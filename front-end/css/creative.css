@@ -2074,11 +2074,6 @@ a.btn.disabled, fieldset:disabled a.btn {
   color: #1651f2;
   background-color: #fff;
   border-color: #fff;
-  border-radius: 4px;
-}
-
-.input-group-btn .btn-primary {
-  border-radius: 4px;
 }
 
 [type='radio'] {
@@ -8564,6 +8559,7 @@ hr.light {
   color: #007bff;
 }
 }header.masthead {
+  height: 100vh;
   padding-top: 10rem;
   padding-bottom: calc(10rem - 72px);
   background: -webkit-gradient(linear, left top, left bottom, from(rgba(66,  80,  92,  0.8)), to(rgba(66,  80,  92,  0.8))), url(../img/bg-masthead.jpg);
@@ -8686,7 +8682,7 @@ section.slide {
 
 .card {
   border: none;
-  border-radius: 4px;
+  border-radius: 0.5rem;
   transition: all 0.2s;
   box-shadow: 0 0.5rem 1rem 0 rgba(0, 0, 0, 0.1);
 }
