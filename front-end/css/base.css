@@ -22,10 +22,10 @@ body {
 
   /* Background gradient */
   background: rgb(0,123,255);
-  background: -moz-radial-gradient(circle, rgba(0,123,255,1) 0%, rgba(22,81,242,1) 100%);
-  background: -webkit-radial-gradient(circle, rgba(0,123,255,1) 0%, rgba(22,81,242,1) 100%);
-  background: radial-gradient(circle, rgba(0,123,255,1) 0%, rgba(22,81,242,1) 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#007bff",endColorstr="#1651f2",GradientType=1);
+  background: -moz-radial-gradient(circle, rgba(0,123,255,1) 0%, rgba(22,81,242,1) 50%, rgba(102,16,242,1) 100%);
+  background: -webkit-radial-gradient(circle, rgba(0,123,255,1) 0%, rgba(22,81,242,1) 50%, rgba(102,16,242,1) 100%);
+  background: radial-gradient(circle, rgba(0,123,255,1) 0%, rgba(22,81,242,1) 50%, rgba(102,16,242,1) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#007bff",endColorstr="#6610f2",GradientType=1);
 }
 
 .h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {

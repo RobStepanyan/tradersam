@@ -5,8 +5,9 @@
 
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="">
-  <meta name="author" content="">
+  <meta name="description" content="Get the latest financial market news, information & quotes of various securities, data analysis reports, as well as a general overview of the market landscape.">
+  <meta name="author" content="Robert Stepanyan">
+  <link rel="shortcut icon" type="image/png" href="img/favicon.png"/>
 
   <title>Stock News, Quotes and More</title>
 
@@ -73,8 +74,8 @@
   <section class="page-section bg-primary p-4" id="quotes">
     <div class="container">
       <div class="row mb-3">
-        <div class="col-lg-12">
-          <div class="input-group-btn" data-toggle="buttons">
+        <div class="row col-lg-12">
+          <div class="input-group-btn scrolling-wrapper-flexbox col-lg-8" data-toggle="buttons">
             <label class="btn btn-primary mr-2 active">
               <input type="radio" name="options" id="Indices" autocomplete="off" checked>Indices
             </label>
@@ -90,46 +91,35 @@
             <label class="btn btn-primary mr-2">
               <input type="radio" name="options" id="Cryptocurrency" autocomplete="off">Cryptocurrency
             </label>
-            <label class="btn btn-primary mr-2">
+            <label class="btn btn-primary">
               <input type="radio" name="options" id="ETFs" autocomplete="off">ETFs
             </label>
           </div>
+          <div class="input-group col-lg-2">
+            <select class="btn btn-primary" id="inputGroupSelect">
+              <option selected>Country...</option>
+              <option value="USA">USA</option>
+              <option value="Japan">Japan</option>
+              <option value="UK">UK</option>
+              <option value="Honk Kong">Honk Kong</option>
+              <option value="China">China</option>
+              <option value="Canada">Canada</option>
+              <option value="Germany">Germany</option>
+              <option value="Australia">Australia</option>
+            </select>
+          </div>
+          <div class="input-group col-lg-2">
+            <select class="btn btn-primary" id="inputGroupSelect">
+              <option selected>Sort By...</option>
+              <option value="Price Asc">Price Asc</option>
+              <option value="Price Desc">Price Desc</option>
+              <option value="Name">Name</option>
+              <option value="Gain">Gain</option>
+              <option value="Loss">Loss</option>
+            </select>
+          </div>
         </div>
       </div>  
-      <div class="row">
-        <div class="col-lg-4">
-          <div class="card mb-5 mb-lg-0">
-            <div class="card-body">
-              <h3 class="text-dark text-uppercase text-center">Stock Market is Failing</h5>
-              <hr>
-              <img src="img/news/img_1.jpg" class="card-img mb-4">
-              <a href="#" class="btn btn-block btn-primary text-uppercase">Read more</a>
-            </div>
-          </div>
-        </div>
-        
-        <div class="col-lg-4">
-          <div class="card mb-5 mb-lg-0">
-            <div class="card-body">
-              <h3 class="text-dark text-uppercase text-center">Stock Market is Failing</h5>
-              <hr>
-              <img src="img/news/img_1.jpg" class="card-img mb-4">
-              <a href="#" class="btn btn-block btn-primary text-uppercase">Read more</a>
-            </div>
-          </div>
-        </div>
-        
-        <div class="col-lg-4">
-          <div class="card">
-            <div class="card-body">
-              <h3 class="text-dark text-uppercase text-center">Stock Market is Failing</h5>
-              <hr>
-              <img src="img/news/img_1.jpg" class="card-img mb-4">
-              <a href="#" class="btn btn-block btn-primary text-uppercase">Read more</a>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   </section>
 

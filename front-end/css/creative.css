@@ -2020,7 +2020,7 @@ textarea.form-control {
   -ms-user-select: none;
   user-select: none;
   background-color: transparent;
-  border: 1px solid transparent;
+  border: 1px solid #fff;
   padding: .375rem .75rem;
   font-size: 1rem;
   line-height: 1.5;
@@ -5531,10 +5531,10 @@ a.close.disabled {
 }
 .bg-primary {
   background: rgb(0,123,255);
-  background: -moz-radial-gradient(circle, rgba(0,123,255,1) 0%, rgba(22,81,242,1) 100%);
-  background: -webkit-radial-gradient(circle, rgba(0,123,255,1) 0%, rgba(22,81,242,1) 100%);
-  background: radial-gradient(circle, rgba(0,123,255,1) 0%, rgba(22,81,242,1) 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#007bff",endColorstr="#1651f2",GradientType=1);
+  background: -moz-radial-gradient(circle, rgba(0,123,255,1) 0%, rgba(22,81,242,1) 50%, rgba(102,16,242,1) 100%);
+  background: -webkit-radial-gradient(circle, rgba(0,123,255,1) 0%, rgba(22,81,242,1) 50%, rgba(102,16,242,1) 100%);
+  background: radial-gradient(circle, rgba(0,123,255,1) 0%, rgba(22,81,242,1) 50%, rgba(102,16,242,1) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#007bff",endColorstr="#6610f2",GradientType=1);
 }
 a.bg-primary:focus, a.bg-primary:hover, button.bg-primary:focus, button.bg-primary:hover {
   background-color: #1651f2!important;
@@ -8558,12 +8558,12 @@ hr.light {
 #mainNav.navbar-scrolled .navbar-nav .nav-item .nav-link:hover {
   color: #007bff;
 }
-}header.masthead {
-  height: 100vh;
+}
+header.masthead {
   padding-top: 10rem;
   padding-bottom: calc(10rem - 72px);
-  background: -webkit-gradient(linear, left top, left bottom, from(rgba(66,  80,  92,  0.8)), to(rgba(66,  80,  92,  0.8))), url(../img/bg-masthead.jpg);
-  background: linear-gradient(to bottom, rgba(66,  80,  92,  0.8) 0, rgba(66,  80,  92,  0.8) 100%), url(../img/bg-masthead.jpg);
+  background: -webkit-gradient(linear, left top, left bottom, from(rgba(66,  80,  92,  0.8)), to(rgba(66,  80,  92,  0.8))), url(../img/bg-masthead-sm-devices.jpg);
+  background: linear-gradient(to bottom, rgba(66,  80,  92,  0.8) 0, rgba(66,  80,  92,  0.8) 100%), url(../img/bg-masthead-sm-devices.jpg);
   background-position: center;
   background-repeat: no-repeat;
   background-attachment: scroll;
@@ -8574,10 +8574,18 @@ header.masthead h1 {
 }
 @media (min-width:992px) {
   header.masthead {
-  height: 100vh;
-  min-height: 40rem;
-  padding-top: 72px;
-  padding-bottom: 0;
+    padding-top: 10rem;
+    padding-bottom: calc(10rem - 72px);
+    background: -webkit-gradient(linear, left top, left bottom, from(rgba(66,  80,  92,  0.8)), to(rgba(66,  80,  92,  0.8))), url(../img/bg-masthead.jpg);
+    background: linear-gradient(to bottom, rgba(66,  80,  92,  0.8) 0, rgba(66,  80,  92,  0.8) 100%), url(../img/bg-masthead.jpg);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+    background-size: cover;
+    height: 100vh;
+    min-height: 40rem;
+    padding-top: 72px;
+    padding-bottom: 0;
 }
 header.masthead p {
   font-size: 1.15rem;
@@ -8670,7 +8678,7 @@ body .no-padding{
 
 /* Same width buttons */
 .btn-same {
-  width: 170px !important;
+  width: 150px !important;
 }
 
 
@@ -8706,4 +8714,42 @@ section.slide {
   font-weight: bold;
   padding: 1rem;
   transition: all 0.2s;
+}
+
+/* Horizontal scrolling */
+.scrolling-wrapper-flexbox {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+}
+
+label input[type='radio'] {
+  flex: 0 0 auto;
+}
+
+/* width */
+.scrolling-wrapper-flexbox::-webkit-scrollbar {
+  height: 5px;
+}
+
+/* Track */
+.scrolling-wrapper-flexbox::-webkit-scrollbar-track {
+  background: #fff;
+  border-radius: 5px;
+}
+
+/* Handle */
+.scrolling-wrapper-flexbox::-webkit-scrollbar-thumb {
+  background: #007bff;
+  border-radius: 5px; 
+}
+
+/* Handle on hover */
+.scrolling-wrapper-flexbox::-webkit-scrollbar-thumb:hover {
+  background: #1651f2; 
+}
+
+#inputGroupSelect:not(:disabled):not(.disabled).active, #inputGroupSelect:not(:disabled):not(.disabled):active, .show>#inputGroupSelect.dropdown-toggle {
+  background: #fff;
+  color: #007bff;
 }
