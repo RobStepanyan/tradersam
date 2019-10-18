@@ -182,7 +182,7 @@ th {
 }
 label {
   display: inline-block;
-  margin-bottom: .5rem;
+  /* margin-bottom: .5rem; */
 }
 button {
   border-radius: 0;
@@ -459,8 +459,6 @@ pre code {
   display: flex;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
-  margin-right: -15px;
-  margin-left: -15px;
 }
 .no-gutters {
   margin-right: 0;
@@ -2025,10 +2023,12 @@ textarea.form-control {
   font-size: 1rem;
   line-height: 1.5;
   border-radius: .25rem;
+  /* margin-bottom: 0.5rem; */
   -webkit-transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, -webkit-box-shadow .15s ease-in-out;
   transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, -webkit-box-shadow .15s ease-in-out;
   transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
   transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out, -webkit-box-shadow .15s ease-in-out;
+  white-space: nowrap;
 }
 @media (prefers-reduced-motion:reduce) {
   .btn {
@@ -8727,29 +8727,38 @@ label input[type='radio'] {
   flex: 0 0 auto;
 }
 
-/* width */
 .scrolling-wrapper-flexbox::-webkit-scrollbar {
-  height: 5px;
+  height: 0px; /* Disabling scrollbar */
 }
 
-/* Track */
-.scrolling-wrapper-flexbox::-webkit-scrollbar-track {
-  background: #fff;
-  border-radius: 5px;
+@media (min-width:768px) {
+  /* width */
+  .scrolling-wrapper-flexbox::-webkit-scrollbar {
+    height: 8px; /* Disabling scrollbar */
+  }
+
+  /* Track */
+  .scrolling-wrapper-flexbox::-webkit-scrollbar-track {
+    background: #fff;
+    border-radius: 5px;
+    margin-top: 5px;
+  }
+
+  /* Handle */
+  .scrolling-wrapper-flexbox::-webkit-scrollbar-thumb {
+    background: #007bff;
+    border-radius: 5px; 
+  }
+
+  /* Handle on hover */
+  .scrolling-wrapper-flexbox::-webkit-scrollbar-thumb:hover {
+    background: #1651f2; 
+  }
 }
 
-/* Handle */
-.scrolling-wrapper-flexbox::-webkit-scrollbar-thumb {
-  background: #007bff;
-  border-radius: 5px; 
-}
-
-/* Handle on hover */
-.scrolling-wrapper-flexbox::-webkit-scrollbar-thumb:hover {
-  background: #1651f2; 
-}
-
-#inputGroupSelect:not(:disabled):not(.disabled).active, #inputGroupSelect:not(:disabled):not(.disabled):active, .show>#inputGroupSelect.dropdown-toggle {
-  background: #fff;
-  color: #007bff;
+.input-group-btn {
+  border: 1px solid rgba(105, 177, 255, 0.8);
+  border-radius: 0.25rem;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 10px;
 }
