@@ -1,6 +1,6 @@
 FROM python:latest
-ADD . /stock
-WORKDIR /stock
-COPY . /stock/
-COPY requirements.txt /stock/
+ADD . /tradersam
+WORKDIR /tradersam
+COPY . /tradersam/
+COPY requirements.txt /tradersam/
 RUN pip install -r requirements.txt

@@ -3,4 +3,4 @@ Django>=2.2.5
 django-crispy-forms>=1.7.2
 sqlparse==0.2.4
 djongo>=1.2.35
-PIL
+Pillow>=6.1.0
