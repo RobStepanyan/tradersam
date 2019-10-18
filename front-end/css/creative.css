@@ -1348,11 +1348,11 @@ pre code {
 .table td, .table th {
   padding: .75rem;
   vertical-align: top;
-  border-top: 1px solid #dee2e6;
+  /* border-top: 1px solid #dee2e6; */
 }
 .table thead th {
   vertical-align: bottom;
-  border-bottom: 2px solid #dee2e6;
+  /* border-bottom: 2px solid #dee2e6; */
 }
 .table tbody+tbody {
   border-top: 2px solid #dee2e6;
@@ -5531,9 +5531,9 @@ a.close.disabled {
 }
 .bg-primary {
   background: rgb(0,123,255);
-  background: -moz-radial-gradient(circle, rgba(0,123,255,1) 0%, rgba(22,81,242,1) 50%, rgba(102,16,242,1) 100%);
-  background: -webkit-radial-gradient(circle, rgba(0,123,255,1) 0%, rgba(22,81,242,1) 50%, rgba(102,16,242,1) 100%);
-  background: radial-gradient(circle, rgba(0,123,255,1) 0%, rgba(22,81,242,1) 50%, rgba(102,16,242,1) 100%);
+  background: -moz-linear-gradient(45deg, rgba(0,123,255,1) 0%, rgba(22,81,242,1) 50%, rgba(102,16,242,1) 100%);
+  background: -webkit-linear-gradient(45deg, rgba(0,123,255,1) 0%, rgba(22,81,242,1) 50%, rgba(102,16,242,1) 100%);
+  background: linear-gradient(45deg, rgba(0,123,255,1) 0%, rgba(22,81,242,1) 50%, rgba(102,16,242,1) 100%);
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#007bff",endColorstr="#6610f2",GradientType=1);
 }
 a.bg-primary:focus, a.bg-primary:hover, button.bg-primary:focus, button.bg-primary:hover {
@@ -8690,7 +8690,7 @@ section.slide {
 
 .card {
   border: none;
-  border-radius: 0.5rem;
+  /* border-radius: 0.5rem; */
   transition: all 0.2s;
   box-shadow: 0 0.5rem 1rem 0 rgba(0, 0, 0, 0.1);
 }
@@ -8740,14 +8740,12 @@ label input[type='radio'] {
   /* Track */
   .scrolling-wrapper-flexbox::-webkit-scrollbar-track {
     background: #fff;
-    border-radius: 5px;
     margin-top: 5px;
   }
 
   /* Handle */
   .scrolling-wrapper-flexbox::-webkit-scrollbar-thumb {
     background: #007bff;
-    border-radius: 5px; 
   }
 
   /* Handle on hover */
@@ -8757,8 +8755,17 @@ label input[type='radio'] {
 }
 
 .input-group-btn {
-  border: 1px solid rgba(105, 177, 255, 0.8);
+  border: 1px solid rgba(105, 177, 255, 0.6);
   border-radius: 0.25rem;
   background: rgba(0, 0, 0, 0.5);
   padding: 10px;
+}
+
+.thead-custom-dark {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.col-lg-12 {
+  border: 1px solid rgba(105, 177, 255, 0.6);
+  border-radius: 0.25rem;
 }
