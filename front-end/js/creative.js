@@ -56,3 +56,21 @@
   });
 
 })(jQuery); // End of use strict
+
+$(function() {
+                
+  var documentEl = $(document),
+      fadeElem = $('.masthead');
+  
+  
+  documentEl.on('scroll', function() {
+      var currScrollPos = documentEl.scrollTop();
+      
+      fadeElem.each(function() {
+          var $this = $(this),
+              elemOffsetTop = $this.offset().top;
+          if (currScrollPos > elemOffsetTop) $this.css('opacity', 1 - (currScrollPos-elemOffsetTop)/1000);
+      }); 
+  });
+  
+});
