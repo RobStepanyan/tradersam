@@ -2064,8 +2064,8 @@ a.btn.disabled, fieldset:disabled a.btn {
   box-shadow:  0 .5rem 0.5rem rgba(0, 0, 0, .3);
 }
 .btn-primary.focus, .btn-primary:focus {
-  -webkit-box-shadow: 0 .5rem 0.5rem rgba(0, 0, 0, .3);
-  box-shadow:  0 .5rem 0.5rem rgba(0, 0, 0, .3);
+  -webkit-box-shadow: 0 .5rem 0.5rem rgba(0, 0, 0, 0);
+  box-shadow:  0 .5rem 0.5rem rgba(0, 0, 0, 0);
 }
 .btn-primary.disabled, .btn-primary:disabled {
   color: #fff;
@@ -5584,6 +5584,12 @@ a.bg-light:focus, a.bg-light:hover, button.bg-light:focus, button.bg-light:hover
 a.bg-dark:focus, a.bg-dark:hover, button.bg-dark:focus, button.bg-dark:hover {
   background-color: #1d2124!important;
 }
+.bg-dark-gray {
+  background-color: #343a40!important;
+}
+.btn-dark-gray {
+  background-color: #343a40!important;
+}
 .bg-white {
   background-color: #fff!important;
 }
@@ -5598,6 +5604,9 @@ a.bg-dark:focus, a.bg-dark:hover, button.bg-dark:focus, button.bg-dark:hover {
 }
 .border-right {
   border-right: 1px solid #dee2e6!important;
+}
+.border-right-bold {
+  border-right: .2rem solid #dee2e6!important;
 }
 .border-bottom {
   border-bottom: 1px solid #dee2e6!important;
@@ -8742,7 +8751,7 @@ label input[type='radio'] {
 
   /* Track */
   .scrolling-wrapper-flexbox::-webkit-scrollbar-track {
-    background: rgba(0, 0, 0, .05);
+    background: rgba(0, 0, 0, .1);
     margin-top: 5px;
     border-radius: 1rem;
   }
@@ -8760,36 +8769,43 @@ label input[type='radio'] {
 }
 
 @media (min-width:992px) {
-  #pr-2 {
-    padding-right: 8px !important;
+  #pr-1 {
+    padding-right: 12px !important;
   }
 
-  #pl-2 {
-    padding-left: 8px !important;
+  #pl-1{
+    padding-left: 12px !important;
   }
-  .col-lg-12 {
-    margin-top: 0 !important;
+  #col-lg-12 {
+    margin-top: 0!important;
+  }
+  .col-lg-6.p-0.mt-5 {
+    margin-top: 0!important;
   }
 }
 
 
 .input-group-btn {
-  border: 2px solid white;
+  border: 2px solid #1651f2;
   border-radius: 0.5rem;
   background: white;
   padding: 10px;
 }
 
-.thead-dark-blue {
-  color: #fff;
-  background-color: #1651f2;;
-}
-
-.col-lg-12 {
+#col-lg-12 {
   border: 2px solid #1651f2;
   border-radius: 0.5rem;
 }
 
-tr {
+td {
   border-bottom: 1px solid #dee2e6;
+  text-align: center!important;
+}
+
+th {
+  text-align: center!important;
+}
+
+.display-table {
+  display: table!important;
 }
