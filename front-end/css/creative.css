@@ -5606,7 +5606,12 @@ a.bg-dark:focus, a.bg-dark:hover, button.bg-dark:focus, button.bg-dark:hover {
   border-right: 1px solid #dee2e6!important;
 }
 .border-right-bold {
-  border-right: .2rem solid #dee2e6!important;
+  border-right: 0!important;
+}
+@media (min-width:992px) {
+  .border-right-bold {
+    border-right: .2rem solid #dee2e6!important;
+  }
 }
 .border-bottom {
   border-bottom: 1px solid #dee2e6!important;
@@ -8798,14 +8803,68 @@ label input[type='radio'] {
 }
 
 td {
-  border-bottom: 1px solid #dee2e6;
+  border-top: 1px solid #dee2e6;
   text-align: center!important;
 }
 
 th {
   text-align: center!important;
+  color: #fff;
+  background-color: #1651f2;
+  border: 2px solid #1651f2;
+  -webkit-box-shadow: 0 .5rem 0.5rem rgba(0, 0, 0, .3);
+  box-shadow: 0 .5rem 0.5rem rgba(0, 0, 0, .3);
 }
 
 .display-table {
   display: table!important;
 }
+
+.custom-hr {
+  height: 0;
+}
+@media (max-width: 992px) {
+  .custom-hr {
+    border-top: .2rem solid white;
+    height: 2px;
+    width: 90%;
+  }
+}
+
+.news-card {
+  height: 200px!important;
+  border: 2px solid #dee2e6 ;
+  border-radius: 0.5rem;
+}
+.news-card:hover {
+  -webkit-transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, -webkit-box-shadow .15s ease-in-out;
+  transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, -webkit-box-shadow .15s ease-in-out;
+  transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+  transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out, -webkit-box-shadow .15s ease-in-out;
+  -webkit-box-shadow: 0 .5rem 0.5rem rgba(0, 0, 0, .3);
+  box-shadow: 0 .5rem 0.5rem rgba(0, 0, 0, .3);
+}
+
+.vertical-text{
+  transform: rotate(90deg);
+}
+.read-btn {
+  text-align: center!important;
+  color: #fff;
+  background-color: #1651f2;
+  border: 2px solid #1651f2;
+  width: 68px;
+  height: 196px;
+  border-radius: 0 .5rem .5rem 0;
+}
+.read-col {
+  width: 68px;
+  height: 200px;
+}
+
+@media (max-width: 992px) {
+  .news-pic img {
+  width: 100px;
+  }
+}
+
