@@ -10,7 +10,7 @@
  */:root {
   --blue: #007bff;
   --blue2: #1651f2;
-  --blue-dark: #0b2242;
+  --dark-blue: #1b3b8d;
   --indigo: #6610f2;
   --purple: #6f42c1;
   --pink: #e83e8c;
@@ -135,7 +135,6 @@ a {
 }
 a:hover {
   color: #000;
-  text-decoration: underline;
 }
 a:not([href]):not([tabindex]) {
   color: inherit;
@@ -2064,11 +2063,11 @@ a.btn.disabled, fieldset:disabled a.btn {
   box-shadow:  0 .5rem 0.5rem rgba(0, 0, 0, .3);
 }
 .btn-primary.btn-xl.focus, .btn-primary.btn-xl:focus {
-  -webkit-box-shadow: 0 .5rem 0.5rem rgba(0, 0, 0, 0);
-  box-shadow:  0 .5rem 0.5rem rgba(0, 0, 0, 0);
+  -webkit-box-shadow: 0 .5rem 0.5rem rgba(185, 67, 67, 0.3);
+  box-shadow:  0 .5rem 0.5rem rgba(0, 0, 0, 0.3);
 }
 
-.btn-primary, .btn-xl[href="#feed"] {
+.btn-primary {
   color: #fff;
   background-color: #1651f2;
   border: 2px solid #1651f2;
@@ -4122,7 +4121,7 @@ input[type=button].btn-block, input[type=reset].btn-block, input[type=submit].bt
 }
 .page-link:hover {
   z-index: 2;
-  color: #d6370c;
+  color: #1651f2;
   text-decoration: none;
   background-color: #e9ecef;
   border-color: #dee2e6;
@@ -4130,17 +4129,15 @@ input[type=button].btn-block, input[type=reset].btn-block, input[type=submit].bt
 .page-link:focus {
   z-index: 2;
   outline: 0;
-  -webkit-box-shadow: 0 0 0 .2rem #002c8c;
-  box-shadow: 0 0 0 .2rem #002c8c;
 }
 .page-item:first-child .page-link {
   margin-left: 0;
-  border-top-left-radius: .25rem;
-  border-bottom-left-radius: .25rem;
+  border-top-left-radius: .5rem;
+  border-bottom-left-radius: .5rem;
 }
 .page-item:last-child .page-link {
-  border-top-right-radius: .25rem;
-  border-bottom-right-radius: .25rem;
+  border-top-right-radius: .5rem;
+  border-bottom-right-radius: .5rem;
 }
 .page-item.active .page-link {
   z-index: 1;
@@ -5552,7 +5549,7 @@ a.close.disabled {
   vertical-align: text-top!important;
 }
 .bg-primary {
-  background: #1651f2;
+  background-color: #1241c2; /* #1651f2 with opacity: 0.8 */
   /* background: rgb(22,81,242);
   background: -moz-radial-gradient(circle, rgba(22,81,242,1) 0%, rgba(11,34,66,1) 100%);
   background: -webkit-radial-gradient(circle, rgba(22,81,242,1) 0%, rgba(11,34,66,1) 100%);
@@ -8825,6 +8822,7 @@ label input[type='radio'] {
 }
 
 td {
+  font-family: "Roboto", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   border-top: 1px solid #dee2e6;
   text-align: center!important;
   font-weight: bold;
@@ -8857,7 +8855,6 @@ th {
 
 .news-card {
   height: 200px!important;
-  border: 1px solid #000000a3;
   border-radius: 0.5rem;
 }
 .news-card:hover {
