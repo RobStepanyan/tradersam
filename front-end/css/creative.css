@@ -10,7 +10,7 @@
  */:root {
   --blue: #007bff;
   --blue2: #1651f2;
-  --dark-blue: #1b3b8d;
+  --dark-blue: #1241c2; /* blue2 opacity 0.8 */
   --indigo: #6610f2;
   --purple: #6f42c1;
   --pink: #e83e8c;
@@ -65,6 +65,9 @@ body {
 }
 [tabindex="-1"]:focus {
   outline: 0!important;
+}
+.roboto {
+  font-family: "Roboto", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
 hr {
   -webkit-box-sizing: content-box;
@@ -4110,6 +4113,7 @@ input[type=button].btn-block, input[type=reset].btn-block, input[type=submit].bt
   border-radius: .25rem;
 }
 .page-link {
+  font-family: "Roboto", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   position: relative;
   display: block;
   padding: .5rem .75rem;
@@ -5549,7 +5553,7 @@ a.close.disabled {
   vertical-align: text-top!important;
 }
 .bg-primary {
-  background-color: #1241c2; /* #1651f2 with opacity: 0.8 */
+  background-color: #1241c2!important; /* #1651f2 with opacity: 0.8 */
   /* background: rgb(22,81,242);
   background: -moz-radial-gradient(circle, rgba(22,81,242,1) 0%, rgba(11,34,66,1) 100%);
   background: -webkit-radial-gradient(circle, rgba(22,81,242,1) 0%, rgba(11,34,66,1) 100%);
@@ -8724,9 +8728,9 @@ section.slide {
 
 .card {
   border: none;
-  /* border-radius: 0.5rem; */
+  border-radius: 0.5rem;
   transition: all 0.2s;
-  box-shadow: 0 0.5rem 1rem 0 rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0.5rem 0.5rem rgba(0, 0, 0, .3);
 }
 
 .slide hr {
@@ -8755,6 +8759,8 @@ section.slide {
   display: flex;
   flex-wrap: nowrap;
   overflow-x: auto;
+  -webkit-box-shadow: inset 0 .5rem 0.5rem rgba(0, 0, 0, .3);
+  box-shadow: inset 0 .5rem 0.5rem rgba(0, 0, 0, .3); 
 }
 
 label input[type='radio'] {
@@ -8810,8 +8816,6 @@ label input[type='radio'] {
   border-radius: 0.5rem;
   background: white;
   padding: 10px;
-  -webkit-box-shadow: inset 0 .5rem 0.5rem rgba(0, 0, 0, .3);
-  box-shadow: inset 0 .5rem 0.5rem rgba(0, 0, 0, .3); 
 }
 
 #col-lg-12 {
@@ -9077,4 +9081,21 @@ h1.vertical-text:hover, h1.vertical-text:hover {
 tbody {
   height: 100px;
   overflow-y: scroll;
+}
+.mini-quote-card {
+  display: inline-block;
+  font-weight: 700;
+  color: #212529;
+  text-align: center;
+  vertical-align: middle;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  background-color: transparent;
+  border: 1px solid #fff;
+  padding: .375rem .75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  border-radius: .5rem;
 }
