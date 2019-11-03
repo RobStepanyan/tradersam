@@ -1574,7 +1574,7 @@ pre code {
   background-color: #fff;
   background-clip: padding-box;
   border: 1px solid #ced4da;
-  border-radius: .25rem;
+  border-radius: .5rem;
   -webkit-transition: border-color .15s ease-in-out, -webkit-box-shadow .15s ease-in-out;
   transition: border-color .15s ease-in-out, -webkit-box-shadow .15s ease-in-out;
   transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
@@ -1592,7 +1592,6 @@ pre code {
 .form-control:focus {
   color: #495057;
   background-color: #fff;
-  border-color: #fbc2b3;
   outline: 0;
 }
 .form-control::-webkit-input-placeholder {
@@ -2539,7 +2538,7 @@ a.btn.disabled, fieldset:disabled a.btn {
   padding: .5rem 1rem;
   font-size: 1.25rem;
   line-height: 1.5;
-  border-radius: .3rem;
+  border-radius: .5rem;
 }
 .btn-group-sm>.btn, .btn-sm {
   padding: .25rem .5rem;
@@ -3147,7 +3146,7 @@ input[type=button].btn-block, input[type=reset].btn-block, input[type=submit].bt
   background: url("data:image/svg+xml, %3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3e%3cpath fill='%23343a40' d='M2 0L0 2h4zm0 5L0 3h4z'/%3e%3c/svg%3e") no-repeat right .75rem center/8px 10px;
   background-color: #fff;
   border: 1px solid #ced4da;
-  border-radius: .25rem;
+  border-radius: .5rem;
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
@@ -3155,8 +3154,6 @@ input[type=button].btn-block, input[type=reset].btn-block, input[type=submit].bt
 .custom-select:focus {
   border-color: #fbc2b3;
   outline: 0;
-  -webkit-box-shadow: 0 0 0 .2rem #002c8c;
-  box-shadow: 0 0 0 .2rem #002c8c;
 }
 .custom-select:focus::-ms-value {
   color: #495057;
@@ -9165,4 +9162,9 @@ tbody {
 
 .form-control[type="search"]::-ms-input-placeholder { /* Microsoft Edge */
   color: rgb(109, 118, 126);
+}
+
+.top-block {
+  margin-top: -8rem;
+  position: relative;
 }
