@@ -9168,3 +9168,8 @@ tbody {
   margin-top: -8rem;
   position: relative;
 }
+@media (max-width: 576px) {
+  #inlineFormCustomSelect {
+    margin-top: 24px;
+  }
+}

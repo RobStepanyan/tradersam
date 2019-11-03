@@ -70,7 +70,7 @@
       <div class="row">
         <div class="col-lg-12 mx-auto">
           <div class="news-heading">
-            <h1>Symbol Lookup</h1>
+            <h1><i class="fa fa-search text-white"></i> Security Lookup</h1>
           </div>
         </div>
       </div>
@@ -80,18 +80,19 @@
   <!-- Search form -->
   <div class="container">
     <div class="row">
-      <div class="col-lg-12 mx-auto top-block">
-        <div class="card card-signin mb-2">
+      <div class="col-lg-9 mx-auto top-block">
+        <div class="card mb-2">
           <div class="card-body">
+            <h2 class="text-center">Search</h2>
             <form>
               <div class="form-row my-4">
-                <div class="col-sm-10">
-                  <input type="text" class="form-control" placeholder="Ticker/Symbol">
+                <div class="col-sm-9">
+                  <input type="text" class="form-control" placeholder="Ticker/Symbol or Name">
                 </div>
-                <div class="col-sm-2">
+                <div class="col-sm-3">
                   <label class="mr-sm-2 sr-only" for="inlineFormCustomSelect">Type</label>
                   <select class="custom-select mr-sm-2" id="inlineFormCustomSelect">
-                    <option selected>Type</option>
+                    <option selected>Type of security</option>
                     <option value="1">Stock</option>
                     <option value="2">Index by Name</option>
                     <option value="3">ETF</option>
@@ -102,12 +103,16 @@
                   </select>
                 </div>
               </div>
-              <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Search</button>
+              <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Get Results</button>
             </form>
           </div>
         </div>
       </div>
     </div>
+    <section class="page-section">
+        <h2>Search results</h2>
+        <h5>Search something to get results there.</h5>
+    </section>
   </div>
   <!-- Search resuts -->
   <div class="container">
