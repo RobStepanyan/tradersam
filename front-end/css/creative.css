@@ -11,6 +11,7 @@
   --blue: #007bff;
   --blue2: #1651f2;
   --dark-blue: #1241c2; /* blue2 opacity 0.8 */
+  --dark-blue2: #0a2161;
   --indigo: #6610f2;
   --purple: #6f42c1;
   --pink: #e83e8c;
@@ -1593,8 +1594,6 @@ pre code {
   background-color: #fff;
   border-color: #fbc2b3;
   outline: 0;
-  -webkit-box-shadow: 0 0 0 .2rem #002c8c;
-  box-shadow: 0 0 0 .2rem #002c8c;
 }
 .form-control::-webkit-input-placeholder {
   color: #6c757d;
@@ -5553,7 +5552,7 @@ a.close.disabled {
   vertical-align: text-top!important;
 }
 .bg-primary {
-  background-color: #1241c2!important; /* #1651f2 with opacity: 0.8 */
+  background-color: #0a2161!important;
   /* background: rgb(22,81,242);
   background: -moz-radial-gradient(circle, rgba(22,81,242,1) 0%, rgba(11,34,66,1) 100%);
   background: -webkit-radial-gradient(circle, rgba(22,81,242,1) 0%, rgba(11,34,66,1) 100%);
@@ -8774,7 +8773,7 @@ label input[type='radio'] {
 @media (min-width:768px) {
   /* width */
   .scrolling-wrapper-flexbox::-webkit-scrollbar {
-    height: 8px; /* Disabling scrollbar */
+    height: 10px; /* Disabling scrollbar */
   }
 
   /* Track */
@@ -8826,7 +8825,6 @@ label input[type='radio'] {
 }
 
 td {
-  font-family: "Roboto", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   border-top: 1px solid #dee2e6;
   text-align: center!important;
   font-weight: bold;
@@ -9098,4 +9096,73 @@ tbody {
   font-size: 1rem;
   line-height: 1.5;
   border-radius: .5rem;
+}
+.border-radius-0 {
+  border-radius: 0!important;
+}
+.form-inline {
+  flex-direction: row!important;
+}
+@media (min-width: 992px) {
+  #nav-search-btn {
+    color: rgba(255, 255, 255, .7)!important;
+  }
+  .form-control[type="search"] {
+    border-bottom: 2px solid rgba(255, 255, 255, .7)!important;
+    color: rgba(255, 255, 255, .7)!important;
+  }
+  .navbar-scrolled .form-control[type="search"] {
+    border-bottom: 2px solid #212529!important;
+    color: #212529!important;
+  }
+  .form-control[type="search"]::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: rgba(255, 255, 255, .7)!important;
+    opacity: 1; /* Firefox */
+  }
+  
+  .form-control[type="search"]:-ms-input-placeholder { /* Internet Explorer 10-11 */
+    color: rgba(255, 255, 255, .7)!important;
+  }
+  
+  .form-control[type="search"]::-ms-input-placeholder { /* Microsoft Edge */
+    color: rgba(255, 255, 255, .7)!important;
+  }
+  .navbar-scrolled #nav-search-btn{
+    color: #212529!important;
+  }
+  .navbar-scrolled .form-control[type="search"]::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: #212529!important;
+    opacity: 1; /* Firefox */
+  }
+  
+  .navbar-scrolled .form-control[type="search"]:-ms-input-placeholder { /* Internet Explorer 10-11 */
+    color: #212529!important;
+  }
+  
+  .navbar-scrolled .form-control[type="search"]::-ms-input-placeholder { /* Microsoft Edge */
+    color: #212529!important;
+  }
+}
+#nav-search-btn {
+  color: rgb(109, 118, 126);
+}
+.form-control[type="search"] {
+  background: 0;
+  border-radius: 0;
+  border: 0;
+  border-bottom: 2px solid rgb(109, 118, 126);
+  width: 200px!important;
+  color: rgb(109, 118, 126);
+}
+.form-control[type="search"]::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: rgb(109, 118, 126);
+  opacity: 1; /* Firefox */
+}
+
+.form-control[type="search"]:-ms-input-placeholder { /* Internet Explorer 10-11 */
+  color: rgb(109, 118, 126);
+}
+
+.form-control[type="search"]::-ms-input-placeholder { /* Microsoft Edge */
+  color: rgb(109, 118, 126);
 }
