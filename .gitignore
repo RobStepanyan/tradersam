@@ -104,3 +104,6 @@ tradersam_env_win/
 
 # mypy
 .mypy_cache/
+
+# Django
+settings.py
