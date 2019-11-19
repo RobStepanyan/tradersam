@@ -107,3 +107,4 @@ tradersam_env_win/
 
 # Django
 tradersam_project/settings.py
+db
