@@ -75,8 +75,12 @@ WSGI_APPLICATION = 'tradersam_project.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'db',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'tradersam_db',
+        'USER': 'tradersam_db_user',
+        'PASSWORD': "@&~k~>8.trzGbKLv",
+        'HOST': 'localhost',
+        'PORT': '',
     }
 }
 
