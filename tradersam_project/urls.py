@@ -18,10 +18,12 @@ from django.urls import path, include
 from django.contrib.auth import views as auth_views
 
 import users_app.views as users_views
+import main_app.views as main_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('main_app.urls')),
+    # path('', include('main_app.urls')),
+    path('', main_views.csoon),
     
     path('signup/', users_views.signup, name='signup'),
     path('login/', users_views.login, name='login'),
