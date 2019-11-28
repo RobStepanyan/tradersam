@@ -13,7 +13,7 @@ def signup(request):
             form.save()
             username = form.cleaned_data.get('username')
             messages.success(request, f'Accound has been created for {username}')
-            return redirect('signup')
+            return redirect('home')
     else:
         form = UserSignUpForm()
     
