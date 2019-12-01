@@ -21,7 +21,7 @@ import users_app.views as users_views
 import main_app.views as main_views
 
 urlpatterns = [
-    path('#s@9z8=#0)u&6*e#m)n7vtppae/', admin.site.urls),
+    path('donttouchtheadminpage/', admin.site.urls),
     path('itsdevareabitch/', include('main_app.urls')),
     path('', main_views.csoon),
     
