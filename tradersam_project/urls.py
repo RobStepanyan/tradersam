@@ -22,7 +22,7 @@ import main_app.views as main_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # path('', include('main_app.urls')),
+    path('itsdevareabitch/', include('main_app.urls')),
     path('', main_views.csoon),
     
     path('signup/', users_views.signup, name='signup'),
