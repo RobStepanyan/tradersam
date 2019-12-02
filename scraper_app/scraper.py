@@ -39,6 +39,7 @@ class CollectStaticInfo:
         print('Collected fields of all commodities')
         print('Starting to save data')
         for static_info in static_infos:
+            print(f'Storing {static_info["Short Name"] + " Futures Contract"}')
             CommodityStaticInfo(
                 short_name=static_info['Short Name'], base_symbol=static_info['Base Symbol'],
                 contract_size=static_info['Contract Size'],
@@ -65,7 +66,7 @@ class CollectStaticInfo:
         print('Sleeping for 2 seconds!')
         sleep(2)
         name_link = dict(zip(short_names, links))
-        print('Starting to collect full names')
+        print('Starting to collect long names')
         static_infos = []
         for name, link in name_link.items():
             request = requests.get(link, headers=header)
@@ -78,6 +79,7 @@ class CollectStaticInfo:
             sleep(10)
 
         for static_info in static_infos:
+            print(f'Storing {static_info["Long Name"]}')
             CurrencyStaticInfo(
                 short_name=static_info['Short Name'], long_name=static_info['Long Name'],
                 link=static_info['Link']).save()
