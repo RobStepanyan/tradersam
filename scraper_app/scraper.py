@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 from time import sleep
-from .models import CommodityStaticInfo
+from .models import CommodityStaticInfo, CurrencyStaticInfo, CryptoCurrencyStaticInfo
 
 class CollectStaticInfo:
     def commodities():
@@ -14,13 +14,12 @@ class CollectStaticInfo:
         request = requests.get(url, headers=header)
         soup = BeautifulSoup(request.text, 'html.parser')
         soup = soup.find_all('td', class_='noWrap bold left noWrap')
-        print('Collected names and links')
         fields_to_scrape = CommodityStaticInfo.fields_to_scrape
 
         for td in soup:
             short_names.append(td.find('a').get_text())
             links.append(url2+str(td.a['href']))
-
+        print('Collected names and links')
         name_link = dict(zip(short_names, links))
         static_infos = []
         print('Starting Collecting Fields')
@@ -48,3 +47,71 @@ class CollectStaticInfo:
                 link=static_info['Link']).save()
         print('Data has been successfuly stored!')
         return ''
+
+    def currencies():
+        print('Starting CollectStaticInfo.currencies()')
+        short_names = []
+        links = []
+        url = 'https://www.investing.com/currencies/'
+        url2 = 'https://www.investing.com'
+        header={'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/601.3.9 (KHTML, like Gecko) Version/9.0.2 Safari/601.3.9'}
+        request = requests.get(url, headers=header)
+        soup = BeautifulSoup(request.text, 'html.parser')
+        soup = soup.find_all('td', class_='noWrap bold left noWrap')
+        for td in soup:
+            short_names.append(td.find('a').get_text())
+            links.append(url2+str(td.a['href']))
+        print('Collected names and links')
+        print('Sleeping for 2 seconds!')
+        sleep(2)
+        name_link = dict(zip(short_names, links))
+        print('Starting to collect full names')
+        static_infos = []
+        for name, link in name_link.items():
+            request = requests.get(link, headers=header)
+            soup = BeautifulSoup(request.text, 'html.parser')
+            soup = soup.find('div', class_='instrumentHead').h1.get_text() #EUR/USD - Euro US Dollar
+            long_name = soup[soup.index('-')+1:] #Euro US Dollar
+            static_infos.append({'Short Name': name, 'Long Name': long_name, 'Link': link})
+            print(f'{len(short_names)-short_names.index(name)-1} Currencies Left')
+            print('Sleeping for 10 seconds')
+            sleep(10)
+
+        for static_info in static_infos:
+            CurrencyStaticInfo(
+                short_name=static_info['Short Name'], long_name=static_info['Long Name'],
+                link=static_info['Link']).save()
+        
+        print('Data has been successfuly stored!')
+        return ''
+
+    def cryptocurrencies():
+        print('Starting CollectStaticInfo.cryptocurrencies()')
+        short_names = []
+        long_names = []
+        links = []
+        url = 'https://www.investing.com/crypto/'
+        url2 = 'https://www.investing.com'
+        header={'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/601.3.9 (KHTML, like Gecko) Version/9.0.2 Safari/601.3.9'}
+        request = requests.get(url, headers=header)
+        soup = BeautifulSoup(request.text, 'html.parser')
+        soup1 = soup.find_all('td', class_='left bold elp name cryptoName first js-currency-name')
+        soup2 = soup.find_all('td', class_='left noWrap elp symb js-currency-symbol')
+        for td1, td2 in zip(soup1, soup2):
+            try:
+                long_names.append(td1.find('a').get_text())
+                links.append(url2+str(td1.a['href']))
+                short_names.append(td2.get_text())
+            except:
+                pass
+        print('Collected all data')
+        print('Starting to store data')
+        for i in range(len(short_names)):
+            print(f'Storing {long_names[i]}')
+            CryptoCurrencyStaticInfo(
+                short_name=short_names[i], long_name=long_names[i],
+                link=links[i]).save()
+        
+        print('Data has been successfuly stored!')
+        return ''
+            

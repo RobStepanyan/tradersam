@@ -25,3 +25,20 @@ class CommodityStaticInfo(models.Model):
 
     def __str__(self):
         return self.country + ' ' + self.long_name + ' (' + self.base_symbol + ')'
+
+
+class CurrencyStaticInfo(models.Model):
+    short_name = models.CharField(max_length=10)
+    long_name = models.CharField(max_length=30)
+    link = models.URLField()
+
+    def __str__(self):
+        return self.short_name + ' - ' + self.long_name
+
+class CryptoCurrencyStaticInfo(models.Model):
+    short_name = models.CharField(max_length=10)
+    long_name = models.CharField(max_length=30)
+    link = models.URLField()
+
+    def __str__(self):
+        return self.short_name + ' - ' + self.long_name
