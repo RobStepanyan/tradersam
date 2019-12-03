@@ -6,6 +6,10 @@ from .models import CommodityStaticInfo, CurrencyStaticInfo, CryptoCurrencyStati
 class CollectStaticInfo:
     def commodities():
         print('Starting CollectStaticInfo.commodities()')
+        print('Removing old records')
+        CommodityStaticInfo.objects.all().delete()
+        print('Old records have been removed')
+        print('Starting to collect new ones')
         short_names = []
         links = []
         url = 'https://www.investing.com/commodities/'
@@ -51,6 +55,10 @@ class CollectStaticInfo:
 
     def currencies():
         print('Starting CollectStaticInfo.currencies()')
+        print('Removing old records')
+        CurrencyStaticInfo.objects.all().delete()
+        print('Old records have been removed')
+        print('Starting to collect new ones')
         short_names = []
         links = []
         url = 'https://www.investing.com/currencies/'
@@ -89,6 +97,10 @@ class CollectStaticInfo:
 
     def cryptocurrencies():
         print('Starting CollectStaticInfo.cryptocurrencies()')
+        print('Removing old records')
+        CryptoCurrencyStaticInfo.objects.all().delete()
+        print('Old records have been removed')
+        print('Starting to collect new ones')
         short_names = []
         long_names = []
         links = []
