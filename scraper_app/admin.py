@@ -4,4 +4,5 @@ from . import models
 # Register your models here.
 admin.site.register(models.CommodityStaticInfo)
 admin.site.register(models.CurrencyStaticInfo)
-admin.site.register(models.CryptoCurrencyStaticInfo)
+admin.site.register(models.CryptocurrencyStaticInfo)
+admin.site.register(models.USStockStaticInfo)

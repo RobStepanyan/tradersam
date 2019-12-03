@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 from time import sleep
-from .models import CommodityStaticInfo, CurrencyStaticInfo, CryptoCurrencyStaticInfo
+from .models import CommodityStaticInfo, CurrencyStaticInfo, CryptocurrencyStaticInfo
 
 class CollectStaticInfo:
     def commodities():
@@ -98,7 +98,7 @@ class CollectStaticInfo:
     def cryptocurrencies():
         print('Starting CollectStaticInfo.cryptocurrencies()')
         print('Removing old records')
-        CryptoCurrencyStaticInfo.objects.all().delete()
+        CryptocurrencyStaticInfo.objects.all().delete()
         print('Old records have been removed')
         print('Starting to collect new ones')
         short_names = []
@@ -122,10 +122,12 @@ class CollectStaticInfo:
         print('Starting to store data')
         for i in range(len(short_names)):
             print(f'Storing {long_names[i]}')
-            CryptoCurrencyStaticInfo(
+            CryptocurrencyStaticInfo(
                 short_name=short_names[i], long_name=long_names[i],
                 link=links[i]).save()
         
         print('Data has been successfuly stored!')
         return ''
+
+    def usstocks():
             
