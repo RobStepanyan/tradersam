@@ -1,7 +1,10 @@
 import requests
+from selenium import webdriver
 from bs4 import BeautifulSoup
 from time import sleep
-from .models import CommodityStaticInfo, CurrencyStaticInfo, CryptocurrencyStaticInfo
+from .models import (
+    CommodityStaticInfo, CurrencyStaticInfo, CryptocurrencyStaticInfo, USStockStaticInfo
+)
 
 class CollectStaticInfo:
     def commodities():
@@ -130,4 +133,58 @@ class CollectStaticInfo:
         return ''
 
     def usstocks():
-            
+        print('Starting CollectStaticInfo.cryptocurrencies()')
+        print('Removing old records')
+        USStockStaticInfo.objects.all().delete()
+        print('Old records have been removed')
+        print('Starting to collect new ones')
+        print('Starting Selenium')
+        url = 'https://www.investing.com/equities/united-states'
+        url2 = 'https://www.investing.com'
+        driver = webdriver.Chrome()
+        driver.get(url)
+        driver.execute_script('$("#stocksFilter").val("#all");')
+        sleep(1)
+        print('Executing JS scripts')
+        driver.execute_script("doStocksFilter('select',this)")
+        sleep(5)
+        print('Executed JS scripts, sleeping for 5 seconds')
+        sleep(5)
+        soup = BeautifulSoup(driver.page_source, 'html.parser')
+        driver.quit()
+        print('Saved page source')
+        print('Starting to collect links')
+        links = []
+        long_names = []
+        for link in soup.find_all('td', class_='bold left noWrap elp plusIconTd'):
+            links.append(link.a['href'])
+            long_names.append(link.a['title'])
+
+        header={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36 OPR/38.0.2220.41'}
+        short_names, markets, isins = [], [], []
+        for link in links:
+            l = url2 + link
+            request = requests.get(l, headers=header)
+            soup = BeautifulSoup(request.text, 'html.parser')
+            short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 3M Company (MMM)
+            short_name = short_name[short_name.index('(')+1:].strip().replace(')', '') # MMM
+            short_names.append(short_name)
+            market = soup.find('i', class_='btnTextDropDwn arial_12 bold').get_text()
+            markets.append(market)
+            isin = soup.find('span', text='ISIN:').find_next_sibling().get_text().strip()
+            isins.append(isin)
+
+        print(len(short_names))
+        print(len(long_names))
+        print(len(markets))
+        print(len(isins))
+        print(len(links))
+        
+        
+        # for i in range(len(long_names)):
+        #     USStockStaticInfo(
+        #         short_name=short_names[i], long_name=long_names[i],
+        #         market=markets[i], isin=isins[i], link=links[i]).save()
+
+        print('Data has been successfuly stored!')
+        return ''
