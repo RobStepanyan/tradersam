@@ -136,11 +136,11 @@ class CollectStaticInfo:
 
     def usstocks():
         #--------------------VPS------------------
-        # display = Display(visible=0, size=(800, 600))
-        # display.start()
-        # options = webdriver.ChromeOptions()
-        # options.add_argument('--no-sandbox')
-        # driver = webdriver.Chrome(chrome_options=options)
+        display = Display(visible=0, size=(800, 600))
+        display.start()
+        options = webdriver.ChromeOptions()
+        options.add_argument('--no-sandbox')
+        driver = webdriver.Chrome(chrome_options=options)
         #-----------------------------------------
         print('Starting CollectStaticInfo.usstocks()')
         print('Removing old records')
@@ -148,80 +148,13 @@ class CollectStaticInfo:
         if dd.upper() != 'Y':
             print('Closing CollectStaticInfo.usstocks()')
             return ''
-        # USStockStaticInfo.objects.all().delete()
+        USStockStaticInfo.objects.all().delete()
         print('Old records have been removed')
         print('Starting to collect new ones')
         print('Starting Selenium')
         url = 'https://www.investing.com/equities/united-states'
         url2 = 'https://www.investing.com'
-        driver = webdriver.Chrome()
-        driver.get(url)
-        print('Executing JS scripts')
-        driver.execute_script('$("#stocksFilter").val("#all");')
-        sleep(5)
-        driver.execute_script("doStocksFilter('select',this)")
-        sleep(15)
-        print('Executed JS scripts, sleeping for 15 seconds')
-        sleep(15)
-        soup = BeautifulSoup(driver.page_source, 'html.parser')
-        driver.quit()
-        print('Saved page source')
-        print('Starting to collect links')
-        links = []
-        long_names = []
-        for link in soup.find_all('td', class_='bold left noWrap elp plusIconTd'):
-            links.append(link.a['href'])
-            long_names.append(link.a['title'])
-
-        header={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36 OPR/38.0.2220.41'}
-        short_names, markets, isins = [], [], []
-        print('Links are collected')
-        print('Starting to visit them and store in databse')
-        i = 0
-        for link in links:
-            l = url2 + link
-            request = requests.get(l, headers=header)
-            soup = BeautifulSoup(request.text, 'html.parser')
-            short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 3M Company (MMM)
-            short_name = short_name[short_name.index('(')+1:].strip().replace(')', '') # MMM
-            short_names.append(short_name)
-            market = soup.find('i', class_='btnTextDropDwn arial_12 bold').get_text()
-            markets.append(market)
-            isin = soup.find('span', text='ISIN:').find_next_sibling().get_text().strip()
-            isins.append(isin)
-            
-            USStockStaticInfo(
-                short_name=short_name, long_name=long_names[i],
-                market=market, isin=isin, link=l).save()
-            i += 1
-            print(f'Stored {i}: {long_names[i]}')
-            if i % 100 == 0:
-                print (f'{len(links)-i} equities left')
-        
-        print('Data has been successfuly stored!')
-        return ''
-
-    def japanstocks():
-        #--------------------VPS------------------
-        # display = Display(visible=0, size=(800, 600))
-        # display.start()
-        # options = webdriver.ChromeOptions()
-        # options.add_argument('--no-sandbox')
-        # driver = webdriver.Chrome(chrome_options=options)
-        #-----------------------------------------
-        print('Starting CollectStaticInfo.japanstocks()')
-        print('Removing old records')
-        dd = input('Are you sure you want to delete all the old records, and scrape new ones? Press Y or y to continue: ')
-        if dd.upper() != 'Y':
-            print('Closing CollectStaticInfo.japanstocks()')
-            return ''
-        JapanStockStaticInfo.objects.all().delete()
-        print('Old records have been removed')
-        print('Starting to collect new ones')
-        print('Starting Selenium')
-        url = 'https://www.investing.com/equities/japan'
-        url2 = 'https://www.investing.com'
-        driver = webdriver.Chrome()
+        # driver = webdriver.Chrome()
         driver.get(url)
         print('Executing JS scripts')
         driver.execute_script('$("#stocksFilter").val("#all");')
@@ -250,17 +183,114 @@ class CollectStaticInfo:
             l = url2 + link
             try:
                 request = requests.get(l, headers=header)
+                soup = BeautifulSoup(request.text, 'html.parser')
+                short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 3M Company (MMM)
+                short_name = short_name[short_name.index('(')+1:].strip().replace(')', '') # MMM
+                short_names.append(short_name)
+                market = soup.find('i', class_='btnTextDropDwn arial_12 bold').get_text()
+                markets.append(market)
+                isin = soup.find('span', text='ISIN:').find_next_sibling().get_text().strip()
+                isins.append(isin)
             except:
-                pass
-            soup = BeautifulSoup(request.text, 'html.parser')
-            short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 3M Company (MMM)
-            short_name = short_name[short_name.index('(')+1:].strip().replace(')', '') # MMM
-            short_names.append(short_name)
-            market = soup.find('i', class_='btnTextDropDwn arial_12 bold').get_text()
-            markets.append(market)
-            isin = soup.find('span', text='ISIN:').find_next_sibling().get_text().strip()
-            isins.append(isin)
-            
+                try:
+                    print('Some Complications')
+                    sleep(10)
+                    request = requests.get(l, headers=header)
+                    soup = BeautifulSoup(request.text, 'html.parser')
+                    short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 3M Company (MMM)
+                    short_name = short_name[short_name.index('(')+1:].strip().replace(')', '') # MMM
+                    short_names.append(short_name)
+                    market = soup.find('i', class_='btnTextDropDwn arial_12 bold').get_text()
+                    markets.append(market)
+                    isin = soup.find('span', text='ISIN:').find_next_sibling().get_text().strip()
+                    isins.append(isin)
+                except:
+                    continue
+
+            USStockStaticInfo(
+                short_name=short_name, long_name=long_names[i],
+                market=market, isin=isin, link=l).save()
+            i += 1
+            print(f'Stored {i}: {long_names[i]}')
+            if i % 100 == 0:
+                print (f'{len(links)-i} equities left')
+        
+        print('Data has been successfuly stored!')
+        return ''
+
+    def japanstocks():
+        #--------------------VPS------------------
+        display = Display(visible=0, size=(800, 600))
+        display.start()
+        options = webdriver.ChromeOptions()
+        options.add_argument('--no-sandbox')
+        driver = webdriver.Chrome(chrome_options=options)
+        #-----------------------------------------
+        print('Starting CollectStaticInfo.japanstocks()')
+        print('Removing old records')
+        dd = input('Are you sure you want to delete all the old records, and scrape new ones? Press Y or y to continue: ')
+        if dd.upper() != 'Y':
+            print('Closing CollectStaticInfo.japanstocks()')
+            return ''
+        JapanStockStaticInfo.objects.all().delete()
+        print('Old records have been removed')
+        print('Starting to collect new ones')
+        print('Starting Selenium')
+        url = 'https://www.investing.com/equities/japan'
+        url2 = 'https://www.investing.com'
+        # driver = webdriver.Chrome()
+        driver.get(url)
+        print('Executing JS scripts')
+        driver.execute_script('$("#stocksFilter").val("#all");')
+        sleep(5)
+        driver.execute_script("doStocksFilter('select',this)")
+        sleep(15)
+        print('Executed JS scripts, sleeping for 15 seconds')
+        sleep(15)
+        soup = BeautifulSoup(driver.page_source, 'html.parser')
+        driver.quit()
+        print('Saved page source')
+        print('Starting to collect links')
+        links = []
+        long_names = []
+        for link in soup.find_all('td', class_='bold left noWrap elp plusIconTd'):
+            links.append(link.a['href'])
+            long_names.append(link.a['title'])
+
+        header={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36 OPR/38.0.2220.41'}
+        short_names, markets, isins = [], [], []
+        print('Links are collected')
+        print('Starting to visit them and store in databse')
+        i = 0
+        for link in links:
+            sleep(1)
+            l = url2 + link
+            try:
+                request = requests.get(l, headers=header)
+                soup = BeautifulSoup(request.text, 'html.parser')
+                short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 3M Company (MMM)
+                short_name = short_name[short_name.index('(')+1:].strip().replace(')', '') # MMM
+                short_names.append(short_name)
+                market = soup.find('i', class_='btnTextDropDwn arial_12 bold').get_text()
+                markets.append(market)
+                isin = soup.find('span', text='ISIN:').find_next_sibling().get_text().strip()
+                isins.append(isin)
+            except:
+                try:
+                    print('Some Complications')
+                    sleep(10)
+                    request = requests.get(l, headers=header)
+                    soup = BeautifulSoup(request.text, 'html.parser')
+                    short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 3M Company (MMM)
+                    short_name = short_name[short_name.index('(')+1:].strip().replace(')', '') # MMM
+                    short_names.append(short_name)
+                    market = soup.find('i', class_='btnTextDropDwn arial_12 bold').get_text()
+                    markets.append(market)
+                    isin = soup.find('span', text='ISIN:').find_next_sibling().get_text().strip()
+                    isins.append(isin)
+                except:
+                    continue
+                    
             JapanStockStaticInfo(
                 short_name=short_name, long_name=long_names[i],
                 market=market, isin=isin, link=l).save()
