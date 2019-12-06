@@ -8,7 +8,7 @@ COUNTRIES = (
 )
 
 MARKETS = (
-    ('NYSE', 'New York Stock Exchange'), ('NASDAQ', 'NASDAQ Stock Market')
+    ('NYSE', 'New York Stock Exchange'), ('NASDAQ', 'NASDAQ Stock Market'), ('OTC Markets', 'Over-The-Counter Markets')
 )
 
 class CommodityStaticInfo(models.Model):
@@ -66,11 +66,14 @@ class CryptocurrencyStaticInfo(models.Model):
 
 class USStockStaticInfo(models.Model):
     short_name = models.CharField(max_length=12)
-    long_name = models.CharField(max_length=50)
+    long_name = models.CharField(max_length=60)
     country = models.CharField(choices=COUNTRIES, default='USA', max_length=3)
-    market = models.CharField(choices=MARKETS, max_length=10)
+    market = models.CharField(choices=MARKETS, max_length=11)
     isin = models.CharField(max_length=12)
     link = models.URLField()
+
+    def __str__(self):
+        return self.long_name + f' - ({self.short_name})'
 
     class Meta:
         verbose_name = "US's Stocks Static Info"

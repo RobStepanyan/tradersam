@@ -162,6 +162,9 @@ class CollectStaticInfo:
 
         header={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36 OPR/38.0.2220.41'}
         short_names, markets, isins = [], [], []
+        print('Links are collected')
+        print('Starting to visit them and store in databse')
+        i = 0
         for link in links:
             l = url2 + link
             request = requests.get(l, headers=header)
@@ -173,18 +176,14 @@ class CollectStaticInfo:
             markets.append(market)
             isin = soup.find('span', text='ISIN:').find_next_sibling().get_text().strip()
             isins.append(isin)
-
-        print(len(short_names))
-        print(len(long_names))
-        print(len(markets))
-        print(len(isins))
-        print(len(links))
+            
+            USStockStaticInfo(
+                short_name=short_name, long_name=long_names[i],
+                market=market, isin=isin, link=l).save()
+            i += 1
+            print(f'Stored {i}: {long_names[i]}')
+            if i % 100 == 0:
+                print (f'{len(links)-i} equities left')
         
-        
-        # for i in range(len(long_names)):
-        #     USStockStaticInfo(
-        #         short_name=short_names[i], long_name=long_names[i],
-        #         market=markets[i], isin=isins[i], link=links[i]).save()
-
         print('Data has been successfuly stored!')
         return ''
