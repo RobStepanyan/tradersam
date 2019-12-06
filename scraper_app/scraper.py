@@ -135,21 +135,24 @@ class CollectStaticInfo:
         return ''
 
     def usstocks():
-        # display = Display(visible=0, size=(800, 600))
-        # display.start()
+        display = Display(visible=0, size=(800, 600))
+        display.start()
+        options = webdriver.ChromeOptions()
+        options.add_argument('--no-sandbox')
+        driver = webdriver.Chrome(chrome_options=options)
         print('Starting CollectStaticInfo.usstocks()')
         print('Removing old records')
-        dd = input('Are you sure you want to delete all the old records, and scrape new ones? Press Y or y to continue')
+        dd = input('Are you sure you want to delete all the old records, and scrape new ones? Press Y or y to continue: ')
         if dd.upper() != 'Y':
             print('Closing CollectStaticInfo.usstocks()')
             return ''
-        USStockStaticInfo.objects.all().delete()
+        # USStockStaticInfo.objects.all().delete()
         print('Old records have been removed')
         print('Starting to collect new ones')
         print('Starting Selenium')
         url = 'https://www.investing.com/equities/united-states'
         url2 = 'https://www.investing.com'
-        driver = webdriver.Chrome()
+        # driver = webdriver.Chrome()
         driver.get(url)
         driver.execute_script('$("#stocksFilter").val("#all");')
         sleep(1)
