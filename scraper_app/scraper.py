@@ -207,11 +207,11 @@ class CollectStaticInfo:
         # driver = webdriver.Chrome(chrome_options=options)
         print('Starting CollectStaticInfo.japanstocks()')
         print('Removing old records')
-        dd = input('Are you sure you want to delete all the old records, and scrape new ones? Press Y or y to continue')
+        dd = input('Are you sure you want to delete all the old records, and scrape new ones? Press Y or y to continue: ')
         if dd.upper() != 'Y':
             print('Closing CollectStaticInfo.japanstocks()')
             return ''
-        # USStockStaticInfo.objects.all().delete()
+        JapanStockStaticInfo.objects.all().delete()
         print('Old records have been removed')
         print('Starting to collect new ones')
         print('Starting Selenium')
@@ -242,8 +242,12 @@ class CollectStaticInfo:
         print('Starting to visit them and store in databse')
         i = 0
         for link in links:
+            sleep(1)
             l = url2 + link
-            request = requests.get(l, headers=header)
+            try:
+                request = requests.get(l, headers=header)
+            except:
+                pass
             soup = BeautifulSoup(request.text, 'html.parser')
             short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 3M Company (MMM)
             short_name = short_name[short_name.index('(')+1:].strip().replace(')', '') # MMM
