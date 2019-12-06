@@ -247,7 +247,10 @@ class CollectStaticInfo:
             try:
                 request = requests.get(l, headers=header)
             except:
-                pass
+                try:
+                    request = requests.get(l, headers=header)
+                except:
+                    pass
             soup = BeautifulSoup(request.text, 'html.parser')
             short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 3M Company (MMM)
             short_name = short_name[short_name.index('(')+1:].strip().replace(')', '') # MMM
