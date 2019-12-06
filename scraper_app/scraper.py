@@ -5,7 +5,7 @@ from selenium import webdriver
 from bs4 import BeautifulSoup
 from time import sleep
 from .models import (
-    CommodityStaticInfo, CurrencyStaticInfo, CryptocurrencyStaticInfo, USStockStaticInfo
+    CommodityStaticInfo, CurrencyStaticInfo, CryptocurrencyStaticInfo, USStockStaticInfo, JapanStockStaticInfo
 )
 
 class CollectStaticInfo:
@@ -202,13 +202,16 @@ class CollectStaticInfo:
     def japanstocks():
         # display = Display(visible=0, size=(800, 600))
         # display.start()
+        # options = webdriver.ChromeOptions()
+        # options.add_argument('--no-sandbox')
+        # driver = webdriver.Chrome(chrome_options=options)
         print('Starting CollectStaticInfo.japanstocks()')
         print('Removing old records')
         dd = input('Are you sure you want to delete all the old records, and scrape new ones? Press Y or y to continue')
         if dd.upper() != 'Y':
             print('Closing CollectStaticInfo.japanstocks()')
             return ''
-        USStockStaticInfo.objects.all().delete()
+        # USStockStaticInfo.objects.all().delete()
         print('Old records have been removed')
         print('Starting to collect new ones')
         print('Starting Selenium')
@@ -250,7 +253,7 @@ class CollectStaticInfo:
             isin = soup.find('span', text='ISIN:').find_next_sibling().get_text().strip()
             isins.append(isin)
             
-            USStockStaticInfo(
+            JapanStockStaticInfo(
                 short_name=short_name, long_name=long_names[i],
                 market=market, isin=isin, link=l).save()
             i += 1

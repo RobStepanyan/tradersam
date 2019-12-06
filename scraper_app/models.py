@@ -93,7 +93,7 @@ class JapanStockStaticInfo(models.Model):
     short_name = models.CharField(max_length=12)
     long_name = models.CharField(max_length=60)
     country = models.CharField(choices=COUNTRIES, default='JPN', max_length=3)
-    market = models.CharField(choices=MARKETS_JPN, max_length=7)
+    market = models.CharField(choices=MARKETS_JPN, max_length=20)
     isin = models.CharField(max_length=12)
     link = models.URLField()
     currency = models.CharField(choices=CURRENCIES, default='JPY', max_length=3)
