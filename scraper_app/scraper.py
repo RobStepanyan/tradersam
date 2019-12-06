@@ -278,7 +278,7 @@ class CollectStaticInfo:
             except:
                 try:
                     print('Some Complications')
-                    sleep(10)
+                    sleep(10) 
                     request = requests.get(l, headers=header)
                     soup = BeautifulSoup(request.text, 'html.parser')
                     short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 3M Company (MMM)
