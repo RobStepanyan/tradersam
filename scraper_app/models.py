@@ -3,12 +3,21 @@ from django.db import models
 # Create your models here.
 COUNTRIES = (
     ('G', 'Global'), ('USA', 'United States of America'), ('UK', 'United Kingdom'),
-    ('JP', 'Japan'), ('HK', 'Honk Kong'), ('CH', 'China'), ('CA', 'Canada'),
+    ('JPN', 'Japan'), ('HK', 'Honk Kong'), ('CH', 'China'), ('CA', 'Canada'),
     ('GE', 'Germany'), ('AU', 'Australia')
 )
 
-MARKETS = (
-    ('NYSE', 'New York Stock Exchange'), ('NASDAQ', 'NASDAQ Stock Market'), ('OTC Markets', 'Over-The-Counter Markets')
+MARKETS_USA = (
+    ('NYSE', 'New York Stock Exchange'), ('NASDAQ', 'NASDAQ Stock Market'), ('OTC Markets', 'Over-The-Counter Markets'),
+)
+
+MARKETS_JPN = (
+    ('Tokyo', 'Tokyo Stock Exchange - (TYO)'), ('Osaka', 'Osaka Securities Exchange'), ('Nagoya', 'Nagoya Stock Exchange - (NSE)'),
+    ('Fukuoka', 'Fukuoka Stock Exchange - (FSE)'), ('Sapporo', 'Sapporo Securities Exchange'), ('JASDAQ', 'JASDAQ Securities Exchange')
+)
+
+CURRENCIES = (
+    ('USD', 'US Dollar'), ('JPY', 'Japanese Yen')
 )
 
 class CommodityStaticInfo(models.Model):
@@ -68,9 +77,10 @@ class USStockStaticInfo(models.Model):
     short_name = models.CharField(max_length=12)
     long_name = models.CharField(max_length=60)
     country = models.CharField(choices=COUNTRIES, default='USA', max_length=3)
-    market = models.CharField(choices=MARKETS, max_length=11)
+    market = models.CharField(choices=MARKETS_USA, max_length=11)
     isin = models.CharField(max_length=12)
     link = models.URLField()
+    currency = models.CharField(choices=CURRENCIES, default='USD', max_length=3)
 
     def __str__(self):
         return self.long_name + f' - ({self.short_name})'
@@ -78,3 +88,19 @@ class USStockStaticInfo(models.Model):
     class Meta:
         verbose_name = "US's Stocks Static Info"
         verbose_name_plural = "US's Stocks Static Info"
+
+class JapanStockStaticInfo(models.Model):
+    short_name = models.CharField(max_length=12)
+    long_name = models.CharField(max_length=60)
+    country = models.CharField(choices=COUNTRIES, default='JPN', max_length=3)
+    market = models.CharField(choices=MARKETS_JPN, max_length=7)
+    isin = models.CharField(max_length=12)
+    link = models.URLField()
+    currency = models.CharField(choices=CURRENCIES, default='JPY', max_length=3)
+
+    def __str__(self):
+        return self.long_name + f' - ({self.short_name})'
+
+    class Meta:
+        verbose_name = "Japan Stocks Static Info"
+        verbose_name_plural = "Japan Stocks Static Info"
