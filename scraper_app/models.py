@@ -133,7 +133,7 @@ class HKStockStaticInfo(models.Model):
     short_name = models.CharField(max_length=12)
     long_name = models.CharField(max_length=60)
     country = models.CharField(choices=COUNTRIES, default='HK', max_length=3)
-    market = models.CharField(choices=MARKETS_HK, max_length=20)
+    market = models.CharField(choices=MARKETS_HK, default='HKG', max_length=20)
     isin = models.CharField(max_length=12)
     link = models.URLField()
     currency = models.CharField(choices=CURRENCIES, default='HKD', max_length=3)
