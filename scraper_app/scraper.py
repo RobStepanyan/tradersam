@@ -368,11 +368,11 @@ class CollectStaticInfo:
 
     def hkstocks():
         #--------------------VPS------------------
-        # display = Display(visible=0, size=(800, 600))
-        # display.start()
-        # options = webdriver.ChromeOptions()
-        # options.add_argument('--no-sandbox')
-        # driver = webdriver.Chrome(chrome_options=options)
+        display = Display(visible=0, size=(800, 600))
+        display.start()
+        options = webdriver.ChromeOptions()
+        options.add_argument('--no-sandbox')
+        driver = webdriver.Chrome(chrome_options=options)
         #-----------------------------------------
         print('Starting CollectStaticInfo.hkstocks()')
         print('Removing old records')
@@ -380,13 +380,13 @@ class CollectStaticInfo:
         if dd.upper() != 'Y':
             print('Closing CollectStaticInfo.hkstocks()')
             return ''
-        HKStockStaticInfo.objects.all().delete()
+        # HKStockStaticInfo.objects.all().delete()
         print('Old records have been removed')
         print('Starting to collect new ones')
         print('Starting Selenium')
         url = 'https://www.investing.com/equities/hong-kong'
         url2 = 'https://www.investing.com'
-        driver = webdriver.Chrome()
+        # driver = webdriver.Chrome()
         driver.get(url)
         print('Executing JS scripts')
         driver.execute_script('$("#stocksFilter").val("#all");')
@@ -445,11 +445,11 @@ class CollectStaticInfo:
 
     def chinastocks():
         #--------------------VPS------------------
-        # display = Display(visible=0, size=(800, 600))
-        # display.start()
-        # options = webdriver.ChromeOptions()
-        # options.add_argument('--no-sandbox')
-        # driver = webdriver.Chrome(chrome_options=options)
+        display = Display(visible=0, size=(800, 600))
+        display.start()
+        options = webdriver.ChromeOptions()
+        options.add_argument('--no-sandbox')
+        driver = webdriver.Chrome(chrome_options=options)
         #-----------------------------------------
         print('Starting CollectStaticInfo.chinastocks()')
         print('Removing old records')
@@ -463,7 +463,7 @@ class CollectStaticInfo:
         print('Starting Selenium')
         url = 'https://www.investing.com/equities/china'
         url2 = 'https://www.investing.com'
-        driver = webdriver.Chrome()
+        # driver = webdriver.Chrome()
         driver.get(url)
         print('Executing JS scripts')
         driver.execute_script('$("#stocksFilter").val("#all");')
