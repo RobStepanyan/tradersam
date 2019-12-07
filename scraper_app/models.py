@@ -16,8 +16,12 @@ MARKETS_JPN = (
     ('Fukuoka', 'Fukuoka Stock Exchange - (FSE)'), ('Sapporo', 'Sapporo Securities Exchange'), ('JASDAQ', 'JASDAQ Securities Exchange')
 )
 
+MARKETS_UK = (
+    ('London', 'London Stock Exchange'),
+)
+
 CURRENCIES = (
-    ('USD', 'US Dollar'), ('JPY', 'Japanese Yen')
+    ('USD', 'US Dollar'), ('JPY', 'Japanese Yen'), ('GBP', 'Pound Sterling')
 )
 
 class CommodityStaticInfo(models.Model):
@@ -104,3 +108,19 @@ class JapanStockStaticInfo(models.Model):
     class Meta:
         verbose_name = "Japan Stocks Static Info"
         verbose_name_plural = "Japan Stocks Static Info"
+
+class UKStockStaticInfo(models.Model):
+    short_name = models.CharField(max_length=12)
+    long_name = models.CharField(max_length=60)
+    country = models.CharField(choices=COUNTRIES, default='UK', max_length=3)
+    market = models.CharField(choices=MARKETS_UK, max_length=20)
+    isin = models.CharField(max_length=12)
+    link = models.URLField()
+    currency = models.CharField(choices=CURRENCIES, default='GBP', max_length=3)
+
+    def __str__(self):
+        return self.long_name + f' - ({self.short_name})'
+
+    class Meta:
+        verbose_name = "UK's Stocks Static Info"
+        verbose_name_plural = "UK's Stocks Static Info"
