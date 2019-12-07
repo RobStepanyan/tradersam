@@ -3,7 +3,7 @@ from django.db import models
 # Create your models here.
 COUNTRIES = (
     ('G', 'Global'), ('USA', 'United States of America'), ('UK', 'United Kingdom'),
-    ('JPN', 'Japan'), ('HK', 'Honk Kong'), ('CH', 'China'), ('CA', 'Canada'),
+    ('JPN', 'Japan'), ('HK', 'Hong Kong'), ('CH', 'China'), ('CA', 'Canada'),
     ('GE', 'Germany'), ('AU', 'Australia')
 )
 
@@ -20,8 +20,12 @@ MARKETS_UK = (
     ('London', 'London Stock Exchange'),
 )
 
+MARKETS_HK = (
+    ('HKG', 'The Stock Exchange of Hong Kong Limited'),
+)
+
 CURRENCIES = (
-    ('USD', 'US Dollar'), ('JPY', 'Japanese Yen'), ('GBP', 'Pound Sterling')
+    ('USD', 'US Dollar'), ('JPY', 'Japanese Yen'), ('GBP', 'Pound Sterling'), ('HKD', 'Hong Kong Dollar')
 )
 
 class CommodityStaticInfo(models.Model):
@@ -90,8 +94,8 @@ class USStockStaticInfo(models.Model):
         return self.long_name + f' - ({self.short_name})'
 
     class Meta:
-        verbose_name = "US's Stocks Static Info"
-        verbose_name_plural = "US's Stocks Static Info"
+        verbose_name = "United States Stocks Static Info"
+        verbose_name_plural = "United States Stocks Static Info"
 
 class JapanStockStaticInfo(models.Model):
     short_name = models.CharField(max_length=12)
@@ -113,7 +117,7 @@ class UKStockStaticInfo(models.Model):
     short_name = models.CharField(max_length=12)
     long_name = models.CharField(max_length=60)
     country = models.CharField(choices=COUNTRIES, default='UK', max_length=3)
-    market = models.CharField(choices=MARKETS_UK, max_length=20)
+    market = models.CharField(choices=MARKETS_UK, default='London', max_length=20)
     isin = models.CharField(max_length=12)
     link = models.URLField()
     currency = models.CharField(choices=CURRENCIES, default='GBP', max_length=3)
@@ -122,5 +126,21 @@ class UKStockStaticInfo(models.Model):
         return self.long_name + f' - ({self.short_name})'
 
     class Meta:
-        verbose_name = "UK's Stocks Static Info"
-        verbose_name_plural = "UK's Stocks Static Info"
+        verbose_name = "United Kingdom Stocks Static Info"
+        verbose_name_plural = "United Kingdom Stocks Static Info"
+
+class HKStockStaticInfo(models.Model):
+    short_name = models.CharField(max_length=12)
+    long_name = models.CharField(max_length=60)
+    country = models.CharField(choices=COUNTRIES, default='HK', max_length=3)
+    market = models.CharField(choices=MARKETS_HK, max_length=20)
+    isin = models.CharField(max_length=12)
+    link = models.URLField()
+    currency = models.CharField(choices=CURRENCIES, default='HKD', max_length=3)
+
+    def __str__(self):
+        return self.long_name + f' - ({self.short_name})'
+
+    class Meta:
+        verbose_name = "Hong Kong Stocks Static Info"
+        verbose_name_plural = "Hong Kong Stocks Static Info"
