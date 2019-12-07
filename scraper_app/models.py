@@ -24,8 +24,13 @@ MARKETS_HK = (
     ('HKG', 'The Stock Exchange of Hong Kong Limited'),
 )
 
+MARKETS_CH = (
+    ('Shanghai', 'Shanghai Stock Exchange - (SSE)'), ('Shenzhen', 'Shenzhen Stock Exchange')
+)
+
 CURRENCIES = (
-    ('USD', 'US Dollar'), ('JPY', 'Japanese Yen'), ('GBP', 'Pound Sterling'), ('HKD', 'Hong Kong Dollar')
+    ('USD', 'US Dollar'), ('JPY', 'Japanese Yen'), ('GBP', 'Pound Sterling'), ('HKD', 'Hong Kong Dollar'),
+    ('CNY', 'Chinese Yuan')
 )
 
 class CommodityStaticInfo(models.Model):
@@ -144,3 +149,19 @@ class HKStockStaticInfo(models.Model):
     class Meta:
         verbose_name = "Hong Kong Stocks Static Info"
         verbose_name_plural = "Hong Kong Stocks Static Info"
+
+class ChinaStockStaticInfo(models.Model):
+    short_name = models.CharField(max_length=12)
+    long_name = models.CharField(max_length=60)
+    country = models.CharField(choices=COUNTRIES, default='CH', max_length=3)
+    market = models.CharField(choices=MARKETS_CH, max_length=20)
+    isin = models.CharField(max_length=12)
+    link = models.URLField()
+    currency = models.CharField(choices=CURRENCIES, default='CNY', max_length=3)
+
+    def __str__(self):
+        return self.long_name + f' - ({self.short_name})'
+
+    class Meta:
+        verbose_name = "China Stocks Static Info"
+        verbose_name_plural = "China Stocks Static Info"
