@@ -305,11 +305,11 @@ class CollectStaticInfo:
 
     def ukstocks():
         #--------------------VPS------------------
-        # display = Display(visible=0, size=(800, 600))
-        # display.start()
-        # options = webdriver.ChromeOptions()
-        # options.add_argument('--no-sandbox')
-        # driver = webdriver.Chrome(chrome_options=options)
+        display = Display(visible=0, size=(800, 600))
+        display.start()
+        options = webdriver.ChromeOptions()
+        options.add_argument('--no-sandbox')
+        driver = webdriver.Chrome(chrome_options=options)
         #-----------------------------------------
         print('Starting CollectStaticInfo.ukstocks()')
         print('Removing old records')
@@ -317,13 +317,13 @@ class CollectStaticInfo:
         if dd.upper() != 'Y':
             print('Closing CollectStaticInfo.ukstocks()')
             return ''
-        # UKStockStaticInfo.objects.all().delete()
+        UKStockStaticInfo.objects.all().delete()
         print('Old records have been removed')
         print('Starting to collect new ones')
         print('Starting Selenium')
         url = 'https://www.investing.com/equities/united-kingdom'
         url2 = 'https://www.investing.com'
-        driver = webdriver.Chrome()
+        # driver = webdriver.Chrome()
         driver.get(url)
         print('Executing JS scripts')
         driver.execute_script('$("#stocksFilter").val("#all");')
@@ -378,7 +378,7 @@ class CollectStaticInfo:
                     
             UKStockStaticInfo(
                 short_name=short_name, long_name=long_names[i],
-                market=market, isin=isin, link=l).save()
+                isin=isin, link=l).save()
             i += 1
             print(f'Stored {i}: {long_names[i]}')
             if i % 100 == 0:
