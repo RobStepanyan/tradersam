@@ -152,7 +152,7 @@ class HKStockStaticInfo(models.Model):
 
 class ChinaStockStaticInfo(models.Model):
     short_name = models.CharField(max_length=12)
-    long_name = models.CharField(max_length=60)
+    long_name = models.CharField(max_length=75)
     country = models.CharField(choices=COUNTRIES, default='CH', max_length=3)
     market = models.CharField(choices=MARKETS_CH, max_length=20)
     isin = models.CharField(max_length=12)

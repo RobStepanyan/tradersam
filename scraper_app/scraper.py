@@ -380,7 +380,7 @@ class CollectStaticInfo:
         if dd.upper() != 'Y':
             print('Closing CollectStaticInfo.hkstocks()')
             return ''
-        # HKStockStaticInfo.objects.all().delete()
+        HKStockStaticInfo.objects.all().delete()
         print('Old records have been removed')
         print('Starting to collect new ones')
         print('Starting Selenium')
@@ -409,7 +409,7 @@ class CollectStaticInfo:
         print('Links are collected')
         print('Starting to visit them and store in databse')
         i = 0
-        for link in links:
+        for link in links[466:]:
             sleep(1)
             l = url2 + link
             try:
@@ -431,10 +431,10 @@ class CollectStaticInfo:
                     isin = soup.find('span', text='ISIN:').find_next_sibling().get_text().strip()
                 except:
                     continue
-                    
+
             HKStockStaticInfo(
                 short_name=short_name, long_name=long_names[i],
-                isin=isin, link=l).save()
+                isin=isin[:12], link=l).save()
             i += 1
             print(f'Stored {i}: {long_names[i]}')
             if i % 100 == 0:
