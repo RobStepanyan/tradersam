@@ -137,11 +137,11 @@ class CollectStaticInfo:
 
     def usstocks():
         #--------------------VPS------------------
-        # display = Display(visible=0, size=(800, 600))
-        # display.start()
-        # options = webdriver.ChromeOptions()
-        # options.add_argument('--no-sandbox')
-        # driver = webdriver.Chrome(chrome_options=options)
+        display = Display(visible=0, size=(800, 600))
+        display.start()
+        options = webdriver.ChromeOptions()
+        options.add_argument('--no-sandbox')
+        driver = webdriver.Chrome(chrome_options=options)
         #-----------------------------------------
         print('Starting CollectStaticInfo.usstocks()')
         print('Removing old records')
@@ -155,7 +155,7 @@ class CollectStaticInfo:
         print('Starting Selenium')
         url = 'https://www.investing.com/equities/united-states'
         url2 = 'https://www.investing.com'
-        driver = webdriver.Chrome()
+        # driver = webdriver.Chrome()
         driver.get(url)
         print('Executing JS scripts')
         driver.execute_script('$("#stocksFilter").val("#all");')
@@ -214,11 +214,11 @@ class CollectStaticInfo:
 
     def japanstocks():
         #--------------------VPS------------------
-        # display = Display(visible=0, size=(800, 600))
-        # display.start()
-        # options = webdriver.ChromeOptions()
-        # options.add_argument('--no-sandbox')
-        # driver = webdriver.Chrome(chrome_options=options)
+        display = Display(visible=0, size=(800, 600))
+        display.start()
+        options = webdriver.ChromeOptions()
+        options.add_argument('--no-sandbox')
+        driver = webdriver.Chrome(chrome_options=options)
         #-----------------------------------------
         print('Starting CollectStaticInfo.japanstocks()')
         print('Removing old records')
@@ -232,7 +232,7 @@ class CollectStaticInfo:
         print('Starting Selenium')
         url = 'https://www.investing.com/equities/japan'
         url2 = 'https://www.investing.com'
-        driver = webdriver.Chrome()
+        # driver = webdriver.Chrome()
         driver.get(url)
         print('Executing JS scripts')
         driver.execute_script('$("#stocksFilter").val("#all");')
@@ -409,15 +409,14 @@ class CollectStaticInfo:
         print('Links are collected')
         print('Starting to visit them and store in databse')
         i = 0
-        for link in links[466:]:
+        for link in links:
             sleep(1)
             l = url2 + link
             try:
                 request = requests.get(l, headers=header)
                 soup = BeautifulSoup(request.text, 'html.parser')
-                short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 3M Company (MMM)
-                short_name = short_name[short_name.index('(')+1:].strip().replace(')', '') # MMM
-                market = soup.find('i', class_='btnTextDropDwn arial_12 bold').get_text()
+                short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 3M Company (1234)
+                short_name = short_name[-6:-1] # 1234
                 isin = soup.find('span', text='ISIN:').find_next_sibling().get_text().strip()
             except:
                 try:
@@ -425,16 +424,15 @@ class CollectStaticInfo:
                     sleep(10) 
                     request = requests.get(l, headers=header)
                     soup = BeautifulSoup(request.text, 'html.parser')
-                    short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 3M Company (MMM)
-                    short_name = short_name[short_name.index('(')+1:].strip().replace(')', '') # MMM
-                    market = soup.find('i', class_='btnTextDropDwn arial_12 bold').get_text()
+                    short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 3M Company (1234)
+                    short_name = short_name[-6:-2] # 1234
                     isin = soup.find('span', text='ISIN:').find_next_sibling().get_text().strip()
                 except:
                     continue
-
+            print(short_name)
             HKStockStaticInfo(
                 short_name=short_name, long_name=long_names[i],
-                isin=isin[:12], link=l).save()
+                isin=isin, link=l).save()
             i += 1
             print(f'Stored {i}: {long_names[i]}')
             if i % 100 == 0:

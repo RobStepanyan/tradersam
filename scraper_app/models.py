@@ -135,7 +135,7 @@ class UKStockStaticInfo(models.Model):
         verbose_name_plural = "United Kingdom Stocks Static Info"
 
 class HKStockStaticInfo(models.Model):
-    short_name = models.CharField(max_length=12)
+    short_name = models.CharField(max_length=4)
     long_name = models.CharField(max_length=60)
     country = models.CharField(choices=COUNTRIES, default='HK', max_length=3)
     market = models.CharField(choices=MARKETS_HK, default='HKG', max_length=20)
