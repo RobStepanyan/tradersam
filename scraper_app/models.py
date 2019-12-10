@@ -7,13 +7,19 @@ COUNTRIES = (
     ('GE', 'Germany'), ('AU', 'Australia')
 )
 
+
+CURRENCIES = (
+    ('USD', 'US Dollar'), ('JPY', 'Japanese Yen'), ('GBP', 'Pound Sterling'), ('HKD', 'Hong Kong Dollar'),
+    ('CNY', 'Chinese Yuan'), ('CAD', 'Canadian Dollar')
+)
+
 MARKETS_USA = (
     ('NYSE', 'New York Stock Exchange'), ('NASDAQ', 'NASDAQ Stock Market'), ('OTC Markets', 'Over-The-Counter Markets'),
 )
 
 MARKETS_JPN = (
-    ('Tokyo', 'Tokyo Stock Exchange - (TYO)'), ('Osaka', 'Osaka Securities Exchange'), ('Nagoya', 'Nagoya Stock Exchange - (NSE)'),
-    ('Fukuoka', 'Fukuoka Stock Exchange - (FSE)'), ('Sapporo', 'Sapporo Securities Exchange'), ('JASDAQ', 'JASDAQ Securities Exchange')
+    ('Tokyo', 'Tokyo Stock Exchange (TYO)'), ('Osaka', 'Osaka Securities Exchange'), ('Nagoya', 'Nagoya Stock Exchange (NSE)'),
+    ('Fukuoka', 'Fukuoka Stock Exchange (FSE)'), ('Sapporo', 'Sapporo Securities Exchange'), ('JASDAQ', 'JASDAQ Securities Exchange')
 )
 
 MARKETS_UK = (
@@ -25,12 +31,12 @@ MARKETS_HK = (
 )
 
 MARKETS_CH = (
-    ('Shanghai', 'Shanghai Stock Exchange - (SSE)'), ('Shenzhen', 'Shenzhen Stock Exchange')
+    ('Shanghai', 'Shanghai Stock Exchange'), ('Shenzhen', 'Shenzhen Stock Exchange')
 )
 
-CURRENCIES = (
-    ('USD', 'US Dollar'), ('JPY', 'Japanese Yen'), ('GBP', 'Pound Sterling'), ('HKD', 'Hong Kong Dollar'),
-    ('CNY', 'Chinese Yuan')
+MARKETS_CA = (
+    ('NEO', 'Aequitas Neo Exchange (NEO)'), ('Toronto', 'Toronto Stock Exchange (TSX)'),
+    ('CSE', 'Canadian Securities Exchange (CSE)'), ('NASDAQ', 'NASDAQ Canada')
 )
 
 class CommodityStaticInfo(models.Model):
@@ -136,7 +142,7 @@ class UKStockStaticInfo(models.Model):
 
 class HKStockStaticInfo(models.Model):
     short_name = models.CharField(max_length=4)
-    long_name = models.CharField(max_length=60)
+    long_name = models.CharField(max_length=75)
     country = models.CharField(choices=COUNTRIES, default='HK', max_length=3)
     market = models.CharField(choices=MARKETS_HK, default='HKG', max_length=20)
     isin = models.CharField(max_length=12)
@@ -151,7 +157,7 @@ class HKStockStaticInfo(models.Model):
         verbose_name_plural = "Hong Kong Stocks Static Info"
 
 class ChinaStockStaticInfo(models.Model):
-    short_name = models.CharField(max_length=12)
+    short_name = models.CharField(max_length=6)
     long_name = models.CharField(max_length=75)
     country = models.CharField(choices=COUNTRIES, default='CH', max_length=3)
     market = models.CharField(choices=MARKETS_CH, max_length=20)
@@ -165,3 +171,19 @@ class ChinaStockStaticInfo(models.Model):
     class Meta:
         verbose_name = "China Stocks Static Info"
         verbose_name_plural = "China Stocks Static Info"
+
+class CanadaStockStaticInfo(models.Model):
+    short_name = models.CharField(max_length=6)
+    long_name = models.CharField(max_length=51)
+    country = models.CharField(choices=COUNTRIES, default='CA', max_length=3)
+    market = models.CharField(choices=MARKETS_CA, max_length=20)
+    isin = models.CharField(max_length=12)
+    link = models.URLField()
+    currency = models.CharField(choices=CURRENCIES, default='CAD', max_length=3)
+
+    def __str__(self):
+        return self.long_name + f' - ({self.short_name})'
+
+    class Meta:
+        verbose_name = "Canada Stocks Static Info"
+        verbose_name_plural = "Canada Stocks Static Info"

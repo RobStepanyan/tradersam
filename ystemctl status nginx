@@ -1,0 +1,19 @@
+[0;1;32m●[0m gunicorn.service - gunicorn daemon
+   Loaded: loaded (/etc/systemd/system/gunicorn.service; enabled; vendor preset: enabled)
+   Active: [0;1;32mactive (running)[0m since Sun 2019-12-08 14:19:20 CET; 9s ago
+ Main PID: 8102 (gunicorn)
+    Tasks: 4 (limit: 4680)
+   Memory: 89.0M
+   CGroup: /system.slice/gunicorn.service
+           ├─8102 /usr/bin/python3 /usr/local/bin/gunicorn --access-logfile - --workers 3 --bind unix:/run/gunicorn.sock tradersam_project.wsgi:application
+           ├─8134 /usr/bin/python3 /usr/local/bin/gunicorn --access-logfile - --workers 3 --bind unix:/run/gunicorn.sock tradersam_project.wsgi:application
+           ├─8139 /usr/bin/python3 /usr/local/bin/gunicorn --access-logfile - --workers 3 --bind unix:/run/gunicorn.sock tradersam_project.wsgi:application
+           └─8141 /usr/bin/python3 /usr/local/bin/gunicorn --access-logfile - --workers 3 --bind unix:/run/gunicorn.sock tradersam_project.wsgi:application
+
+Dec 08 14:19:20 traders.am systemd[1]: Started gunicorn daemon.
+Dec 08 14:19:20 traders.am gunicorn[8102]: [2019-12-08 14:19:20 +0100] [8102] [INFO] Starting gunicorn 20.0.0
+Dec 08 14:19:20 traders.am gunicorn[8102]: [2019-12-08 14:19:20 +0100] [8102] [INFO] Listening at: unix:/run/gunicorn.sock (8102)
+Dec 08 14:19:20 traders.am gunicorn[8102]: [2019-12-08 14:19:20 +0100] [8102] [INFO] Using worker: sync
+Dec 08 14:19:20 traders.am gunicorn[8102]: [2019-12-08 14:19:20 +0100] [8134] [INFO] Booting worker with pid: 8134
+Dec 08 14:19:20 traders.am gunicorn[8102]: [2019-12-08 14:19:20 +0100] [8139] [INFO] Booting worker with pid: 8139
+Dec 08 14:19:20 traders.am gunicorn[8102]: [2019-12-08 14:19:20 +0100] [8141] [INFO] Booting worker with pid: 8141

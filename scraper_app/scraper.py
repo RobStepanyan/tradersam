@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 from time import sleep
 from .models import (
     CommodityStaticInfo, CurrencyStaticInfo, CryptocurrencyStaticInfo, USStockStaticInfo, JapanStockStaticInfo,
-    UKStockStaticInfo, HKStockStaticInfo, ChinaStockStaticInfo
+    UKStockStaticInfo, HKStockStaticInfo, ChinaStockStaticInfo, CanadaStockStaticInfo
 )
 
 class CollectStaticInfo:
@@ -141,7 +141,7 @@ class CollectStaticInfo:
         display.start()
         options = webdriver.ChromeOptions()
         options.add_argument('--no-sandbox')
-        driver = webdriver.Chrome(chrome_options=options)
+        driver = webdriver.Chrome(options=options)
         #-----------------------------------------
         print('Starting CollectStaticInfo.usstocks()')
         print('Removing old records')
@@ -218,7 +218,7 @@ class CollectStaticInfo:
         display.start()
         options = webdriver.ChromeOptions()
         options.add_argument('--no-sandbox')
-        driver = webdriver.Chrome(chrome_options=options)
+        driver = webdriver.Chrome(options=options)
         #-----------------------------------------
         print('Starting CollectStaticInfo.japanstocks()')
         print('Removing old records')
@@ -295,7 +295,7 @@ class CollectStaticInfo:
         display.start()
         options = webdriver.ChromeOptions()
         options.add_argument('--no-sandbox')
-        driver = webdriver.Chrome(chrome_options=options)
+        driver = webdriver.Chrome(options=options)
         #-----------------------------------------
         print('Starting CollectStaticInfo.ukstocks()')
         print('Removing old records')
@@ -372,7 +372,7 @@ class CollectStaticInfo:
         display.start()
         options = webdriver.ChromeOptions()
         options.add_argument('--no-sandbox')
-        driver = webdriver.Chrome(chrome_options=options)
+        driver = webdriver.Chrome(options=options)
         #-----------------------------------------
         print('Starting CollectStaticInfo.hkstocks()')
         print('Removing old records')
@@ -416,7 +416,7 @@ class CollectStaticInfo:
                 request = requests.get(l, headers=header)
                 soup = BeautifulSoup(request.text, 'html.parser')
                 short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 3M Company (1234)
-                short_name = short_name[-6:-1] # 1234
+                short_name = short_name.strip()[-5:-1] # 1234
                 isin = soup.find('span', text='ISIN:').find_next_sibling().get_text().strip()
             except:
                 try:
@@ -425,11 +425,10 @@ class CollectStaticInfo:
                     request = requests.get(l, headers=header)
                     soup = BeautifulSoup(request.text, 'html.parser')
                     short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 3M Company (1234)
-                    short_name = short_name[-6:-2] # 1234
+                    short_name = short_name.strip()[-5:-1] # 1234
                     isin = soup.find('span', text='ISIN:').find_next_sibling().get_text().strip()
                 except:
                     continue
-            print(short_name)
             HKStockStaticInfo(
                 short_name=short_name, long_name=long_names[i],
                 isin=isin, link=l).save()
@@ -447,7 +446,7 @@ class CollectStaticInfo:
         display.start()
         options = webdriver.ChromeOptions()
         options.add_argument('--no-sandbox')
-        driver = webdriver.Chrome(chrome_options=options)
+        driver = webdriver.Chrome(options=options)
         #-----------------------------------------
         print('Starting CollectStaticInfo.chinastocks()')
         print('Removing old records')
@@ -455,7 +454,7 @@ class CollectStaticInfo:
         if dd.upper() != 'Y':
             print('Closing CollectStaticInfo.chinastocks()')
             return ''
-        # ChinaStockStaticInfo.objects.all().delete()
+        ChinaStockStaticInfo.objects.all().delete()
         print('Old records have been removed')
         print('Starting to collect new ones')
         print('Starting Selenium')
@@ -490,6 +489,82 @@ class CollectStaticInfo:
             try:
                 request = requests.get(l, headers=header)
                 soup = BeautifulSoup(request.text, 'html.parser')
+                short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # Huadian Ener-B - (900937)
+                short_name = short_name.strip()[-7:-1] # 900937
+                market = soup.find('i', class_='btnTextDropDwn arial_12 bold').get_text()
+                isin = soup.find('span', text='ISIN:').find_next_sibling().get_text().strip()
+            except:
+                try:
+                    print('Some Complications')
+                    sleep(10) 
+                    request = requests.get(l, headers=header)
+                    soup = BeautifulSoup(request.text, 'html.parser')
+                    short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # Huadian Ener-B - (900937)
+                    short_name = short_name.strip()[-7:-1] # 900937
+                    market = soup.find('i', class_='btnTextDropDwn arial_12 bold').get_text()
+                    isin = soup.find('span', text='ISIN:').find_next_sibling().get_text().strip()
+                except:
+                    continue
+                    
+            ChinaStockStaticInfo(
+                short_name=short_name, long_name=long_names[i],
+                isin=isin, market=market, link=l).save()
+            i += 1
+            print(f'Stored {i}: {long_names[i]}')
+            if i % 100 == 0:
+                print (f'{len(links)-i} equities left')
+        
+        print('Data has been successfuly stored!')
+        return ''
+
+    def canadastocks():
+        #--------------------VPS------------------
+        display = Display(visible=0, size=(800, 600))
+        display.start()
+        options = webdriver.ChromeOptions()
+        options.add_argument('--no-sandbox')
+        driver = webdriver.Chrome(options=options)
+        #-----------------------------------------
+        print('Starting CollectStaticInfo.canadastocks()')
+        print('Removing old records')
+        dd = input('Are you sure you want to delete all the old records, and scrape new ones? Press Y or y to continue: ')
+        if dd.upper() != 'Y':
+            print('Closing CollectStaticInfo.canadastocks()')
+            return ''
+        CanadaStockStaticInfo.objects.all().delete()
+        print('Old records have been removed')
+        print('Starting to collect new ones')
+        print('Starting Selenium')
+        url = 'https://www.investing.com/equities/canada'
+        url2 = 'https://www.investing.com'
+        # driver = webdriver.Chrome()
+        driver.get(url)
+        print('Executing JS scripts')
+        driver.execute_script('$("#stocksFilter").val("#all");')
+        sleep(5)
+        driver.execute_script("doStocksFilter('select',this)")
+        sleep(15)
+        print('Executed JS scripts, sleeping for 15 seconds')
+        sleep(15)
+        soup = BeautifulSoup(driver.page_source, 'html.parser')
+        driver.quit()
+        print('Saved page source')
+        print('Starting to collect links')
+        links = []
+        long_names = []
+        for link in soup.find_all('td', class_='bold left noWrap elp plusIconTd'):
+            links.append(link.a['href'])
+            long_names.append(link.a['title'])
+        header={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36 OPR/38.0.2220.41'}
+        print('Links are collected')
+        print('Starting to visit them and store in databse')
+        i = 0
+        for link in links:
+            sleep(1)
+            l = url2 + link
+            try:
+                request = requests.get(l, headers=header)
+                soup = BeautifulSoup(request.text, 'html.parser')
                 short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 3M Company (MMM)
                 short_name = short_name[short_name.index('(')+1:].strip().replace(')', '') # MMM
                 market = soup.find('i', class_='btnTextDropDwn arial_12 bold').get_text()
@@ -507,9 +582,9 @@ class CollectStaticInfo:
                 except:
                     continue
                     
-            ChinaStockStaticInfo(
+            CanadaStockStaticInfo(
                 short_name=short_name, long_name=long_names[i],
-                isin=isin, link=l).save()
+                isin=isin, market=market, link=l).save()
             i += 1
             print(f'Stored {i}: {long_names[i]}')
             if i % 100 == 0:
