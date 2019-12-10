@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 from time import sleep
 from .models import (
     CommodityStaticInfo, CurrencyStaticInfo, CryptocurrencyStaticInfo, USStockStaticInfo, JapanStockStaticInfo,
-    UKStockStaticInfo, HKStockStaticInfo, ChinaStockStaticInfo, CanadaStockStaticInfo
+    UKStockStaticInfo, HKStockStaticInfo, ChinaStockStaticInfo, CanadaStockStaticInfo, GermanyStockStaticInfo
 )
 
 class CollectStaticInfo:
@@ -583,6 +583,82 @@ class CollectStaticInfo:
                     continue
                     
             CanadaStockStaticInfo(
+                short_name=short_name, long_name=long_names[i],
+                isin=isin, market=market, link=l).save()
+            i += 1
+            print(f'Stored {i}: {long_names[i]}')
+            if i % 100 == 0:
+                print (f'{len(links)-i} equities left')
+        
+        print('Data has been successfuly stored!')
+        return ''
+
+    def germanystocks():
+        #--------------------VPS------------------
+        display = Display(visible=0, size=(800, 600))
+        display.start()
+        options = webdriver.ChromeOptions()
+        options.add_argument('--no-sandbox')
+        driver = webdriver.Chrome(options=options)
+        #-----------------------------------------
+        print('Starting CollectStaticInfo.germanystocks()')
+        print('Removing old records')
+        dd = input('Are you sure you want to delete all the old records, and scrape new ones? Press Y or y to continue: ')
+        if dd.upper() != 'Y':
+            print('Closing CollectStaticInfo.germanystocks()')
+            return ''
+        GermanyStockStaticInfo.objects.all().delete()
+        print('Old records have been removed')
+        print('Starting to collect new ones')
+        print('Starting Selenium')
+        url = 'https://www.investing.com/equities/germany'
+        url2 = 'https://www.investing.com'
+        # driver = webdriver.Chrome()
+        driver.get(url)
+        print('Executing JS scripts')
+        driver.execute_script('$("#stocksFilter").val("#all");')
+        sleep(5)
+        driver.execute_script("doStocksFilter('select',this)")
+        sleep(15)
+        print('Executed JS scripts, sleeping for 15 seconds')
+        sleep(15)
+        soup = BeautifulSoup(driver.page_source, 'html.parser')
+        driver.quit()
+        print('Saved page source')
+        print('Starting to collect links')
+        links = []
+        long_names = []
+        for link in soup.find_all('td', class_='bold left noWrap elp plusIconTd'):
+            links.append(link.a['href'])
+            long_names.append(link.a['title'])
+        header={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36 OPR/38.0.2220.41'}
+        print('Links are collected')
+        print('Starting to visit them and store in databse')
+        i = 0
+        for link in links:
+            sleep(1)
+            l = url2 + link
+            try:
+                request = requests.get(l, headers=header)
+                soup = BeautifulSoup(request.text, 'html.parser')
+                short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 3M Company (MMM)
+                short_name = short_name[short_name.index('(')+1:].strip().replace(')', '') # MMM
+                market = soup.find('i', class_='btnTextDropDwn arial_12 bold').get_text()
+                isin = soup.find('span', text='ISIN:').find_next_sibling().get_text().strip()
+            except:
+                try:
+                    print('Some Complications')
+                    sleep(10) 
+                    request = requests.get(l, headers=header)
+                    soup = BeautifulSoup(request.text, 'html.parser')
+                    short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 3M Company (MMM)
+                    short_name = short_name[short_name.index('(')+1:].strip().replace(')', '') # MMM
+                    market = soup.find('i', class_='btnTextDropDwn arial_12 bold').get_text()
+                    isin = soup.find('span', text='ISIN:').find_next_sibling().get_text().strip()
+                except:
+                    continue
+                    
+            GermanyStockStaticInfo(
                 short_name=short_name, long_name=long_names[i],
                 isin=isin, market=market, link=l).save()
             i += 1

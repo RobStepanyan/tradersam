@@ -10,7 +10,7 @@ COUNTRIES = (
 
 CURRENCIES = (
     ('USD', 'US Dollar'), ('JPY', 'Japanese Yen'), ('GBP', 'Pound Sterling'), ('HKD', 'Hong Kong Dollar'),
-    ('CNY', 'Chinese Yuan'), ('CAD', 'Canadian Dollar')
+    ('CNY', 'Chinese Yuan'), ('CAD', 'Canadian Dollar'), ('EUR', 'Euro')
 )
 
 MARKETS_USA = (
@@ -37,6 +37,13 @@ MARKETS_CH = (
 MARKETS_CA = (
     ('NEO', 'Aequitas Neo Exchange (NEO)'), ('Toronto', 'Toronto Stock Exchange (TSX)'),
     ('CSE', 'Canadian Securities Exchange (CSE)'), ('NASDAQ', 'NASDAQ Canada')
+)
+
+MARKETS_GE = (
+    ('Frankfurt', 'Frankfurt Stock Exchange (XFRA)'), ('Berlin', 'Berlin Stock Exchange (XBER)'),
+    ('Xetra', 'Xetra Stock Exchange (XETR)'), ('Munich', 'Munich Stock Exchange (XMUN)'),
+    ('Stuttgart', 'Stuttgart Stock Exchange (XSTU)'), ('Dusseldorf', 'Dusseldorf Stock Exchange(XDUS)'),
+    ('Hamburg', 'Hamburg Stock Exchange(XHAM)'), ('Hannover', 'Hannover Stock Exchange (XHAN)')
 )
 
 class CommodityStaticInfo(models.Model):
@@ -187,3 +194,19 @@ class CanadaStockStaticInfo(models.Model):
     class Meta:
         verbose_name = "Canada Stocks Static Info"
         verbose_name_plural = "Canada Stocks Static Info"
+
+class GermanyStockStaticInfo(models.Model):
+    short_name = models.CharField(max_length=6)
+    long_name = models.CharField(max_length=45)
+    country = models.CharField(choices=COUNTRIES, default='GE', max_length=3)
+    market = models.CharField(choices=MARKETS_GE, max_length=20)
+    isin = models.CharField(max_length=12)
+    link = models.URLField()
+    currency = models.CharField(choices=CURRENCIES, default='EUR', max_length=3)
+
+    def __str__(self):
+        return self.long_name + f' - ({self.short_name})'
+
+    class Meta:
+        verbose_name = "Germany Stocks Static Info"
+        verbose_name_plural = "Germany Stocks Static Info"
