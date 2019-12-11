@@ -10,7 +10,7 @@ COUNTRIES = (
 
 CURRENCIES = (
     ('USD', 'US Dollar'), ('JPY', 'Japanese Yen'), ('GBP', 'Pound Sterling'), ('HKD', 'Hong Kong Dollar'),
-    ('CNY', 'Chinese Yuan'), ('CAD', 'Canadian Dollar'), ('EUR', 'Euro')
+    ('CNY', 'Chinese Yuan'), ('CAD', 'Canadian Dollar'), ('EUR', 'Euro'), ('AUD', 'Australian Dollar')
 )
 
 MARKETS_USA = (
@@ -44,6 +44,10 @@ MARKETS_GE = (
     ('Xetra', 'Xetra Stock Exchange (XETR)'), ('Munich', 'Munich Stock Exchange (XMUN)'),
     ('Stuttgart', 'Stuttgart Stock Exchange (XSTU)'), ('Dusseldorf', 'Dusseldorf Stock Exchange(XDUS)'),
     ('Hamburg', 'Hamburg Stock Exchange(XHAM)'), ('Hannover', 'Hannover Stock Exchange (XHAN)')
+)
+
+MARKETS_AU = (
+    ('ASX', 'Australian Securities Exchange'),
 )
 
 class CommodityStaticInfo(models.Model):
@@ -196,7 +200,7 @@ class CanadaStockStaticInfo(models.Model):
         verbose_name_plural = "Canada Stocks Static Info"
 
 class GermanyStockStaticInfo(models.Model):
-    short_name = models.CharField(max_length=6)
+    short_name = models.CharField(max_length=8)
     long_name = models.CharField(max_length=45)
     country = models.CharField(choices=COUNTRIES, default='GE', max_length=3)
     market = models.CharField(choices=MARKETS_GE, max_length=20)
@@ -210,3 +214,20 @@ class GermanyStockStaticInfo(models.Model):
     class Meta:
         verbose_name = "Germany Stocks Static Info"
         verbose_name_plural = "Germany Stocks Static Info"
+
+class AustraliaStockStaticInfo(models.Model):
+    short_name = models.CharField(max_length=8)
+    long_name = models.CharField(max_length=49)
+    country = models.CharField(choices=COUNTRIES, default='AU', max_length=3)
+    market = models.CharField(choices=MARKETS_AU, max_length=3, default='ASX')
+    isin = models.CharField(max_length=12)
+    link = models.URLField()
+    currency = models.CharField(choices=CURRENCIES, default='AUD', max_length=3)
+
+    def __str__(self):
+        return self.long_name + f' - ({self.short_name})'
+
+    class Meta:
+        verbose_name = "Australia Stocks Static Info"
+        verbose_name_plural = "Australia Stocks Static Info"
+
