@@ -281,7 +281,7 @@ class UKIndexStaticInfo(models.Model):
         verbose_name_plural = "United Kingdom Indices Static Info"
 
 class HKIndexStaticInfo(models.Model):
-    short_name = models.CharField(max_length=8)
+    short_name = models.CharField(max_length=12)
     long_name = models.CharField(max_length=56)
     country = models.CharField(choices=COUNTRIES, default='HK', max_length=3)
     market = models.CharField(choices=MARKETS_HK, default='HKG', max_length=3)
