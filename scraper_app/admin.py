@@ -5,6 +5,7 @@ from . import models
 admin.site.register(models.CommodityStaticInfo)
 admin.site.register(models.CurrencyStaticInfo)
 admin.site.register(models.CryptocurrencyStaticInfo)
+
 admin.site.register(models.USStockStaticInfo)
 admin.site.register(models.JapanStockStaticInfo)
 admin.site.register(models.UKStockStaticInfo)
@@ -17,3 +18,5 @@ admin.site.register(models.AustraliaStockStaticInfo)
 admin.site.register(models.USIndexStaticInfo)
 admin.site.register(models.JapanIndexStaticInfo)
 admin.site.register(models.UKIndexStaticInfo)
+admin.site.register(models.HKIndexStaticInfo)
+admin.site.register(models.ChinaIndexStaticInfo)

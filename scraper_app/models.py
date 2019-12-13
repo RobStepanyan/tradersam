@@ -294,3 +294,18 @@ class HKIndexStaticInfo(models.Model):
     class Meta:
         verbose_name = "Hong Kong Indices Static Info"
         verbose_name_plural = "Hong Kong Indices Static Info"
+
+class ChinaIndexStaticInfo(models.Model):
+    short_name = models.CharField(max_length=12)
+    long_name = models.CharField(max_length=56)
+    country = models.CharField(choices=COUNTRIES, default='CH', max_length=3)
+    market = models.CharField(choices=MARKETS_CH, max_length=8)
+    link = models.URLField()
+    currency = models.CharField(choices=CURRENCIES, default='CNY', max_length=3)
+
+    def __str__(self):
+        return self.long_name + f' - ({self.short_name})'
+
+    class Meta:
+        verbose_name = "China Indices Static Info"
+        verbose_name_plural = "China Indices Static Info"
