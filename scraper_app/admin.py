@@ -16,3 +16,4 @@ admin.site.register(models.AustraliaStockStaticInfo)
 
 admin.site.register(models.USIndexStaticInfo)
 admin.site.register(models.JapanIndexStaticInfo)
+admin.site.register(models.UKIndexStaticInfo)
