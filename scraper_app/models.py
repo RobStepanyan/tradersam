@@ -127,7 +127,7 @@ class JapanStockStaticInfo(models.Model):
     short_name = models.CharField(max_length=12)
     long_name = models.CharField(max_length=60)
     country = models.CharField(choices=COUNTRIES, default='JPN', max_length=3)
-    market = models.CharField(choices=MARKETS_JPN, max_length=20)
+    market = models.CharField(choices=MARKETS_JPN, max_length=7)
     isin = models.CharField(max_length=12)
     link = models.URLField()
     currency = models.CharField(choices=CURRENCIES, default='JPY', max_length=3)
@@ -249,3 +249,19 @@ class USIndexStaticInfo(models.Model):
     class Meta:
         verbose_name = "United States Indices Static Info"
         verbose_name_plural = "United States Indices Static Info"
+
+class JapanIndexStaticInfo(models.Model):
+    short_name = models.CharField(max_length=12)
+    long_name = models.CharField(max_length=49)
+    country = models.CharField(choices=COUNTRIES, default='JPN', max_length=3)
+    market = models.CharField(choices=MARKETS_JPN, max_length=7)
+    isin = models.CharField(max_length=12)
+    link = models.URLField()
+    currency = models.CharField(choices=CURRENCIES, default='JPY', max_length=3)
+
+    def __str__(self):
+        return self.long_name + f' - ({self.short_name})'
+
+    class Meta:
+        verbose_name = "Japan Indices Static Info"
+        verbose_name_plural = "Japan Indices Static Info"
