@@ -13,3 +13,5 @@ admin.site.register(models.ChinaStockStaticInfo)
 admin.site.register(models.CanadaStockStaticInfo)
 admin.site.register(models.GermanyStockStaticInfo)
 admin.site.register(models.AustraliaStockStaticInfo)
+
+admin.site.register(models.USIndexStaticInfo)

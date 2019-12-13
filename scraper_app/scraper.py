@@ -7,8 +7,9 @@ from time import sleep
 from .models import (
     CommodityStaticInfo, CurrencyStaticInfo, CryptocurrencyStaticInfo, USStockStaticInfo, JapanStockStaticInfo,
     UKStockStaticInfo, HKStockStaticInfo, ChinaStockStaticInfo, CanadaStockStaticInfo, GermanyStockStaticInfo,
-    AustraliaStockStaticInfo
+    AustraliaStockStaticInfo, USIndexStaticInfo
 )
+from .models import MARKETS_USA
 
 class CollectStaticInfo:
     def commodities():
@@ -177,7 +178,7 @@ class CollectStaticInfo:
 
         header={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36 OPR/38.0.2220.41'}
         print('Links are collected')
-        print('Starting to visit them and store in databse')
+        print('Starting to visit them and store in database')
         i = 0
         for link in links:
             sleep(1)
@@ -188,17 +189,33 @@ class CollectStaticInfo:
                 short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 3M Company (MMM)
                 short_name = short_name[short_name.index('(')+1:].strip().replace(')', '') # MMM
                 market = soup.find('i', class_='btnTextDropDwn arial_12 bold').get_text()
+                markets = [m[0] for m in MARKETS_USA]
                 isin = soup.find('span', text='ISIN:').find_next_sibling().get_text().strip()
+                if market not in markets:
+                    market = soup.find('table', class_='genTbl closedTbl exchangeDropdownTbl displayNone').tbody
+                    market = market.find_all('tr')
+                    for tr in market:
+                        if tr.find('td', class_='left bold').find_next_sibling().get_text() in markets:
+                            market = tr.find('td', class_='left bold').find_next_sibling().get_text()
+                            break
             except:
                 try:
-                    print('Some Complications')
+                    print('Some Complication, sleeping for 10sec')
                     sleep(10)
                     request = requests.get(l, headers=header)
                     soup = BeautifulSoup(request.text, 'html.parser')
                     short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 3M Company (MMM)
                     short_name = short_name[short_name.index('(')+1:].strip().replace(')', '') # MMM
                     market = soup.find('i', class_='btnTextDropDwn arial_12 bold').get_text()
+                    markets = [m[0] for m in MARKETS_USA]
                     isin = soup.find('span', text='ISIN:').find_next_sibling().get_text().strip()
+                    if market not in markets:
+                        market = soup.find('table', class_='genTbl closedTbl exchangeDropdownTbl displayNone').tbody
+                        market = market.find_all('tr')
+                        for tr in market:
+                            if tr.find('td', class_='left bold').find_next_sibling().get_text() in markets:
+                                market = tr.find('td', class_='left bold').find_next_sibling().get_text()
+                                break
                 except:
                     continue
 
@@ -254,7 +271,7 @@ class CollectStaticInfo:
 
         header={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36 OPR/38.0.2220.41'}
         print('Links are collected')
-        print('Starting to visit them and store in databse')
+        print('Starting to visit them and store in database')
         i = 0
         for link in links:
             sleep(1)
@@ -331,7 +348,7 @@ class CollectStaticInfo:
 
         header={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36 OPR/38.0.2220.41'}
         print('Links are collected')
-        print('Starting to visit them and store in databse')
+        print('Starting to visit them and store in database')
         i = 0
         for link in links:
             sleep(1)
@@ -408,7 +425,7 @@ class CollectStaticInfo:
 
         header={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36 OPR/38.0.2220.41'}
         print('Links are collected')
-        print('Starting to visit them and store in databse')
+        print('Starting to visit them and store in database')
         i = 0
         for link in links:
             sleep(1)
@@ -482,7 +499,7 @@ class CollectStaticInfo:
 
         header={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36 OPR/38.0.2220.41'}
         print('Links are collected')
-        print('Starting to visit them and store in databse')
+        print('Starting to visit them and store in database')
         i = 0
         for link in links:
             sleep(1)
@@ -558,7 +575,7 @@ class CollectStaticInfo:
             long_names.append(link.a['title'])
         header={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36 OPR/38.0.2220.41'}
         print('Links are collected')
-        print('Starting to visit them and store in databse')
+        print('Starting to visit them and store in database')
         i = 0
         for link in links:
             sleep(1)
@@ -634,7 +651,7 @@ class CollectStaticInfo:
             long_names.append(link.a['title'])
         header={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36 OPR/38.0.2220.41'}
         print('Links are collected')
-        print('Starting to visit them and store in databse')
+        print('Starting to visit them and store in database')
         i = 0
         errors = []
         for link in links:
@@ -710,7 +727,7 @@ class CollectStaticInfo:
             long_names.append(link.a['title'])
         header={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36 OPR/38.0.2220.41'}
         print('Links are collected')
-        print('Starting to visit them and store in databse')
+        print('Starting to visit them and store in database')
         i = 0
         errors = []
         for link in links:
@@ -738,6 +755,93 @@ class CollectStaticInfo:
             AustraliaStockStaticInfo(
                 short_name=short_name, long_name=long_names[i],
                 isin=isin, link=l).save()
+            i += 1
+            print(f'Stored {i}: {long_names[i]}')
+            if i % 100 == 0:
+                print (f'{len(links)-i} equities left')
+        
+        print('Data has been successfuly stored!')
+        return ''
+
+
+    # INDICES' STATIC INFO AREA
+    def usindices():
+        #--------------------VPS------------------
+        display = Display(visible=0, size=(800, 600))
+        display.start()
+        options = webdriver.ChromeOptions()
+        options.add_argument('--no-sandbox')
+        driver = webdriver.Chrome(options=options)
+        #-----------------------------------------
+        print('Starting CollectStaticInfo.usindices()')
+        dd = input('Are you sure you want to delete all the old records, and scrape new ones? Press Y or y to continue: ')
+        print('Removing old records')
+        if dd.upper() != 'Y':
+            print('Closing CollectStaticInfo.usindices()')
+            return ''
+        USIndexStaticInfo.objects.all().delete()
+        print('Old records have been removed')
+        print('Starting to collect new ones')
+        print('Starting Selenium')
+        url = 'https://www.investing.com/indices/usa-indices?&majorIndices=on&primarySectors=on&additionalIndices=on&otherIndices=on'
+        url2 = 'https://www.investing.com'
+        # driver = webdriver.Chrome()
+        driver.get(url)
+
+        soup = BeautifulSoup(driver.page_source, 'html.parser')
+        driver.quit()
+        print('Saved page source')
+        print('Starting to collect links')
+        links = []
+        long_names = []
+        for link in soup.find_all('td', class_='bold left noWrap elp plusIconTd'):
+            links.append(link.a['href'])
+            long_names.append(link.a['title'])
+
+        header={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36 OPR/38.0.2220.41'}
+        print('Links are collected')
+        print('Starting to visit them and store in database')
+        i = 0
+        errors = []
+        for link in links:
+            sleep(1)
+            l = url2 + link
+            try:
+                request = requests.get(l, headers=header)
+                soup = BeautifulSoup(request.text, 'html.parser')
+                short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 3M Company (MMM)
+                short_name = short_name[short_name.index('(')+1:].strip().replace(')', '') # MMM
+                market = soup.find('i', class_='btnTextDropDwn arial_12 bold').get_text()
+                markets = [m[0] for m in MARKETS_USA]
+                if market not in markets:
+                    market = soup.find('table', class_='genTbl closedTbl exchangeDropdownTbl displayNone').tbody
+                    market = market.find_all('tr')
+                    for tr in market:
+                        if tr.find('td', class_='left bold').find_next_sibling().get_text() in markets:
+                            market = tr.find('td', class_='left bold').find_next_sibling().get_text()
+                            break
+            except:
+                try:
+                    print('Some Complication, sleeping for 10sec')
+                    sleep(10)
+                    request = requests.get(l, headers=header)
+                    soup = BeautifulSoup(request.text, 'html.parser')
+                    short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 3M Company (MMM)
+                    short_name = short_name[short_name.index('(')+1:].strip().replace(')', '') # MMM
+                    market = soup.find('i', class_='btnTextDropDwn arial_12 bold').get_text()
+                    markets = [m[0] for m in MARKETS_USA]
+                    if market not in markets:
+                        market = soup.find('table', class_='genTbl closedTbl exchangeDropdownTbl displayNone').tbody
+                        market = market.find_all('tr')
+                        for tr in market:
+                            if tr.find('td', class_='left bold').find_next_sibling().get_text() in markets:
+                                market = tr.find('td', class_='left bold').find_next_sibling().get_text()
+                                break
+                except:
+                    continue
+            USIndexStaticInfo(
+                short_name=short_name, long_name=long_names[i],
+                market=market, link=l).save()
             i += 1
             print(f'Stored {i}: {long_names[i]}')
             if i % 100 == 0:

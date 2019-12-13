@@ -14,7 +14,11 @@ CURRENCIES = (
 )
 
 MARKETS_USA = (
-    ('NYSE', 'New York Stock Exchange'), ('NASDAQ', 'NASDAQ Stock Market'), ('OTC Markets', 'Over-The-Counter Markets'),
+    ('NYSE', 'New York Stock Exchange (NYSE)'), ('NASDAQ', 'NASDAQ Stock Market'), ('OTC Markets', 'Over-The-Counter Markets (OTC)'),
+    ('AMEX', 'American Stock Exchange (AMEX)'), ('BSE', 'Boston Stock Exchange (BSE)'), ('CBOE', 'Chicago Board Options Exchange (CBOE)'),
+    ('CBOT', 'Chicago Board of Trade (CBOT)'), ('CME', 'Chicago Mercantile Exchange (CME)'), ('CHX', 'Chicago Stock Exchange (CHX)'),
+    ('ISE', 'International Securities Exchange (ISE)'), ('MS4X', 'Miami Stock Exchange (MS4X)'), ('NSX', 'National Stock Exchange (NSX)'),
+    ('PHLX', 'Philadelphia Stock Exchange (PHLX)'), ('NYSE Arca', 'NYSE Arca')
 )
 
 MARKETS_JPN = (
@@ -231,3 +235,17 @@ class AustraliaStockStaticInfo(models.Model):
         verbose_name = "Australia Stocks Static Info"
         verbose_name_plural = "Australia Stocks Static Info"
 
+class USIndexStaticInfo(models.Model):
+    short_name = models.CharField(max_length=12)
+    long_name = models.CharField(max_length=63)
+    country = models.CharField(choices=COUNTRIES, default='USA', max_length=3)
+    market = models.CharField(choices=MARKETS_USA, max_length=11)
+    link = models.URLField()
+    currency = models.CharField(choices=CURRENCIES, default='USD', max_length=3)
+
+    def __str__(self):
+        return self.long_name + f' - ({self.short_name})'
+
+    class Meta:
+        verbose_name = "United States Indices Static Info"
+        verbose_name_plural = "United States Indices Static Info"
