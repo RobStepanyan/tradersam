@@ -159,7 +159,7 @@ class HKStockStaticInfo(models.Model):
     short_name = models.CharField(max_length=4)
     long_name = models.CharField(max_length=75)
     country = models.CharField(choices=COUNTRIES, default='HK', max_length=3)
-    market = models.CharField(choices=MARKETS_HK, default='HKG', max_length=20)
+    market = models.CharField(choices=MARKETS_HK, default='HKG', max_length=3)
     isin = models.CharField(max_length=12)
     link = models.URLField()
     currency = models.CharField(choices=CURRENCIES, default='HKD', max_length=3)
@@ -279,3 +279,18 @@ class UKIndexStaticInfo(models.Model):
     class Meta:
         verbose_name = "United Kingdom Indices Static Info"
         verbose_name_plural = "United Kingdom Indices Static Info"
+
+class HKIndexStaticInfo(models.Model):
+    short_name = models.CharField(max_length=8)
+    long_name = models.CharField(max_length=56)
+    country = models.CharField(choices=COUNTRIES, default='HK', max_length=3)
+    market = models.CharField(choices=MARKETS_HK, default='HKG', max_length=3)
+    link = models.URLField()
+    currency = models.CharField(choices=CURRENCIES, default='HKD', max_length=3)
+
+    def __str__(self):
+        return self.long_name + f' - ({self.short_name})'
+
+    class Meta:
+        verbose_name = "Hong Kong Indices Static Info"
+        verbose_name_plural = "Hong Kong Indices Static Info"
