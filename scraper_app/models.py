@@ -340,3 +340,18 @@ class GermanyIndexStaticInfo(models.Model):
     class Meta:
         verbose_name = "Germany Indices Static Info"
         verbose_name_plural = "Germany Indices Static Info"
+
+class AustraliaIndexStaticInfo(models.Model):
+    short_name = models.CharField(max_length=12)
+    long_name = models.CharField(max_length=47)
+    country = models.CharField(choices=COUNTRIES, default='AU', max_length=3)
+    market = models.CharField(choices=MARKETS_AU, max_length=3, default='ASX')
+    link = models.URLField()
+    currency = models.CharField(choices=CURRENCIES, default='AUD', max_length=3)
+
+    def __str__(self):
+        return self.long_name + f' - ({self.short_name})'
+
+    class Meta:
+        verbose_name = "Australia Indices Static Info"
+        verbose_name_plural = "Australia Indices Static Info"
