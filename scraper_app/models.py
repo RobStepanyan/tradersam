@@ -40,7 +40,8 @@ MARKETS_CH = (
 
 MARKETS_CA = (
     ('NEO', 'Aequitas Neo Exchange (NEO)'), ('Toronto', 'Toronto Stock Exchange (TSX)'),
-    ('CSE', 'Canadian Securities Exchange (CSE)'), ('NASDAQ', 'NASDAQ Canada')
+    ('CSE', 'Canadian Securities Exchange (CSE)'), ('NASDAQ', 'NASDAQ Canada'),
+    ('TSXV', 'TSX Venture Exchange (TSXV)')
 )
 
 MARKETS_GE = (
@@ -191,7 +192,7 @@ class CanadaStockStaticInfo(models.Model):
     short_name = models.CharField(max_length=6)
     long_name = models.CharField(max_length=51)
     country = models.CharField(choices=COUNTRIES, default='CA', max_length=3)
-    market = models.CharField(choices=MARKETS_CA, max_length=20)
+    market = models.CharField(choices=MARKETS_CA, max_length=7)
     isin = models.CharField(max_length=12)
     link = models.URLField()
     currency = models.CharField(choices=CURRENCIES, default='CAD', max_length=3)
@@ -324,3 +325,18 @@ class CanadaIndexStaticInfo(models.Model):
     class Meta:
         verbose_name = "Canada Indices Static Info"
         verbose_name_plural = "Canada Indices Static Info"
+
+class GermanyIndexStaticInfo(models.Model):
+    short_name = models.CharField(max_length=12)
+    long_name = models.CharField(max_length=46)
+    country = models.CharField(choices=COUNTRIES, default='GE', max_length=3)
+    market = models.CharField(choices=MARKETS_GE, max_length=10)
+    link = models.URLField()
+    currency = models.CharField(choices=CURRENCIES, default='EUR', max_length=3)
+
+    def __str__(self):
+        return self.long_name + f' - ({self.short_name})'
+
+    class Meta:
+        verbose_name = "Germany Indices Static Info"
+        verbose_name_plural = "Germany Indices Static Info"
