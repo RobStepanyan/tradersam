@@ -1,4 +1,4 @@
-import requests
+import requests, os
 from selenium import webdriver
 from pyvirtualdisplay import Display
 from selenium import webdriver
@@ -9,11 +9,457 @@ from .models import (
     UKStockStaticInfo, HKStockStaticInfo, ChinaStockStaticInfo, CanadaStockStaticInfo, GermanyStockStaticInfo,
     AustraliaStockStaticInfo, 
     USIndexStaticInfo, JapanIndexStaticInfo, UKIndexStaticInfo, HKIndexStaticInfo, ChinaIndexStaticInfo,
-    CanadaIndexStaticInfo, GermanyIndexStaticInfo, AustraliaIndexStaticInfo
+    CanadaIndexStaticInfo, GermanyIndexStaticInfo, AustraliaIndexStaticInfo,
+    ETFIssuers
 )
 from .models import (
-    MARKETS_USA, MARKETS_JPN, MARKETS_CH, MARKETS_CA, MARKETS_GE
+    MARKETS_US, MARKETS_JP, MARKETS_CH, MARKETS_CA, MARKETS_GE
 )
+
+class CollectETFIssuers:
+    def all():
+        print('Starting to collect for United States')
+        CollectETFIssuers.us()
+        # from .models import ETF_ISSUERS_US
+        # print(ETF_ISSUERS_US)
+        print('Starting to collect for Japan')
+        CollectETFIssuers.japan()
+        print('Starting to collect for United Kingdom')
+        CollectETFIssuers.uk()
+        print('Starting to collect for Honk Kong')
+        CollectETFIssuers.hk()
+        print('Starting to collect for China')
+        CollectETFIssuers.china()
+        print('Starting to collect for Canada')
+        CollectETFIssuers.canada()
+        print('Starting to collect for Germany')
+        CollectETFIssuers.germany()
+        print('Starting to collect for Australia')
+        CollectETFIssuers.australia()
+
+
+    def us():
+        #--------------------VPS------------------
+        display = Display(visible=0, size=(800, 600))
+        display.start()
+        options = webdriver.ChromeOptions()
+        options.add_argument('--no-sandbox')
+        driver = webdriver.Chrome(options=options)
+        #-----------------------------------------
+        print('Starting get_etf_issuers.us()')
+        print('Starting Selenium')
+        url = 'https://www.investing.com/etfs/usa-etfs?&issuer_filter=0'
+        url2 = 'https://www.investing.com'
+        # driver = webdriver.Chrome()
+        driver.get(url)
+        ETFIssuers.objects.filter(country='US').delete()
+        print('Removed old records starting to collect new ones')
+        soup = BeautifulSoup(driver.page_source, 'html.parser')
+        driver.quit()
+        print('Saved page source')
+        print('Starting to collect links')
+        links = []
+        for link in soup.find_all('td', class_='bold left noWrap elp plusIconTd'):
+            links.append(link.a['href'])
+        header={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36 OPR/38.0.2220.41'}
+        print('Links are collected')
+        print('Starting to visit them and collect issuers info')
+        i = 0
+        issuers = []
+        for link in links:
+            sleep(1)
+            l = url2 + link
+            try:
+                request = requests.get(l, headers=header)
+                soup = BeautifulSoup(request.text, 'html.parser')
+                issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
+            except:
+                try:
+                    print('Some Complication, sleeping for 10sec')
+                    sleep(10)
+                    request = requests.get(l, headers=header)
+                    soup = BeautifulSoup(request.text, 'html.parser')
+                    issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
+                except:
+                    continue
+            print(f'Visited {i}/{len(links)-1}')
+            i += 1
+            issuers.append(issuer)
+        issuers = list(set(issuers))
+        for issuer in issuers:
+            ETFIssuers(country='US', name=issuer).save()
+        return ''
+
+    def japan():
+        #--------------------VPS------------------
+        display = Display(visible=0, size=(800, 600))
+        display.start()
+        options = webdriver.ChromeOptions()
+        options.add_argument('--no-sandbox')
+        driver = webdriver.Chrome(options=options)
+        #-----------------------------------------
+        print('Starting get_etf_issuers.japan()')
+        print('Starting Selenium')
+        url = 'https://www.investing.com/etfs/japan-etfs?&issuer_filter=0'
+        url2 = 'https://www.investing.com'
+        # driver = webdriver.Chrome()
+        driver.get(url)
+        ETFIssuers.objects.filter(country='JP').delete()
+        print('Removed old records starting to collect new ones')
+        soup = BeautifulSoup(driver.page_source, 'html.parser')
+        driver.quit()
+        print('Saved page source')
+        print('Starting to collect links')
+        links = []
+        for link in soup.find_all('td', class_='bold left noWrap elp plusIconTd'):
+            links.append(link.a['href'])
+        header={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36 OPR/38.0.2220.41'}
+        print('Links are collected')
+        print('Starting to visit them and collect issuers info')
+        i = 0
+        issuers = []
+        for link in links:
+            sleep(1)
+            l = url2 + link
+            try:
+                request = requests.get(l, headers=header)
+                soup = BeautifulSoup(request.text, 'html.parser')
+                issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
+            except:
+                try:
+                    print('Some Complication, sleeping for 10sec')
+                    sleep(10)
+                    request = requests.get(l, headers=header)
+                    soup = BeautifulSoup(request.text, 'html.parser')
+                    issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
+                except:
+                    continue
+            print(f'Visited {i}/{len(links)-1}')
+            i += 1
+            issuers.append(issuer)
+        issuers = list(set(issuers))
+        for issuer in issuers:
+            ETFIssuers(country='JP', name=issuer).save()
+        return ''
+
+    def uk():
+        #--------------------VPS------------------
+        display = Display(visible=0, size=(800, 600))
+        display.start()
+        options = webdriver.ChromeOptions()
+        options.add_argument('--no-sandbox')
+        driver = webdriver.Chrome(options=options)
+        #-----------------------------------------
+        print('Starting get_etf_issuers.uk()')
+        print('Starting Selenium')
+        url = 'https://www.investing.com/etfs/uk-etfs?&issuer_filter=0'
+        url2 = 'https://www.investing.com'
+        # driver = webdriver.Chrome()
+        driver.get(url)
+        ETFIssuers.objects.filter(country='UK').delete()
+        print('Removed old records starting to collect new ones')
+        soup = BeautifulSoup(driver.page_source, 'html.parser')
+        driver.quit()
+        print('Saved page source')
+        print('Starting to collect links')
+        links = []
+        for link in soup.find_all('td', class_='bold left noWrap elp plusIconTd'):
+            links.append(link.a['href'])
+        header={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36 OPR/38.0.2220.41'}
+        print('Links are collected')
+        print('Starting to visit them and collect issuers info')
+        i = 0
+        issuers = []
+        for link in links:
+            sleep(1)
+            l = url2 + link
+            try:
+                request = requests.get(l, headers=header)
+                soup = BeautifulSoup(request.text, 'html.parser')
+                issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
+            except:
+                try:
+                    print('Some Complication, sleeping for 10sec')
+                    sleep(10)
+                    request = requests.get(l, headers=header)
+                    soup = BeautifulSoup(request.text, 'html.parser')
+                    issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
+                except:
+                    continue
+            print(f'Visited {i}/{len(links)-1}')
+            i += 1
+            issuers.append(issuer)
+        issuers = list(set(issuers))
+        for issuer in issuers:
+            ETFIssuers(country='UK', name=issuer).save()
+        print('Results are saved in -> United Kingdom ETF Issuers.txt')
+        return ''
+
+    def hk():
+        #--------------------VPS------------------
+        display = Display(visible=0, size=(800, 600))
+        display.start()
+        options = webdriver.ChromeOptions()
+        options.add_argument('--no-sandbox')
+        driver = webdriver.Chrome(options=options)
+        #-----------------------------------------
+        print('Starting get_etf_issuers.hk()')
+        print('Starting Selenium')
+        url = 'https://www.investing.com/etfs/hong-kong-etfs?&issuer_filter=0'
+        url2 = 'https://www.investing.com'
+        # driver = webdriver.Chrome()
+        driver.get(url)
+        ETFIssuers.objects.filter(country='HK').delete()
+        print('Removed old records starting to collect new ones')
+        soup = BeautifulSoup(driver.page_source, 'html.parser')
+        driver.quit()
+        print('Saved page source')
+        print('Starting to collect links')
+        links = []
+        for link in soup.find_all('td', class_='bold left noWrap elp plusIconTd'):
+            links.append(link.a['href'])
+        header={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36 OPR/38.0.2220.41'}
+        print('Links are collected')
+        print('Starting to visit them and collect issuers info')
+        i = 0
+        issuers = []
+        for link in links:
+            sleep(1)
+            l = url2 + link
+            try:
+                request = requests.get(l, headers=header)
+                soup = BeautifulSoup(request.text, 'html.parser')
+                issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
+            except:
+                try:
+                    print('Some Complication, sleeping for 10sec')
+                    sleep(10)
+                    request = requests.get(l, headers=header)
+                    soup = BeautifulSoup(request.text, 'html.parser')
+                    issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
+                except:
+                    continue
+            print(f'Visited {i}/{len(links)-1}')
+            i += 1
+            issuers.append(issuer)
+        issuers = list(set(issuers))
+        for issuer in issuers:
+            ETFIssuers(country='HK', name=issuer).save()
+        print('Results are saved in -> Honk Kong ETF Issuers.txt')
+        return ''
+
+    def china():
+        #--------------------VPS------------------
+        display = Display(visible=0, size=(800, 600))
+        display.start()
+        options = webdriver.ChromeOptions()
+        options.add_argument('--no-sandbox')
+        driver = webdriver.Chrome(options=options)
+        #-----------------------------------------
+        print('Starting get_etf_issuers.china()')
+        print('Starting Selenium')
+        url = 'https://www.investing.com/etfs/china-etfs?&issuer_filter=0'
+        url2 = 'https://www.investing.com'
+        # driver = webdriver.Chrome()
+        driver.get(url)
+        ETFIssuers.objects.filter(country='CH').delete()
+        print('Removed old records starting to collect new ones')
+        soup = BeautifulSoup(driver.page_source, 'html.parser')
+        driver.quit()
+        print('Saved page source')
+        print('Starting to collect links')
+        links = []
+        for link in soup.find_all('td', class_='bold left noWrap elp plusIconTd'):
+            links.append(link.a['href'])
+        header={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36 OPR/38.0.2220.41'}
+        print('Links are collected')
+        print('Starting to visit them and collect issuers info')
+        i = 0
+        issuers = []
+        for link in links:
+            sleep(1)
+            l = url2 + link
+            try:
+                request = requests.get(l, headers=header)
+                soup = BeautifulSoup(request.text, 'html.parser')
+                issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
+            except:
+                try:
+                    print('Some Complication, sleeping for 10sec')
+                    sleep(10)
+                    request = requests.get(l, headers=header)
+                    soup = BeautifulSoup(request.text, 'html.parser')
+                    issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
+                except:
+                    continue
+            print(f'Visited {i}/{len(links)-1}')
+            i += 1
+            issuers.append(issuer)
+        issuers = list(set(issuers))
+        for issuer in issuers:
+            ETFIssuers(country='CH', name=issuer).save()
+        print('Results are saved in -> China ETF Issuers.txt')
+        return ''
+
+    def canada():
+        #--------------------VPS------------------
+        display = Display(visible=0, size=(800, 600))
+        display.start()
+        options = webdriver.ChromeOptions()
+        options.add_argument('--no-sandbox')
+        driver = webdriver.Chrome(options=options)
+        #-----------------------------------------
+        print('Starting get_etf_issuers.canada()')
+        print('Starting Selenium')
+        url = 'https://www.investing.com/etfs/canada-etfs?&issuer_filter=0'
+        url2 = 'https://www.investing.com'
+        # driver = webdriver.Chrome()
+        driver.get(url)
+        ETFIssuers.objects.filter(country='CA').delete()
+        print('Removed old records starting to collect new ones')
+        soup = BeautifulSoup(driver.page_source, 'html.parser')
+        driver.quit()
+        print('Saved page source')
+        print('Starting to collect links')
+        links = []
+        for link in soup.find_all('td', class_='bold left noWrap elp plusIconTd'):
+            links.append(link.a['href'])
+        header={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36 OPR/38.0.2220.41'}
+        print('Links are collected')
+        print('Starting to visit them and collect issuers info')
+        i = 0
+        issuers = []
+        for link in links:
+            sleep(1)
+            l = url2 + link
+            try:
+                request = requests.get(l, headers=header)
+                soup = BeautifulSoup(request.text, 'html.parser')
+                issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
+            except:
+                try:
+                    print('Some Complication, sleeping for 10sec')
+                    sleep(10)
+                    request = requests.get(l, headers=header)
+                    soup = BeautifulSoup(request.text, 'html.parser')
+                    issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
+                except:
+                    continue
+            print(f'Visited {i}/{len(links)-1}')
+            i += 1
+            issuers.append(issuer)
+        issuers = list(set(issuers))
+        for issuer in issuers:
+            ETFIssuers(country='CA', name=issuer).save()
+        print('Results are saved in -> Canada ETF Issuers.txt')
+        return ''
+
+    def germany():
+        #--------------------VPS------------------
+        display = Display(visible=0, size=(800, 600))
+        display.start()
+        options = webdriver.ChromeOptions()
+        options.add_argument('--no-sandbox')
+        driver = webdriver.Chrome(options=options)
+        #-----------------------------------------
+        print('Starting get_etf_issuers.germany()')
+        print('Starting Selenium')
+        url = 'https://www.investing.com/etfs/germany-etfs?&issuer_filter=0'
+        url2 = 'https://www.investing.com'
+        # driver = webdriver.Chrome()
+        driver.get(url)
+        ETFIssuers.objects.filter(country='GE').delete()
+        print('Removed old records starting to collect new ones')
+        soup = BeautifulSoup(driver.page_source, 'html.parser')
+        driver.quit()
+        print('Saved page source')
+        print('Starting to collect links')
+        links = []
+        for link in soup.find_all('td', class_='bold left noWrap elp plusIconTd'):
+            links.append(link.a['href'])
+        header={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36 OPR/38.0.2220.41'}
+        print('Links are collected')
+        print('Starting to visit them and collect issuers info')
+        i = 0
+        issuers = []
+        for link in links:
+            sleep(1)
+            l = url2 + link
+            try:
+                request = requests.get(l, headers=header)
+                soup = BeautifulSoup(request.text, 'html.parser')
+                issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
+            except:
+                try:
+                    print('Some Complication, sleeping for 10sec')
+                    sleep(10)
+                    request = requests.get(l, headers=header)
+                    soup = BeautifulSoup(request.text, 'html.parser')
+                    issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
+                except:
+                    continue
+            print(f'Visited {i}/{len(links)-1}')
+            i += 1
+            issuers.append(issuer)
+        issuers = list(set(issuers))
+        for issuer in issuers:
+            ETFIssuers(country='GE', name=issuer).save()
+        print('Results are saved in -> Germany ETF Issuers.txt')
+        return ''
+
+    def australia():
+        #--------------------VPS------------------
+        display = Display(visible=0, size=(800, 600))
+        display.start()
+        options = webdriver.ChromeOptions()
+        options.add_argument('--no-sandbox')
+        driver = webdriver.Chrome(options=options)
+        #-----------------------------------------
+        print('Starting get_etf_issuers.australia()')
+        print('Starting Selenium')
+        url = 'https://www.investing.com/etfs/australia-etfs?&issuer_filter=0'
+        url2 = 'https://www.investing.com'
+        # driver = webdriver.Chrome()
+        driver.get(url)
+        ETFIssuers.objects.filter(country='AU').delete()
+        print('Removed old records starting to collect new ones')
+        soup = BeautifulSoup(driver.page_source, 'html.parser')
+        driver.quit()
+        print('Saved page source')
+        print('Starting to collect links')
+        links = []
+        for link in soup.find_all('td', class_='bold left noWrap elp plusIconTd'):
+            links.append(link.a['href'])
+        header={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36 OPR/38.0.2220.41'}
+        print('Links are collected')
+        print('Starting to visit them and collect issuers info')
+        i = 0
+        issuers = []
+        for link in links:
+            sleep(1)
+            l = url2 + link
+            try:
+                request = requests.get(l, headers=header)
+                soup = BeautifulSoup(request.text, 'html.parser')
+                issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
+            except:
+                try:
+                    print('Some Complication, sleeping for 10sec')
+                    sleep(10)
+                    request = requests.get(l, headers=header)
+                    soup = BeautifulSoup(request.text, 'html.parser')
+                    issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
+                except:
+                    continue
+            print(f'Visited {i}/{len(links)-1}')
+            i += 1
+            issuers.append(issuer)
+        issuers = list(set(issuers))
+        for issuer in issuers:
+            ETFIssuers(country='AU', name=issuer).save()
+        print('Results are saved in -> Australia ETF Issuers.txt')
+        return ''
+
 class CollectStaticInfo:
     def commodities():
         print('Starting CollectStaticInfo.commodities()')
@@ -192,7 +638,7 @@ class CollectStaticInfo:
                 short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 3M Company (MMM)
                 short_name = short_name[short_name.index('(')+1:].strip().replace(')', '') # MMM
                 market = soup.find('i', class_='btnTextDropDwn arial_12 bold').get_text()
-                markets = [m[0] for m in MARKETS_USA]
+                markets = [m[0] for m in MARKETS_US]
                 isin = soup.find('span', text='ISIN:').find_next_sibling().get_text().strip()
                 if market not in markets:
                     market = soup.find('table', class_='genTbl closedTbl exchangeDropdownTbl displayNone').tbody
@@ -210,7 +656,7 @@ class CollectStaticInfo:
                     short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 3M Company (MMM)
                     short_name = short_name[short_name.index('(')+1:].strip().replace(')', '') # MMM
                     market = soup.find('i', class_='btnTextDropDwn arial_12 bold').get_text()
-                    markets = [m[0] for m in MARKETS_USA]
+                    markets = [m[0] for m in MARKETS_US]
                     isin = soup.find('span', text='ISIN:').find_next_sibling().get_text().strip()
                     if market not in markets:
                         market = soup.find('table', class_='genTbl closedTbl exchangeDropdownTbl displayNone').tbody
@@ -229,7 +675,7 @@ class CollectStaticInfo:
             if i % 100 == 0:
                 print (f'{len(links)-i} equities left')
             i += 1
-            
+
         print('Data has been successfuly stored!')
         return ''
 
@@ -286,7 +732,7 @@ class CollectStaticInfo:
                 short_name = short_name[short_name.index('(')+1:].strip().replace(')', '') # MMM
                 isin = soup.find('span', text='ISIN:').find_next_sibling().get_text().strip()
                 market = soup.find('i', class_='btnTextDropDwn arial_12 bold').get_text()
-                markets = [m[0] for m in MARKETS_JPN]
+                markets = [m[0] for m in MARKETS_JP]
                 if market not in markets:
                     market = soup.find('table', class_='genTbl closedTbl exchangeDropdownTbl displayNone').tbody
                     market = market.find_all('tr')
@@ -304,7 +750,7 @@ class CollectStaticInfo:
                     short_name = short_name[short_name.index('(')+1:].strip().replace(')', '') # MMM
                     isin = soup.find('span', text='ISIN:').find_next_sibling().get_text().strip()
                     market = soup.find('i', class_='btnTextDropDwn arial_12 bold').get_text()
-                    markets = [m[0] for m in MARKETS_JPN]
+                    markets = [m[0] for m in MARKETS_JP]
                     if market not in markets:
                         market = soup.find('table', class_='genTbl closedTbl exchangeDropdownTbl displayNone').tbody
                         market = market.find_all('tr')
@@ -322,7 +768,7 @@ class CollectStaticInfo:
             if i % 100 == 0:
                 print (f'{len(links)-i} equities left')
             i += 1
-            
+
         print('Data has been successfuly stored!')
         return ''
 
@@ -399,7 +845,7 @@ class CollectStaticInfo:
             if i % 100 == 0:
                 print (f'{len(links)-i} equities left')
             i += 1
-            
+
         print('Data has been successfuly stored!')
         return ''
 
@@ -473,7 +919,7 @@ class CollectStaticInfo:
             if i % 100 == 0:
                 print (f'{len(links)-i} equities left')
             i += 1
-            
+
         print('Data has been successfuly stored!')
         return ''
 
@@ -550,7 +996,7 @@ class CollectStaticInfo:
             if i % 100 == 0:
                 print (f'{len(links)-i} equities left')
             i += 1
-            
+
         print('Data has been successfuly stored!')
         return ''
 
@@ -644,7 +1090,7 @@ class CollectStaticInfo:
             if i % 100 == 0:
                 print (f'{len(links)-i} equities left')
             i += 1
-            
+
         print('Data has been successfuly stored!')
         return ''
 
@@ -738,7 +1184,7 @@ class CollectStaticInfo:
             if i % 100 == 0:
                 print (f'{len(links)-i} equities left')
             i += 1
-            
+
         print('Data has been successfuly stored!')
         return ''
 
@@ -814,7 +1260,7 @@ class CollectStaticInfo:
             if i % 100 == 0:
                 print (f'{len(links)-i} equities left')
             i += 1
-            
+
         print('Data has been successfuly stored!')
         return ''
 
@@ -867,7 +1313,7 @@ class CollectStaticInfo:
                 short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 3M Company (MMM)
                 short_name = short_name[short_name.index('(')+1:].strip().replace(')', '') # MMM
                 market = soup.find('i', class_='btnTextDropDwn arial_12 bold').get_text()
-                markets = [m[0] for m in MARKETS_USA]
+                markets = [m[0] for m in MARKETS_US]
                 if market not in markets:
                     market = soup.find('table', class_='genTbl closedTbl exchangeDropdownTbl displayNone').tbody
                     market = market.find_all('tr')
@@ -884,7 +1330,7 @@ class CollectStaticInfo:
                     short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 3M Company (MMM)
                     short_name = short_name[short_name.index('(')+1:].strip().replace(')', '') # MMM
                     market = soup.find('i', class_='btnTextDropDwn arial_12 bold').get_text()
-                    markets = [m[0] for m in MARKETS_USA]
+                    markets = [m[0] for m in MARKETS_US]
                     if market not in markets:
                         market = soup.find('table', class_='genTbl closedTbl exchangeDropdownTbl displayNone').tbody
                         market = market.find_all('tr')
@@ -901,7 +1347,7 @@ class CollectStaticInfo:
             if i % 100 == 0:
                 print (f'{len(links)-i} equities left')
             i += 1
-            
+
         print('Data has been successfuly stored!')
         return ''
 
@@ -952,7 +1398,7 @@ class CollectStaticInfo:
                 short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 3M Company (MMM)
                 short_name = short_name[short_name.index('(')+1:].strip().replace(')', '') # MMM
                 market = soup.find('i', class_='btnTextDropDwn arial_12 bold').get_text()
-                markets = [m[0] for m in MARKETS_JPN]
+                markets = [m[0] for m in MARKETS_JP]
                 if market not in markets:
                     market = soup.find('table', class_='genTbl closedTbl exchangeDropdownTbl displayNone').tbody
                     market = market.find_all('tr')
@@ -969,7 +1415,7 @@ class CollectStaticInfo:
                     short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 3M Company (MMM)
                     short_name = short_name[short_name.index('(')+1:].strip().replace(')', '') # MMM
                     market = soup.find('i', class_='btnTextDropDwn arial_12 bold').get_text()
-                    markets = [m[0] for m in MARKETS_JPN]
+                    markets = [m[0] for m in MARKETS_JP]
                     if market not in markets:
                         market = soup.find('table', class_='genTbl closedTbl exchangeDropdownTbl displayNone').tbody
                         market = market.find_all('tr')
@@ -986,7 +1432,7 @@ class CollectStaticInfo:
             if i % 100 == 0:
                 print (f'{len(links)-i} equities left')
             i += 1
-            
+
         print('Data has been successfuly stored!')
         return ''
 
@@ -1051,7 +1497,7 @@ class CollectStaticInfo:
             if i % 100 == 0:
                 print (f'{len(links)-i} equities left')
             i += 1
-            
+
         print('Data has been successfuly stored!')
         return ''
 
@@ -1118,7 +1564,7 @@ class CollectStaticInfo:
             if i % 100 == 0:
                 print (f'{len(links)-i} equities left')
             i += 1
-            
+
         print('Data has been successfuly stored!')
         return ''
 
@@ -1204,7 +1650,7 @@ class CollectStaticInfo:
             if i % 100 == 0:
                 print (f'{len(links)-i} equities left')
             i += 1
-            
+
         print('Data has been successfuly stored!')
         return ''
 
@@ -1289,8 +1735,7 @@ class CollectStaticInfo:
             print(f'Stored {i}: {long_names[i]}')
             if i % 100 == 0:
                 print (f'{len(links)-i} equities left')
-                i += 1i += 1
-                
+                i += 1
         
         print('Data has been successfuly stored!')
         return ''
@@ -1372,11 +1817,11 @@ class CollectStaticInfo:
                     continue
             GermanyIndexStaticInfo(
                 short_name=short_name, long_name=long_names[i], 
+                market=market, link=l).save() 
             print(f'Stored {i}: {long_names[i]}')
             if i % 100 == 0:
                 print (f'{len(links)-i} equities left')
-                i += 1i += 1
-                
+                i += 1
         
         print('Data has been successfuly stored!')
         return ''
@@ -1443,8 +1888,9 @@ class CollectStaticInfo:
             print(f'Stored {i}: {long_names[i]}')
             if i % 100 == 0:
                 print (f'{len(links)-i} equities left')
-                i += 1i += 1
-                
+                i += 1
+
         
         print('Data has been successfuly stored!')
         return ''
+

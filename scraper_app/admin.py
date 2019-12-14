@@ -23,3 +23,5 @@ admin.site.register(models.ChinaIndexStaticInfo)
 admin.site.register(models.CanadaIndexStaticInfo)
 admin.site.register(models.GermanyIndexStaticInfo)
 admin.site.register(models.AustraliaIndexStaticInfo)
+# ETFs
+admin.site.register(models.ETFIssuers)

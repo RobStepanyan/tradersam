@@ -2,8 +2,8 @@ from django.db import models
 
 # Create your models here.
 COUNTRIES = (
-    ('G', 'Global'), ('USA', 'United States of America'), ('UK', 'United Kingdom'),
-    ('JPN', 'Japan'), ('HK', 'Hong Kong'), ('CH', 'China'), ('CA', 'Canada'),
+    ('G', 'Global'), ('US', 'United States of America'), ('UK', 'United Kingdom'),
+    ('JP', 'Japan'), ('HK', 'Hong Kong'), ('CH', 'China'), ('CA', 'Canada'),
     ('GE', 'Germany'), ('AU', 'Australia')
 )
 
@@ -13,15 +13,15 @@ CURRENCIES = (
     ('CNY', 'Chinese Yuan'), ('CAD', 'Canadian Dollar'), ('EUR', 'Euro'), ('AUD', 'Australian Dollar')
 )
 
-MARKETS_USA = (
+MARKETS_US = (
     ('NYSE', 'New York Stock Exchange (NYSE)'), ('NASDAQ', 'NASDAQ Stock Market'), ('OTC Markets', 'Over-The-Counter Markets (OTC)'),
     ('AMEX', 'American Stock Exchange (AMEX)'), ('BSE', 'Boston Stock Exchange (BSE)'), ('CBOE', 'Chicago Board Options Exchange (CBOE)'),
     ('CBOT', 'Chicago Board of Trade (CBOT)'), ('CME', 'Chicago Mercantile Exchange (CME)'), ('CHX', 'Chicago Stock Exchange (CHX)'),
-    ('ISE', 'International Securities Exchange (ISE)'), ('MS4X', 'Miami Stock Exchange (MS4X)'), ('NSX', 'National Stock Exchange (NSX)'),
+    ('ISE', 'International Securities Exchange i.nameSE)'), ('MS4X', 'Miami Stock Exchange (MS4X)'), ('NSX', 'National Stock Exchange (NSX)'),
     ('PHLX', 'Philadelphia Stock Exchange (PHLX)'), ('NYSE Arca', 'NYSE Arca')
 )
 
-MARKETS_JPN = (
+MARKETS_JP = (
     ('Tokyo', 'Tokyo Stock Exchange (TYO)'), ('Osaka', 'Osaka Securities Exchange'), ('Nagoya', 'Nagoya Stock Exchange (NSE)'),
     ('Fukuoka', 'Fukuoka Stock Exchange (FSE)'), ('Sapporo', 'Sapporo Securities Exchange'), ('JASDAQ', 'JASDAQ Securities Exchange')
 )
@@ -55,6 +55,7 @@ MARKETS_AU = (
     ('ASX', 'Australian Securities Exchange'),
 )
 
+
 class CommodityStaticInfo(models.Model):
     fields_to_scrape = (
         'Contract Size', 'Tick Size', 'Tick Value', 'Base Symbol', 'Point Value', 'Months')
@@ -65,7 +66,7 @@ class CommodityStaticInfo(models.Model):
     def long_name(self):
         return self.short_name + ' Futures Contract'
 
-    country = models.CharField(choices=COUNTRIES, max_length=3)
+    country = models.CharField(choices=COUNTRIES, max_length=2)
     
     base_symbol = models.CharField(max_length=6)
     contract_size = models.CharField(max_length=30)
@@ -111,8 +112,8 @@ class CryptocurrencyStaticInfo(models.Model):
 class USStockStaticInfo(models.Model):
     short_name = models.CharField(max_length=12)
     long_name = models.CharField(max_length=60)
-    country = models.CharField(choices=COUNTRIES, default='USA', max_length=3)
-    market = models.CharField(choices=MARKETS_USA, max_length=11)
+    country = models.CharField(choices=COUNTRIES, default='US', max_length=2)
+    market = models.CharField(choices=MARKETS_US, max_length=11)
     isin = models.CharField(max_length=12)
     link = models.URLField()
     currency = models.CharField(choices=CURRENCIES, default='USD', max_length=3)
@@ -127,8 +128,8 @@ class USStockStaticInfo(models.Model):
 class JapanStockStaticInfo(models.Model):
     short_name = models.CharField(max_length=12)
     long_name = models.CharField(max_length=60)
-    country = models.CharField(choices=COUNTRIES, default='JPN', max_length=3)
-    market = models.CharField(choices=MARKETS_JPN, max_length=7)
+    country = models.CharField(choices=COUNTRIES, default='JP', max_length=2)
+    market = models.CharField(choices=MARKETS_JP, max_length=7)
     isin = models.CharField(max_length=12)
     link = models.URLField()
     currency = models.CharField(choices=CURRENCIES, default='JPY', max_length=3)
@@ -143,7 +144,7 @@ class JapanStockStaticInfo(models.Model):
 class UKStockStaticInfo(models.Model):
     short_name = models.CharField(max_length=12)
     long_name = models.CharField(max_length=60)
-    country = models.CharField(choices=COUNTRIES, default='UK', max_length=3)
+    country = models.CharField(choices=COUNTRIES, default='UK', max_length=2)
     market = models.CharField(choices=MARKETS_UK, default='London', max_length=20)
     isin = models.CharField(max_length=12)
     link = models.URLField()
@@ -159,7 +160,7 @@ class UKStockStaticInfo(models.Model):
 class HKStockStaticInfo(models.Model):
     short_name = models.CharField(max_length=4)
     long_name = models.CharField(max_length=75)
-    country = models.CharField(choices=COUNTRIES, default='HK', max_length=3)
+    country = models.CharField(choices=COUNTRIES, default='HK', max_length=2)
     market = models.CharField(choices=MARKETS_HK, default='HKG', max_length=3)
     isin = models.CharField(max_length=12)
     link = models.URLField()
@@ -175,7 +176,7 @@ class HKStockStaticInfo(models.Model):
 class ChinaStockStaticInfo(models.Model):
     short_name = models.CharField(max_length=6)
     long_name = models.CharField(max_length=75)
-    country = models.CharField(choices=COUNTRIES, default='CH', max_length=3)
+    country = models.CharField(choices=COUNTRIES, default='CH', max_length=2)
     market = models.CharField(choices=MARKETS_CH, max_length=20)
     isin = models.CharField(max_length=12)
     link = models.URLField()
@@ -191,7 +192,7 @@ class ChinaStockStaticInfo(models.Model):
 class CanadaStockStaticInfo(models.Model):
     short_name = models.CharField(max_length=6)
     long_name = models.CharField(max_length=51)
-    country = models.CharField(choices=COUNTRIES, default='CA', max_length=3)
+    country = models.CharField(choices=COUNTRIES, default='CA', max_length=2)
     market = models.CharField(choices=MARKETS_CA, max_length=7)
     isin = models.CharField(max_length=12)
     link = models.URLField()
@@ -207,7 +208,7 @@ class CanadaStockStaticInfo(models.Model):
 class GermanyStockStaticInfo(models.Model):
     short_name = models.CharField(max_length=8)
     long_name = models.CharField(max_length=45)
-    country = models.CharField(choices=COUNTRIES, default='GE', max_length=3)
+    country = models.CharField(choices=COUNTRIES, default='GE', max_length=2)
     market = models.CharField(choices=MARKETS_GE, max_length=20)
     isin = models.CharField(max_length=12)
     link = models.URLField()
@@ -223,7 +224,7 @@ class GermanyStockStaticInfo(models.Model):
 class AustraliaStockStaticInfo(models.Model):
     short_name = models.CharField(max_length=8)
     long_name = models.CharField(max_length=49)
-    country = models.CharField(choices=COUNTRIES, default='AU', max_length=3)
+    country = models.CharField(choices=COUNTRIES, default='AU', max_length=2)
     market = models.CharField(choices=MARKETS_AU, max_length=3, default='ASX')
     isin = models.CharField(max_length=12)
     link = models.URLField()
@@ -239,8 +240,8 @@ class AustraliaStockStaticInfo(models.Model):
 class USIndexStaticInfo(models.Model):
     short_name = models.CharField(max_length=12)
     long_name = models.CharField(max_length=63)
-    country = models.CharField(choices=COUNTRIES, default='USA', max_length=3)
-    market = models.CharField(choices=MARKETS_USA, max_length=11)
+    country = models.CharField(choices=COUNTRIES, default='US', max_length=2)
+    market = models.CharField(choices=MARKETS_US, max_length=11)
     link = models.URLField()
     currency = models.CharField(choices=CURRENCIES, default='USD', max_length=3)
 
@@ -254,8 +255,8 @@ class USIndexStaticInfo(models.Model):
 class JapanIndexStaticInfo(models.Model):
     short_name = models.CharField(max_length=12)
     long_name = models.CharField(max_length=49)
-    country = models.CharField(choices=COUNTRIES, default='JPN', max_length=3)
-    market = models.CharField(choices=MARKETS_JPN, max_length=7)
+    country = models.CharField(choices=COUNTRIES, default='JP', max_length=2)
+    market = models.CharField(choices=MARKETS_JP, max_length=7)
     link = models.URLField()
     currency = models.CharField(choices=CURRENCIES, default='JPY', max_length=3)
 
@@ -269,7 +270,7 @@ class JapanIndexStaticInfo(models.Model):
 class UKIndexStaticInfo(models.Model):
     short_name = models.CharField(max_length=12)
     long_name = models.CharField(max_length=49)
-    country = models.CharField(choices=COUNTRIES, default='UK', max_length=3)
+    country = models.CharField(choices=COUNTRIES, default='UK', max_length=2)
     market = models.CharField(choices=MARKETS_UK, default='London', max_length=20)
     link = models.URLField()
     currency = models.CharField(choices=CURRENCIES, default='GBP', max_length=3)
@@ -284,7 +285,7 @@ class UKIndexStaticInfo(models.Model):
 class HKIndexStaticInfo(models.Model):
     short_name = models.CharField(max_length=12)
     long_name = models.CharField(max_length=56)
-    country = models.CharField(choices=COUNTRIES, default='HK', max_length=3)
+    country = models.CharField(choices=COUNTRIES, default='HK', max_length=2)
     market = models.CharField(choices=MARKETS_HK, default='HKG', max_length=3)
     link = models.URLField()
     currency = models.CharField(choices=CURRENCIES, default='HKD', max_length=3)
@@ -299,7 +300,7 @@ class HKIndexStaticInfo(models.Model):
 class ChinaIndexStaticInfo(models.Model):
     short_name = models.CharField(max_length=12)
     long_name = models.CharField(max_length=56)
-    country = models.CharField(choices=COUNTRIES, default='CH', max_length=3)
+    country = models.CharField(choices=COUNTRIES, default='CH', max_length=2)
     market = models.CharField(choices=MARKETS_CH, max_length=8)
     link = models.URLField()
     currency = models.CharField(choices=CURRENCIES, default='CNY', max_length=3)
@@ -314,7 +315,7 @@ class ChinaIndexStaticInfo(models.Model):
 class CanadaIndexStaticInfo(models.Model):
     short_name = models.CharField(max_length=12)
     long_name = models.CharField(max_length=44)
-    country = models.CharField(choices=COUNTRIES, default='CA', max_length=3)
+    country = models.CharField(choices=COUNTRIES, default='CA', max_length=2)
     market = models.CharField(choices=MARKETS_CA, max_length=7)
     link = models.URLField()
     currency = models.CharField(choices=CURRENCIES, default='CAD', max_length=3)
@@ -329,7 +330,7 @@ class CanadaIndexStaticInfo(models.Model):
 class GermanyIndexStaticInfo(models.Model):
     short_name = models.CharField(max_length=12)
     long_name = models.CharField(max_length=46)
-    country = models.CharField(choices=COUNTRIES, default='GE', max_length=3)
+    country = models.CharField(choices=COUNTRIES, default='GE', max_length=2)
     market = models.CharField(choices=MARKETS_GE, max_length=10)
     link = models.URLField()
     currency = models.CharField(choices=CURRENCIES, default='EUR', max_length=3)
@@ -344,7 +345,7 @@ class GermanyIndexStaticInfo(models.Model):
 class AustraliaIndexStaticInfo(models.Model):
     short_name = models.CharField(max_length=12)
     long_name = models.CharField(max_length=47)
-    country = models.CharField(choices=COUNTRIES, default='AU', max_length=3)
+    country = models.CharField(choices=COUNTRIES, default='AU', max_length=2)
     market = models.CharField(choices=MARKETS_AU, max_length=3, default='ASX')
     link = models.URLField()
     currency = models.CharField(choices=CURRENCIES, default='AUD', max_length=3)
@@ -355,3 +356,23 @@ class AustraliaIndexStaticInfo(models.Model):
     class Meta:
         verbose_name = "Australia Indices Static Info"
         verbose_name_plural = "Australia Indices Static Info"
+
+class ETFIssuers(models.Model):
+    name = models.CharField(max_length=80)
+    country = models.CharField(choices=COUNTRIES, max_length=2)
+
+    def __str__(self):
+        return f'{self.country}' + self.name
+
+    class Meta:
+        verbose_name = 'ETF Issuers'
+        verbose_name_plural = 'ETF Issuers'
+
+ETF_ISSUERS_US = tuple([(i.name, i.name) for i in list(ETFIssuers.objects.filter(country='US'))])
+ETF_ISSUERS_JP = tuple([(i.name, i.name) for i in list(ETFIssuers.objects.filter(country='JP'))])
+ETF_ISSUERS_UK = tuple([(i.name, i.name) for i in list(ETFIssuers.objects.filter(country='UK'))])
+ETF_ISSUERS_HK = tuple([(i.name, i.name) for i in list(ETFIssuers.objects.filter(country='HK'))])
+ETF_ISSUERS_CH = tuple([(i.name, i.name) for i in list(ETFIssuers.objects.filter(country='CH'))])
+ETF_ISSUERS_CA = tuple([(i.name, i.name) for i in list(ETFIssuers.objects.filter(country='CA'))])
+ETF_ISSUERS_GE = tuple([(i.name, i.name) for i in list(ETFIssuers.objects.filter(country='GE'))])
+ETF_ISSUERS_AU = tuple([(i.name, i.name) for i in list(ETFIssuers.objects.filter(country='AU'))])
