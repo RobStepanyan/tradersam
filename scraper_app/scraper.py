@@ -225,11 +225,11 @@ class CollectStaticInfo:
             USStockStaticInfo(
                 short_name=short_name, long_name=long_names[i],
                 market=market, isin=isin, link=l).save()
-            i += 1
             print(f'Stored {i}: {long_names[i]}')
             if i % 100 == 0:
                 print (f'{len(links)-i} equities left')
-        
+            i += 1
+            
         print('Data has been successfuly stored!')
         return ''
 
@@ -318,11 +318,11 @@ class CollectStaticInfo:
             JapanStockStaticInfo(
                 short_name=short_name, long_name=long_names[i],
                 market=market, isin=isin, link=l).save()
-            i += 1
             print(f'Stored {i}: {long_names[i]}')
             if i % 100 == 0:
                 print (f'{len(links)-i} equities left')
-        
+            i += 1
+            
         print('Data has been successfuly stored!')
         return ''
 
@@ -395,11 +395,11 @@ class CollectStaticInfo:
             UKStockStaticInfo(
                 short_name=short_name, long_name=long_names[i],
                 isin=isin, link=l).save()
-            i += 1
             print(f'Stored {i}: {long_names[i]}')
             if i % 100 == 0:
                 print (f'{len(links)-i} equities left')
-        
+            i += 1
+            
         print('Data has been successfuly stored!')
         return ''
 
@@ -469,11 +469,11 @@ class CollectStaticInfo:
             HKStockStaticInfo(
                 short_name=short_name, long_name=long_names[i],
                 isin=isin, link=l).save()
-            i += 1
             print(f'Stored {i}: {long_names[i]}')
             if i % 100 == 0:
                 print (f'{len(links)-i} equities left')
-        
+            i += 1
+            
         print('Data has been successfuly stored!')
         return ''
 
@@ -546,11 +546,11 @@ class CollectStaticInfo:
             ChinaStockStaticInfo(
                 short_name=short_name, long_name=long_names[i],
                 isin=isin, market=market, link=l).save()
-            i += 1
             print(f'Stored {i}: {long_names[i]}')
             if i % 100 == 0:
                 print (f'{len(links)-i} equities left')
-        
+            i += 1
+            
         print('Data has been successfuly stored!')
         return ''
 
@@ -640,11 +640,11 @@ class CollectStaticInfo:
             CanadaStockStaticInfo(
                 short_name=short_name, long_name=long_names[i],
                 isin=isin, market=market, link=l).save()
-            i += 1
             print(f'Stored {i}: {long_names[i]}')
             if i % 100 == 0:
                 print (f'{len(links)-i} equities left')
-        
+            i += 1
+            
         print('Data has been successfuly stored!')
         return ''
 
@@ -734,11 +734,11 @@ class CollectStaticInfo:
             GermanyStockStaticInfo(
                 short_name=short_name, long_name=long_names[i],
                 isin=isin, market=market, link=l).save()
-            i += 1
             print(f'Stored {i}: {long_names[i]}')
             if i % 100 == 0:
                 print (f'{len(links)-i} equities left')
-        
+            i += 1
+            
         print('Data has been successfuly stored!')
         return ''
 
@@ -810,11 +810,11 @@ class CollectStaticInfo:
             AustraliaStockStaticInfo(
                 short_name=short_name, long_name=long_names[i],
                 isin=isin, link=l).save()
-            i += 1
             print(f'Stored {i}: {long_names[i]}')
             if i % 100 == 0:
                 print (f'{len(links)-i} equities left')
-        
+            i += 1
+            
         print('Data has been successfuly stored!')
         return ''
 
@@ -897,11 +897,11 @@ class CollectStaticInfo:
             USIndexStaticInfo(
                 short_name=short_name, long_name=long_names[i],
                 market=market, link=l).save()
-            i += 1
             print(f'Stored {i}: {long_names[i]}')
             if i % 100 == 0:
                 print (f'{len(links)-i} equities left')
-        
+            i += 1
+            
         print('Data has been successfuly stored!')
         return ''
 
@@ -982,11 +982,11 @@ class CollectStaticInfo:
             JapanIndexStaticInfo(
                 short_name=short_name, long_name=long_names[i],
                 market=market, link=l).save()
-            i += 1
             print(f'Stored {i}: {long_names[i]}')
             if i % 100 == 0:
                 print (f'{len(links)-i} equities left')
-        
+            i += 1
+            
         print('Data has been successfuly stored!')
         return ''
 
@@ -1047,11 +1047,11 @@ class CollectStaticInfo:
                     continue
             UKIndexStaticInfo(
                 short_name=short_name, long_name=long_names[i], link=l).save()
-            i += 1
             print(f'Stored {i}: {long_names[i]}')
             if i % 100 == 0:
                 print (f'{len(links)-i} equities left')
-        
+            i += 1
+            
         print('Data has been successfuly stored!')
         return ''
 
@@ -1114,11 +1114,11 @@ class CollectStaticInfo:
                     continue
             HKIndexStaticInfo(
                 short_name=short_name, long_name=long_names[i], link=l).save()
-            i += 1
             print(f'Stored {i}: {long_names[i]}')
             if i % 100 == 0:
                 print (f'{len(links)-i} equities left')
-        
+            i += 1
+            
         print('Data has been successfuly stored!')
         return ''
 
@@ -1200,11 +1200,11 @@ class CollectStaticInfo:
             ChinaIndexStaticInfo(
                 short_name=short_name, long_name=long_names[i], 
                 market=market, link=l).save()
-            i += 1
             print(f'Stored {i}: {long_names[i]}')
             if i % 100 == 0:
                 print (f'{len(links)-i} equities left')
-        
+            i += 1
+            
         print('Data has been successfuly stored!')
         return ''
 
@@ -1286,10 +1286,11 @@ class CollectStaticInfo:
             CanadaIndexStaticInfo(
                 short_name=short_name, long_name=long_names[i], 
                 market=market, link=l).save()
-            i += 1
             print(f'Stored {i}: {long_names[i]}')
             if i % 100 == 0:
                 print (f'{len(links)-i} equities left')
+                i += 1i += 1
+                
         
         print('Data has been successfuly stored!')
         return ''
@@ -1371,11 +1372,11 @@ class CollectStaticInfo:
                     continue
             GermanyIndexStaticInfo(
                 short_name=short_name, long_name=long_names[i], 
-                market=market, link=l).save()
-            i += 1
             print(f'Stored {i}: {long_names[i]}')
             if i % 100 == 0:
                 print (f'{len(links)-i} equities left')
+                i += 1i += 1
+                
         
         print('Data has been successfuly stored!')
         return ''
@@ -1439,10 +1440,11 @@ class CollectStaticInfo:
                     continue
             AustraliaIndexStaticInfo(
                 short_name=short_name, long_name=long_names[i], link=l).save()
-            i += 1
             print(f'Stored {i}: {long_names[i]}')
             if i % 100 == 0:
                 print (f'{len(links)-i} equities left')
+                i += 1i += 1
+                
         
         print('Data has been successfuly stored!')
         return ''
