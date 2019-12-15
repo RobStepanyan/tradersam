@@ -358,7 +358,7 @@ class AustraliaIndexStaticInfo(models.Model):
         verbose_name_plural = "Australia Indices Static Info"
 
 class ETFIssuers(models.Model):
-    name = models.CharField(max_length=80)
+    name = models.CharField(max_length=45)
     country = models.CharField(choices=COUNTRIES, max_length=2)
 
     def __str__(self):
@@ -376,3 +376,139 @@ ETF_ISSUERS_CH = tuple([(i.name, i.name) for i in list(ETFIssuers.objects.filter
 ETF_ISSUERS_CA = tuple([(i.name, i.name) for i in list(ETFIssuers.objects.filter(country='CA'))])
 ETF_ISSUERS_GE = tuple([(i.name, i.name) for i in list(ETFIssuers.objects.filter(country='GE'))])
 ETF_ISSUERS_AU = tuple([(i.name, i.name) for i in list(ETFIssuers.objects.filter(country='AU'))])
+
+class USETFStaticInfo(models.Model):
+    short_name = models.CharField(max_length=12)
+    long_name = models.CharField(max_length=80)
+    country = models.CharField(choices=COUNTRIES, max_length=2)
+    issuer = models.CharField(choices=ETF_ISSUERS_US, max_length=32)
+    market = models.CharField(choices=MARKETS_US, max_length=11)
+    currency = models.CharField(choices=CURRENCIES, default='USD', max_length=3)
+    isin = models.CharField(max_length=12)
+    link = models.URLField()
+
+    def __str__(self):
+        return f'{self.country}' + self.name
+
+    class Meta:
+        verbose_name = 'United States ETFs\' Static Info'
+        verbose_name_plural = 'United States ETFs\' Static Info'
+
+class JapanETFStaticInfo(models.Model):
+    short_name = models.CharField(max_length=12)
+    long_name = models.CharField(max_length=80)
+    country = models.CharField(choices=COUNTRIES, default='JP', max_length=2)
+    issuer = models.CharField(choices=ETF_ISSUERS_JP, max_length=40)
+    market = models.CharField(choices=MARKETS_JP, max_length=7)
+    isin = models.CharField(max_length=12)
+    link = models.URLField()
+    currency = models.CharField(choices=CURRENCIES, default='JPY', max_length=3)
+
+    def __str__(self):
+        return f'{self.country}' + self.name
+
+    class Meta:
+        verbose_name = 'Japan ETFs\' Static Info'
+        verbose_name_plural = 'Japan ETFs\' Static Info'
+
+class UKETFStaticInfo(models.Model):
+    short_name = models.CharField(max_length=12)
+    long_name = models.CharField(max_length=80)
+    country = models.CharField(choices=COUNTRIES, default='UK', max_length=2)
+    issuer = models.CharField(choices=ETF_ISSUERS_UK, max_length=40)
+    market = models.CharField(choices=MARKETS_UK, default='London', max_length=20)
+    isin = models.CharField(max_length=12)
+    link = models.URLField()
+    currency = models.CharField(choices=CURRENCIES, default='GBP', max_length=3)
+
+    def __str__(self):
+        return f'{self.country}' + self.name
+
+    class Meta:
+        verbose_name = 'United Kingdom ETFs\' Static Info'
+        verbose_name_plural = 'United Kingdom ETFs\' Static Info'
+
+class HKETFStaticInfo(models.Model):
+    short_name = models.CharField(max_length=12)
+    long_name = models.CharField(max_length=80)
+    country = models.CharField(choices=COUNTRIES, default='HK', max_length=2)
+    issuer = models.CharField(choices=ETF_ISSUERS_HK, max_length=45)
+    market = models.CharField(choices=MARKETS_HK, default='HKG', max_length=3)
+    isin = models.CharField(max_length=12)
+    link = models.URLField()
+    currency = models.CharField(choices=CURRENCIES, default='HKD', max_length=3)
+
+    def __str__(self):
+        return f'{self.country}' + self.name
+
+    class Meta:
+        verbose_name = 'Honk Kong ETFs\' Static Info'
+        verbose_name_plural = 'Honk Kong ETFs\' Static Info'
+
+class ChinaETFStaticInfo(models.Model):
+    short_name = models.CharField(max_length=12)
+    long_name = models.CharField(max_length=80)
+    country = models.CharField(choices=COUNTRIES, default='CH', max_length=2)
+    issuer = models.CharField(choices=ETF_ISSUERS_CH, max_length=40)
+    market = models.CharField(choices=MARKETS_CH, max_length=20)
+    isin = models.CharField(max_length=12)
+    link = models.URLField()
+    currency = models.CharField(choices=CURRENCIES, default='CNY', max_length=3)
+
+    def __str__(self):
+        return f'{self.country}' + self.name
+
+    class Meta:
+        verbose_name = 'China ETFs\' Static Info'
+        verbose_name_plural = 'China ETFs\' Static Info'
+
+class CanadaETFStaticInfo(models.Model):
+    short_name = models.CharField(max_length=12)
+    long_name = models.CharField(max_length=80)
+    country = models.CharField(choices=COUNTRIES, default='CA', max_length=2)
+    issuer = models.CharField(choices=ETF_ISSUERS_CA, max_length=37)
+    market = models.CharField(choices=MARKETS_CA, max_length=7)
+    isin = models.CharField(max_length=12)
+    link = models.URLField()
+    currency = models.CharField(choices=CURRENCIES, default='CAD', max_length=3)
+
+    def __str__(self):
+        return f'{self.country}' + self.name
+
+    class Meta:
+        verbose_name = 'Canada ETFs\' Static Info'
+        verbose_name_plural = 'Canada ETFs\' Static Info'
+
+class GermanyETFStaticInfo(models.Model):
+    short_name = models.CharField(max_length=12)
+    long_name = models.CharField(max_length=80)
+    country = models.CharField(choices=COUNTRIES, default='GE', max_length=2)
+    issuer = models.CharField(choices=ETF_ISSUERS_GE, max_length=40)
+    market = models.CharField(choices=MARKETS_GE, max_length=20)
+    isin = models.CharField(max_length=12)
+    link = models.URLField()
+    currency = models.CharField(choices=CURRENCIES, default='EUR', max_length=3)
+
+    def __str__(self):
+        return f'{self.country}' + self.name
+
+    class Meta:
+        verbose_name = 'Germany ETFs\' Static Info'
+        verbose_name_plural = 'Germany ETFs\' Static Info'
+
+class AustraliaETFStaticInfo(models.Model):
+    short_name = models.CharField(max_length=12)
+    long_name = models.CharField(max_length=80)
+    country = models.CharField(choices=COUNTRIES, default='AU', max_length=2)
+    issuer = models.CharField(choices=ETF_ISSUERS_AU, max_length=38)
+    market = models.CharField(choices=MARKETS_AU, max_length=3, default='ASX')
+    isin = models.CharField(max_length=12)
+    link = models.URLField()
+    currency = models.CharField(choices=CURRENCIES, default='AUD', max_length=3)
+
+    def __str__(self):
+        return f'{self.country}' + self.name
+
+    class Meta:
+        verbose_name = 'Australia ETFs\' Static Info'
+        verbose_name_plural = 'Australia ETFs\' Static Info'

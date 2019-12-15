@@ -10,18 +10,19 @@ from .models import (
     AustraliaStockStaticInfo, 
     USIndexStaticInfo, JapanIndexStaticInfo, UKIndexStaticInfo, HKIndexStaticInfo, ChinaIndexStaticInfo,
     CanadaIndexStaticInfo, GermanyIndexStaticInfo, AustraliaIndexStaticInfo,
-    ETFIssuers
+    ETFIssuers, USETFStaticInfo, JapanETFStaticInfo, UKETFStaticInfo, HKETFStaticInfo, ChinaETFStaticInfo,
+    CanadaETFStaticInfo, GermanyETFStaticInfo, AustraliaETFStaticInfo
 )
 from .models import (
-    MARKETS_US, MARKETS_JP, MARKETS_CH, MARKETS_CA, MARKETS_GE
+    MARKETS_US, MARKETS_JP, MARKETS_CH, MARKETS_CA, MARKETS_GE,
+    ETF_ISSUERS_US, ETF_ISSUERS_JP, ETF_ISSUERS_UK, ETF_ISSUERS_HK, ETF_ISSUERS_CH, ETF_ISSUERS_CA,
+    ETF_ISSUERS_GE, ETF_ISSUERS_AU
 )
 
 class CollectETFIssuers:
     def all():
         print('Starting to collect for United States')
         CollectETFIssuers.us()
-        # from .models import ETF_ISSUERS_US
-        # print(ETF_ISSUERS_US)
         print('Starting to collect for Japan')
         CollectETFIssuers.japan()
         print('Starting to collect for United Kingdom')
@@ -458,6 +459,629 @@ class CollectETFIssuers:
         for issuer in issuers:
             ETFIssuers(country='AU', name=issuer).save()
         print('Results are saved in -> Australia ETF Issuers.txt')
+        return ''
+
+class CollectETFStaticInfo:
+    def all():
+        print('Starting CollectETFStaticInfo')
+        print('Starting to collect for United States')
+        CollectETFStaticInfo.us()
+        print('Starting to collect for Japan')
+        CollectETFStaticInfo.japan()
+        print('Starting to collect for United Kingdom')
+        CollectETFStaticInfo.uk()
+        print('Starting to collect for Honk Kong')
+        CollectETFStaticInfo.hk()
+        print('Starting to collect for China')
+        CollectETFStaticInfo.china()
+        print('Starting to collect for Canada')
+        CollectETFStaticInfo.canada()
+        print('Starting to collect for Germany')
+        CollectETFStaticInfo.germany()
+        print('Starting to collect for Australia')
+        CollectETFStaticInfo.australia()
+
+
+    def us():
+        #--------------------VPS------------------
+        display = Display(visible=0, size=(800, 600))
+        display.start()
+        options = webdriver.ChromeOptions()
+        options.add_argument('--no-sandbox')
+        driver = webdriver.Chrome(options=options)
+        #-----------------------------------------
+        print('Starting get_etf_issuers.us()')
+        print('Starting Selenium')
+        url = 'https://www.investing.com/etfs/usa-etfs?&issuer_filter=0'
+        url2 = 'https://www.investing.com'
+        # driver = webdriver.Chrome()
+        driver.get(url)
+        USETFStaticInfo.objects.all().delete()
+        print('Removed old records starting to collect new ones')
+        soup = BeautifulSoup(driver.page_source, 'html.parser')
+        driver.quit()
+        print('Saved page source')
+        print('Starting to collect links')
+        links = []
+        long_names = []
+        for link in soup.find_all('td', class_='bold left noWrap elp plusIconTd'):
+            links.append(link.a['href'])
+            long_names.append(link.a['title'])
+
+        header={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36 OPR/38.0.2220.41'}
+        print('Links are collected')
+        print('Starting to visit them and store in database')
+        i = 0
+        for link in links[:2]:
+            sleep(1)
+            l = url2 + link
+            try:
+                request = requests.get(l, headers=header)
+                soup = BeautifulSoup(request.text, 'html.parser')
+                short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 3M Company (MMM)
+                short_name = short_name[short_name.index('(')+1:].strip().replace(')', '') # MMM
+                market = soup.find('i', class_='btnTextDropDwn arial_12 bold').get_text()
+                markets = [m[0] for m in MARKETS_US]
+                issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
+                isin = soup.find('span', text='ISIN:').find_next_sibling().get_text().strip()
+                if market not in markets:
+                    market = soup.find('table', class_='genTbl closedTbl exchangeDropdownTbl displayNone').tbody
+                    market = market.find_all('tr')
+                    for tr in market:
+                        if tr.find('td', class_='left bold').find_next_sibling().get_text() in markets:
+                            market = tr.find('td', class_='left bold').find_next_sibling().get_text()
+                            break
+            except:
+                try:
+                    print('Some Complication, sleeping for 10sec')
+                    sleep(10)
+                    request = requests.get(l, headers=header)
+                    soup = BeautifulSoup(request.text, 'html.parser')
+                    short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 3M Company (MMM)
+                    short_name = short_name[short_name.index('(')+1:].strip().replace(')', '') # MMM
+                    market = soup.find('i', class_='btnTextDropDwn arial_12 bold').get_text()
+                    markets = [m[0] for m in MARKETS_US]
+                    issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
+                    isin = soup.find('span', text='ISIN:').find_next_sibling().get_text().strip()
+                    if market not in markets:
+                        market = soup.find('table', class_='genTbl closedTbl exchangeDropdownTbl displayNone').tbody
+                        market = market.find_all('tr')
+                        for tr in market:
+                            if tr.find('td', class_='left bold').find_next_sibling().get_text() in markets:
+                                market = tr.find('td', class_='left bold').find_next_sibling().get_text()
+                                break
+                except:
+                    continue
+
+            USETFStaticInfo(
+                short_name=short_name, long_name=long_names[i],
+                market=market, issuer=issuer, isin=isin, link=l).save()
+            print(f'Stored {i}: {long_names[i]} ({i}/{len(long_names)})')
+            if i % 100 == 0:
+                print (f'{len(links)-i} equities left')
+            i += 1
+
+        print('Data has been successfuly stored!')
+        return ''
+
+    def japan():
+        #--------------------VPS------------------
+        display = Display(visible=0, size=(800, 600))
+        display.start()
+        options = webdriver.ChromeOptions()
+        options.add_argument('--no-sandbox')
+        driver = webdriver.Chrome(options=options)
+        #-----------------------------------------
+        print('Starting get_etf_issuers.japan()')
+        print('Starting Selenium')
+        url = 'https://www.investing.com/etfs/japan-etfs?&issuer_filter=0'
+        url2 = 'https://www.investing.com'
+        # driver = webdriver.Chrome()
+        driver.get(url)
+        JapanETFStaticInfo.objects.all().delete()
+        print('Removed old records starting to collect new ones')
+        soup = BeautifulSoup(driver.page_source, 'html.parser')
+        driver.quit()
+        print('Saved page source')
+        print('Starting to collect links')
+        links = []
+        long_names = []
+        for link in soup.find_all('td', class_='bold left noWrap elp plusIconTd'):
+            links.append(link.a['href'])
+            long_names.append(link.a['title'])
+
+        header={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36 OPR/38.0.2220.41'}
+        print('Links are collected')
+        print('Starting to visit them and store in database')
+        i = 0
+        for link in links[:2]:
+            sleep(1)
+            l = url2 + link
+            try:
+                request = requests.get(l, headers=header)
+                soup = BeautifulSoup(request.text, 'html.parser')
+                short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 3M Company (MMM)
+                short_name = short_name[short_name.index('(')+1:].strip().replace(')', '') # MMM
+                market = soup.find('i', class_='btnTextDropDwn arial_12 bold').get_text()
+                markets = [m[0] for m in MARKETS_JP]
+                issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
+                isin = soup.find('span', text='ISIN:').find_next_sibling().get_text().strip()
+                if market not in markets:
+                    market = soup.find('table', class_='genTbl closedTbl exchangeDropdownTbl displayNone').tbody
+                    market = market.find_all('tr')
+                    for tr in market:
+                        if tr.find('td', class_='left bold').find_next_sibling().get_text() in markets:
+                            market = tr.find('td', class_='left bold').find_next_sibling().get_text()
+                            break
+            except:
+                try:
+                    print('Some Complication, sleeping for 10sec')
+                    sleep(10)
+                    request = requests.get(l, headers=header)
+                    soup = BeautifulSoup(request.text, 'html.parser')
+                    short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 3M Company (MMM)
+                    short_name = short_name[short_name.index('(')+1:].strip().replace(')', '') # MMM
+                    market = soup.find('i', class_='btnTextDropDwn arial_12 bold').get_text()
+                    markets = [m[0] for m in MARKETS_JP]
+                    issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
+                    isin = soup.find('span', text='ISIN:').find_next_sibling().get_text().strip()
+                    if market not in markets:
+                        market = soup.find('table', class_='genTbl closedTbl exchangeDropdownTbl displayNone').tbody
+                        market = market.find_all('tr')
+                        for tr in market:
+                            if tr.find('td', class_='left bold').find_next_sibling().get_text() in markets:
+                                market = tr.find('td', class_='left bold').find_next_sibling().get_text()
+                                break
+                except:
+                    continue
+
+            JapanETFStaticInfo(
+                short_name=short_name, long_name=long_names[i],
+                market=market, issuer=issuer, isin=isin, link=l).save()
+            print(f'Stored {i}: {long_names[i]} ({i}/{len(long_names)})')
+            if i % 100 == 0:
+                print (f'{len(links)-i} equities left')
+            i += 1
+
+        print('Data has been successfuly stored!')
+        return ''
+
+    def uk():
+        #--------------------VPS------------------
+        display = Display(visible=0, size=(800, 600))
+        display.start()
+        options = webdriver.ChromeOptions()
+        options.add_argument('--no-sandbox')
+        driver = webdriver.Chrome(options=options)
+        #-----------------------------------------
+        print('Starting get_etf_issuers.uk()')
+        print('Starting Selenium')
+        url = 'https://www.investing.com/etfs/uk-etfs?&issuer_filter=0'
+        url2 = 'https://www.investing.com'
+        # driver = webdriver.Chrome()
+        driver.get(url)
+        UKETFStaticInfo.objects.all().delete()
+        print('Removed old records starting to collect new ones')
+        soup = BeautifulSoup(driver.page_source, 'html.parser')
+        driver.quit()
+        print('Saved page source')
+        print('Starting to collect links')
+        links = []
+        long_names = []
+        for link in soup.find_all('td', class_='bold left noWrap elp plusIconTd'):
+            links.append(link.a['href'])
+            long_names.append(link.a['title'])
+
+        header={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36 OPR/38.0.2220.41'}
+        print('Links are collected')
+        print('Starting to visit them and store in database')
+        i = 0
+        for link in links[:2]:
+            sleep(1)
+            l = url2 + link
+            try:
+                request = requests.get(l, headers=header)
+                soup = BeautifulSoup(request.text, 'html.parser')
+                short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 3M Company (MMM)
+                short_name = short_name[short_name.index('(')+1:].strip().replace(')', '') # MMM
+                issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
+                isin = soup.find('span', text='ISIN:').find_next_sibling().get_text().strip()
+            except:
+                try:
+                    print('Some Complication, sleeping for 10sec')
+                    sleep(10)
+                    request = requests.get(l, headers=header)
+                    soup = BeautifulSoup(request.text, 'html.parser')
+                    short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 3M Company (MMM)
+                    short_name = short_name[short_name.index('(')+1:].strip().replace(')', '') # MMM
+                    issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
+                    isin = soup.find('span', text='ISIN:').find_next_sibling().get_text().strip()
+                except:
+                    continue
+
+            UKETFStaticInfo(
+                short_name=short_name, long_name=long_names[i],
+                issuer=issuer, isin=isin, link=l).save()
+            print(f'Stored {i}: {long_names[i]} ({i}/{len(long_names)})')
+            if i % 100 == 0:
+                print (f'{len(links)-i} equities left')
+            i += 1
+
+        print('Data has been successfuly stored!')
+        return ''
+
+    def hk():
+        #--------------------VPS------------------
+        display = Display(visible=0, size=(800, 600))
+        display.start()
+        options = webdriver.ChromeOptions()
+        options.add_argument('--no-sandbox')
+        driver = webdriver.Chrome(options=options)
+        #-----------------------------------------
+        print('Starting get_etf_issuers.hk()')
+        print('Starting Selenium')
+        url = 'https://www.investing.com/etfs/hong-kong-etfs?&issuer_filter=0'
+        url2 = 'https://www.investing.com'
+        # driver = webdriver.Chrome()
+        driver.get(url)
+        HKETFStaticInfo.objects.all().delete()
+        print('Removed old records starting to collect new ones')
+        soup = BeautifulSoup(driver.page_source, 'html.parser')
+        driver.quit()
+        print('Saved page source')
+        print('Starting to collect links')
+        links = []
+        long_names = []
+        for link in soup.find_all('td', class_='bold left noWrap elp plusIconTd'):
+            links.append(link.a['href'])
+            long_names.append(link.a['title'])
+
+        header={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36 OPR/38.0.2220.41'}
+        print('Links are collected')
+        print('Starting to visit them and store in database')
+        i = 0
+        for link in links[:2]:
+            sleep(1)
+            l = url2 + link
+            try:
+                request = requests.get(l, headers=header)
+                soup = BeautifulSoup(request.text, 'html.parser')
+                short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 3M Company (MMM)
+                short_name = short_name[short_name.index('(')+1:].strip().replace(')', '') # MMM
+                issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
+                isin = soup.find('span', text='ISIN:').find_next_sibling().get_text().strip()
+            except:
+                try:
+                    print('Some Complication, sleeping for 10sec')
+                    sleep(10)
+                    request = requests.get(l, headers=header)
+                    soup = BeautifulSoup(request.text, 'html.parser')
+                    short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 3M Company (MMM)
+                    short_name = short_name[short_name.index('(')+1:].strip().replace(')', '') # MMM
+                    issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
+                    isin = soup.find('span', text='ISIN:').find_next_sibling().get_text().strip()
+                except:
+                    continue
+
+            HKETFStaticInfo(
+                short_name=short_name, long_name=long_names[i],
+                issuer=issuer, isin=isin, link=l).save()
+            print(f'Stored {i}: {long_names[i]} ({i}/{len(long_names)})')
+            if i % 100 == 0:
+                print (f'{len(links)-i} equities left')
+            i += 1
+
+        print('Data has been successfuly stored!')
+        return ''
+
+    def china():
+        #--------------------VPS------------------
+        display = Display(visible=0, size=(800, 600))
+        display.start()
+        options = webdriver.ChromeOptions()
+        options.add_argument('--no-sandbox')
+        driver = webdriver.Chrome(options=options)
+        #-----------------------------------------
+        print('Starting get_etf_issuers.china()')
+        print('Starting Selenium')
+        url = 'https://www.investing.com/etfs/china-etfs?&issuer_filter=0'
+        url2 = 'https://www.investing.com'
+        # driver = webdriver.Chrome()
+        driver.get(url)
+        ChinaETFStaticInfo.objects.all().delete()
+        print('Removed old records starting to collect new ones')
+        soup = BeautifulSoup(driver.page_source, 'html.parser')
+        driver.quit()
+        print('Saved page source')
+        print('Starting to collect links')
+        links = []
+        long_names = []
+        for link in soup.find_all('td', class_='bold left noWrap elp plusIconTd'):
+            links.append(link.a['href'])
+            long_names.append(link.a['title'])
+
+        header={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36 OPR/38.0.2220.41'}
+        print('Links are collected')
+        print('Starting to visit them and store in database')
+        i = 0
+        for link in links[:2]:
+            sleep(1)
+            l = url2 + link
+            try:
+                request = requests.get(l, headers=header)
+                soup = BeautifulSoup(request.text, 'html.parser')
+                short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 3M Company (MMM)
+                short_name = short_name[short_name.index('(')+1:].strip().replace(')', '') # MMM
+                market = soup.find('i', class_='btnTextDropDwn arial_12 bold').get_text()
+                markets = [m[0] for m in MARKETS_CH]
+                issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
+                isin = soup.find('span', text='ISIN:').find_next_sibling().get_text().strip()
+                if market not in markets:
+                    market = soup.find('table', class_='genTbl closedTbl exchangeDropdownTbl displayNone').tbody
+                    market = market.find_all('tr')
+                    for tr in market:
+                        if tr.find('td', class_='left bold').find_next_sibling().get_text() in markets:
+                            market = tr.find('td', class_='left bold').find_next_sibling().get_text()
+                            break
+            except:
+                try:
+                    print('Some Complication, sleeping for 10sec')
+                    sleep(10)
+                    request = requests.get(l, headers=header)
+                    soup = BeautifulSoup(request.text, 'html.parser')
+                    short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 3M Company (MMM)
+                    short_name = short_name[short_name.index('(')+1:].strip().replace(')', '') # MMM
+                    market = soup.find('i', class_='btnTextDropDwn arial_12 bold').get_text()
+                    markets = [m[0] for m in MARKETS_CH]
+                    issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
+                    isin = soup.find('span', text='ISIN:').find_next_sibling().get_text().strip()
+                    if market not in markets:
+                        market = soup.find('table', class_='genTbl closedTbl exchangeDropdownTbl displayNone').tbody
+                        market = market.find_all('tr')
+                        for tr in market:
+                            if tr.find('td', class_='left bold').find_next_sibling().get_text() in markets:
+                                market = tr.find('td', class_='left bold').find_next_sibling().get_text()
+                                break
+                except:
+                    continue
+
+            ChinaETFStaticInfo(
+                short_name=short_name, long_name=long_names[i],
+                market=market, issuer=issuer, isin=isin, link=l).save()
+            print(f'Stored {i}: {long_names[i]} ({i}/{len(long_names)})')
+            if i % 100 == 0:
+                print (f'{len(links)-i} equities left')
+            i += 1
+
+        print('Data has been successfuly stored!')
+        return ''
+
+    def canada():
+        #--------------------VPS------------------
+        display = Display(visible=0, size=(800, 600))
+        display.start()
+        options = webdriver.ChromeOptions()
+        options.add_argument('--no-sandbox')
+        driver = webdriver.Chrome(options=options)
+        #-----------------------------------------
+        print('Starting get_etf_issuers.canada()')
+        print('Starting Selenium')
+        url = 'https://www.investing.com/etfs/canada-etfs?&issuer_filter=0'
+        url2 = 'https://www.investing.com'
+        # driver = webdriver.Chrome()
+        driver.get(url)
+        CanadaETFStaticInfo.objects.all().delete()
+        print('Removed old records starting to collect new ones')
+        soup = BeautifulSoup(driver.page_source, 'html.parser')
+        driver.quit()
+        print('Saved page source')
+        print('Starting to collect links')
+        links = []
+        long_names = []
+        for link in soup.find_all('td', class_='bold left noWrap elp plusIconTd'):
+            links.append(link.a['href'])
+            long_names.append(link.a['title'])
+
+        header={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36 OPR/38.0.2220.41'}
+        print('Links are collected')
+        print('Starting to visit them and store in database')
+        i = 0
+        for link in links[:2]:
+            sleep(1)
+            l = url2 + link
+            try:
+                request = requests.get(l, headers=header)
+                soup = BeautifulSoup(request.text, 'html.parser')
+                short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 3M Company (MMM)
+                short_name = short_name[short_name.index('(')+1:].strip().replace(')', '') # MMM
+                market = soup.find('i', class_='btnTextDropDwn arial_12 bold').get_text()
+                markets = [m[0] for m in MARKETS_CA]
+                issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
+                isin = soup.find('span', text='ISIN:').find_next_sibling().get_text().strip()
+                if market not in markets:
+                    market = soup.find('table', class_='genTbl closedTbl exchangeDropdownTbl displayNone').tbody
+                    market = market.find_all('tr')
+                    for tr in market:
+                        if tr.find('td', class_='left bold').find_next_sibling().get_text() in markets:
+                            market = tr.find('td', class_='left bold').find_next_sibling().get_text()
+                            break
+            except:
+                try:
+                    print('Some Complication, sleeping for 10sec')
+                    sleep(10)
+                    request = requests.get(l, headers=header)
+                    soup = BeautifulSoup(request.text, 'html.parser')
+                    short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 3M Company (MMM)
+                    short_name = short_name[short_name.index('(')+1:].strip().replace(')', '') # MMM
+                    market = soup.find('i', class_='btnTextDropDwn arial_12 bold').get_text()
+                    markets = [m[0] for m in MARKETS_CA]
+                    issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
+                    isin = soup.find('span', text='ISIN:').find_next_sibling().get_text().strip()
+                    if market not in markets:
+                        market = soup.find('table', class_='genTbl closedTbl exchangeDropdownTbl displayNone').tbody
+                        market = market.find_all('tr')
+                        for tr in market:
+                            if tr.find('td', class_='left bold').find_next_sibling().get_text() in markets:
+                                market = tr.find('td', class_='left bold').find_next_sibling().get_text()
+                                break
+                except:
+                    continue
+
+            CanadaETFStaticInfo(
+                short_name=short_name, long_name=long_names[i],
+                market=market, issuer=issuer, isin=isin, link=l).save()
+            print(f'Stored {i}: {long_names[i]} ({i}/{len(long_names)})')
+            if i % 100 == 0:
+                print (f'{len(links)-i} equities left')
+            i += 1
+
+        print('Data has been successfuly stored!')
+        return ''
+
+    def germany():
+        #--------------------VPS------------------
+        display = Display(visible=0, size=(800, 600))
+        display.start()
+        options = webdriver.ChromeOptions()
+        options.add_argument('--no-sandbox')
+        driver = webdriver.Chrome(options=options)
+        #-----------------------------------------
+        print('Starting get_etf_issuers.germany()')
+        print('Starting Selenium')
+        url = 'https://www.investing.com/etfs/germany-etfs?&issuer_filter=0'
+        url2 = 'https://www.investing.com'
+        # driver = webdriver.Chrome()
+        driver.get(url)
+        GermanyETFStaticInfo.objects.all().delete()
+        print('Removed old records starting to collect new ones')
+        soup = BeautifulSoup(driver.page_source, 'html.parser')
+        driver.quit()
+        print('Saved page source')
+        print('Starting to collect links')
+        links = []
+        long_names = []
+        for link in soup.find_all('td', class_='bold left noWrap elp plusIconTd'):
+            links.append(link.a['href'])
+            long_names.append(link.a['title'])
+
+        header={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36 OPR/38.0.2220.41'}
+        print('Links are collected')
+        print('Starting to visit them and store in database')
+        i = 0
+        for link in links[:2]:
+            sleep(1)
+            l = url2 + link
+            try:
+                request = requests.get(l, headers=header)
+                soup = BeautifulSoup(request.text, 'html.parser')
+                short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 3M Company (MMM)
+                short_name = short_name[short_name.index('(')+1:].strip().replace(')', '') # MMM
+                market = soup.find('i', class_='btnTextDropDwn arial_12 bold').get_text()
+                markets = [m[0] for m in MARKETS_GE]
+                issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
+                isin = soup.find('span', text='ISIN:').find_next_sibling().get_text().strip()
+                if market not in markets:
+                    market = soup.find('table', class_='genTbl closedTbl exchangeDropdownTbl displayNone').tbody
+                    market = market.find_all('tr')
+                    for tr in market:
+                        if tr.find('td', class_='left bold').find_next_sibling().get_text() in markets:
+                            market = tr.find('td', class_='left bold').find_next_sibling().get_text()
+                            break
+            except:
+                try:
+                    print('Some Complication, sleeping for 10sec')
+                    sleep(10)
+                    request = requests.get(l, headers=header)
+                    soup = BeautifulSoup(request.text, 'html.parser')
+                    short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 3M Company (MMM)
+                    short_name = short_name[short_name.index('(')+1:].strip().replace(')', '') # MMM
+                    market = soup.find('i', class_='btnTextDropDwn arial_12 bold').get_text()
+                    markets = [m[0] for m in MARKETS_GE]
+                    issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
+                    isin = soup.find('span', text='ISIN:').find_next_sibling().get_text().strip()
+                    if market not in markets:
+                        market = soup.find('table', class_='genTbl closedTbl exchangeDropdownTbl displayNone').tbody
+                        market = market.find_all('tr')
+                        for tr in market:
+                            if tr.find('td', class_='left bold').find_next_sibling().get_text() in markets:
+                                market = tr.find('td', class_='left bold').find_next_sibling().get_text()
+                                break
+                except:
+                    continue
+
+            GermanyETFStaticInfo(
+                short_name=short_name, long_name=long_names[i],
+                market=market, issuer=issuer, isin=isin, link=l).save()
+            print(f'Stored {i}: {long_names[i]} ({i}/{len(long_names)})')
+            if i % 100 == 0:
+                print (f'{len(links)-i} equities left')
+            i += 1
+
+        print('Data has been successfuly stored!')
+        return ''
+
+    def australia():
+        #--------------------VPS------------------
+        display = Display(visible=0, size=(800, 600))
+        display.start()
+        options = webdriver.ChromeOptions()
+        options.add_argument('--no-sandbox')
+        driver = webdriver.Chrome(options=options)
+        #-----------------------------------------
+        print('Starting get_etf_issuers.australia()')
+        print('Starting Selenium')
+        url = 'https://www.investing.com/etfs/australia-etfs?&issuer_filter=0'
+        url2 = 'https://www.investing.com'
+        # driver = webdriver.Chrome()
+        driver.get(url)
+        AustraliaETFStaticInfo.objects.all().delete()
+        print('Removed old records starting to collect new ones')
+        soup = BeautifulSoup(driver.page_source, 'html.parser')
+        driver.quit()
+        print('Saved page source')
+        print('Starting to collect links')
+        links = []
+        long_names = []
+        for link in soup.find_all('td', class_='bold left noWrap elp plusIconTd'):
+            links.append(link.a['href'])
+            long_names.append(link.a['title'])
+
+        header={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36 OPR/38.0.2220.41'}
+        print('Links are collected')
+        print('Starting to visit them and store in database')
+        i = 0
+        for link in links[:2]:
+            sleep(1)
+            l = url2 + link
+            try:
+                request = requests.get(l, headers=header)
+                soup = BeautifulSoup(request.text, 'html.parser')
+                short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 3M Company (MMM)
+                short_name = short_name[short_name.index('(')+1:].strip().replace(')', '') # MMM
+                issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
+                isin = soup.find('span', text='ISIN:').find_next_sibling().get_text().strip()
+            except:
+                try:
+                    print('Some Complication, sleeping for 10sec')
+                    sleep(10)
+                    request = requests.get(l, headers=header)
+                    soup = BeautifulSoup(request.text, 'html.parser')
+                    short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 3M Company (MMM)
+                    short_name = short_name[short_name.index('(')+1:].strip().replace(')', '') # MMM
+                    issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
+                    isin = soup.find('span', text='ISIN:').find_next_sibling().get_text().strip()
+                except:
+                    continue
+
+            AustraliaETFStaticInfo(
+                short_name=short_name, long_name=long_names[i],
+                issuer=issuer, isin=isin, link=l).save()
+            print(f'Stored {i}: {long_names[i]} ({i}/{len(long_names)})')
+            if i % 100 == 0:
+                print (f'{len(links)-i} equities left')
+            i += 1
+
+        print('Data has been successfuly stored!')
         return ''
 
 class CollectStaticInfo:
