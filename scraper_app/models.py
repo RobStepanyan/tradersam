@@ -379,7 +379,7 @@ ETF_ISSUERS_AU = tuple([(i.name, i.name) for i in list(ETFIssuers.objects.filter
 
 class USETFStaticInfo(models.Model):
     short_name = models.CharField(max_length=12)
-    long_name = models.CharField(max_length=80)
+    long_name = models.CharField(max_length=98)
     country = models.CharField(choices=COUNTRIES, default='US', max_length=2)
     issuer = models.CharField(choices=ETF_ISSUERS_US, max_length=32)
     market = models.CharField(choices=MARKETS_US, max_length=11)
@@ -396,7 +396,7 @@ class USETFStaticInfo(models.Model):
 
 class JapanETFStaticInfo(models.Model):
     short_name = models.CharField(max_length=12)
-    long_name = models.CharField(max_length=80)
+    long_name = models.CharField(max_length=75)
     country = models.CharField(choices=COUNTRIES, default='JP', max_length=2)
     issuer = models.CharField(choices=ETF_ISSUERS_JP, max_length=40)
     market = models.CharField(choices=MARKETS_JP, max_length=7)
@@ -413,7 +413,7 @@ class JapanETFStaticInfo(models.Model):
 
 class UKETFStaticInfo(models.Model):
     short_name = models.CharField(max_length=12)
-    long_name = models.CharField(max_length=80)
+    long_name = models.CharField(max_length=84)
     country = models.CharField(choices=COUNTRIES, default='UK', max_length=2)
     issuer = models.CharField(choices=ETF_ISSUERS_UK, max_length=40)
     market = models.CharField(choices=MARKETS_UK, default='London', max_length=20)
@@ -430,7 +430,7 @@ class UKETFStaticInfo(models.Model):
 
 class HKETFStaticInfo(models.Model):
     short_name = models.CharField(max_length=12)
-    long_name = models.CharField(max_length=80)
+    long_name = models.CharField(max_length=79)
     country = models.CharField(choices=COUNTRIES, default='HK', max_length=2)
     issuer = models.CharField(choices=ETF_ISSUERS_HK, max_length=45)
     market = models.CharField(choices=MARKETS_HK, default='HKG', max_length=3)
@@ -447,7 +447,7 @@ class HKETFStaticInfo(models.Model):
 
 class ChinaETFStaticInfo(models.Model):
     short_name = models.CharField(max_length=12)
-    long_name = models.CharField(max_length=80)
+    long_name = models.CharField(max_length=51)
     country = models.CharField(choices=COUNTRIES, default='CH', max_length=2)
     issuer = models.CharField(choices=ETF_ISSUERS_CH, max_length=40)
     market = models.CharField(choices=MARKETS_CH, max_length=20)
@@ -464,7 +464,7 @@ class ChinaETFStaticInfo(models.Model):
 
 class CanadaETFStaticInfo(models.Model):
     short_name = models.CharField(max_length=12)
-    long_name = models.CharField(max_length=80)
+    long_name = models.CharField(max_length=74)
     country = models.CharField(choices=COUNTRIES, default='CA', max_length=2)
     issuer = models.CharField(choices=ETF_ISSUERS_CA, max_length=37)
     market = models.CharField(choices=MARKETS_CA, max_length=7)
@@ -481,7 +481,7 @@ class CanadaETFStaticInfo(models.Model):
 
 class GermanyETFStaticInfo(models.Model):
     short_name = models.CharField(max_length=12)
-    long_name = models.CharField(max_length=80)
+    long_name = models.CharField(max_length=84)
     country = models.CharField(choices=COUNTRIES, default='GE', max_length=2)
     issuer = models.CharField(choices=ETF_ISSUERS_GE, max_length=40)
     market = models.CharField(choices=MARKETS_GE, max_length=20)
@@ -498,7 +498,7 @@ class GermanyETFStaticInfo(models.Model):
 
 class AustraliaETFStaticInfo(models.Model):
     short_name = models.CharField(max_length=12)
-    long_name = models.CharField(max_length=80)
+    long_name = models.CharField(max_length=61)
     country = models.CharField(choices=COUNTRIES, default='AU', max_length=2)
     issuer = models.CharField(choices=ETF_ISSUERS_AU, max_length=38)
     market = models.CharField(choices=MARKETS_AU, max_length=3, default='ASX')

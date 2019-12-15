@@ -507,7 +507,7 @@ class CollectETFStaticInfo:
         for link in soup.find_all('td', class_='bold left noWrap elp plusIconTd'):
             links.append(link.a['href'])
             long_names.append(link.a['title'])
-
+        
         header={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36 OPR/38.0.2220.41'}
         print('Links are collected')
         print('Starting to visit them and store in database')
@@ -554,7 +554,6 @@ class CollectETFStaticInfo:
                                 break
                 except:
                     continue
-
             USETFStaticInfo(
                 short_name=short_name, long_name=long_names[i],
                 market=market, issuer=issuer, isin=isin, link=l).save()
@@ -591,7 +590,7 @@ class CollectETFStaticInfo:
         for link in soup.find_all('td', class_='bold left noWrap elp plusIconTd'):
             links.append(link.a['href'])
             long_names.append(link.a['title'])
-
+        
         header={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36 OPR/38.0.2220.41'}
         print('Links are collected')
         print('Starting to visit them and store in database')
@@ -675,7 +674,7 @@ class CollectETFStaticInfo:
         for link in soup.find_all('td', class_='bold left noWrap elp plusIconTd'):
             links.append(link.a['href'])
             long_names.append(link.a['title'])
-
+        
         header={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36 OPR/38.0.2220.41'}
         print('Links are collected')
         print('Starting to visit them and store in database')
@@ -741,7 +740,7 @@ class CollectETFStaticInfo:
         for link in soup.find_all('td', class_='bold left noWrap elp plusIconTd'):
             links.append(link.a['href'])
             long_names.append(link.a['title'])
-
+        
         header={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36 OPR/38.0.2220.41'}
         print('Links are collected')
         print('Starting to visit them and store in database')
@@ -807,7 +806,7 @@ class CollectETFStaticInfo:
         for link in soup.find_all('td', class_='bold left noWrap elp plusIconTd'):
             links.append(link.a['href'])
             long_names.append(link.a['title'])
-
+        
         header={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36 OPR/38.0.2220.41'}
         print('Links are collected')
         print('Starting to visit them and store in database')
@@ -891,7 +890,7 @@ class CollectETFStaticInfo:
         for link in soup.find_all('td', class_='bold left noWrap elp plusIconTd'):
             links.append(link.a['href'])
             long_names.append(link.a['title'])
-
+        
         header={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36 OPR/38.0.2220.41'}
         print('Links are collected')
         print('Starting to visit them and store in database')
@@ -975,7 +974,7 @@ class CollectETFStaticInfo:
         for link in soup.find_all('td', class_='bold left noWrap elp plusIconTd'):
             links.append(link.a['href'])
             long_names.append(link.a['title'])
-
+        
         header={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36 OPR/38.0.2220.41'}
         print('Links are collected')
         print('Starting to visit them and store in database')
@@ -1059,7 +1058,7 @@ class CollectETFStaticInfo:
         for link in soup.find_all('td', class_='bold left noWrap elp plusIconTd'):
             links.append(link.a['href'])
             long_names.append(link.a['title'])
-
+        
         header={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36 OPR/38.0.2220.41'}
         print('Links are collected')
         print('Starting to visit them and store in database')
