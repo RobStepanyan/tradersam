@@ -512,14 +512,15 @@ class CollectETFStaticInfo:
         print('Links are collected')
         print('Starting to visit them and store in database')
         i = 0
-        for link in links[:2]:
+        for link in links:
             sleep(1)
             l = url2 + link
             try:
                 request = requests.get(l, headers=header)
                 soup = BeautifulSoup(request.text, 'html.parser')
-                short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 3M Company (MMM)
-                short_name = short_name[short_name.index('(')+1:].strip().replace(')', '') # MMM
+                short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 'Hang Seng China Affiliated Corps (CCI) (HSCC)'
+                short_name = short_name[::-1] # ')CCSH( )ICC( sproC detailiffA anihC gneS gnaH'
+                short_name = short_name[short_name.index(')')+1:short_name.index('(')] # CCSH
                 market = soup.find('i', class_='btnTextDropDwn arial_12 bold').get_text()
                 markets = [m[0] for m in MARKETS_US]
                 issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
@@ -537,8 +538,9 @@ class CollectETFStaticInfo:
                     sleep(10)
                     request = requests.get(l, headers=header)
                     soup = BeautifulSoup(request.text, 'html.parser')
-                    short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 3M Company (MMM)
-                    short_name = short_name[short_name.index('(')+1:].strip().replace(')', '') # MMM
+                    short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 'Hang Seng China Affiliated Corps (CCI) (HSCC)'
+                    short_name = short_name[::-1] # ')CCSH( )ICC( sproC detailiffA anihC gneS gnaH'
+                    short_name = short_name[short_name.index(')')+1:short_name.index('(')] # CCSH
                     market = soup.find('i', class_='btnTextDropDwn arial_12 bold').get_text()
                     markets = [m[0] for m in MARKETS_US]
                     issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
@@ -594,14 +596,15 @@ class CollectETFStaticInfo:
         print('Links are collected')
         print('Starting to visit them and store in database')
         i = 0
-        for link in links[:2]:
+        for link in links:
             sleep(1)
             l = url2 + link
             try:
                 request = requests.get(l, headers=header)
                 soup = BeautifulSoup(request.text, 'html.parser')
-                short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 3M Company (MMM)
-                short_name = short_name[short_name.index('(')+1:].strip().replace(')', '') # MMM
+                short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 'Hang Seng China Affiliated Corps (CCI) (HSCC)'
+                short_name = short_name[::-1] # ')CCSH( )ICC( sproC detailiffA anihC gneS gnaH'
+                short_name = short_name[short_name.index(')')+1:short_name.index('(')] # CCSH
                 market = soup.find('i', class_='btnTextDropDwn arial_12 bold').get_text()
                 markets = [m[0] for m in MARKETS_JP]
                 issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
@@ -619,8 +622,9 @@ class CollectETFStaticInfo:
                     sleep(10)
                     request = requests.get(l, headers=header)
                     soup = BeautifulSoup(request.text, 'html.parser')
-                    short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 3M Company (MMM)
-                    short_name = short_name[short_name.index('(')+1:].strip().replace(')', '') # MMM
+                    short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 'Hang Seng China Affiliated Corps (CCI) (HSCC)'
+                    short_name = short_name[::-1] # ')CCSH( )ICC( sproC detailiffA anihC gneS gnaH'
+                    short_name = short_name[short_name.index(')')+1:short_name.index('(')] # CCSH
                     market = soup.find('i', class_='btnTextDropDwn arial_12 bold').get_text()
                     markets = [m[0] for m in MARKETS_JP]
                     issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
@@ -676,14 +680,15 @@ class CollectETFStaticInfo:
         print('Links are collected')
         print('Starting to visit them and store in database')
         i = 0
-        for link in links[:2]:
+        for link in links:
             sleep(1)
             l = url2 + link
             try:
                 request = requests.get(l, headers=header)
                 soup = BeautifulSoup(request.text, 'html.parser')
-                short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 3M Company (MMM)
-                short_name = short_name[short_name.index('(')+1:].strip().replace(')', '') # MMM
+                short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 'Hang Seng China Affiliated Corps (CCI) (HSCC)'
+                short_name = short_name[::-1] # ')CCSH( )ICC( sproC detailiffA anihC gneS gnaH'
+                short_name = short_name[short_name.index(')')+1:short_name.index('(')] # CCSH
                 issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
                 isin = soup.find('span', text='ISIN:').find_next_sibling().get_text().strip()
             except:
@@ -692,8 +697,9 @@ class CollectETFStaticInfo:
                     sleep(10)
                     request = requests.get(l, headers=header)
                     soup = BeautifulSoup(request.text, 'html.parser')
-                    short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 3M Company (MMM)
-                    short_name = short_name[short_name.index('(')+1:].strip().replace(')', '') # MMM
+                    short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 'Hang Seng China Affiliated Corps (CCI) (HSCC)'
+                    short_name = short_name[::-1] # ')CCSH( )ICC( sproC detailiffA anihC gneS gnaH'
+                    short_name = short_name[short_name.index(')')+1:short_name.index('(')] # CCSH
                     issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
                     isin = soup.find('span', text='ISIN:').find_next_sibling().get_text().strip()
                 except:
@@ -740,14 +746,15 @@ class CollectETFStaticInfo:
         print('Links are collected')
         print('Starting to visit them and store in database')
         i = 0
-        for link in links[:2]:
+        for link in links:
             sleep(1)
             l = url2 + link
             try:
                 request = requests.get(l, headers=header)
                 soup = BeautifulSoup(request.text, 'html.parser')
-                short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 3M Company (MMM)
-                short_name = short_name[short_name.index('(')+1:].strip().replace(')', '') # MMM
+                short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 'Hang Seng China Affiliated Corps (CCI) (HSCC)'
+                short_name = short_name[::-1] # ')CCSH( )ICC( sproC detailiffA anihC gneS gnaH'
+                short_name = short_name[short_name.index(')')+1:short_name.index('(')] # CCSH
                 issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
                 isin = soup.find('span', text='ISIN:').find_next_sibling().get_text().strip()
             except:
@@ -756,8 +763,9 @@ class CollectETFStaticInfo:
                     sleep(10)
                     request = requests.get(l, headers=header)
                     soup = BeautifulSoup(request.text, 'html.parser')
-                    short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 3M Company (MMM)
-                    short_name = short_name[short_name.index('(')+1:].strip().replace(')', '') # MMM
+                    short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 'Hang Seng China Affiliated Corps (CCI) (HSCC)'
+                    short_name = short_name[::-1] # ')CCSH( )ICC( sproC detailiffA anihC gneS gnaH'
+                    short_name = short_name[short_name.index(')')+1:short_name.index('(')] # CCSH
                     issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
                     isin = soup.find('span', text='ISIN:').find_next_sibling().get_text().strip()
                 except:
@@ -804,14 +812,15 @@ class CollectETFStaticInfo:
         print('Links are collected')
         print('Starting to visit them and store in database')
         i = 0
-        for link in links[:2]:
+        for link in links:
             sleep(1)
             l = url2 + link
             try:
                 request = requests.get(l, headers=header)
                 soup = BeautifulSoup(request.text, 'html.parser')
-                short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 3M Company (MMM)
-                short_name = short_name[short_name.index('(')+1:].strip().replace(')', '') # MMM
+                short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 'Hang Seng China Affiliated Corps (CCI) (HSCC)'
+                short_name = short_name[::-1] # ')CCSH( )ICC( sproC detailiffA anihC gneS gnaH'
+                short_name = short_name[short_name.index(')')+1:short_name.index('(')] # CCSH
                 market = soup.find('i', class_='btnTextDropDwn arial_12 bold').get_text()
                 markets = [m[0] for m in MARKETS_CH]
                 issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
@@ -829,8 +838,9 @@ class CollectETFStaticInfo:
                     sleep(10)
                     request = requests.get(l, headers=header)
                     soup = BeautifulSoup(request.text, 'html.parser')
-                    short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 3M Company (MMM)
-                    short_name = short_name[short_name.index('(')+1:].strip().replace(')', '') # MMM
+                    short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 'Hang Seng China Affiliated Corps (CCI) (HSCC)'
+                    short_name = short_name[::-1] # ')CCSH( )ICC( sproC detailiffA anihC gneS gnaH'
+                    short_name = short_name[short_name.index(')')+1:short_name.index('(')] # CCSH
                     market = soup.find('i', class_='btnTextDropDwn arial_12 bold').get_text()
                     markets = [m[0] for m in MARKETS_CH]
                     issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
@@ -886,14 +896,15 @@ class CollectETFStaticInfo:
         print('Links are collected')
         print('Starting to visit them and store in database')
         i = 0
-        for link in links[:2]:
+        for link in links:
             sleep(1)
             l = url2 + link
             try:
                 request = requests.get(l, headers=header)
                 soup = BeautifulSoup(request.text, 'html.parser')
-                short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 3M Company (MMM)
-                short_name = short_name[short_name.index('(')+1:].strip().replace(')', '') # MMM
+                short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 'Hang Seng China Affiliated Corps (CCI) (HSCC)'
+                short_name = short_name[::-1] # ')CCSH( )ICC( sproC detailiffA anihC gneS gnaH'
+                short_name = short_name[short_name.index(')')+1:short_name.index('(')] # CCSH
                 market = soup.find('i', class_='btnTextDropDwn arial_12 bold').get_text()
                 markets = [m[0] for m in MARKETS_CA]
                 issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
@@ -911,8 +922,9 @@ class CollectETFStaticInfo:
                     sleep(10)
                     request = requests.get(l, headers=header)
                     soup = BeautifulSoup(request.text, 'html.parser')
-                    short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 3M Company (MMM)
-                    short_name = short_name[short_name.index('(')+1:].strip().replace(')', '') # MMM
+                    short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 'Hang Seng China Affiliated Corps (CCI) (HSCC)'
+                    short_name = short_name[::-1] # ')CCSH( )ICC( sproC detailiffA anihC gneS gnaH'
+                    short_name = short_name[short_name.index(')')+1:short_name.index('(')] # CCSH
                     market = soup.find('i', class_='btnTextDropDwn arial_12 bold').get_text()
                     markets = [m[0] for m in MARKETS_CA]
                     issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
@@ -968,14 +980,15 @@ class CollectETFStaticInfo:
         print('Links are collected')
         print('Starting to visit them and store in database')
         i = 0
-        for link in links[:2]:
+        for link in links:
             sleep(1)
             l = url2 + link
             try:
                 request = requests.get(l, headers=header)
                 soup = BeautifulSoup(request.text, 'html.parser')
-                short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 3M Company (MMM)
-                short_name = short_name[short_name.index('(')+1:].strip().replace(')', '') # MMM
+                short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 'Hang Seng China Affiliated Corps (CCI) (HSCC)'
+                short_name = short_name[::-1] # ')CCSH( )ICC( sproC detailiffA anihC gneS gnaH'
+                short_name = short_name[short_name.index(')')+1:short_name.index('(')] # CCSH
                 market = soup.find('i', class_='btnTextDropDwn arial_12 bold').get_text()
                 markets = [m[0] for m in MARKETS_GE]
                 issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
@@ -993,8 +1006,9 @@ class CollectETFStaticInfo:
                     sleep(10)
                     request = requests.get(l, headers=header)
                     soup = BeautifulSoup(request.text, 'html.parser')
-                    short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 3M Company (MMM)
-                    short_name = short_name[short_name.index('(')+1:].strip().replace(')', '') # MMM
+                    short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 'Hang Seng China Affiliated Corps (CCI) (HSCC)'
+                    short_name = short_name[::-1] # ')CCSH( )ICC( sproC detailiffA anihC gneS gnaH'
+                    short_name = short_name[short_name.index(')')+1:short_name.index('(')] # CCSH
                     market = soup.find('i', class_='btnTextDropDwn arial_12 bold').get_text()
                     markets = [m[0] for m in MARKETS_GE]
                     issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
@@ -1050,14 +1064,15 @@ class CollectETFStaticInfo:
         print('Links are collected')
         print('Starting to visit them and store in database')
         i = 0
-        for link in links[:2]:
+        for link in links:
             sleep(1)
             l = url2 + link
             try:
                 request = requests.get(l, headers=header)
                 soup = BeautifulSoup(request.text, 'html.parser')
-                short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 3M Company (MMM)
-                short_name = short_name[short_name.index('(')+1:].strip().replace(')', '') # MMM
+                short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 'Hang Seng China Affiliated Corps (CCI) (HSCC)'
+                short_name = short_name[::-1] # ')CCSH( )ICC( sproC detailiffA anihC gneS gnaH'
+                short_name = short_name[short_name.index(')')+1:short_name.index('(')] # CCSH
                 issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
                 isin = soup.find('span', text='ISIN:').find_next_sibling().get_text().strip()
             except:
@@ -1066,8 +1081,9 @@ class CollectETFStaticInfo:
                     sleep(10)
                     request = requests.get(l, headers=header)
                     soup = BeautifulSoup(request.text, 'html.parser')
-                    short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 3M Company (MMM)
-                    short_name = short_name[short_name.index('(')+1:].strip().replace(')', '') # MMM
+                    short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 'Hang Seng China Affiliated Corps (CCI) (HSCC)'
+                    short_name = short_name[::-1] # ')CCSH( )ICC( sproC detailiffA anihC gneS gnaH'
+                    short_name = short_name[short_name.index(')')+1:short_name.index('(')] # CCSH
                     issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
                     isin = soup.find('span', text='ISIN:').find_next_sibling().get_text().strip()
                 except:

@@ -362,7 +362,7 @@ class ETFIssuers(models.Model):
     country = models.CharField(choices=COUNTRIES, max_length=2)
 
     def __str__(self):
-        return f'{self.country}' + self.name
+        return f'{self.country}' + self.long_name
 
     class Meta:
         verbose_name = 'ETF Issuers'
@@ -380,7 +380,7 @@ ETF_ISSUERS_AU = tuple([(i.name, i.name) for i in list(ETFIssuers.objects.filter
 class USETFStaticInfo(models.Model):
     short_name = models.CharField(max_length=12)
     long_name = models.CharField(max_length=80)
-    country = models.CharField(choices=COUNTRIES, max_length=2)
+    country = models.CharField(choices=COUNTRIES, default='US', max_length=2)
     issuer = models.CharField(choices=ETF_ISSUERS_US, max_length=32)
     market = models.CharField(choices=MARKETS_US, max_length=11)
     currency = models.CharField(choices=CURRENCIES, default='USD', max_length=3)
@@ -388,7 +388,7 @@ class USETFStaticInfo(models.Model):
     link = models.URLField()
 
     def __str__(self):
-        return f'{self.country}' + self.name
+        return f'{self.country}' + self.long_name
 
     class Meta:
         verbose_name = 'United States ETFs\' Static Info'
@@ -405,7 +405,7 @@ class JapanETFStaticInfo(models.Model):
     currency = models.CharField(choices=CURRENCIES, default='JPY', max_length=3)
 
     def __str__(self):
-        return f'{self.country}' + self.name
+        return f'{self.country}' + self.long_name
 
     class Meta:
         verbose_name = 'Japan ETFs\' Static Info'
@@ -422,7 +422,7 @@ class UKETFStaticInfo(models.Model):
     currency = models.CharField(choices=CURRENCIES, default='GBP', max_length=3)
 
     def __str__(self):
-        return f'{self.country}' + self.name
+        return f'{self.country}' + self.long_name
 
     class Meta:
         verbose_name = 'United Kingdom ETFs\' Static Info'
@@ -439,7 +439,7 @@ class HKETFStaticInfo(models.Model):
     currency = models.CharField(choices=CURRENCIES, default='HKD', max_length=3)
 
     def __str__(self):
-        return f'{self.country}' + self.name
+        return f'{self.country}' + self.long_name
 
     class Meta:
         verbose_name = 'Honk Kong ETFs\' Static Info'
@@ -456,7 +456,7 @@ class ChinaETFStaticInfo(models.Model):
     currency = models.CharField(choices=CURRENCIES, default='CNY', max_length=3)
 
     def __str__(self):
-        return f'{self.country}' + self.name
+        return f'{self.country}' + self.long_name
 
     class Meta:
         verbose_name = 'China ETFs\' Static Info'
@@ -473,7 +473,7 @@ class CanadaETFStaticInfo(models.Model):
     currency = models.CharField(choices=CURRENCIES, default='CAD', max_length=3)
 
     def __str__(self):
-        return f'{self.country}' + self.name
+        return f'{self.country}' + self.long_name
 
     class Meta:
         verbose_name = 'Canada ETFs\' Static Info'
@@ -490,7 +490,7 @@ class GermanyETFStaticInfo(models.Model):
     currency = models.CharField(choices=CURRENCIES, default='EUR', max_length=3)
 
     def __str__(self):
-        return f'{self.country}' + self.name
+        return f'{self.country}' + self.long_name
 
     class Meta:
         verbose_name = 'Germany ETFs\' Static Info'
@@ -507,7 +507,7 @@ class AustraliaETFStaticInfo(models.Model):
     currency = models.CharField(choices=CURRENCIES, default='AUD', max_length=3)
 
     def __str__(self):
-        return f'{self.country}' + self.name
+        return f'{self.country}' + self.long_name
 
     class Meta:
         verbose_name = 'Australia ETFs\' Static Info'
