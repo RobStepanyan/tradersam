@@ -442,8 +442,8 @@ class HKETFStaticInfo(models.Model):
         return f'{self.country}' + self.long_name
 
     class Meta:
-        verbose_name = 'Honk Kong ETFs\' Static Info'
-        verbose_name_plural = 'Honk Kong ETFs\' Static Info'
+        verbose_name = 'Hong Kong ETFs\' Static Info'
+        verbose_name_plural = 'Hong Kong ETFs\' Static Info'
 
 class ChinaETFStaticInfo(models.Model):
     short_name = models.CharField(max_length=12)
@@ -512,3 +512,123 @@ class AustraliaETFStaticInfo(models.Model):
     class Meta:
         verbose_name = 'Australia ETFs\' Static Info'
         verbose_name_plural = 'Australia ETFs\' Static Info'
+# *********************** Bonds
+class USBondStaticInfo(models.Model):
+    short_name = models.CharField(max_length=18)
+    long_name = models.CharField(max_length=32)
+    country = models.CharField(choices=COUNTRIES, default='US', max_length=2)
+    market = models.CharField(choices=MARKETS_US, max_length=11)
+    currency = models.CharField(choices=CURRENCIES, default='USD', max_length=3)
+    link = models.URLField()
+
+    def __str__(self):
+        return self.long_name
+
+    class Meta:
+        verbose_name = 'United States Bonds\' Static Info'
+        verbose_name_plural = 'United States Bonds\' Static Info'
+
+class JapanBondStaticInfo(models.Model):
+    short_name = models.CharField(max_length=10)
+    long_name = models.CharField(max_length=24)
+    country = models.CharField(choices=COUNTRIES, default='JP', max_length=2)
+    market = models.CharField(choices=MARKETS_JP, max_length=7)
+    link = models.URLField()
+    currency = models.CharField(choices=CURRENCIES, default='JPY', max_length=3)
+
+    def __str__(self):
+        return self.long_name
+
+    class Meta:
+        verbose_name = 'Japan Bonds\' Static Info'
+        verbose_name_plural = 'Japan Bonds\' Static Info'
+
+class UKBondStaticInfo(models.Model):
+    short_name = models.CharField(max_length=8)
+    long_name = models.CharField(max_length=33)
+    country = models.CharField(choices=COUNTRIES, default='UK', max_length=2)
+    market = models.CharField(choices=MARKETS_UK, default='London', max_length=20)
+    link = models.URLField()
+    currency = models.CharField(choices=CURRENCIES, default='GBP', max_length=3)
+
+    def __str__(self):
+        return self.long_name
+
+    class Meta:
+        verbose_name = 'United Kingdom Bonds\' Static Info'
+        verbose_name_plural = 'United Kingdom Bonds\' Static Info'
+
+class HKBondStaticInfo(models.Model):
+    short_name = models.CharField(max_length=13)
+    long_name = models.CharField(max_length=28)
+    country = models.CharField(choices=COUNTRIES, default='HK', max_length=2)
+    market = models.CharField(choices=MARKETS_HK, default='HKG', max_length=3)
+    link = models.URLField()
+    currency = models.CharField(choices=CURRENCIES, default='HKD', max_length=3)
+
+    def __str__(self):
+        return self.long_name
+
+    class Meta:
+        verbose_name = 'Hong Kong Bonds\' Static Info'
+        verbose_name_plural = 'Hong Kong Bonds\' Static Info'
+
+class ChinaBondStaticInfo(models.Model):
+    short_name = models.CharField(max_length=9)
+    long_name = models.CharField(max_length=24)
+    country = models.CharField(choices=COUNTRIES, default='CH', max_length=2)
+    market = models.CharField(choices=MARKETS_CH, max_length=20)
+    link = models.URLField()
+    currency = models.CharField(choices=CURRENCIES, default='CNY', max_length=3)
+
+    def __str__(self):
+        return self.long_name
+
+    class Meta:
+        verbose_name = 'China Bonds\' Static Info'
+        verbose_name_plural = 'China Bonds\' Static Info'
+
+class CanadaBondStaticInfo(models.Model):
+    short_name = models.CharField(max_length=10)
+    long_name = models.CharField(max_length=25)
+    country = models.CharField(choices=COUNTRIES, default='CA', max_length=2)
+    market = models.CharField(choices=MARKETS_CA, max_length=7)
+    link = models.URLField()
+    currency = models.CharField(choices=CURRENCIES, default='CAD', max_length=3)
+
+    def __str__(self):
+        return self.long_name
+
+    class Meta:
+        verbose_name = 'Canada Bonds\' Static Info'
+        verbose_name_plural = 'Canada Bonds\' Static Info'
+
+class GermanyBondStaticInfo(models.Model):
+    short_name = models.CharField(max_length=11)
+    long_name = models.CharField(max_length=26)
+    country = models.CharField(choices=COUNTRIES, default='GE', max_length=2)
+    market = models.CharField(choices=MARKETS_GE, max_length=20)
+    link = models.URLField()
+    currency = models.CharField(choices=CURRENCIES, default='EUR', max_length=3)
+
+    def __str__(self):
+        return self.long_name
+
+    class Meta:
+        verbose_name = 'Germany Bonds\' Static Info'
+        verbose_name_plural = 'Germany Bonds\' Static Info'
+
+class AustraliaBondStaticInfo(models.Model):
+    short_name = models.CharField(max_length=13)
+    long_name = models.CharField(max_length=28)
+    country = models.CharField(choices=COUNTRIES, default='AU', max_length=2)
+    market = models.CharField(choices=MARKETS_AU, max_length=3, default='ASX')
+    link = models.URLField()
+    currency = models.CharField(choices=CURRENCIES, default='AUD', max_length=3)
+
+    def __str__(self):
+        return self.long_name
+
+    class Meta:
+        verbose_name = 'Australia Bonds\' Static Info'
+        verbose_name_plural = 'Australia Bonds\' Static Info'
