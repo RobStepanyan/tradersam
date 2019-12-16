@@ -2582,8 +2582,10 @@ class CollectBondStaticInfo:
         print('Starting to collect links')
         links = []
         long_names = []
+        short_names = []
         for link in soup.find_all('td', class_='bold left noWrap elp plusIconTd'):
             links.append(link.a['href'])
+            short_names.append(link.a.get_text())
             long_names.append(link.a['title']+' Bond Yield')
         
         header={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36 OPR/38.0.2220.41'}
@@ -2596,9 +2598,6 @@ class CollectBondStaticInfo:
             try:
                 request = requests.get(l, headers=header)
                 soup = BeautifulSoup(request.text, 'html.parser')
-                short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 'Hang Seng China Affiliated Corps (CCI) (HSCC)'
-                short_name = short_name[::-1] # ')CCSH( )ICC( sproC detailiffA anihC gneS gnaH'
-                short_name = short_name[short_name.index(')')+1:short_name.index('(')][::-1] # HSCC
                 market = soup.find('i', class_='btnTextDropDwn arial_12 bold').get_text()
                 markets = [m[0] for m in MARKETS_US]
                 if market not in markets:
@@ -2614,9 +2613,6 @@ class CollectBondStaticInfo:
                     sleep(10)
                     request = requests.get(l, headers=header)
                     soup = BeautifulSoup(request.text, 'html.parser')
-                    short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 'Hang Seng China Affiliated Corps (CCI) (HSCC)'
-                    short_name = short_name[::-1] # ')CCSH( )ICC( sproC detailiffA anihC gneS gnaH'
-                    short_name = short_name[short_name.index(')')+1:short_name.index('(')][::-1] # HSCC
                     market = soup.find('i', class_='btnTextDropDwn arial_12 bold').get_text()
                     markets = [m[0] for m in MARKETS_US]
                     if market not in markets:
@@ -2629,16 +2625,14 @@ class CollectBondStaticInfo:
                 except:
                     continue
             USBondStaticInfo(
-                short_name=short_name, long_name=long_names[i],
+                short_name=short_names[i], long_name=long_names[i],
                 market=market, link=l).save()
             print(f'Stored {i}: {long_names[i]} ({i}/{len(long_names)})')
             if i % 100 == 0:
                 print (f'{len(links)-i} bonds left')
             i += 1
-
         print('Data has been successfuly stored!')
         return ''
-
     def japan():
         #--------------------VPS------------------
         display = Display(visible=0, size=(800, 600))
@@ -2661,8 +2655,10 @@ class CollectBondStaticInfo:
         print('Starting to collect links')
         links = []
         long_names = []
+        short_names = []
         for link in soup.find_all('td', class_='bold left noWrap elp plusIconTd'):
             links.append(link.a['href'])
+            short_names.append(link.a.get_text())
             long_names.append(link.a['title']+' Bond Yield')
         
         header={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36 OPR/38.0.2220.41'}
@@ -2675,9 +2671,6 @@ class CollectBondStaticInfo:
             try:
                 request = requests.get(l, headers=header)
                 soup = BeautifulSoup(request.text, 'html.parser')
-                short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 'Hang Seng China Affiliated Corps (CCI) (HSCC)'
-                short_name = short_name[::-1] # ')CCSH( )ICC( sproC detailiffA anihC gneS gnaH'
-                short_name = short_name[short_name.index(')')+1:short_name.index('(')][::-1] # HSCC
                 market = soup.find('i', class_='btnTextDropDwn arial_12 bold').get_text()
                 markets = [m[0] for m in MARKETS_JP]
                 if market not in markets:
@@ -2693,9 +2686,6 @@ class CollectBondStaticInfo:
                     sleep(10)
                     request = requests.get(l, headers=header)
                     soup = BeautifulSoup(request.text, 'html.parser')
-                    short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 'Hang Seng China Affiliated Corps (CCI) (HSCC)'
-                    short_name = short_name[::-1] # ')CCSH( )ICC( sproC detailiffA anihC gneS gnaH'
-                    short_name = short_name[short_name.index(')')+1:short_name.index('(')][::-1] # HSCC
                     market = soup.find('i', class_='btnTextDropDwn arial_12 bold').get_text()
                     markets = [m[0] for m in MARKETS_JP]
                     if market not in markets:
@@ -2708,7 +2698,7 @@ class CollectBondStaticInfo:
                 except:
                     continue
             JapanBondStaticInfo(
-                short_name=short_name, long_name=long_names[i],
+                short_name=short_names[i], long_name=long_names[i],
                 market=market, link=l).save()
             print(f'Stored {i}: {long_names[i]} ({i}/{len(long_names)})')
             if i % 100 == 0:
@@ -2740,8 +2730,10 @@ class CollectBondStaticInfo:
         print('Starting to collect links')
         links = []
         long_names = []
+        short_names = []
         for link in soup.find_all('td', class_='bold left noWrap elp plusIconTd'):
             links.append(link.a['href'])
+            short_names.append(link.a.get_text())
             long_names.append(link.a['title']+' Bond Yield')
         
         header={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36 OPR/38.0.2220.41'}
@@ -2754,22 +2746,16 @@ class CollectBondStaticInfo:
             try:
                 request = requests.get(l, headers=header)
                 soup = BeautifulSoup(request.text, 'html.parser')
-                short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 'Hang Seng China Affiliated Corps (CCI) (HSCC)'
-                short_name = short_name[::-1] # ')CCSH( )ICC( sproC detailiffA anihC gneS gnaH'
-                short_name = short_name[short_name.index(')')+1:short_name.index('(')][::-1] # HSCC
             except:
                 try:
                     print('Some Complication, sleeping for 10sec')
                     sleep(10)
                     request = requests.get(l, headers=header)
                     soup = BeautifulSoup(request.text, 'html.parser')
-                    short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 'Hang Seng China Affiliated Corps (CCI) (HSCC)'
-                    short_name = short_name[::-1] # ')CCSH( )ICC( sproC detailiffA anihC gneS gnaH'
-                    short_name = short_name[short_name.index(')')+1:short_name.index('(')][::-1] # HSCC
                 except:
                     continue
             UKBondStaticInfo(
-                short_name=short_name, long_name=long_names[i], link=l).save()
+                short_name=short_names[i], long_name=long_names[i], link=l).save()
             print(f'Stored {i}: {long_names[i]} ({i}/{len(long_names)})')
             if i % 100 == 0:
                 print (f'{len(links)-i} bonds left')
@@ -2800,8 +2786,10 @@ class CollectBondStaticInfo:
         print('Starting to collect links')
         links = []
         long_names = []
+        short_names = []
         for link in soup.find_all('td', class_='bold left noWrap elp plusIconTd'):
             links.append(link.a['href'])
+            short_names.append(link.a.get_text())
             long_names.append(link.a['title']+' Bond Yield')
         
         header={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36 OPR/38.0.2220.41'}
@@ -2814,22 +2802,16 @@ class CollectBondStaticInfo:
             try:
                 request = requests.get(l, headers=header)
                 soup = BeautifulSoup(request.text, 'html.parser')
-                short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 'Hang Seng China Affiliated Corps (CCI) (HSCC)'
-                short_name = short_name[::-1] # ')CCSH( )ICC( sproC detailiffA anihC gneS gnaH'
-                short_name = short_name[short_name.index(')')+1:short_name.index('(')][::-1] # HSCC
             except:
                 try:
                     print('Some Complication, sleeping for 10sec')
                     sleep(10)
                     request = requests.get(l, headers=header)
                     soup = BeautifulSoup(request.text, 'html.parser')
-                    short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 'Hang Seng China Affiliated Corps (CCI) (HSCC)'
-                    short_name = short_name[::-1] # ')CCSH( )ICC( sproC detailiffA anihC gneS gnaH'
-                    short_name = short_name[short_name.index(')')+1:short_name.index('(')][::-1] # HSCC
                 except:
                     continue
             HKBondStaticInfo(
-                short_name=short_name, long_name=long_names[i], link=l).save()
+                short_name=short_names[i], long_name=long_names[i], link=l).save()
             print(f'Stored {i}: {long_names[i]} ({i}/{len(long_names)})')
             if i % 100 == 0:
                 print (f'{len(links)-i} bonds left')
@@ -2860,8 +2842,10 @@ class CollectBondStaticInfo:
         print('Starting to collect links')
         links = []
         long_names = []
+        short_names = []
         for link in soup.find_all('td', class_='bold left noWrap elp plusIconTd'):
             links.append(link.a['href'])
+            short_names.append(link.a.get_text())
             long_names.append(link.a['title']+' Bond Yield')
         
         header={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36 OPR/38.0.2220.41'}
@@ -2874,9 +2858,6 @@ class CollectBondStaticInfo:
             try:
                 request = requests.get(l, headers=header)
                 soup = BeautifulSoup(request.text, 'html.parser')
-                short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 'Hang Seng China Affiliated Corps (CCI) (HSCC)'
-                short_name = short_name[::-1] # ')CCSH( )ICC( sproC detailiffA anihC gneS gnaH'
-                short_name = short_name[short_name.index(')')+1:short_name.index('(')][::-1] # HSCC
                 market = soup.find('i', class_='btnTextDropDwn arial_12 bold').get_text()
                 markets = [m[0] for m in MARKETS_CH]
                 if market not in markets:
@@ -2892,9 +2873,6 @@ class CollectBondStaticInfo:
                     sleep(10)
                     request = requests.get(l, headers=header)
                     soup = BeautifulSoup(request.text, 'html.parser')
-                    short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 'Hang Seng China Affiliated Corps (CCI) (HSCC)'
-                    short_name = short_name[::-1] # ')CCSH( )ICC( sproC detailiffA anihC gneS gnaH'
-                    short_name = short_name[short_name.index(')')+1:short_name.index('(')][::-1] # HSCC
                     market = soup.find('i', class_='btnTextDropDwn arial_12 bold').get_text()
                     markets = [m[0] for m in MARKETS_CH]
                     if market not in markets:
@@ -2907,7 +2885,7 @@ class CollectBondStaticInfo:
                 except:
                     continue
             ChinaBondStaticInfo(
-                short_name=short_name, long_name=long_names[i],
+                short_name=short_names[i], long_name=long_names[i],
                 market=market, link=l).save()
             print(f'Stored {i}: {long_names[i]} ({i}/{len(long_names)})')
             if i % 100 == 0:
@@ -2939,8 +2917,10 @@ class CollectBondStaticInfo:
         print('Starting to collect links')
         links = []
         long_names = []
+        short_names = []
         for link in soup.find_all('td', class_='bold left noWrap elp plusIconTd'):
             links.append(link.a['href'])
+            short_names.append(link.a.get_text())
             long_names.append(link.a['title']+' Bond Yield')
         
         header={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36 OPR/38.0.2220.41'}
@@ -2953,9 +2933,6 @@ class CollectBondStaticInfo:
             try:
                 request = requests.get(l, headers=header)
                 soup = BeautifulSoup(request.text, 'html.parser')
-                short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 'Hang Seng China Affiliated Corps (CCI) (HSCC)'
-                short_name = short_name[::-1] # ')CCSH( )ICC( sproC detailiffA anihC gneS gnaH'
-                short_name = short_name[short_name.index(')')+1:short_name.index('(')][::-1] # HSCC
                 market = soup.find('i', class_='btnTextDropDwn arial_12 bold').get_text()
                 markets = [m[0] for m in MARKETS_CA]
                 if market not in markets:
@@ -2971,9 +2948,6 @@ class CollectBondStaticInfo:
                     sleep(10)
                     request = requests.get(l, headers=header)
                     soup = BeautifulSoup(request.text, 'html.parser')
-                    short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 'Hang Seng China Affiliated Corps (CCI) (HSCC)'
-                    short_name = short_name[::-1] # ')CCSH( )ICC( sproC detailiffA anihC gneS gnaH'
-                    short_name = short_name[short_name.index(')')+1:short_name.index('(')][::-1] # HSCC
                     market = soup.find('i', class_='btnTextDropDwn arial_12 bold').get_text()
                     markets = [m[0] for m in MARKETS_CA]
                     if market not in markets:
@@ -2986,7 +2960,7 @@ class CollectBondStaticInfo:
                 except:
                     continue
             CanadaBondStaticInfo(
-                short_name=short_name, long_name=long_names[i],
+                short_name=short_names[i], long_name=long_names[i],
                 market=market, link=l).save()
             print(f'Stored {i}: {long_names[i]} ({i}/{len(long_names)})')
             if i % 100 == 0:
@@ -3018,8 +2992,10 @@ class CollectBondStaticInfo:
         print('Starting to collect links')
         links = []
         long_names = []
+        short_names = []
         for link in soup.find_all('td', class_='bold left noWrap elp plusIconTd'):
             links.append(link.a['href'])
+            short_names.append(link.a.get_text())
             long_names.append(link.a['title']+' Bond Yield')
         
         header={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36 OPR/38.0.2220.41'}
@@ -3032,9 +3008,6 @@ class CollectBondStaticInfo:
             try:
                 request = requests.get(l, headers=header)
                 soup = BeautifulSoup(request.text, 'html.parser')
-                short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 'Hang Seng China Affiliated Corps (CCI) (HSCC)'
-                short_name = short_name[::-1] # ')CCSH( )ICC( sproC detailiffA anihC gneS gnaH'
-                short_name = short_name[short_name.index(')')+1:short_name.index('(')][::-1] # HSCC
                 market = soup.find('i', class_='btnTextDropDwn arial_12 bold').get_text()
                 markets = [m[0] for m in MARKETS_GE]
                 if market not in markets:
@@ -3050,9 +3023,6 @@ class CollectBondStaticInfo:
                     sleep(10)
                     request = requests.get(l, headers=header)
                     soup = BeautifulSoup(request.text, 'html.parser')
-                    short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 'Hang Seng China Affiliated Corps (CCI) (HSCC)'
-                    short_name = short_name[::-1] # ')CCSH( )ICC( sproC detailiffA anihC gneS gnaH'
-                    short_name = short_name[short_name.index(')')+1:short_name.index('(')][::-1] # HSCC
                     market = soup.find('i', class_='btnTextDropDwn arial_12 bold').get_text()
                     markets = [m[0] for m in MARKETS_GE]
                     if market not in markets:
@@ -3065,7 +3035,7 @@ class CollectBondStaticInfo:
                 except:
                     continue
             GermanyBondStaticInfo(
-                short_name=short_name, long_name=long_names[i],
+                short_name=short_names[i], long_name=long_names[i],
                 market=market, link=l).save()
             print(f'Stored {i}: {long_names[i]} ({i}/{len(long_names)})')
             if i % 100 == 0:
@@ -3097,8 +3067,10 @@ class CollectBondStaticInfo:
         print('Starting to collect links')
         links = []
         long_names = []
+        short_names = []
         for link in soup.find_all('td', class_='bold left noWrap elp plusIconTd'):
             links.append(link.a['href'])
+            short_names.append(link.a.get_text())
             long_names.append(link.a['title']+' Bond Yield')
         
         header={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36 OPR/38.0.2220.41'}
@@ -3111,22 +3083,16 @@ class CollectBondStaticInfo:
             try:
                 request = requests.get(l, headers=header)
                 soup = BeautifulSoup(request.text, 'html.parser')
-                short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 'Hang Seng China Affiliated Corps (CCI) (HSCC)'
-                short_name = short_name[::-1] # ')CCSH( )ICC( sproC detailiffA anihC gneS gnaH'
-                short_name = short_name[short_name.index(')')+1:short_name.index('(')][::-1] # HSCC
             except:
                 try:
                     print('Some Complication, sleeping for 10sec')
                     sleep(10)
                     request = requests.get(l, headers=header)
                     soup = BeautifulSoup(request.text, 'html.parser')
-                    short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 'Hang Seng China Affiliated Corps (CCI) (HSCC)'
-                    short_name = short_name[::-1] # ')CCSH( )ICC( sproC detailiffA anihC gneS gnaH'
-                    short_name = short_name[short_name.index(')')+1:short_name.index('(')][::-1] # HSCC
                 except:
                     continue
             AustraliaBondStaticInfo(
-                short_name=short_name, long_name=long_names[i], link=l).save()
+                short_name=short_names[i], long_name=long_names[i], link=l).save()
             print(f'Stored {i}: {long_names[i]} ({i}/{len(long_names)})')
             if i % 100 == 0:
                 print (f'{len(links)-i} bonds left')
