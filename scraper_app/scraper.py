@@ -13,18 +13,19 @@ from .models import (
     CanadaIndexStaticInfo, GermanyIndexStaticInfo, AustraliaIndexStaticInfo,
     # ETFs
     ETFIssuers, USETFStaticInfo, JapanETFStaticInfo, UKETFStaticInfo, HKETFStaticInfo, ChinaETFStaticInfo,
-    CanadaETFStaticInfo, GermanyETFStaticInfo, AustraliaETFStaticInfo,
+    CanadaETFStaticInfo, GermanyETFStaticInfo, AustraliaETFStaticInfo, ETF_ISSUERS_US, ETF_ISSUERS_JP, 
+    ETF_ISSUERS_UK, ETF_ISSUERS_HK, ETF_ISSUERS_CH, ETF_ISSUERS_CA, ETF_ISSUERS_GE, ETF_ISSUERS_AU,
     # Bonds
     USBondStaticInfo, JapanBondStaticInfo, UKBondStaticInfo, HKBondStaticInfo, ChinaBondStaticInfo,
-    CanadaBondStaticInfo, GermanyBondStaticInfo, AustraliaBondStaticInfo
-
-)
-from .models import (
+    CanadaBondStaticInfo, GermanyBondStaticInfo, AustraliaBondStaticInfo,
+    # Markets
     MARKETS_US, MARKETS_JP, MARKETS_CH, MARKETS_CA, MARKETS_GE,
-    ETF_ISSUERS_US, ETF_ISSUERS_JP, ETF_ISSUERS_UK, ETF_ISSUERS_HK, ETF_ISSUERS_CH, ETF_ISSUERS_CA,
-    ETF_ISSUERS_GE, ETF_ISSUERS_AU
+    # Funds
+    FundIssuers, USFundStaticInfo, JapanFundStaticInfo, UKFundStaticInfo, HKFundStaticInfo, 
+    ChinaFundStaticInfo, CanadaFundStaticInfo, GermanyFundStaticInfo, AustraliaFundStaticInfo,
 )
-# This class is used oly for cryptocurrencies, currencies, commodities, stocks and indices
+
+# This class is used only for cryptocurrencies, currencies, commodities, stocks and indices
 class CollectStaticInfo:
     def commodities():
         print('Starting CollectStaticInfo.commodities()')
@@ -388,7 +389,6 @@ class CollectStaticInfo:
                 soup = BeautifulSoup(request.text, 'html.parser')
                 short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 3M Company (MMM)
                 short_name = short_name[short_name.index('(')+1:].strip().replace(')', '') # MMM
-                market = soup.find('i', class_='btnTextDropDwn arial_12 bold').get_text()
                 isin = soup.find('span', text='ISIN:').find_next_sibling().get_text().strip()
             except:
                 try:
@@ -398,7 +398,6 @@ class CollectStaticInfo:
                     soup = BeautifulSoup(request.text, 'html.parser')
                     short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 3M Company (MMM)
                     short_name = short_name[short_name.index('(')+1:].strip().replace(')', '') # MMM
-                    market = soup.find('i', class_='btnTextDropDwn arial_12 bold').get_text()
                     isin = soup.find('span', text='ISIN:').find_next_sibling().get_text().strip()
                 except:
                     continue
@@ -701,7 +700,6 @@ class CollectStaticInfo:
         print('Links are collected')
         print('Starting to visit them and store in database')
         i = 0
-        errors = []
         for link in links:
             sleep(1)
             l = url2 + link
@@ -795,7 +793,6 @@ class CollectStaticInfo:
         print('Links are collected')
         print('Starting to visit them and store in database')
         i = 0
-        errors = []
         for link in links:
             sleep(1)
             l = url2 + link
@@ -804,7 +801,6 @@ class CollectStaticInfo:
                 soup = BeautifulSoup(request.text, 'html.parser')
                 short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 3M Company (MMM)
                 short_name = short_name[short_name.index('(')+1:].strip().replace(')', '') # MMM
-                market = soup.find('i', class_='btnTextDropDwn arial_12 bold').get_text()
                 isin = soup.find('span', text='ISIN:').find_next_sibling().get_text().strip()
             except:
                 try:
@@ -814,7 +810,6 @@ class CollectStaticInfo:
                     soup = BeautifulSoup(request.text, 'html.parser')
                     short_name = soup.find('h1', class_='float_lang_base_1 relativeAttr').get_text() # 3M Company (MMM)
                     short_name = short_name[short_name.index('(')+1:].strip().replace(')', '') # MMM
-                    market = soup.find('i', class_='btnTextDropDwn arial_12 bold').get_text()
                     isin = soup.find('span', text='ISIN:').find_next_sibling().get_text().strip()
                 except:
                     continue
@@ -868,7 +863,6 @@ class CollectStaticInfo:
         print('Links are collected')
         print('Starting to visit them and store in database')
         i = 0
-        errors = []
         for link in links:
             sleep(1)
             l = url2 + link
@@ -953,7 +947,6 @@ class CollectStaticInfo:
         print('Links are collected')
         print('Starting to visit them and store in database')
         i = 0
-        errors = []
         for link in links:
             sleep(1)
             l = url2 + link
@@ -1037,7 +1030,6 @@ class CollectStaticInfo:
         print('Links are collected')
         print('Starting to visit them and store in database')
         i = 0
-        errors = []
         for link in links:
             sleep(1)
             l = url2 + link
@@ -1102,7 +1094,6 @@ class CollectStaticInfo:
         print('Links are collected')
         print('Starting to visit them and store in database')
         i = 0
-        errors = []
         for link in links:
             sleep(1)
             l = url2 + link
@@ -1169,7 +1160,6 @@ class CollectStaticInfo:
         print('Links are collected')
         print('Starting to visit them and store in database')
         i = 0
-        errors = []
         for link in links:
             sleep(1)
             l = url2 + link
@@ -1255,7 +1245,6 @@ class CollectStaticInfo:
         print('Links are collected')
         print('Starting to visit them and store in database')
         i = 0
-        errors = []
         for link in links:
             sleep(1)
             l = url2 + link
@@ -1341,7 +1330,6 @@ class CollectStaticInfo:
         print('Links are collected')
         print('Starting to visit them and store in database')
         i = 0
-        errors = []
         for link in links:
             sleep(1)
             l = url2 + link
@@ -2633,6 +2621,7 @@ class CollectBondStaticInfo:
             i += 1
         print('Data has been successfuly stored!')
         return ''
+
     def japan():
         #--------------------VPS------------------
         display = Display(visible=0, size=(800, 600))
@@ -3099,4 +3088,448 @@ class CollectBondStaticInfo:
             i += 1
 
         print('Data has been successfuly stored!')
+        return ''
+
+# Used for collecting funds' issuers
+class CollectFundIssuers:
+    def all():
+        print('Starting to Collect Fund Issuers for United States')
+        CollectFundIssuers.us()
+        print('Starting to Collect Fund Issuers for Japan')
+        CollectFundIssuers.japan()
+        print('Starting to Collect Fund Issuers for United Kingdom')
+        CollectFundIssuers.uk()
+        print('Starting to Collect Fund Issuers for Honk Kong')
+        CollectFundIssuers.hk()
+        print('Starting to Collect Fund Issuers for China')
+        CollectFundIssuers.china()
+        print('Starting to Collect Fund Issuers for Canada')
+        CollectFundIssuers.canada()
+        print('Starting to Collect Fund Issuers for Germany')
+        CollectFundIssuers.germany()
+        print('Starting to Collect Fund Issuers for Australia')
+        CollectFundIssuers.australia()
+    
+    def us():
+        #--------------------VPS------------------
+        display = Display(visible=0, size=(800, 600))
+        display.start()
+        options = webdriver.ChromeOptions()
+        options.add_argument('--no-sandbox')
+        driver = webdriver.Chrome(options=options)
+        #-----------------------------------------
+        print('Starting CollectFundIssuers.us()')
+        print('Starting Selenium')
+        url = 'https://www.investing.com/funds/usa-funds?&issuer_filter=0'
+        url2 = 'https://www.investing.com'
+        # driver = webdriver.Chrome()
+        driver.get(url)
+        FundIssuers.objects.filter(country='US').delete()
+        print('Removed old records starting to collect new ones')
+        soup = BeautifulSoup(driver.page_source, 'html.parser')
+        driver.quit()
+        print('Saved page source')
+        print('Starting to collect links')
+        links = []
+        for link in soup.find_all('td', class_='bold left noWrap elp plusIconTd'):
+            links.append(link.a['href'])
+        header={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36 OPR/38.0.2220.41'}
+        print('Links are collected')
+        print('Starting to visit them and collect issuers info')
+        i = 0
+        issuers = []
+        for link in links:
+            sleep(1)
+            l = url2 + link
+            try:
+                request = requests.get(l, headers=header)
+                soup = BeautifulSoup(request.text, 'html.parser')
+                issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
+            except:
+                try:
+                    print('Some Complication, sleeping for 10sec')
+                    sleep(10)
+                    request = requests.get(l, headers=header)
+                    soup = BeautifulSoup(request.text, 'html.parser')
+                    issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
+                except:
+                    continue
+            print(f'Visited {i}/{len(links)-1}')
+            i += 1
+            issuers.append(issuer)
+        issuers = list(set(issuers))
+        print(f'Longest Issuer Name: {len(max(issuers, key=len))}')
+        for issuer in issuers:
+            FundIssuers(country='US', name=issuer).save()
+        return ''
+
+    def japan():
+        #--------------------VPS------------------
+        display = Display(visible=0, size=(800, 600))
+        display.start()
+        options = webdriver.ChromeOptions()
+        options.add_argument('--no-sandbox')
+        driver = webdriver.Chrome(options=options)
+        #-----------------------------------------
+        print('Starting CollectFundIssuers.japan()')
+        print('Starting Selenium')
+        url = 'https://www.investing.com/funds/japan-funds?&issuer_filter=0'
+        url2 = 'https://www.investing.com'
+        # driver = webdriver.Chrome()
+        driver.get(url)
+        FundIssuers.objects.filter(country='JP').delete()
+        print('Removed old records starting to collect new ones')
+        soup = BeautifulSoup(driver.page_source, 'html.parser')
+        driver.quit()
+        print('Saved page source')
+        print('Starting to collect links')
+        links = []
+        for link in soup.find_all('td', class_='bold left noWrap elp plusIconTd'):
+            links.append(link.a['href'])
+        header={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36 OPR/38.0.2220.41'}
+        print('Links are collected')
+        print('Starting to visit them and collect issuers info')
+        i = 0
+        issuers = []
+        for link in links:
+            sleep(1)
+            l = url2 + link
+            try:
+                request = requests.get(l, headers=header)
+                soup = BeautifulSoup(request.text, 'html.parser')
+                issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
+            except:
+                try:
+                    print('Some Complication, sleeping for 10sec')
+                    sleep(10)
+                    request = requests.get(l, headers=header)
+                    soup = BeautifulSoup(request.text, 'html.parser')
+                    issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
+                except:
+                    continue
+            print(f'Visited {i}/{len(links)-1}')
+            i += 1
+            issuers.append(issuer)
+        issuers = list(set(issuers))
+        print(f'Longest Issuer Name: {len(max(issuers, key=len))}')
+        for issuer in issuers:
+            FundIssuers(country='JP', name=issuer).save()
+        return ''
+
+    def uk():
+        #--------------------VPS------------------
+        display = Display(visible=0, size=(800, 600))
+        display.start()
+        options = webdriver.ChromeOptions()
+        options.add_argument('--no-sandbox')
+        driver = webdriver.Chrome(options=options)
+        #-----------------------------------------
+        print('Starting CollectFundIssuers.uk()')
+        print('Starting Selenium')
+        url = 'https://www.investing.com/funds/uk-funds?&issuer_filter=0'
+        url2 = 'https://www.investing.com'
+        # driver = webdriver.Chrome()
+        driver.get(url)
+        FundIssuers.objects.filter(country='UK').delete()
+        print('Removed old records starting to collect new ones')
+        soup = BeautifulSoup(driver.page_source, 'html.parser')
+        driver.quit()
+        print('Saved page source')
+        print('Starting to collect links')
+        links = []
+        for link in soup.find_all('td', class_='bold left noWrap elp plusIconTd'):
+            links.append(link.a['href'])
+        header={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36 OPR/38.0.2220.41'}
+        print('Links are collected')
+        print('Starting to visit them and collect issuers info')
+        i = 0
+        issuers = []
+        for link in links:
+            sleep(1)
+            l = url2 + link
+            try:
+                request = requests.get(l, headers=header)
+                soup = BeautifulSoup(request.text, 'html.parser')
+                issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
+            except:
+                try:
+                    print('Some Complication, sleeping for 10sec')
+                    sleep(10)
+                    request = requests.get(l, headers=header)
+                    soup = BeautifulSoup(request.text, 'html.parser')
+                    issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
+                except:
+                    continue
+            print(f'Visited {i}/{len(links)-1}')
+            i += 1
+            issuers.append(issuer)
+        issuers = list(set(issuers))
+        print(f'Longest Issuer Name: {len(max(issuers, key=len))}')
+        for issuer in issuers:
+            FundIssuers(country='UK', name=issuer).save()
+        return ''
+
+    def hk():
+        #--------------------VPS------------------
+        display = Display(visible=0, size=(800, 600))
+        display.start()
+        options = webdriver.ChromeOptions()
+        options.add_argument('--no-sandbox')
+        driver = webdriver.Chrome(options=options)
+        #-----------------------------------------
+        print('Starting CollectFundIssuers.hk()')
+        print('Starting Selenium')
+        url = 'https://www.investing.com/funds/hong-kong-funds?&issuer_filter=0'
+        url2 = 'https://www.investing.com'
+        # driver = webdriver.Chrome()
+        driver.get(url)
+        FundIssuers.objects.filter(country='HK').delete()
+        print('Removed old records starting to collect new ones')
+        soup = BeautifulSoup(driver.page_source, 'html.parser')
+        driver.quit()
+        print('Saved page source')
+        print('Starting to collect links')
+        links = []
+        for link in soup.find_all('td', class_='bold left noWrap elp plusIconTd'):
+            links.append(link.a['href'])
+        header={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36 OPR/38.0.2220.41'}
+        print('Links are collected')
+        print('Starting to visit them and collect issuers info')
+        i = 0
+        issuers = []
+        for link in links:
+            sleep(1)
+            l = url2 + link
+            try:
+                request = requests.get(l, headers=header)
+                soup = BeautifulSoup(request.text, 'html.parser')
+                issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
+            except:
+                try:
+                    print('Some Complication, sleeping for 10sec')
+                    sleep(10)
+                    request = requests.get(l, headers=header)
+                    soup = BeautifulSoup(request.text, 'html.parser')
+                    issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
+                except:
+                    continue
+            print(f'Visited {i}/{len(links)-1}')
+            i += 1
+            issuers.append(issuer)
+        issuers = list(set(issuers))
+        print(f'Longest Issuer Name: {len(max(issuers, key=len))}')
+        for issuer in issuers:
+            FundIssuers(country='HK', name=issuer).save()
+        return ''
+
+    def china():
+        #--------------------VPS------------------
+        display = Display(visible=0, size=(800, 600))
+        display.start()
+        options = webdriver.ChromeOptions()
+        options.add_argument('--no-sandbox')
+        driver = webdriver.Chrome(options=options)
+        #-----------------------------------------
+        print('Starting CollectFundIssuers.china()')
+        print('Starting Selenium')
+        url = 'https://www.investing.com/funds/china-funds?&issuer_filter=0'
+        url2 = 'https://www.investing.com'
+        # driver = webdriver.Chrome()
+        driver.get(url)
+        FundIssuers.objects.filter(country='CH').delete()
+        print('Removed old records starting to collect new ones')
+        soup = BeautifulSoup(driver.page_source, 'html.parser')
+        driver.quit()
+        print('Saved page source')
+        print('Starting to collect links')
+        links = []
+        for link in soup.find_all('td', class_='bold left noWrap elp plusIconTd'):
+            links.append(link.a['href'])
+        header={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36 OPR/38.0.2220.41'}
+        print('Links are collected')
+        print('Starting to visit them and collect issuers info')
+        i = 0
+        issuers = []
+        for link in links:
+            sleep(1)
+            l = url2 + link
+            try:
+                request = requests.get(l, headers=header)
+                soup = BeautifulSoup(request.text, 'html.parser')
+                issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
+            except:
+                try:
+                    print('Some Complication, sleeping for 10sec')
+                    sleep(10)
+                    request = requests.get(l, headers=header)
+                    soup = BeautifulSoup(request.text, 'html.parser')
+                    issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
+                except:
+                    continue
+            print(f'Visited {i}/{len(links)-1}')
+            i += 1
+            issuers.append(issuer)
+        issuers = list(set(issuers))
+        print(f'Longest Issuer Name: {len(max(issuers, key=len))}')
+        for issuer in issuers:
+            FundIssuers(country='CH', name=issuer).save()
+        return ''
+
+    def canada():
+        #--------------------VPS------------------
+        display = Display(visible=0, size=(800, 600))
+        display.start()
+        options = webdriver.ChromeOptions()
+        options.add_argument('--no-sandbox')
+        driver = webdriver.Chrome(options=options)
+        #-----------------------------------------
+        print('Starting CollectFundIssuers.canada()')
+        print('Starting Selenium')
+        url = 'https://www.investing.com/funds/canada-funds?&issuer_filter=0'
+        url2 = 'https://www.investing.com'
+        # driver = webdriver.Chrome()
+        driver.get(url)
+        FundIssuers.objects.filter(country='CA').delete()
+        print('Removed old records starting to collect new ones')
+        soup = BeautifulSoup(driver.page_source, 'html.parser')
+        driver.quit()
+        print('Saved page source')
+        print('Starting to collect links')
+        links = []
+        for link in soup.find_all('td', class_='bold left noWrap elp plusIconTd'):
+            links.append(link.a['href'])
+        header={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36 OPR/38.0.2220.41'}
+        print('Links are collected')
+        print('Starting to visit them and collect issuers info')
+        i = 0
+        issuers = []
+        for link in links:
+            sleep(1)
+            l = url2 + link
+            try:
+                request = requests.get(l, headers=header)
+                soup = BeautifulSoup(request.text, 'html.parser')
+                issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
+            except:
+                try:
+                    print('Some Complication, sleeping for 10sec')
+                    sleep(10)
+                    request = requests.get(l, headers=header)
+                    soup = BeautifulSoup(request.text, 'html.parser')
+                    issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
+                except:
+                    continue
+            print(f'Visited {i}/{len(links)-1}')
+            i += 1
+            issuers.append(issuer)
+        issuers = list(set(issuers))
+        print(f'Longest Issuer Name: {len(max(issuers, key=len))}')
+        for issuer in issuers:
+            FundIssuers(country='CA', name=issuer).save()
+        return ''
+
+    def germany():
+        #--------------------VPS------------------
+        display = Display(visible=0, size=(800, 600))
+        display.start()
+        options = webdriver.ChromeOptions()
+        options.add_argument('--no-sandbox')
+        driver = webdriver.Chrome(options=options)
+        #-----------------------------------------
+        print('Starting CollectFundIssuers.germany()')
+        print('Starting Selenium')
+        url = 'https://www.investing.com/funds/germany-funds?&issuer_filter=0'
+        url2 = 'https://www.investing.com'
+        # driver = webdriver.Chrome()
+        driver.get(url)
+        FundIssuers.objects.filter(country='GE').delete()
+        print('Removed old records starting to collect new ones')
+        soup = BeautifulSoup(driver.page_source, 'html.parser')
+        driver.quit()
+        print('Saved page source')
+        print('Starting to collect links')
+        links = []
+        for link in soup.find_all('td', class_='bold left noWrap elp plusIconTd'):
+            links.append(link.a['href'])
+        header={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) CArome/51.0.2704.106 Safari/537.36 OPR/38.0.2220.41'}
+        print('Links are collected')
+        print('Starting to visit them and collect issuers info')
+        i = 0
+        issuers = []
+        for link in links:
+            sleep(1)
+            l = url2 + link
+            try:
+                request = requests.get(l, headers=header)
+                soup = BeautifulSoup(request.text, 'html.parser')
+                issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
+            except:
+                try:
+                    print('Some Complication, sleeping for 10sec')
+                    sleep(10)
+                    request = requests.get(l, headers=header)
+                    soup = BeautifulSoup(request.text, 'html.parser')
+                    issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
+                except:
+                    continue
+            print(f'Visited {i}/{len(links)-1}')
+            i += 1
+            issuers.append(issuer)
+        issuers = list(set(issuers))
+        print(f'Longest Issuer Name: {len(max(issuers, key=len))}')
+        for issuer in issuers:
+            FundIssuers(country='GE', name=issuer).save()
+        return ''
+
+    def australia():
+        #--------------------VPS------------------
+        display = Display(visible=0, size=(800, 600))
+        display.start()
+        options = webdriver.ChromeOptions()
+        options.add_argument('--no-sandbox')
+        driver = webdriver.Chrome(options=options)
+        #-----------------------------------------
+        print('Starting CollectFundIssuers.australia()')
+        print('Starting Selenium')
+        url = 'https://www.investing.com/funds/australia-funds?&issuer_filter=0'
+        url2 = 'https://www.investing.com'
+        # driver = webdriver.Chrome()
+        driver.get(url)
+        FundIssuers.objects.filter(country='AU').delete()
+        print('Removed old records starting to collect new ones')
+        soup = BeautifulSoup(driver.page_source, 'html.parser')
+        driver.quit()
+        print('Saved page source')
+        print('Starting to collect links')
+        links = []
+        for link in soup.find_all('td', class_='bold left noWrap elp plusIconTd'):
+            links.append(link.a['href'])
+        header={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) CArome/51.0.2704.106 Safari/537.36 OPR/38.0.2220.41'}
+        print('Links are collected')
+        print('Starting to visit them and collect issuers info')
+        i = 0
+        issuers = []
+        for link in links:
+            sleep(1)
+            l = url2 + link
+            try:
+                request = requests.get(l, headers=header)
+                soup = BeautifulSoup(request.text, 'html.parser')
+                issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
+            except:
+                try:
+                    print('Some Complication, sleeping for 10sec')
+                    sleep(10)
+                    request = requests.get(l, headers=header)
+                    soup = BeautifulSoup(request.text, 'html.parser')
+                    issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
+                except:
+                    continue
+            print(f'Visited {i}/{len(links)-1}')
+            i += 1
+            issuers.append(issuer)
+        issuers = list(set(issuers))
+        print(f'Longest Issuer Name: {len(max(issuers, key=len))}')
+        for issuer in issuers:
+            FundIssuers(country='AU', name=issuer).save()
         return ''

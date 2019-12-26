@@ -1,4 +1,5 @@
 from django.db import models
+import datetime
 
 # Create your models here.
 COUNTRIES = (
@@ -632,3 +633,184 @@ class AustraliaBondStaticInfo(models.Model):
     class Meta:
         verbose_name = 'Australia Bonds\' Static Info'
         verbose_name_plural = 'Australia Bonds\' Static Info'
+
+class FundIssuers(models.Model):
+    name = models.CharField(max_length=55)
+    country = models.CharField(choices=COUNTRIES, max_length=2)
+
+    def __str__(self):
+        return f'{self.country}' + self.long_name
+
+    class Meta:
+        verbose_name = 'Fund Issuers'
+        verbose_name_plural = 'Fund Issuers'
+
+FUND_ISSUERS_US = tuple([(i.name, i.name) for i in list(FundIssuers.objects.filter(country='US'))])
+FUND_ISSUERS_JP = tuple([(i.name, i.name) for i in list(FundIssuers.objects.filter(country='JP'))])
+FUND_ISSUERS_UK = tuple([(i.name, i.name) for i in list(FundIssuers.objects.filter(country='UK'))])
+FUND_ISSUERS_HK = tuple([(i.name, i.name) for i in list(FundIssuers.objects.filter(country='HK'))])
+FUND_ISSUERS_CH = tuple([(i.name, i.name) for i in list(FundIssuers.objects.filter(country='CH'))])
+FUND_ISSUERS_CA = tuple([(i.name, i.name) for i in list(FundIssuers.objects.filter(country='CA'))])
+FUND_ISSUERS_GE = tuple([(i.name, i.name) for i in list(FundIssuers.objects.filter(country='GE'))])
+FUND_ISSUERS_AU = tuple([(i.name, i.name) for i in list(FundIssuers.objects.filter(country='AU'))])
+
+# *********************** Funds
+class USFundStaticInfo(models.Model):
+    short_name = models.CharField(max_length=18) #determine
+    long_name = models.CharField(max_length=32) #determine
+    country = models.CharField(choices=COUNTRIES, default='US', max_length=2)
+    market = models.CharField(choices=MARKETS_US, max_length=11)
+    currency = models.CharField(choices=CURRENCIES, default='USD', max_length=3)
+    link = models.URLField()
+    issuer = models.CharField(choices=FUND_ISSUERS_US, max_length=30)
+    isin = models.CharField(max_length=12)
+    min_investment = models.IntegerField()
+    category = models.CharField(max_length=30)
+    inception_date = models.DateField(default=datetime.date.today)
+
+    def __str__(self):
+        return self.long_name
+
+    class Meta:
+        verbose_name = 'United States Funds\' Static Info'
+        verbose_name_plural = 'United States Funds\' Static Info'
+
+class JapanFundStaticInfo(models.Model):
+    short_name = models.CharField(max_length=10)
+    long_name = models.CharField(max_length=24)
+    country = models.CharField(choices=COUNTRIES, default='JP', max_length=2)
+    market = models.CharField(choices=MARKETS_JP, max_length=7)
+    link = models.URLField()
+    currency = models.CharField(choices=CURRENCIES, default='JPY', max_length=3)
+    issuer = models.CharField(choices=FUND_ISSUERS_JP, max_length=48)
+    isin = models.CharField(max_length=12)
+    min_investment = models.IntegerField()
+    category = models.CharField(max_length=30)
+    inception_date = models.DateField(default=datetime.date.today)
+
+    def __str__(self):
+        return self.long_name
+
+    class Meta:
+        verbose_name = 'Japan Funds\' Static Info'
+        verbose_name_plural = 'Japan Funds\' Static Info'
+
+class UKFundStaticInfo(models.Model):
+    short_name = models.CharField(max_length=8)
+    long_name = models.CharField(max_length=33)
+    country = models.CharField(choices=COUNTRIES, default='UK', max_length=2)
+    market = models.CharField(choices=MARKETS_UK, default='London', max_length=20)
+    link = models.URLField()
+    currency = models.CharField(choices=CURRENCIES, default='GBP', max_length=3)
+    issuer = models.CharField(choices=FUND_ISSUERS_UK, max_length=50)
+    isin = models.CharField(max_length=12)
+    min_investment = models.IntegerField()
+    category = models.CharField(max_length=30)
+    inception_date = models.DateField(default=datetime.date.today)
+
+    def __str__(self): 
+        return self.long_name
+
+    class Meta:
+        verbose_name = 'United Kingdom Funds\' Static Info'
+        verbose_name_plural = 'United Kingdom Funds\' Static Info'
+
+class HKFundStaticInfo(models.Model):
+    short_name = models.CharField(max_length=13)
+    long_name = models.CharField(max_length=28)
+    country = models.CharField(choices=COUNTRIES, default='HK', max_length=2)
+    market = models.CharField(choices=MARKETS_HK, default='HKG', max_length=3)
+    link = models.URLField()
+    currency = models.CharField(choices=CURRENCIES, default='HKD', max_length=3)
+    issuer = models.CharField(choices=FUND_ISSUERS_HK, max_length=50)
+    isin = models.CharField(max_length=12)
+    min_investment = models.IntegerField()
+    category = models.CharField(max_length=30)
+    inception_date = models.DateField(default=datetime.date.today)
+
+    def __str__(self):
+        return self.long_name
+
+    class Meta:
+        verbose_name = 'Hong Kong Funds\' Static Info'
+        verbose_name_plural = 'Hong Kong Funds\' Static Info'
+
+class ChinaFundStaticInfo(models.Model):
+    short_name = models.CharField(max_length=9)
+    long_name = models.CharField(max_length=24)
+    country = models.CharField(choices=COUNTRIES, default='CH', max_length=2)
+    market = models.CharField(choices=MARKETS_CH, max_length=20)
+    link = models.URLField()
+    currency = models.CharField(choices=CURRENCIES, default='CNY', max_length=3)
+    issuer = models.CharField(choices=FUND_ISSUERS_CH, max_length=39)
+    isin = models.CharField(max_length=12)
+    min_investment = models.IntegerField()
+    category = models.CharField(max_length=30)
+    inception_date = models.DateField(default=datetime.date.today)
+
+    def __str__(self):
+        return self.long_name
+
+    class Meta:
+        verbose_name = 'China Funds\' Static Info'
+        verbose_name_plural = 'China Funds\' Static Info'
+
+class CanadaFundStaticInfo(models.Model):
+    short_name = models.CharField(max_length=10)
+    long_name = models.CharField(max_length=25)
+    country = models.CharField(choices=COUNTRIES, default='CA', max_length=2)
+    market = models.CharField(choices=MARKETS_CA, max_length=7)
+    link = models.URLField()
+    currency = models.CharField(choices=CURRENCIES, default='CAD', max_length=3)
+    issuer = models.CharField(choices=FUND_ISSUERS_CA, max_length=33)
+    isin = models.CharField(max_length=12)
+    min_investment = models.IntegerField()
+    category = models.CharField(max_length=30)
+    inception_date = models.DateField(default=datetime.date.today)
+
+    def __str__(self):
+        return self.long_name
+
+    class Meta:
+        verbose_name = 'Canada Funds\' Static Info'
+        verbose_name_plural = 'Canada Funds\' Static Info'
+
+class GermanyFundStaticInfo(models.Model):
+    short_name = models.CharField(max_length=11)
+    long_name = models.CharField(max_length=26)
+    country = models.CharField(choices=COUNTRIES, default='GE', max_length=2)
+    market = models.CharField(choices=MARKETS_GE, max_length=20)
+    link = models.URLField()
+    currency = models.CharField(choices=CURRENCIES, default='EUR', max_length=3)
+    issuer = models.CharField(choices=FUND_ISSUERS_GE, max_length=41)
+    isin = models.CharField(max_length=12)
+    min_investment = models.IntegerField()
+    category = models.CharField(max_length=30)
+    inception_date = models.DateField(default=datetime.date.today)
+
+    def __str__(self):
+        return self.long_name
+
+    class Meta:
+        verbose_name = 'Germany Funds\' Static Info'
+        verbose_name_plural = 'Germany Funds\' Static Info'
+
+class AustraliaFundStaticInfo(models.Model):
+    short_name = models.CharField(max_length=13)
+    long_name = models.CharField(max_length=28)
+    country = models.CharField(choices=COUNTRIES, default='AU', max_length=2)
+    market = models.CharField(choices=MARKETS_AU, max_length=3, default='ASX')
+    link = models.URLField()
+    currency = models.CharField(choices=CURRENCIES, default='AUD', max_length=3)
+    issuer = models.CharField(choices=FUND_ISSUERS_AU, max_length=39)
+    isin = models.CharField(max_length=12)
+    min_investment = models.IntegerField()
+    category = models.CharField(max_length=30)
+    inception_date = models.DateField(default=datetime.date.today)
+
+    def __str__(self):
+        return self.long_name
+
+    class Meta:
+        verbose_name = 'Australia Funds\' Static Info'
+        verbose_name_plural = 'Australia Funds\' Static Info'
