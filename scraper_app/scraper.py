@@ -3593,6 +3593,7 @@ class CollectFundStaticInfo:
         for link in links:
             sleep(1)
             l = url2 + link
+            print(l)
             try:
                 request = requests.get(l, headers=header)
                 soup = BeautifulSoup(request.text, 'html.parser')
@@ -3651,13 +3652,16 @@ class CollectFundStaticInfo:
                 fields['Min. Investment'] = None # Will be converted to 'null' before postgresql automatically
             else:
                 fields['Min. Investment'] = fields['Min. Investment'].replace(',', '').strip()
-
+            try:
+                inception_date=datetime.datetime.strptime(fields['Inception Date'], '%b %d, %Y')
+            except:
+                inception_date = None
             USFundStaticInfo(
                 short_name=short_names[i], long_name=long_names[i],
                 market=market, issuer=issuer, isin=isin, link=l, 
                 min_investment=fields['Min. Investment'],
                 category=fields['Category'], category_descrptn=fields['Category Descrptn'],
-                inception_date=datetime.datetime.strptime(fields['Inception Date'], '%b %d, %Y')).save()
+                inception_date=inception_date).save()
             print(f'Stored {i}: {long_names[i]} ({i}/{len(long_names)})')
             i += 1
 
@@ -3699,6 +3703,7 @@ class CollectFundStaticInfo:
         for link in links:
             sleep(1)
             l = url2 + link
+            print(l)
             try:
                 request = requests.get(l, headers=header)
                 soup = BeautifulSoup(request.text, 'html.parser')
@@ -3804,6 +3809,7 @@ class CollectFundStaticInfo:
         for link in links:
             sleep(1)
             l = url2 + link
+            print(l)
             try:
                 request = requests.get(l, headers=header)
                 soup = BeautifulSoup(request.text, 'html.parser')
@@ -3891,6 +3897,7 @@ class CollectFundStaticInfo:
         for link in links:
             sleep(1)
             l = url2 + link
+            print(l)
             try:
                 request = requests.get(l, headers=header)
                 soup = BeautifulSoup(request.text, 'html.parser')
@@ -3978,6 +3985,7 @@ class CollectFundStaticInfo:
         for link in links:
             sleep(1)
             l = url2 + link
+            print(l)
             try:
                 request = requests.get(l, headers=header)
                 soup = BeautifulSoup(request.text, 'html.parser')
@@ -4083,6 +4091,7 @@ class CollectFundStaticInfo:
         for link in links:
             sleep(1)
             l = url2 + link
+            print(l)
             try:
                 request = requests.get(l, headers=header)
                 soup = BeautifulSoup(request.text, 'html.parser')
@@ -4186,6 +4195,7 @@ class CollectFundStaticInfo:
         for link in links:
             sleep(1)
             l = url2 + link
+            print(l)
             try:
                 request = requests.get(l, headers=header)
                 soup = BeautifulSoup(request.text, 'html.parser')
@@ -4291,6 +4301,7 @@ class CollectFundStaticInfo:
         for link in links:
             sleep(1)
             l = url2 + link
+            print(l)
             try:
                 request = requests.get(l, headers=header)
                 soup = BeautifulSoup(request.text, 'html.parser')

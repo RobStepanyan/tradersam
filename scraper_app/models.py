@@ -363,7 +363,7 @@ class ETFIssuers(models.Model):
     country = models.CharField(choices=COUNTRIES, max_length=2)
 
     def __str__(self):
-        return f'{self.country}' + self.long_name
+        return f'{self.country}' + self.name
 
     class Meta:
         verbose_name = 'ETF Issuers'
@@ -639,7 +639,7 @@ class FundIssuers(models.Model):
     country = models.CharField(choices=COUNTRIES, max_length=2)
 
     def __str__(self):
-        return f'{self.country}' + self.long_name
+        return f'{self.country}' + self.name
 
     class Meta:
         verbose_name = 'Fund Issuers'
@@ -666,8 +666,8 @@ class USFundStaticInfo(models.Model):
     isin = models.CharField(max_length=12)
     min_investment = models.CharField(null=True, max_length=12)
     category = models.CharField(max_length=40)
-    category_descrptn = models.CharField(max_length=800, default='')
-    inception_date = models.DateField(default=datetime.date.today)
+    category_descrptn = models.TextField()
+    inception_date = models.DateField(default=datetime.date.today, null=True)
 
     def __str__(self):
         return self.long_name
@@ -687,7 +687,7 @@ class JapanFundStaticInfo(models.Model):
     isin = models.CharField(max_length=12)
     min_investment = models.CharField(null=True, max_length=12)
     category = models.CharField(max_length=40)
-    category_descrptn = models.CharField(max_length=800, default='')
+    category_descrptn = models.TextField()
     inception_date = models.DateField(default=datetime.date.today)
 
     def __str__(self):
@@ -708,7 +708,7 @@ class UKFundStaticInfo(models.Model):
     isin = models.CharField(max_length=12)
     min_investment = models.CharField(null=True, max_length=12)
     category = models.CharField(max_length=40)
-    category_descrptn = models.CharField(max_length=800, default='')
+    category_descrptn = models.TextField()
     inception_date = models.DateField(default=datetime.date.today)
 
     def __str__(self): 
@@ -729,7 +729,7 @@ class HKFundStaticInfo(models.Model):
     isin = models.CharField(max_length=12)
     min_investment = models.CharField(null=True, max_length=12)
     category = models.CharField(max_length=40)
-    category_descrptn = models.CharField(max_length=800, default='')
+    category_descrptn = models.TextField()
     inception_date = models.DateField(default=datetime.date.today)
 
     def __str__(self):
@@ -750,7 +750,7 @@ class ChinaFundStaticInfo(models.Model):
     isin = models.CharField(max_length=12)
     min_investment = models.CharField(null=True, max_length=12)
     category = models.CharField(max_length=40)
-    category_descrptn = models.CharField(max_length=800, default='')
+    category_descrptn = models.TextField()
     inception_date = models.DateField(default=datetime.date.today)
 
     def __str__(self):
@@ -771,7 +771,7 @@ class CanadaFundStaticInfo(models.Model):
     isin = models.CharField(max_length=12)
     min_investment = models.CharField(null=True, max_length=12)
     category = models.CharField(max_length=40)
-    category_descrptn = models.CharField(max_length=800, default='')
+    category_descrptn = models.TextField()
     inception_date = models.DateField(default=datetime.date.today)
 
     def __str__(self):
@@ -792,7 +792,7 @@ class GermanyFundStaticInfo(models.Model):
     isin = models.CharField(max_length=12)
     min_investment = models.CharField(null=True, max_length=12)
     category = models.CharField(max_length=40)
-    category_descrptn = models.CharField(max_length=800, default='')
+    category_descrptn = models.TextField()
     inception_date = models.DateField(default=datetime.date.today)
 
     def __str__(self):
@@ -813,7 +813,7 @@ class AustraliaFundStaticInfo(models.Model):
     isin = models.CharField(max_length=12)
     min_investment = models.CharField(null=True, max_length=12)
     category = models.CharField(max_length=40)
-    category_descrptn = models.CharField(max_length=800, default='')
+    category_descrptn = models.TextField()
     inception_date = models.DateField(default=datetime.date.today)
 
     def __str__(self):
