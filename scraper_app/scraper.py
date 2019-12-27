@@ -1984,7 +1984,7 @@ class CollectETFStaticInfo:
             USETFStaticInfo(
                 short_name=short_name, long_name=long_names[i],
                 market=market, issuer=issuer, isin=isin, link=l).save()
-            print(f'Stored {i}: {long_names[i]} ({i}/{len(long_names)})')
+            print(f'Stored {i}: {long_names[i]} ({i}/{len(long_names)-1})')
             if i % 100 == 0:
                 print (f'{len(links)-i} equities left')
             i += 1
@@ -2068,7 +2068,7 @@ class CollectETFStaticInfo:
             JapanETFStaticInfo(
                 short_name=short_name, long_name=long_names[i],
                 market=market, issuer=issuer, isin=isin, link=l).save()
-            print(f'Stored {i}: {long_names[i]} ({i}/{len(long_names)})')
+            print(f'Stored {i}: {long_names[i]} ({i}/{len(long_names)-1})')
             if i % 100 == 0:
                 print (f'{len(links)-i} equities left')
             i += 1
@@ -2134,7 +2134,7 @@ class CollectETFStaticInfo:
             UKETFStaticInfo(
                 short_name=short_name, long_name=long_names[i],
                 issuer=issuer, isin=isin, link=l).save()
-            print(f'Stored {i}: {long_names[i]} ({i}/{len(long_names)})')
+            print(f'Stored {i}: {long_names[i]} ({i}/{len(long_names)-1})')
             if i % 100 == 0:
                 print (f'{len(links)-i} equities left')
             i += 1
@@ -2200,7 +2200,7 @@ class CollectETFStaticInfo:
             HKETFStaticInfo(
                 short_name=short_name, long_name=long_names[i],
                 issuer=issuer, isin=isin, link=l).save()
-            print(f'Stored {i}: {long_names[i]} ({i}/{len(long_names)})')
+            print(f'Stored {i}: {long_names[i]} ({i}/{len(long_names)-1})')
             if i % 100 == 0:
                 print (f'{len(links)-i} equities left')
             i += 1
@@ -2284,7 +2284,7 @@ class CollectETFStaticInfo:
             ChinaETFStaticInfo(
                 short_name=short_name, long_name=long_names[i],
                 market=market, issuer=issuer, isin=isin, link=l).save()
-            print(f'Stored {i}: {long_names[i]} ({i}/{len(long_names)})')
+            print(f'Stored {i}: {long_names[i]} ({i}/{len(long_names)-1})')
             if i % 100 == 0:
                 print (f'{len(links)-i} equities left')
             i += 1
@@ -2368,7 +2368,7 @@ class CollectETFStaticInfo:
             CanadaETFStaticInfo(
                 short_name=short_name, long_name=long_names[i],
                 market=market, issuer=issuer, isin=isin, link=l).save()
-            print(f'Stored {i}: {long_names[i]} ({i}/{len(long_names)})')
+            print(f'Stored {i}: {long_names[i]} ({i}/{len(long_names)-1})')
             if i % 100 == 0:
                 print (f'{len(links)-i} equities left')
             i += 1
@@ -2452,7 +2452,7 @@ class CollectETFStaticInfo:
             GermanyETFStaticInfo(
                 short_name=short_name, long_name=long_names[i],
                 market=market, issuer=issuer, isin=isin, link=l).save()
-            print(f'Stored {i}: {long_names[i]} ({i}/{len(long_names)})')
+            print(f'Stored {i}: {long_names[i]} ({i}/{len(long_names)-1})')
             if i % 100 == 0:
                 print (f'{len(links)-i} equities left')
             i += 1
@@ -2518,7 +2518,7 @@ class CollectETFStaticInfo:
             AustraliaETFStaticInfo(
                 short_name=short_name, long_name=long_names[i],
                 issuer=issuer, isin=isin, link=l).save()
-            print(f'Stored {i}: {long_names[i]} ({i}/{len(long_names)})')
+            print(f'Stored {i}: {long_names[i]} ({i}/{len(long_names)-1})')
             if i % 100 == 0:
                 print (f'{len(links)-i} equities left')
             i += 1
@@ -2615,7 +2615,7 @@ class CollectBondStaticInfo:
             USBondStaticInfo(
                 short_name=short_names[i], long_name=long_names[i],
                 market=market, link=l).save()
-            print(f'Stored {i}: {long_names[i]} ({i}/{len(long_names)})')
+            print(f'Stored {i}: {long_names[i]} ({i}/{len(long_names)-1})')
             if i % 100 == 0:
                 print (f'{len(links)-i} bonds left')
             i += 1
@@ -2689,7 +2689,7 @@ class CollectBondStaticInfo:
             JapanBondStaticInfo(
                 short_name=short_names[i], long_name=long_names[i],
                 market=market, link=l).save()
-            print(f'Stored {i}: {long_names[i]} ({i}/{len(long_names)})')
+            print(f'Stored {i}: {long_names[i]} ({i}/{len(long_names)-1})')
             if i % 100 == 0:
                 print (f'{len(links)-i} bonds left')
             i += 1
@@ -2745,7 +2745,7 @@ class CollectBondStaticInfo:
                     continue
             UKBondStaticInfo(
                 short_name=short_names[i], long_name=long_names[i], link=l).save()
-            print(f'Stored {i}: {long_names[i]} ({i}/{len(long_names)})')
+            print(f'Stored {i}: {long_names[i]} ({i}/{len(long_names)-1})')
             if i % 100 == 0:
                 print (f'{len(links)-i} bonds left')
             i += 1
@@ -2801,7 +2801,7 @@ class CollectBondStaticInfo:
                     continue
             HKBondStaticInfo(
                 short_name=short_names[i], long_name=long_names[i], link=l).save()
-            print(f'Stored {i}: {long_names[i]} ({i}/{len(long_names)})')
+            print(f'Stored {i}: {long_names[i]} ({i}/{len(long_names)-1})')
             if i % 100 == 0:
                 print (f'{len(links)-i} bonds left')
             i += 1
@@ -2876,7 +2876,7 @@ class CollectBondStaticInfo:
             ChinaBondStaticInfo(
                 short_name=short_names[i], long_name=long_names[i],
                 market=market, link=l).save()
-            print(f'Stored {i}: {long_names[i]} ({i}/{len(long_names)})')
+            print(f'Stored {i}: {long_names[i]} ({i}/{len(long_names)-1})')
             if i % 100 == 0:
                 print (f'{len(links)-i} bonds left')
             i += 1
@@ -2951,7 +2951,7 @@ class CollectBondStaticInfo:
             CanadaBondStaticInfo(
                 short_name=short_names[i], long_name=long_names[i],
                 market=market, link=l).save()
-            print(f'Stored {i}: {long_names[i]} ({i}/{len(long_names)})')
+            print(f'Stored {i}: {long_names[i]} ({i}/{len(long_names)-1})')
             if i % 100 == 0:
                 print (f'{len(links)-i} bonds left')
             i += 1
@@ -3026,7 +3026,7 @@ class CollectBondStaticInfo:
             GermanyBondStaticInfo(
                 short_name=short_names[i], long_name=long_names[i],
                 market=market, link=l).save()
-            print(f'Stored {i}: {long_names[i]} ({i}/{len(long_names)})')
+            print(f'Stored {i}: {long_names[i]} ({i}/{len(long_names)-1})')
             if i % 100 == 0:
                 print (f'{len(links)-i} bonds left')
             i += 1
@@ -3082,7 +3082,7 @@ class CollectBondStaticInfo:
                     continue
             AustraliaBondStaticInfo(
                 short_name=short_names[i], long_name=long_names[i], link=l).save()
-            print(f'Stored {i}: {long_names[i]} ({i}/{len(long_names)})')
+            print(f'Stored {i}: {long_names[i]} ({i}/{len(long_names)-1})')
             if i % 100 == 0:
                 print (f'{len(links)-i} bonds left')
             i += 1
@@ -3616,7 +3616,7 @@ class CollectFundStaticInfo:
                             try:
                                 fields['Category Descrptn'] = field.next_sibling['data-tooltip']
                             except:
-                                fields['Category Descrptn'] = ''
+                                fields['Category Descrptn'] = None
                         fields[field.get_text()] = field.next_sibling.get_text()
             except:
                 try:
@@ -3643,7 +3643,7 @@ class CollectFundStaticInfo:
                                 try:
                                     fields['Category Descrptn'] = field.next_sibling['data-tooltip']
                                 except:
-                                    fields['Category Descrptn'] = ''
+                                    fields['Category Descrptn'] = None
                             fields[field.get_text()] = field.next_sibling.get_text()
                 except:
                     continue
@@ -3662,7 +3662,7 @@ class CollectFundStaticInfo:
                 min_investment=fields['Min. Investment'],
                 category=fields['Category'], category_descrptn=fields['Category Descrptn'],
                 inception_date=inception_date).save()
-            print(f'Stored {i}: {long_names[i]} ({i}/{len(long_names)})')
+            print(f'Stored {i}: {long_names[i]} ({i}/{len(long_names)-1})')
             i += 1
 
         print('Data has been successfuly stored!')
@@ -3726,7 +3726,7 @@ class CollectFundStaticInfo:
                             try:
                                 fields['Category Descrptn'] = field.next_sibling['data-tooltip']
                             except:
-                                fields['Category Descrptn'] = ''
+                                fields['Category Descrptn'] = None
                         fields[field.get_text()] = field.next_sibling.get_text()
             except:
                 try:
@@ -3753,7 +3753,7 @@ class CollectFundStaticInfo:
                                 try:
                                     fields['Category Descrptn'] = field.next_sibling['data-tooltip']
                                 except:
-                                    fields['Category Descrptn'] = ''
+                                    fields['Category Descrptn'] = None
                             fields[field.get_text()] = field.next_sibling.get_text()
                 except:
                     continue
@@ -3768,7 +3768,7 @@ class CollectFundStaticInfo:
                 min_investment=fields['Min. Investment'],
                 category=fields['Category'], category_descrptn=fields['Category Descrptn'],
                 inception_date=datetime.datetime.strptime(fields['Inception Date'], '%b %d, %Y')).save()
-            print(f'Stored {i}: {long_names[i]} ({i}/{len(long_names)})')
+            print(f'Stored {i}: {long_names[i]} ({i}/{len(long_names)-1})')
             i += 1
 
         print('Data has been successfuly stored!')
@@ -3823,7 +3823,7 @@ class CollectFundStaticInfo:
                             try:
                                 fields['Category Descrptn'] = field.next_sibling['data-tooltip']
                             except:
-                                fields['Category Descrptn'] = ''
+                                fields['Category Descrptn'] = None
                         fields[field.get_text()] = field.next_sibling.get_text()
             except:
                 try:
@@ -3841,7 +3841,7 @@ class CollectFundStaticInfo:
                                 try:
                                     fields['Category Descrptn'] = field.next_sibling['data-tooltip']
                                 except:
-                                    fields['Category Descrptn'] = ''
+                                    fields['Category Descrptn'] = None
                             fields[field.get_text()] = field.next_sibling.get_text()
                 except:
                     continue
@@ -3856,7 +3856,7 @@ class CollectFundStaticInfo:
                 min_investment=fields['Min. Investment'],
                 category=fields['Category'], category_descrptn=fields['Category Descrptn'],
                 inception_date=datetime.datetime.strptime(fields['Inception Date'], '%b %d, %Y')).save()
-            print(f'Stored {i}: {long_names[i]} ({i}/{len(long_names)})')
+            print(f'Stored {i}: {long_names[i]} ({i}/{len(long_names)-1})')
             i += 1
 
         print('Data has been successfuly stored!')
@@ -3902,7 +3902,10 @@ class CollectFundStaticInfo:
                 request = requests.get(l, headers=header)
                 soup = BeautifulSoup(request.text, 'html.parser')
                 issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
-                isin = soup.find('span', text='ISIN:').find_next_sibling().get_text().strip()
+                if soup.find('span', text='ISIN:'):
+                    isin = soup.find('span', text='ISIN:').find_next_sibling().get_text().strip()
+                else:
+                    isin = None
                 soup = soup.find_all('span')
                 fields = {}
                 for field in soup:
@@ -3911,7 +3914,7 @@ class CollectFundStaticInfo:
                             try:
                                 fields['Category Descrptn'] = field.next_sibling['data-tooltip']
                             except:
-                                fields['Category Descrptn'] = ''
+                                fields['Category Descrptn'] = None
                         fields[field.get_text()] = field.next_sibling.get_text()
             except:
                 try:
@@ -3920,7 +3923,10 @@ class CollectFundStaticInfo:
                     request = requests.get(l, headers=header)
                     soup = BeautifulSoup(request.text, 'html.parser')
                     issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
-                    isin = soup.find('span', text='ISIN:').find_next_sibling().get_text().strip()
+                    if soup.find('span', text='ISIN:'):
+                        isin = soup.find('span', text='ISIN:').find_next_sibling().get_text().strip()
+                    else:
+                        isin = None
                     soup = soup.find_all('span')
                     fields = {}
                     for field in soup:
@@ -3929,7 +3935,7 @@ class CollectFundStaticInfo:
                                 try:
                                     fields['Category Descrptn'] = field.next_sibling['data-tooltip']
                                 except:
-                                    fields['Category Descrptn'] = ''
+                                    fields['Category Descrptn'] = None
                             fields[field.get_text()] = field.next_sibling.get_text()
                 except:
                     continue
@@ -3938,13 +3944,18 @@ class CollectFundStaticInfo:
                 fields['Min. Investment'] = None # Will be converted to 'null' before postgresql automatically
             else:
                 fields['Min. Investment'] = fields['Min. Investment'].replace(',', '').strip()
+            try:
+                inception_date=datetime.datetime.strptime(fields['Inception Date'], '%b %d, %Y')
+            except:
+                inception_date = None
+
             HKFundStaticInfo(
                 short_name=short_names[i], long_name=long_names[i],
                 issuer=issuer, isin=isin, link=l, 
                 min_investment=fields['Min. Investment'],
                 category=fields['Category'], category_descrptn=fields['Category Descrptn'],
-                inception_date=datetime.datetime.strptime(fields['Inception Date'], '%b %d, %Y')).save()
-            print(f'Stored {i}: {long_names[i]} ({i}/{len(long_names)})')
+                inception_date=inception_date).save()
+            print(f'Stored {i}: {long_names[i]} ({i}/{len(long_names)-1})')
             i += 1
 
         print('Data has been successfuly stored!')
@@ -3990,7 +4001,6 @@ class CollectFundStaticInfo:
                 request = requests.get(l, headers=header)
                 soup = BeautifulSoup(request.text, 'html.parser')
                 issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
-                isin = soup.find('span', text='ISIN:').find_next_sibling().get_text().strip()
                 market = soup.find('i', class_='btnTextDropDwn arial_12 bold').get_text()
                 markets = [m[0] for m in MARKETS_CH]
                 if market not in markets:
@@ -4008,7 +4018,7 @@ class CollectFundStaticInfo:
                             try:
                                 fields['Category Descrptn'] = field.next_sibling['data-tooltip']
                             except:
-                                fields['Category Descrptn'] = ''
+                                fields['Category Descrptn'] = None
                         fields[field.get_text()] = field.next_sibling.get_text()
             except:
                 try:
@@ -4017,7 +4027,6 @@ class CollectFundStaticInfo:
                     request = requests.get(l, headers=header)
                     soup = BeautifulSoup(request.text, 'html.parser')
                     issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
-                    isin = soup.find('span', text='ISIN:').find_next_sibling().get_text().strip()
                     market = soup.find('i', class_='btnTextDropDwn arial_12 bold').get_text()
                     markets = [m[0] for m in MARKETS_CH]
                     if market not in markets:
@@ -4035,7 +4044,7 @@ class CollectFundStaticInfo:
                                 try:
                                     fields['Category Descrptn'] = field.next_sibling['data-tooltip']
                                 except:
-                                    fields['Category Descrptn'] = ''
+                                    fields['Category Descrptn'] = None
                             fields[field.get_text()] = field.next_sibling.get_text()
                 except:
                     continue
@@ -4046,11 +4055,11 @@ class CollectFundStaticInfo:
                 fields['Min. Investment'] = fields['Min. Investment'].replace(',', '').strip()
             ChinaFundStaticInfo(
                 short_name=short_names[i], long_name=long_names[i],
-                market=market, issuer=issuer, isin=isin, link=l, 
+                market=market, issuer=issuer, link=l, 
                 min_investment=fields['Min. Investment'],
                 category=fields['Category'], category_descrptn=fields['Category Descrptn'],
                 inception_date=datetime.datetime.strptime(fields['Inception Date'], '%b %d, %Y')).save()
-            print(f'Stored {i}: {long_names[i]} ({i}/{len(long_names)})')
+            print(f'Stored {i}: {long_names[i]} ({i}/{len(long_names)-1})')
             i += 1
 
         print('Data has been successfuly stored!')
@@ -4113,7 +4122,7 @@ class CollectFundStaticInfo:
                             try:
                                 fields['Category Descrptn'] = field.next_sibling['data-tooltip']
                             except:
-                                fields['Category Descrptn'] = ''
+                                fields['Category Descrptn'] = None
                         fields[field.get_text()] = field.next_sibling.get_text()
             except:
                 try:
@@ -4139,7 +4148,7 @@ class CollectFundStaticInfo:
                                 try:
                                     fields['Category Descrptn'] = field.next_sibling['data-tooltip']
                                 except:
-                                    fields['Category Descrptn'] = ''
+                                    fields['Category Descrptn'] = None
                             fields[field.get_text()] = field.next_sibling.get_text()
                 except:
                     continue
@@ -4154,7 +4163,7 @@ class CollectFundStaticInfo:
                 min_investment=fields['Min. Investment'],
                 category=fields['Category'], category_descrptn=fields['Category Descrptn'],
                 inception_date=datetime.datetime.strptime(fields['Inception Date'], '%b %d, %Y')).save()
-            print(f'Stored {i}: {long_names[i]} ({i}/{len(long_names)})')
+            print(f'Stored {i}: {long_names[i]} ({i}/{len(long_names)-1})')
             i += 1
 
         print('Data has been successfuly stored!')
@@ -4218,7 +4227,7 @@ class CollectFundStaticInfo:
                             try:
                                 fields['Category Descrptn'] = field.next_sibling['data-tooltip']
                             except:
-                                fields['Category Descrptn'] = ''
+                                fields['Category Descrptn'] = None
                         fields[field.get_text()] = field.next_sibling.get_text()
             except:
                 try:
@@ -4245,7 +4254,7 @@ class CollectFundStaticInfo:
                                 try:
                                     fields['Category Descrptn'] = field.next_sibling['data-tooltip']
                                 except:
-                                    fields['Category Descrptn'] = ''
+                                    fields['Category Descrptn'] = None
                             fields[field.get_text()] = field.next_sibling.get_text()
                 except:
                     continue
@@ -4260,7 +4269,7 @@ class CollectFundStaticInfo:
                 min_investment=fields['Min. Investment'],
                 category=fields['Category'], category_descrptn=fields['Category Descrptn'],
                 inception_date=datetime.datetime.strptime(fields['Inception Date'], '%b %d, %Y')).save()
-            print(f'Stored {i}: {long_names[i]} ({i}/{len(long_names)})')
+            print(f'Stored {i}: {long_names[i]} ({i}/{len(long_names)-1})')
             i += 1
 
         print('Data has been successfuly stored!')
@@ -4314,7 +4323,7 @@ class CollectFundStaticInfo:
                             try:
                                 fields['Category Descrptn'] = field.next_sibling['data-tooltip']
                             except:
-                                fields['Category Descrptn'] = ''
+                                fields['Category Descrptn'] = None
                         fields[field.get_text()] = field.next_sibling.get_text()
             except:
                 try:
@@ -4331,7 +4340,7 @@ class CollectFundStaticInfo:
                                 try:
                                     fields['Category Descrptn'] = field.next_sibling['data-tooltip']
                                 except:
-                                    fields['Category Descrptn'] = ''
+                                    fields['Category Descrptn'] = None
                             fields[field.get_text()] = field.next_sibling.get_text()
                 except:
                     continue
@@ -4346,7 +4355,7 @@ class CollectFundStaticInfo:
                 min_investment=fields['Min. Investment'],
                 category=fields['Category'], category_descrptn=fields['Category Descrptn'],
                 inception_date=datetime.datetime.strptime(fields['Inception Date'], '%b %d, %Y')).save()
-            print(f'Stored {i}: {long_names[i]} ({i}/{len(long_names)})')
+            print(f'Stored {i}: {long_names[i]} ({i}/{len(long_names)-1})')
             i += 1
 
         print('Data has been successfuly stored!')

@@ -666,7 +666,7 @@ class USFundStaticInfo(models.Model):
     isin = models.CharField(max_length=12)
     min_investment = models.CharField(null=True, max_length=12)
     category = models.CharField(max_length=40)
-    category_descrptn = models.TextField()
+    category_descrptn = models.TextField(null=True)
     inception_date = models.DateField(default=datetime.date.today, null=True)
 
     def __str__(self):
@@ -687,8 +687,8 @@ class JapanFundStaticInfo(models.Model):
     isin = models.CharField(max_length=12)
     min_investment = models.CharField(null=True, max_length=12)
     category = models.CharField(max_length=40)
-    category_descrptn = models.TextField()
-    inception_date = models.DateField(default=datetime.date.today)
+    category_descrptn = models.TextField(null=True)
+    inception_date = models.DateField(default=datetime.date.today, null=True)
 
     def __str__(self):
         return self.long_name
@@ -708,8 +708,8 @@ class UKFundStaticInfo(models.Model):
     isin = models.CharField(max_length=12)
     min_investment = models.CharField(null=True, max_length=12)
     category = models.CharField(max_length=40)
-    category_descrptn = models.TextField()
-    inception_date = models.DateField(default=datetime.date.today)
+    category_descrptn = models.TextField(null=True)
+    inception_date = models.DateField(default=datetime.date.today, null=True)
 
     def __str__(self): 
         return self.long_name
@@ -726,11 +726,11 @@ class HKFundStaticInfo(models.Model):
     link = models.URLField()
     currency = models.CharField(choices=CURRENCIES, default='HKD', max_length=3)
     issuer = models.CharField(choices=FUND_ISSUERS_HK, max_length=50)
-    isin = models.CharField(max_length=12)
+    isin = models.CharField(max_length=12, null=True)
     min_investment = models.CharField(null=True, max_length=12)
-    category = models.CharField(max_length=40)
-    category_descrptn = models.TextField()
-    inception_date = models.DateField(default=datetime.date.today)
+    category = models.CharField(max_length=45)
+    category_descrptn = models.TextField(null=True)
+    inception_date = models.DateField(default=datetime.date.today, null=True)
 
     def __str__(self):
         return self.long_name
@@ -747,11 +747,10 @@ class ChinaFundStaticInfo(models.Model):
     link = models.URLField()
     currency = models.CharField(choices=CURRENCIES, default='CNY', max_length=3)
     issuer = models.CharField(choices=FUND_ISSUERS_CH, max_length=39)
-    isin = models.CharField(max_length=12)
     min_investment = models.CharField(null=True, max_length=12)
     category = models.CharField(max_length=40)
-    category_descrptn = models.TextField()
-    inception_date = models.DateField(default=datetime.date.today)
+    category_descrptn = models.TextField(null=True)
+    inception_date = models.DateField(default=datetime.date.today, null=True)
 
     def __str__(self):
         return self.long_name
@@ -768,11 +767,10 @@ class CanadaFundStaticInfo(models.Model):
     link = models.URLField()
     currency = models.CharField(choices=CURRENCIES, default='CAD', max_length=3)
     issuer = models.CharField(choices=FUND_ISSUERS_CA, max_length=33)
-    isin = models.CharField(max_length=12)
     min_investment = models.CharField(null=True, max_length=12)
     category = models.CharField(max_length=40)
-    category_descrptn = models.TextField()
-    inception_date = models.DateField(default=datetime.date.today)
+    category_descrptn = models.TextField(null=True)
+    inception_date = models.DateField(default=datetime.date.today, null=True)
 
     def __str__(self):
         return self.long_name
@@ -791,9 +789,9 @@ class GermanyFundStaticInfo(models.Model):
     issuer = models.CharField(choices=FUND_ISSUERS_GE, max_length=41)
     isin = models.CharField(max_length=12)
     min_investment = models.CharField(null=True, max_length=12)
-    category = models.CharField(max_length=40)
-    category_descrptn = models.TextField()
-    inception_date = models.DateField(default=datetime.date.today)
+    category = models.CharField(max_length=41)
+    category_descrptn = models.TextField(null=True)
+    inception_date = models.DateField(default=datetime.date.today, null=True)
 
     def __str__(self):
         return self.long_name
@@ -810,11 +808,10 @@ class AustraliaFundStaticInfo(models.Model):
     link = models.URLField()
     currency = models.CharField(choices=CURRENCIES, default='AUD', max_length=3)
     issuer = models.CharField(choices=FUND_ISSUERS_AU, max_length=39)
-    isin = models.CharField(max_length=12)
     min_investment = models.CharField(null=True, max_length=12)
     category = models.CharField(max_length=40)
-    category_descrptn = models.TextField()
-    inception_date = models.DateField(default=datetime.date.today)
+    category_descrptn = models.TextField(null=True)
+    inception_date = models.DateField(default=datetime.date.today, null=True)
 
     def __str__(self):
         return self.long_name
