@@ -1,4 +1,4 @@
-import requests, os
+import requests, os, datetime
 from selenium import webdriver
 from pyvirtualdisplay import Display
 from selenium import webdriver
@@ -3532,4 +3532,811 @@ class CollectFundIssuers:
         print(f'Longest Issuer Name: {len(max(issuers, key=len))}')
         for issuer in issuers:
             FundIssuers(country='AU', name=issuer).save()
+        return ''
+
+class CollectFundStaticInfo:
+    fields_to_scrape = (
+        'Inception Date', 'Min. Investment', 'Category')
+    
+    def all():
+        print('Starting CollectFundStaticInfo')
+        print('Starting to collect for United States')
+        CollectFundStaticInfo.us()
+        print('Starting to collect for Japan')
+        CollectFundStaticInfo.japan()
+        print('Starting to collect for United Kingdom')
+        CollectFundStaticInfo.uk()
+        print('Starting to collect for Honk Kong')
+        CollectFundStaticInfo.hk()
+        print('Starting to collect for China')
+        CollectFundStaticInfo.china()
+        print('Starting to collect for Canada')
+        CollectFundStaticInfo.canada()
+        print('Starting to collect for Germany')
+        CollectFundStaticInfo.germany()
+        print('Starting to collect for Australia')
+        CollectFundStaticInfo.australia()
+
+        
+    def us():
+        #--------------------VPS------------------
+        display = Display(visible=0, size=(800, 600))
+        display.start()
+        options = webdriver.ChromeOptions()
+        options.add_argument('--no-sandbox')
+        driver = webdriver.Chrome(options=options)
+        #-----------------------------------------
+        print('Starting CollectFundStaticInfo.us()')
+        print('Starting Selenium')
+        url = 'https://www.investing.com/funds/usa-funds?&issuer_filter=0'
+        url2 = 'https://www.investing.com'
+        # driver = webdriver.Chrome()
+        driver.get(url)
+        USFundStaticInfo.objects.all().delete()
+        print('Removed old records starting to collect new ones')
+        soup = BeautifulSoup(driver.page_source, 'html.parser')
+        driver.quit()
+        print('Saved page source')
+        print('Starting to collect links')
+        links = []
+        short_names = []
+        long_names = []
+        for link in soup.find_all('td', class_='bold left noWrap elp plusIconTd'):
+            links.append(link.a['href'])
+            short_names.append(link.find_next_sibling()['title'].strip())
+            long_names.append(link.a['title'])
+        
+        header={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36 OPR/38.0.2220.41'}
+        print('Links are collected')
+        print('Starting to visit them and store in database')
+        i = 0
+        for link in links:
+            sleep(1)
+            l = url2 + link
+            try:
+                request = requests.get(l, headers=header)
+                soup = BeautifulSoup(request.text, 'html.parser')
+                issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
+                isin = soup.find('span', text='ISIN:').find_next_sibling().get_text().strip()
+                market = soup.find('i', class_='btnTextDropDwn arial_12 bold').get_text()
+                markets = [m[0] for m in MARKETS_US]
+                if market not in markets:
+                    market = soup.find('table', class_='genTbl closedTbl exchangeDropdownTbl displayNone').tbody
+                    market = market.find_all('tr')
+                    for tr in market:
+                        if tr.find('td', class_='left bold').find_next_sibling().get_text() in markets:
+                            market = tr.find('td', class_='left bold').find_next_sibling().get_text()
+                            break
+                soup = soup.find_all('span')
+                fields = {}
+                for field in soup:
+                    if field.get_text() in CollectFundStaticInfo.fields_to_scrape:
+                        if field.get_text() == 'Category':
+                            try:
+                                fields['Category Descrptn'] = field.next_sibling['data-tooltip']
+                            except:
+                                fields['Category Descrptn'] = ''
+                        fields[field.get_text()] = field.next_sibling.get_text()
+            except:
+                try:
+                    print('Some Complication, sleeping for 10sec')
+                    sleep(10)
+                    request = requests.get(l, headers=header)
+                    soup = BeautifulSoup(request.text, 'html.parser')
+                    issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
+                    isin = soup.find('span', text='ISIN:').find_next_sibling().get_text().strip()
+                    market = soup.find('i', class_='btnTextDropDwn arial_12 bold').get_text()
+                    markets = [m[0] for m in MARKETS_US]
+                    if market not in markets:
+                        market = soup.find('table', class_='genTbl closedTbl exchangeDropdownTbl displayNone').tbody
+                        market = market.find_all('tr')
+                        for tr in market:
+                            if tr.find('td', class_='left bold').find_next_sibling().get_text() in markets:
+                                market = tr.find('td', class_='left bold').find_next_sibling().get_text()
+                                break
+                    soup = soup.find_all('span')
+                    fields = {}
+                    for field in soup:
+                        if field.get_text() in CollectFundStaticInfo.fields_to_scrape:
+                            if field.get_text() == 'Category':
+                                try:
+                                    fields['Category Descrptn'] = field.next_sibling['data-tooltip']
+                                except:
+                                    fields['Category Descrptn'] = ''
+                            fields[field.get_text()] = field.next_sibling.get_text()
+                except:
+                    continue
+
+            if fields['Min. Investment'] == 'N/A':
+                fields['Min. Investment'] = None # Will be converted to 'null' before postgresql automatically
+            else:
+                fields['Min. Investment'] = fields['Min. Investment'].replace(',', '').strip()
+
+            USFundStaticInfo(
+                short_name=short_names[i], long_name=long_names[i],
+                market=market, issuer=issuer, isin=isin, link=l, 
+                min_investment=fields['Min. Investment'],
+                category=fields['Category'], category_descrptn=fields['Category Descrptn'],
+                inception_date=datetime.datetime.strptime(fields['Inception Date'], '%b %d, %Y')).save()
+            print(f'Stored {i}: {long_names[i]} ({i}/{len(long_names)})')
+            i += 1
+
+        print('Data has been successfuly stored!')
+        return ''
+
+    def japan():
+        #--------------------VPS------------------
+        display = Display(visible=0, size=(800, 600))
+        display.start()
+        options = webdriver.ChromeOptions()
+        options.add_argument('--no-sandbox')
+        driver = webdriver.Chrome(options=options)
+        #-----------------------------------------
+        print('Starting CollectFundStaticInfo.japan()')
+        print('Starting Selenium')
+        url = 'https://www.investing.com/funds/japan-funds?&issuer_filter=0'
+        url2 = 'https://www.investing.com'
+        # driver = webdriver.Chrome()
+        driver.get(url)
+        JapanFundStaticInfo.objects.all().delete()
+        print('Removed old records starting to collect new ones')
+        soup = BeautifulSoup(driver.page_source, 'html.parser')
+        driver.quit()
+        print('Saved page source')
+        print('Starting to collect links')
+        links = []
+        short_names = []
+        long_names = []
+        for link in soup.find_all('td', class_='bold left noWrap elp plusIconTd'):
+            links.append(link.a['href'])
+            short_names.append(link.find_next_sibling()['title'].strip())
+            long_names.append(link.a['title'])
+        
+        header={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36 OPR/38.0.2220.41'}
+        print('Links are collected')
+        print('Starting to visit them and store in database')
+        i = 0
+        for link in links:
+            sleep(1)
+            l = url2 + link
+            try:
+                request = requests.get(l, headers=header)
+                soup = BeautifulSoup(request.text, 'html.parser')
+                issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
+                isin = soup.find('span', text='ISIN:').find_next_sibling().get_text().strip()
+                market = soup.find('i', class_='btnTextDropDwn arial_12 bold').get_text()
+                markets = [m[0] for m in MARKETS_JP]
+                if market not in markets:
+                    market = soup.find('table', class_='genTbl closedTbl exchangeDropdownTbl displayNone').tbody
+                    market = market.find_all('tr')
+                    for tr in market:
+                        if tr.find('td', class_='left bold').find_next_sibling().get_text() in markets:
+                            market = tr.find('td', class_='left bold').find_next_sibling().get_text()
+                            break
+                soup = soup.find_all('span')
+                fields = {}
+                for field in soup:
+                    if field.get_text() in CollectFundStaticInfo.fields_to_scrape:
+                        if field.get_text() == 'Category':
+                            try:
+                                fields['Category Descrptn'] = field.next_sibling['data-tooltip']
+                            except:
+                                fields['Category Descrptn'] = ''
+                        fields[field.get_text()] = field.next_sibling.get_text()
+            except:
+                try:
+                    print('Some Complication, sleeping for 10sec')
+                    sleep(10)
+                    request = requests.get(l, headers=header)
+                    soup = BeautifulSoup(request.text, 'html.parser')
+                    issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
+                    isin = soup.find('span', text='ISIN:').find_next_sibling().get_text().strip()
+                    market = soup.find('i', class_='btnTextDropDwn arial_12 bold').get_text()
+                    markets = [m[0] for m in MARKETS_JP]
+                    if market not in markets:
+                        market = soup.find('table', class_='genTbl closedTbl exchangeDropdownTbl displayNone').tbody
+                        market = market.find_all('tr')
+                        for tr in market:
+                            if tr.find('td', class_='left bold').find_next_sibling().get_text() in markets:
+                                market = tr.find('td', class_='left bold').find_next_sibling().get_text()
+                                break
+                    soup = soup.find_all('span')
+                    fields = {}
+                    for field in soup:
+                        if field.get_text() in CollectFundStaticInfo.fields_to_scrape:
+                            if field.get_text() == 'Category':
+                                try:
+                                    fields['Category Descrptn'] = field.next_sibling['data-tooltip']
+                                except:
+                                    fields['Category Descrptn'] = ''
+                            fields[field.get_text()] = field.next_sibling.get_text()
+                except:
+                    continue
+
+            if fields['Min. Investment'] == 'N/A':
+                fields['Min. Investment'] = None # Will be converted to 'null' before postgresql automatically
+            else:
+                fields['Min. Investment'] = fields['Min. Investment'].replace(',', '').strip()
+            JapanFundStaticInfo(
+                short_name=short_names[i], long_name=long_names[i],
+                market=market, issuer=issuer, isin=isin, link=l, 
+                min_investment=fields['Min. Investment'],
+                category=fields['Category'], category_descrptn=fields['Category Descrptn'],
+                inception_date=datetime.datetime.strptime(fields['Inception Date'], '%b %d, %Y')).save()
+            print(f'Stored {i}: {long_names[i]} ({i}/{len(long_names)})')
+            i += 1
+
+        print('Data has been successfuly stored!')
+        return ''
+
+    def uk():
+        #--------------------VPS------------------
+        display = Display(visible=0, size=(800, 600))
+        display.start()
+        options = webdriver.ChromeOptions()
+        options.add_argument('--no-sandbox')
+        driver = webdriver.Chrome(options=options)
+        #-----------------------------------------
+        print('Starting CollectFundStaticInfo.uk()')
+        print('Starting Selenium')
+        url = 'https://www.investing.com/funds/uk-funds?&issuer_filter=0'
+        url2 = 'https://www.investing.com'
+        # driver = webdriver.Chrome()
+        driver.get(url)
+        UKFundStaticInfo.objects.all().delete()
+        print('Removed old records starting to collect new ones')
+        soup = BeautifulSoup(driver.page_source, 'html.parser')
+        driver.quit()
+        print('Saved page source')
+        print('Starting to collect links')
+        links = []
+        short_names = []
+        long_names = []
+        for link in soup.find_all('td', class_='bold left noWrap elp plusIconTd'):
+            links.append(link.a['href'])
+            short_names.append(link.find_next_sibling()['title'].strip())
+            long_names.append(link.a['title'])
+        
+        header={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36 OPR/38.0.2220.41'}
+        print('Links are collected')
+        print('Starting to visit them and store in database')
+        i = 0
+        for link in links:
+            sleep(1)
+            l = url2 + link
+            try:
+                request = requests.get(l, headers=header)
+                soup = BeautifulSoup(request.text, 'html.parser')
+                issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
+                isin = soup.find('span', text='ISIN:').find_next_sibling().get_text().strip()
+                soup = soup.find_all('span')
+                fields = {}
+                for field in soup:
+                    if field.get_text() in CollectFundStaticInfo.fields_to_scrape:
+                        if field.get_text() == 'Category':
+                            try:
+                                fields['Category Descrptn'] = field.next_sibling['data-tooltip']
+                            except:
+                                fields['Category Descrptn'] = ''
+                        fields[field.get_text()] = field.next_sibling.get_text()
+            except:
+                try:
+                    print('Some Complication, sleeping for 10sec')
+                    sleep(10)
+                    request = requests.get(l, headers=header)
+                    soup = BeautifulSoup(request.text, 'html.parser')
+                    issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
+                    isin = soup.find('span', text='ISIN:').find_next_sibling().get_text().strip()
+                    soup = soup.find_all('span')
+                    fields = {}
+                    for field in soup:
+                        if field.get_text() in CollectFundStaticInfo.fields_to_scrape:
+                            if field.get_text() == 'Category':
+                                try:
+                                    fields['Category Descrptn'] = field.next_sibling['data-tooltip']
+                                except:
+                                    fields['Category Descrptn'] = ''
+                            fields[field.get_text()] = field.next_sibling.get_text()
+                except:
+                    continue
+
+            if fields['Min. Investment'] == 'N/A':
+                fields['Min. Investment'] = None # Will be converted to 'null' before postgresql automatically
+            else:
+                fields['Min. Investment'] = fields['Min. Investment'].replace(',', '').strip()
+            UKFundStaticInfo(
+                short_name=short_names[i], long_name=long_names[i],
+                issuer=issuer, isin=isin, link=l, 
+                min_investment=fields['Min. Investment'],
+                category=fields['Category'], category_descrptn=fields['Category Descrptn'],
+                inception_date=datetime.datetime.strptime(fields['Inception Date'], '%b %d, %Y')).save()
+            print(f'Stored {i}: {long_names[i]} ({i}/{len(long_names)})')
+            i += 1
+
+        print('Data has been successfuly stored!')
+        return ''
+
+    def hk():
+        #--------------------VPS------------------
+        display = Display(visible=0, size=(800, 600))
+        display.start()
+        options = webdriver.ChromeOptions()
+        options.add_argument('--no-sandbox')
+        driver = webdriver.Chrome(options=options)
+        #-----------------------------------------
+        print('Starting CollectFundStaticInfo.hk()')
+        print('Starting Selenium')
+        url = 'https://www.investing.com/funds/hong-kong-funds?&issuer_filter=0'
+        url2 = 'https://www.investing.com'
+        # driver = webdriver.Chrome()
+        driver.get(url)
+        HKFundStaticInfo.objects.all().delete()
+        print('Removed old records starting to collect new ones')
+        soup = BeautifulSoup(driver.page_source, 'html.parser')
+        driver.quit()
+        print('Saved page source')
+        print('Starting to collect links')
+        links = []
+        short_names = []
+        long_names = []
+        for link in soup.find_all('td', class_='bold left noWrap elp plusIconTd'):
+            links.append(link.a['href'])
+            short_names.append(link.find_next_sibling()['title'].strip())
+            long_names.append(link.a['title'])
+        
+        header={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36 OPR/38.0.2220.41'}
+        print('Links are collected')
+        print('Starting to visit them and store in database')
+        i = 0
+        for link in links:
+            sleep(1)
+            l = url2 + link
+            try:
+                request = requests.get(l, headers=header)
+                soup = BeautifulSoup(request.text, 'html.parser')
+                issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
+                isin = soup.find('span', text='ISIN:').find_next_sibling().get_text().strip()
+                soup = soup.find_all('span')
+                fields = {}
+                for field in soup:
+                    if field.get_text() in CollectFundStaticInfo.fields_to_scrape:
+                        if field.get_text() == 'Category':
+                            try:
+                                fields['Category Descrptn'] = field.next_sibling['data-tooltip']
+                            except:
+                                fields['Category Descrptn'] = ''
+                        fields[field.get_text()] = field.next_sibling.get_text()
+            except:
+                try:
+                    print('Some Complication, sleeping for 10sec')
+                    sleep(10)
+                    request = requests.get(l, headers=header)
+                    soup = BeautifulSoup(request.text, 'html.parser')
+                    issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
+                    isin = soup.find('span', text='ISIN:').find_next_sibling().get_text().strip()
+                    soup = soup.find_all('span')
+                    fields = {}
+                    for field in soup:
+                        if field.get_text() in CollectFundStaticInfo.fields_to_scrape:
+                            if field.get_text() == 'Category':
+                                try:
+                                    fields['Category Descrptn'] = field.next_sibling['data-tooltip']
+                                except:
+                                    fields['Category Descrptn'] = ''
+                            fields[field.get_text()] = field.next_sibling.get_text()
+                except:
+                    continue
+
+            if fields['Min. Investment'] == 'N/A':
+                fields['Min. Investment'] = None # Will be converted to 'null' before postgresql automatically
+            else:
+                fields['Min. Investment'] = fields['Min. Investment'].replace(',', '').strip()
+            HKFundStaticInfo(
+                short_name=short_names[i], long_name=long_names[i],
+                issuer=issuer, isin=isin, link=l, 
+                min_investment=fields['Min. Investment'],
+                category=fields['Category'], category_descrptn=fields['Category Descrptn'],
+                inception_date=datetime.datetime.strptime(fields['Inception Date'], '%b %d, %Y')).save()
+            print(f'Stored {i}: {long_names[i]} ({i}/{len(long_names)})')
+            i += 1
+
+        print('Data has been successfuly stored!')
+        return ''
+
+    def china():
+        #--------------------VPS------------------
+        display = Display(visible=0, size=(800, 600))
+        display.start()
+        options = webdriver.ChromeOptions()
+        options.add_argument('--no-sandbox')
+        driver = webdriver.Chrome(options=options)
+        #-----------------------------------------
+        print('Starting CollectFundStaticInfo.china()')
+        print('Starting Selenium')
+        url = 'https://www.investing.com/funds/china-funds?&issuer_filter=0'
+        url2 = 'https://www.investing.com'
+        # driver = webdriver.Chrome()
+        driver.get(url)
+        ChinaFundStaticInfo.objects.all().delete()
+        print('Removed old records starting to collect new ones')
+        soup = BeautifulSoup(driver.page_source, 'html.parser')
+        driver.quit()
+        print('Saved page source')
+        print('Starting to collect links')
+        links = []
+        short_names = []
+        long_names = []
+        for link in soup.find_all('td', class_='bold left noWrap elp plusIconTd'):
+            links.append(link.a['href'])
+            short_names.append(link.find_next_sibling()['title'].strip())
+            long_names.append(link.a['title'])
+        
+        header={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36 OPR/38.0.2220.41'}
+        print('Links are collected')
+        print('Starting to visit them and store in database')
+        i = 0
+        for link in links:
+            sleep(1)
+            l = url2 + link
+            try:
+                request = requests.get(l, headers=header)
+                soup = BeautifulSoup(request.text, 'html.parser')
+                issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
+                isin = soup.find('span', text='ISIN:').find_next_sibling().get_text().strip()
+                market = soup.find('i', class_='btnTextDropDwn arial_12 bold').get_text()
+                markets = [m[0] for m in MARKETS_CH]
+                if market not in markets:
+                    market = soup.find('table', class_='genTbl closedTbl exchangeDropdownTbl displayNone').tbody
+                    market = market.find_all('tr')
+                    for tr in market:
+                        if tr.find('td', class_='left bold').find_next_sibling().get_text() in markets:
+                            market = tr.find('td', class_='left bold').find_next_sibling().get_text()
+                            break
+                soup = soup.find_all('span')
+                fields = {}
+                for field in soup:
+                    if field.get_text() in CollectFundStaticInfo.fields_to_scrape:
+                        if field.get_text() == 'Category':
+                            try:
+                                fields['Category Descrptn'] = field.next_sibling['data-tooltip']
+                            except:
+                                fields['Category Descrptn'] = ''
+                        fields[field.get_text()] = field.next_sibling.get_text()
+            except:
+                try:
+                    print('Some Complication, sleeping for 10sec')
+                    sleep(10)
+                    request = requests.get(l, headers=header)
+                    soup = BeautifulSoup(request.text, 'html.parser')
+                    issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
+                    isin = soup.find('span', text='ISIN:').find_next_sibling().get_text().strip()
+                    market = soup.find('i', class_='btnTextDropDwn arial_12 bold').get_text()
+                    markets = [m[0] for m in MARKETS_CH]
+                    if market not in markets:
+                        market = soup.find('table', class_='genTbl closedTbl exchangeDropdownTbl displayNone').tbody
+                        market = market.find_all('tr')
+                        for tr in market:
+                            if tr.find('td', class_='left bold').find_next_sibling().get_text() in markets:
+                                market = tr.find('td', class_='left bold').find_next_sibling().get_text()
+                                break
+                    soup = soup.find_all('span')
+                    fields = {}
+                    for field in soup:
+                        if field.get_text() in CollectFundStaticInfo.fields_to_scrape:
+                            if field.get_text() == 'Category':
+                                try:
+                                    fields['Category Descrptn'] = field.next_sibling['data-tooltip']
+                                except:
+                                    fields['Category Descrptn'] = ''
+                            fields[field.get_text()] = field.next_sibling.get_text()
+                except:
+                    continue
+
+            if fields['Min. Investment'] == 'N/A':
+                fields['Min. Investment'] = None # Will be converted to 'null' before postgresql automatically
+            else:
+                fields['Min. Investment'] = fields['Min. Investment'].replace(',', '').strip()
+            ChinaFundStaticInfo(
+                short_name=short_names[i], long_name=long_names[i],
+                market=market, issuer=issuer, isin=isin, link=l, 
+                min_investment=fields['Min. Investment'],
+                category=fields['Category'], category_descrptn=fields['Category Descrptn'],
+                inception_date=datetime.datetime.strptime(fields['Inception Date'], '%b %d, %Y')).save()
+            print(f'Stored {i}: {long_names[i]} ({i}/{len(long_names)})')
+            i += 1
+
+        print('Data has been successfuly stored!')
+        return ''
+
+    def canada():
+        #--------------------VPS------------------
+        display = Display(visible=0, size=(800, 600))
+        display.start()
+        options = webdriver.ChromeOptions()
+        options.add_argument('--no-sandbox')
+        driver = webdriver.Chrome(options=options)
+        #-----------------------------------------
+        print('Starting CollectFundStaticInfo.canada()')
+        print('Starting Selenium')
+        url = 'https://www.investing.com/funds/canada-funds?&issuer_filter=0'
+        url2 = 'https://www.investing.com'
+        # driver = webdriver.Chrome()
+        driver.get(url)
+        CanadaFundStaticInfo.objects.all().delete()
+        print('Removed old records starting to collect new ones')
+        soup = BeautifulSoup(driver.page_source, 'html.parser')
+        driver.quit()
+        print('Saved page source')
+        print('Starting to collect links')
+        links = []
+        short_names = []
+        long_names = []
+        for link in soup.find_all('td', class_='bold left noWrap elp plusIconTd'):
+            links.append(link.a['href'])
+            short_names.append(link.find_next_sibling()['title'].strip())
+            long_names.append(link.a['title'])
+        
+        header={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36 OPR/38.0.2220.41'}
+        print('Links are collected')
+        print('Starting to visit them and store in database')
+        i = 0
+        for link in links:
+            sleep(1)
+            l = url2 + link
+            try:
+                request = requests.get(l, headers=header)
+                soup = BeautifulSoup(request.text, 'html.parser')
+                issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
+                market = soup.find('i', class_='btnTextDropDwn arial_12 bold').get_text()
+                markets = [m[0] for m in MARKETS_CA]
+                if market not in markets:
+                    market = soup.find('table', class_='genTbl closedTbl exchangeDropdownTbl displayNone').tbody
+                    market = market.find_all('tr')
+                    for tr in market:
+                        if tr.find('td', class_='left bold').find_next_sibling().get_text() in markets:
+                            market = tr.find('td', class_='left bold').find_next_sibling().get_text()
+                            break
+                soup = soup.find_all('span')
+                fields = {}
+                for field in soup:
+                    if field.get_text() in CollectFundStaticInfo.fields_to_scrape:
+                        if field.get_text() == 'Category':
+                            try:
+                                fields['Category Descrptn'] = field.next_sibling['data-tooltip']
+                            except:
+                                fields['Category Descrptn'] = ''
+                        fields[field.get_text()] = field.next_sibling.get_text()
+            except:
+                try:
+                    print('Some Complication, sleeping for 10sec')
+                    sleep(10)
+                    request = requests.get(l, headers=header)
+                    soup = BeautifulSoup(request.text, 'html.parser')
+                    issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
+                    market = soup.find('i', class_='btnTextDropDwn arial_12 bold').get_text()
+                    markets = [m[0] for m in MARKETS_CA]
+                    if market not in markets:
+                        market = soup.find('table', class_='genTbl closedTbl exchangeDropdownTbl displayNone').tbody
+                        market = market.find_all('tr')
+                        for tr in market:
+                            if tr.find('td', class_='left bold').find_next_sibling().get_text() in markets:
+                                market = tr.find('td', class_='left bold').find_next_sibling().get_text()
+                                break
+                    soup = soup.find_all('span')
+                    fields = {}
+                    for field in soup:
+                        if field.get_text() in CollectFundStaticInfo.fields_to_scrape:
+                            if field.get_text() == 'Category':
+                                try:
+                                    fields['Category Descrptn'] = field.next_sibling['data-tooltip']
+                                except:
+                                    fields['Category Descrptn'] = ''
+                            fields[field.get_text()] = field.next_sibling.get_text()
+                except:
+                    continue
+
+            if fields['Min. Investment'] == 'N/A':
+                fields['Min. Investment'] = None # Will be converted to 'null' before postgresql automatically
+            else:
+                fields['Min. Investment'] = fields['Min. Investment'].replace(',', '').strip()
+            CanadaFundStaticInfo(
+                short_name=short_names[i], long_name=long_names[i],
+                market=market, issuer=issuer, link=l, 
+                min_investment=fields['Min. Investment'],
+                category=fields['Category'], category_descrptn=fields['Category Descrptn'],
+                inception_date=datetime.datetime.strptime(fields['Inception Date'], '%b %d, %Y')).save()
+            print(f'Stored {i}: {long_names[i]} ({i}/{len(long_names)})')
+            i += 1
+
+        print('Data has been successfuly stored!')
+        return ''
+
+    def germany():
+        #--------------------VPS------------------
+        display = Display(visible=0, size=(800, 600))
+        display.start()
+        options = webdriver.ChromeOptions()
+        options.add_argument('--no-sandbox')
+        driver = webdriver.Chrome(options=options)
+        #-----------------------------------------
+        print('Starting CollectFundStaticInfo.germany()')
+        print('Starting Selenium')
+        url = 'https://www.investing.com/funds/germany-funds?&issuer_filter=0'
+        url2 = 'https://www.investing.com'
+        # driver = webdriver.Chrome()
+        driver.get(url)
+        GermanyFundStaticInfo.objects.all().delete()
+        print('Removed old records starting to collect new ones')
+        soup = BeautifulSoup(driver.page_source, 'html.parser')
+        driver.quit()
+        print('Saved page source')
+        print('Starting to collect links')
+        links = []
+        short_names = []
+        long_names = []
+        for link in soup.find_all('td', class_='bold left noWrap elp plusIconTd'):
+            links.append(link.a['href'])
+            short_names.append(link.find_next_sibling()['title'].strip())
+            long_names.append(link.a['title'])
+        
+        header={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36 OPR/38.0.2220.41'}
+        print('Links are collected')
+        print('Starting to visit them and store in database')
+        i = 0
+        for link in links:
+            sleep(1)
+            l = url2 + link
+            try:
+                request = requests.get(l, headers=header)
+                soup = BeautifulSoup(request.text, 'html.parser')
+                issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
+                isin = soup.find('span', text='ISIN:').find_next_sibling().get_text().strip()
+                market = soup.find('i', class_='btnTextDropDwn arial_12 bold').get_text()
+                markets = [m[0] for m in MARKETS_GE]
+                if market not in markets:
+                    market = soup.find('table', class_='genTbl closedTbl exchangeDropdownTbl displayNone').tbody
+                    market = market.find_all('tr')
+                    for tr in market:
+                        if tr.find('td', class_='left bold').find_next_sibling().get_text() in markets:
+                            market = tr.find('td', class_='left bold').find_next_sibling().get_text()
+                            break
+                soup = soup.find_all('span')
+                fields = {}
+                for field in soup:
+                    if field.get_text() in CollectFundStaticInfo.fields_to_scrape:
+                        if field.get_text() == 'Category':
+                            try:
+                                fields['Category Descrptn'] = field.next_sibling['data-tooltip']
+                            except:
+                                fields['Category Descrptn'] = ''
+                        fields[field.get_text()] = field.next_sibling.get_text()
+            except:
+                try:
+                    print('Some Complication, sleeping for 10sec')
+                    sleep(10)
+                    request = requests.get(l, headers=header)
+                    soup = BeautifulSoup(request.text, 'html.parser')
+                    issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
+                    isin = soup.find('span', text='ISIN:').find_next_sibling().get_text().strip()
+                    market = soup.find('i', class_='btnTextDropDwn arial_12 bold').get_text()
+                    markets = [m[0] for m in MARKETS_GE]
+                    if market not in markets:
+                        market = soup.find('table', class_='genTbl closedTbl exchangeDropdownTbl displayNone').tbody
+                        market = market.find_all('tr')
+                        for tr in market:
+                            if tr.find('td', class_='left bold').find_next_sibling().get_text() in markets:
+                                market = tr.find('td', class_='left bold').find_next_sibling().get_text()
+                                break
+                    soup = soup.find_all('span')
+                    fields = {}
+                    for field in soup:
+                        if field.get_text() in CollectFundStaticInfo.fields_to_scrape:
+                            if field.get_text() == 'Category':
+                                try:
+                                    fields['Category Descrptn'] = field.next_sibling['data-tooltip']
+                                except:
+                                    fields['Category Descrptn'] = ''
+                            fields[field.get_text()] = field.next_sibling.get_text()
+                except:
+                    continue
+
+            if fields['Min. Investment'] == 'N/A':
+                fields['Min. Investment'] = None # Will be converted to 'null' before postgresql automatically
+            else:
+                fields['Min. Investment'] = fields['Min. Investment'].replace(',', '').strip()
+            GermanyFundStaticInfo(
+                short_name=short_names[i], long_name=long_names[i],
+                market=market, issuer=issuer, isin=isin, link=l, 
+                min_investment=fields['Min. Investment'],
+                category=fields['Category'], category_descrptn=fields['Category Descrptn'],
+                inception_date=datetime.datetime.strptime(fields['Inception Date'], '%b %d, %Y')).save()
+            print(f'Stored {i}: {long_names[i]} ({i}/{len(long_names)})')
+            i += 1
+
+        print('Data has been successfuly stored!')
+        return ''
+
+    def australia():
+        #--------------------VPS------------------
+        display = Display(visible=0, size=(800, 600))
+        display.start()
+        options = webdriver.ChromeOptions()
+        options.add_argument('--no-sandbox')
+        driver = webdriver.Chrome(options=options)
+        #-----------------------------------------
+        print('Starting CollectFundStaticInfo.australia()')
+        print('Starting Selenium')
+        url = 'https://www.investing.com/funds/australia-funds?&issuer_filter=0'
+        url2 = 'https://www.investing.com'
+        # driver = webdriver.Chrome()
+        driver.get(url)
+        AustraliaFundStaticInfo.objects.all().delete()
+        print('Removed old records starting to collect new ones')
+        soup = BeautifulSoup(driver.page_source, 'html.parser')
+        driver.quit()
+        print('Saved page source')
+        print('Starting to collect links')
+        links = []
+        short_names = []
+        long_names = []
+        for link in soup.find_all('td', class_='bold left noWrap elp plusIconTd'):
+            links.append(link.a['href'])
+            short_names.append(link.find_next_sibling()['title'].strip())
+            long_names.append(link.a['title'])
+        
+        header={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36 OPR/38.0.2220.41'}
+        print('Links are collected')
+        print('Starting to visit them and store in database')
+        i = 0
+        for link in links:
+            sleep(1)
+            l = url2 + link
+            try:
+                request = requests.get(l, headers=header)
+                soup = BeautifulSoup(request.text, 'html.parser')
+                issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
+                soup = soup.find_all('span')
+                fields = {}
+                for field in soup:
+                    if field.get_text() in CollectFundStaticInfo.fields_to_scrape:
+                        if field.get_text() == 'Category':
+                            try:
+                                fields['Category Descrptn'] = field.next_sibling['data-tooltip']
+                            except:
+                                fields['Category Descrptn'] = ''
+                        fields[field.get_text()] = field.next_sibling.get_text()
+            except:
+                try:
+                    print('Some Complication, sleeping for 10sec')
+                    sleep(10)
+                    request = requests.get(l, headers=header)
+                    soup = BeautifulSoup(request.text, 'html.parser')
+                    issuer = soup.find('span', text='Issuer:').find_next_sibling().get_text().strip()
+                    soup = soup.find_all('span')
+                    fields = {}
+                    for field in soup:
+                        if field.get_text() in CollectFundStaticInfo.fields_to_scrape:
+                            if field.get_text() == 'Category':
+                                try:
+                                    fields['Category Descrptn'] = field.next_sibling['data-tooltip']
+                                except:
+                                    fields['Category Descrptn'] = ''
+                            fields[field.get_text()] = field.next_sibling.get_text()
+                except:
+                    continue
+
+            if fields['Min. Investment'] == 'N/A':
+                fields['Min. Investment'] = None # Will be converted to 'null' before postgresql automatically
+            else:
+                fields['Min. Investment'] = fields['Min. Investment'].replace(',', '').strip()
+            AustraliaFundStaticInfo(
+                short_name=short_names[i], long_name=long_names[i],
+                issuer=issuer, link=l, 
+                min_investment=fields['Min. Investment'],
+                category=fields['Category'], category_descrptn=fields['Category Descrptn'],
+                inception_date=datetime.datetime.strptime(fields['Inception Date'], '%b %d, %Y')).save()
+            print(f'Stored {i}: {long_names[i]} ({i}/{len(long_names)})')
+            i += 1
+
+        print('Data has been successfuly stored!')
         return ''
