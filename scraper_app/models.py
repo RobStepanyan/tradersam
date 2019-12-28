@@ -56,8 +56,13 @@ MARKETS_AU = (
     ('ASX', 'Australian Securities Exchange'),
 )
 
+TYPES = (
+    ('cmdty', 'Commodity'), ('crncy', 'Currency'), ('crptcrncy', 'Cryptocurrency'),
+    ('stck', 'Stock'), ('indx', 'Index'), ('etf', 'ETF'), ('bnd', 'Bond'), ('fnd', ('Fund'))
+)
 
 class CommodityStaticInfo(models.Model):
+    Type = models.CharField(choices=TYPES, max_length=9, default='cmdty')
     fields_to_scrape = (
         'Contract Size', 'Tick Size', 'Tick Value', 'Base Symbol', 'Point Value', 'Months')
     
@@ -76,17 +81,19 @@ class CommodityStaticInfo(models.Model):
     tick_value = models.CharField(max_length=30)
     months = models.CharField(max_length=30)
     point_value = models.CharField(max_length=20)
+    unit = models.CharField(max_length=10, null=True)
     link = models.URLField()
 
     def __str__(self):
         return self.country + ' ' + self.long_name + ' (' + self.base_symbol + ')'
 
     class Meta:
-        verbose_name = "Commodities' Static Info"
-        verbose_name_plural = "Commodities' Static Info"
+        verbose_name = "(Static Info) Commodities'"
+        verbose_name_plural = "(Static Info) Commodities'"
 
 
 class CurrencyStaticInfo(models.Model):
+    Type = models.CharField(choices=TYPES, max_length=9, default='crncy')
     short_name = models.CharField(max_length=10)
     long_name = models.CharField(max_length=50)
     link = models.URLField()
@@ -95,10 +102,11 @@ class CurrencyStaticInfo(models.Model):
         return self.short_name + ' - ' + self.long_name
 
     class Meta:
-        verbose_name = "Currencies' Static Info"
-        verbose_name_plural = "Currencies' Static Info"
+        verbose_name = "(Static Info) Currencies'"
+        verbose_name_plural = "(Static Info) Currencies'"
 
 class CryptocurrencyStaticInfo(models.Model):
+    Type = models.CharField(choices=TYPES, max_length=9, default='crptcrncy')
     short_name = models.CharField(max_length=10)
     long_name = models.CharField(max_length=50)
     link = models.URLField()
@@ -107,10 +115,11 @@ class CryptocurrencyStaticInfo(models.Model):
         return self.short_name + ' - ' + self.long_name
 
     class Meta:
-        verbose_name = "Cryptocurrencies' Static Info"
-        verbose_name_plural = "Cryptocurrencies' Static Info"
+        verbose_name = "(Static Info) Cryptocurrencies'"
+        verbose_name_plural = "(Static Info) Cryptocurrencies'"
 
 class USStockStaticInfo(models.Model):
+    Type = models.CharField(choices=TYPES, max_length=9, default='stck')
     short_name = models.CharField(max_length=12)
     long_name = models.CharField(max_length=60)
     country = models.CharField(choices=COUNTRIES, default='US', max_length=2)
@@ -123,10 +132,11 @@ class USStockStaticInfo(models.Model):
         return self.long_name + f' - ({self.short_name})'
 
     class Meta:
-        verbose_name = "United States Stocks Static Info"
-        verbose_name_plural = "United States Stocks Static Info"
+        verbose_name = "(Static Info) United States Stocks"
+        verbose_name_plural = "(Static Info) United States Stocks"
 
 class JapanStockStaticInfo(models.Model):
+    Type = models.CharField(choices=TYPES, max_length=9, default='stck')
     short_name = models.CharField(max_length=12)
     long_name = models.CharField(max_length=60)
     country = models.CharField(choices=COUNTRIES, default='JP', max_length=2)
@@ -139,10 +149,11 @@ class JapanStockStaticInfo(models.Model):
         return self.long_name + f' - ({self.short_name})'
 
     class Meta:
-        verbose_name = "Japan Stocks Static Info"
-        verbose_name_plural = "Japan Stocks Static Info"
+        verbose_name = "(Static Info) Japan Stocks"
+        verbose_name_plural = "(Static Info) Japan Stocks"
 
 class UKStockStaticInfo(models.Model):
+    Type = models.CharField(choices=TYPES, max_length=9, default='stck')
     short_name = models.CharField(max_length=12)
     long_name = models.CharField(max_length=60)
     country = models.CharField(choices=COUNTRIES, default='UK', max_length=2)
@@ -155,10 +166,11 @@ class UKStockStaticInfo(models.Model):
         return self.long_name + f' - ({self.short_name})'
 
     class Meta:
-        verbose_name = "United Kingdom Stocks Static Info"
-        verbose_name_plural = "United Kingdom Stocks Static Info"
+        verbose_name = "(Static Info) United Kingdom Stocks"
+        verbose_name_plural = "(Static Info) United Kingdom Stocks"
 
 class HKStockStaticInfo(models.Model):
+    Type = models.CharField(choices=TYPES, max_length=9, default='stck')
     short_name = models.CharField(max_length=4)
     long_name = models.CharField(max_length=75)
     country = models.CharField(choices=COUNTRIES, default='HK', max_length=2)
@@ -171,10 +183,11 @@ class HKStockStaticInfo(models.Model):
         return self.long_name + f' - ({self.short_name})'
 
     class Meta:
-        verbose_name = "Hong Kong Stocks Static Info"
-        verbose_name_plural = "Hong Kong Stocks Static Info"
+        verbose_name = "(Static Info) Hong Kong Stocks"
+        verbose_name_plural = "(Static Info) Hong Kong Stocks"
 
 class ChinaStockStaticInfo(models.Model):
+    Type = models.CharField(choices=TYPES, max_length=9, default='stck')
     short_name = models.CharField(max_length=6)
     long_name = models.CharField(max_length=75)
     country = models.CharField(choices=COUNTRIES, default='CH', max_length=2)
@@ -187,10 +200,11 @@ class ChinaStockStaticInfo(models.Model):
         return self.long_name + f' - ({self.short_name})'
 
     class Meta:
-        verbose_name = "China Stocks Static Info"
-        verbose_name_plural = "China Stocks Static Info"
+        verbose_name = "(Static Info) China Stocks"
+        verbose_name_plural = "(Static Info) China Stocks"
 
 class CanadaStockStaticInfo(models.Model):
+    Type = models.CharField(choices=TYPES, max_length=9, default='stck')
     short_name = models.CharField(max_length=6)
     long_name = models.CharField(max_length=51)
     country = models.CharField(choices=COUNTRIES, default='CA', max_length=2)
@@ -203,10 +217,11 @@ class CanadaStockStaticInfo(models.Model):
         return self.long_name + f' - ({self.short_name})'
 
     class Meta:
-        verbose_name = "Canada Stocks Static Info"
-        verbose_name_plural = "Canada Stocks Static Info"
+        verbose_name = "(Static Info) Canada Stocks"
+        verbose_name_plural = "(Static Info) Canada Stocks"
 
 class GermanyStockStaticInfo(models.Model):
+    Type = models.CharField(choices=TYPES, max_length=9, default='stck')
     short_name = models.CharField(max_length=8)
     long_name = models.CharField(max_length=45)
     country = models.CharField(choices=COUNTRIES, default='GE', max_length=2)
@@ -219,10 +234,11 @@ class GermanyStockStaticInfo(models.Model):
         return self.long_name + f' - ({self.short_name})'
 
     class Meta:
-        verbose_name = "Germany Stocks Static Info"
-        verbose_name_plural = "Germany Stocks Static Info"
+        verbose_name = "(Static Info) Germany Stocks"
+        verbose_name_plural = "(Static Info) Germany Stocks"
 
 class AustraliaStockStaticInfo(models.Model):
+    Type = models.CharField(choices=TYPES, max_length=9, default='stck')
     short_name = models.CharField(max_length=8)
     long_name = models.CharField(max_length=49)
     country = models.CharField(choices=COUNTRIES, default='AU', max_length=2)
@@ -235,10 +251,11 @@ class AustraliaStockStaticInfo(models.Model):
         return self.long_name + f' - ({self.short_name})'
 
     class Meta:
-        verbose_name = "Australia Stocks Static Info"
-        verbose_name_plural = "Australia Stocks Static Info"
+        verbose_name = "(Static Info) Australia Stocks"
+        verbose_name_plural = "(Static Info) Australia Stocks"
 
 class USIndexStaticInfo(models.Model):
+    Type = models.CharField(choices=TYPES, max_length=9, default='indx')
     short_name = models.CharField(max_length=12)
     long_name = models.CharField(max_length=63)
     country = models.CharField(choices=COUNTRIES, default='US', max_length=2)
@@ -250,10 +267,11 @@ class USIndexStaticInfo(models.Model):
         return self.long_name + f' - ({self.short_name})'
 
     class Meta:
-        verbose_name = "United States Indices Static Info"
-        verbose_name_plural = "United States Indices Static Info"
+        verbose_name = "(Static Info) United States Indices"
+        verbose_name_plural = "(Static Info) United States Indices"
 
 class JapanIndexStaticInfo(models.Model):
+    Type = models.CharField(choices=TYPES, max_length=9, default='indx')
     short_name = models.CharField(max_length=12)
     long_name = models.CharField(max_length=49)
     country = models.CharField(choices=COUNTRIES, default='JP', max_length=2)
@@ -265,10 +283,11 @@ class JapanIndexStaticInfo(models.Model):
         return self.long_name + f' - ({self.short_name})'
 
     class Meta:
-        verbose_name = "Japan Indices Static Info"
-        verbose_name_plural = "Japan Indices Static Info"
+        verbose_name = "(Static Info) Japan Indices"
+        verbose_name_plural = "(Static Info) Japan Indices"
 
 class UKIndexStaticInfo(models.Model):
+    Type = models.CharField(choices=TYPES, max_length=9, default='indx')
     short_name = models.CharField(max_length=12)
     long_name = models.CharField(max_length=49)
     country = models.CharField(choices=COUNTRIES, default='UK', max_length=2)
@@ -280,10 +299,11 @@ class UKIndexStaticInfo(models.Model):
         return self.long_name + f' - ({self.short_name})'
 
     class Meta:
-        verbose_name = "United Kingdom Indices Static Info"
-        verbose_name_plural = "United Kingdom Indices Static Info"
+        verbose_name = "(Static Info) United Kingdom Indices"
+        verbose_name_plural = "(Static Info) United Kingdom Indices"
 
 class HKIndexStaticInfo(models.Model):
+    Type = models.CharField(choices=TYPES, max_length=9, default='indx')
     short_name = models.CharField(max_length=12)
     long_name = models.CharField(max_length=56)
     country = models.CharField(choices=COUNTRIES, default='HK', max_length=2)
@@ -295,10 +315,11 @@ class HKIndexStaticInfo(models.Model):
         return self.long_name + f' - ({self.short_name})'
 
     class Meta:
-        verbose_name = "Hong Kong Indices Static Info"
-        verbose_name_plural = "Hong Kong Indices Static Info"
+        verbose_name = "(Static Info) Hong Kong Indices"
+        verbose_name_plural = "(Static Info) Hong Kong Indices"
 
 class ChinaIndexStaticInfo(models.Model):
+    Type = models.CharField(choices=TYPES, max_length=9, default='indx')
     short_name = models.CharField(max_length=12)
     long_name = models.CharField(max_length=56)
     country = models.CharField(choices=COUNTRIES, default='CH', max_length=2)
@@ -310,10 +331,11 @@ class ChinaIndexStaticInfo(models.Model):
         return self.long_name + f' - ({self.short_name})'
 
     class Meta:
-        verbose_name = "China Indices Static Info"
-        verbose_name_plural = "China Indices Static Info"
+        verbose_name = "(Static Info) China Indices"
+        verbose_name_plural = "(Static Info) China Indices"
 
 class CanadaIndexStaticInfo(models.Model):
+    Type = models.CharField(choices=TYPES, max_length=9, default='indx')
     short_name = models.CharField(max_length=12)
     long_name = models.CharField(max_length=44)
     country = models.CharField(choices=COUNTRIES, default='CA', max_length=2)
@@ -325,10 +347,11 @@ class CanadaIndexStaticInfo(models.Model):
         return self.long_name + f' - ({self.short_name})'
 
     class Meta:
-        verbose_name = "Canada Indices Static Info"
-        verbose_name_plural = "Canada Indices Static Info"
+        verbose_name = "(Static Info) Canada Indices"
+        verbose_name_plural = "(Static Info) Canada Indices"
 
 class GermanyIndexStaticInfo(models.Model):
+    Type = models.CharField(choices=TYPES, max_length=9, default='indx')
     short_name = models.CharField(max_length=12)
     long_name = models.CharField(max_length=46)
     country = models.CharField(choices=COUNTRIES, default='GE', max_length=2)
@@ -340,10 +363,11 @@ class GermanyIndexStaticInfo(models.Model):
         return self.long_name + f' - ({self.short_name})'
 
     class Meta:
-        verbose_name = "Germany Indices Static Info"
-        verbose_name_plural = "Germany Indices Static Info"
+        verbose_name = "(Static Info) Germany Indices"
+        verbose_name_plural = "(Static Info) Germany Indices"
 
 class AustraliaIndexStaticInfo(models.Model):
+    Type = models.CharField(choices=TYPES, max_length=9, default='indx')
     short_name = models.CharField(max_length=12)
     long_name = models.CharField(max_length=47)
     country = models.CharField(choices=COUNTRIES, default='AU', max_length=2)
@@ -355,8 +379,8 @@ class AustraliaIndexStaticInfo(models.Model):
         return self.long_name + f' - ({self.short_name})'
 
     class Meta:
-        verbose_name = "Australia Indices Static Info"
-        verbose_name_plural = "Australia Indices Static Info"
+        verbose_name = "(Static Info) Australia Indices"
+        verbose_name_plural = "(Static Info) Australia Indices"
 
 class ETFIssuers(models.Model):
     name = models.CharField(max_length=45)
@@ -366,8 +390,8 @@ class ETFIssuers(models.Model):
         return f'{self.country}' + self.name
 
     class Meta:
-        verbose_name = 'ETF Issuers'
-        verbose_name_plural = 'ETF Issuers'
+        verbose_name = '(Other) ETF Issuers'
+        verbose_name_plural = '(Other) ETF Issuers'
 
 ETF_ISSUERS_US = tuple([(i.name, i.name) for i in list(ETFIssuers.objects.filter(country='US'))])
 ETF_ISSUERS_JP = tuple([(i.name, i.name) for i in list(ETFIssuers.objects.filter(country='JP'))])
@@ -379,6 +403,7 @@ ETF_ISSUERS_GE = tuple([(i.name, i.name) for i in list(ETFIssuers.objects.filter
 ETF_ISSUERS_AU = tuple([(i.name, i.name) for i in list(ETFIssuers.objects.filter(country='AU'))])
 
 class USETFStaticInfo(models.Model):
+    Type = models.CharField(choices=TYPES, max_length=9, default='etf')
     short_name = models.CharField(max_length=12)
     long_name = models.CharField(max_length=98)
     country = models.CharField(choices=COUNTRIES, default='US', max_length=2)
@@ -392,10 +417,11 @@ class USETFStaticInfo(models.Model):
         return f'{self.country}' + self.long_name
 
     class Meta:
-        verbose_name = 'United States ETFs\' Static Info'
-        verbose_name_plural = 'United States ETFs\' Static Info'
+        verbose_name = '(Static Info) United States ETFs\''
+        verbose_name_plural = '(Static Info) United States ETFs\''
 
 class JapanETFStaticInfo(models.Model):
+    Type = models.CharField(choices=TYPES, max_length=9, default='etf')
     short_name = models.CharField(max_length=12)
     long_name = models.CharField(max_length=75)
     country = models.CharField(choices=COUNTRIES, default='JP', max_length=2)
@@ -409,10 +435,11 @@ class JapanETFStaticInfo(models.Model):
         return f'{self.country}' + self.long_name
 
     class Meta:
-        verbose_name = 'Japan ETFs\' Static Info'
-        verbose_name_plural = 'Japan ETFs\' Static Info'
+        verbose_name = '(Static Info) Japan ETFs\''
+        verbose_name_plural = '(Static Info) Japan ETFs\''
 
 class UKETFStaticInfo(models.Model):
+    Type = models.CharField(choices=TYPES, max_length=9, default='etf')
     short_name = models.CharField(max_length=12)
     long_name = models.CharField(max_length=84)
     country = models.CharField(choices=COUNTRIES, default='UK', max_length=2)
@@ -426,10 +453,11 @@ class UKETFStaticInfo(models.Model):
         return f'{self.country}' + self.long_name
 
     class Meta:
-        verbose_name = 'United Kingdom ETFs\' Static Info'
-        verbose_name_plural = 'United Kingdom ETFs\' Static Info'
+        verbose_name = '(Static Info) United Kingdom ETFs\''
+        verbose_name_plural = '(Static Info) United Kingdom ETFs\''
 
 class HKETFStaticInfo(models.Model):
+    Type = models.CharField(choices=TYPES, max_length=9, default='etf')
     short_name = models.CharField(max_length=12)
     long_name = models.CharField(max_length=79)
     country = models.CharField(choices=COUNTRIES, default='HK', max_length=2)
@@ -443,10 +471,11 @@ class HKETFStaticInfo(models.Model):
         return f'{self.country}' + self.long_name
 
     class Meta:
-        verbose_name = 'Hong Kong ETFs\' Static Info'
-        verbose_name_plural = 'Hong Kong ETFs\' Static Info'
+        verbose_name = '(Static Info) Hong Kong ETFs\''
+        verbose_name_plural = '(Static Info) Hong Kong ETFs\''
 
 class ChinaETFStaticInfo(models.Model):
+    Type = models.CharField(choices=TYPES, max_length=9, default='etf')
     short_name = models.CharField(max_length=12)
     long_name = models.CharField(max_length=51)
     country = models.CharField(choices=COUNTRIES, default='CH', max_length=2)
@@ -460,10 +489,11 @@ class ChinaETFStaticInfo(models.Model):
         return f'{self.country}' + self.long_name
 
     class Meta:
-        verbose_name = 'China ETFs\' Static Info'
-        verbose_name_plural = 'China ETFs\' Static Info'
+        verbose_name = '(Static Info) China ETFs\''
+        verbose_name_plural = '(Static Info) China ETFs\''
 
 class CanadaETFStaticInfo(models.Model):
+    Type = models.CharField(choices=TYPES, max_length=9, default='etf')
     short_name = models.CharField(max_length=12)
     long_name = models.CharField(max_length=74)
     country = models.CharField(choices=COUNTRIES, default='CA', max_length=2)
@@ -477,10 +507,11 @@ class CanadaETFStaticInfo(models.Model):
         return f'{self.country}' + self.long_name
 
     class Meta:
-        verbose_name = 'Canada ETFs\' Static Info'
-        verbose_name_plural = 'Canada ETFs\' Static Info'
+        verbose_name = '(Static Info) Canada ETFs\''
+        verbose_name_plural = '(Static Info) Canada ETFs\''
 
 class GermanyETFStaticInfo(models.Model):
+    Type = models.CharField(choices=TYPES, max_length=9, default='etf')
     short_name = models.CharField(max_length=12)
     long_name = models.CharField(max_length=84)
     country = models.CharField(choices=COUNTRIES, default='GE', max_length=2)
@@ -494,10 +525,11 @@ class GermanyETFStaticInfo(models.Model):
         return f'{self.country}' + self.long_name
 
     class Meta:
-        verbose_name = 'Germany ETFs\' Static Info'
-        verbose_name_plural = 'Germany ETFs\' Static Info'
+        verbose_name = '(Static Info) Germany ETFs\''
+        verbose_name_plural = '(Static Info) Germany ETFs\''
 
 class AustraliaETFStaticInfo(models.Model):
+    Type = models.CharField(choices=TYPES, max_length=9, default='etf')
     short_name = models.CharField(max_length=12)
     long_name = models.CharField(max_length=61)
     country = models.CharField(choices=COUNTRIES, default='AU', max_length=2)
@@ -511,10 +543,11 @@ class AustraliaETFStaticInfo(models.Model):
         return f'{self.country}' + self.long_name
 
     class Meta:
-        verbose_name = 'Australia ETFs\' Static Info'
-        verbose_name_plural = 'Australia ETFs\' Static Info'
+        verbose_name = '(Static Info) Australia ETFs\''
+        verbose_name_plural = '(Static Info) Australia ETFs\''
 # *********************** Bonds
 class USBondStaticInfo(models.Model):
+    Type = models.CharField(choices=TYPES, max_length=9, default='bnd')
     short_name = models.CharField(max_length=18)
     long_name = models.CharField(max_length=32)
     country = models.CharField(choices=COUNTRIES, default='US', max_length=2)
@@ -526,10 +559,11 @@ class USBondStaticInfo(models.Model):
         return self.long_name
 
     class Meta:
-        verbose_name = 'United States Bonds\' Static Info'
-        verbose_name_plural = 'United States Bonds\' Static Info'
+        verbose_name = '(Static Info) United States Bonds\''
+        verbose_name_plural = '(Static Info) United States Bonds\''
 
 class JapanBondStaticInfo(models.Model):
+    Type = models.CharField(choices=TYPES, max_length=9, default='bnd')
     short_name = models.CharField(max_length=10)
     long_name = models.CharField(max_length=24)
     country = models.CharField(choices=COUNTRIES, default='JP', max_length=2)
@@ -541,10 +575,11 @@ class JapanBondStaticInfo(models.Model):
         return self.long_name
 
     class Meta:
-        verbose_name = 'Japan Bonds\' Static Info'
-        verbose_name_plural = 'Japan Bonds\' Static Info'
+        verbose_name = '(Static Info) Japan Bonds\''
+        verbose_name_plural = '(Static Info) Japan Bonds\''
 
 class UKBondStaticInfo(models.Model):
+    Type = models.CharField(choices=TYPES, max_length=9, default='bnd')
     short_name = models.CharField(max_length=8)
     long_name = models.CharField(max_length=33)
     country = models.CharField(choices=COUNTRIES, default='UK', max_length=2)
@@ -556,10 +591,11 @@ class UKBondStaticInfo(models.Model):
         return self.long_name
 
     class Meta:
-        verbose_name = 'United Kingdom Bonds\' Static Info'
-        verbose_name_plural = 'United Kingdom Bonds\' Static Info'
+        verbose_name = '(Static Info) United Kingdom Bonds\''
+        verbose_name_plural = '(Static Info) United Kingdom Bonds\''
 
 class HKBondStaticInfo(models.Model):
+    Type = models.CharField(choices=TYPES, max_length=9, default='bnd')
     short_name = models.CharField(max_length=13)
     long_name = models.CharField(max_length=28)
     country = models.CharField(choices=COUNTRIES, default='HK', max_length=2)
@@ -571,10 +607,11 @@ class HKBondStaticInfo(models.Model):
         return self.long_name
 
     class Meta:
-        verbose_name = 'Hong Kong Bonds\' Static Info'
-        verbose_name_plural = 'Hong Kong Bonds\' Static Info'
+        verbose_name = '(Static Info) Hong Kong Bonds\''
+        verbose_name_plural = '(Static Info) Hong Kong Bonds\''
 
 class ChinaBondStaticInfo(models.Model):
+    Type = models.CharField(choices=TYPES, max_length=9, default='bnd')
     short_name = models.CharField(max_length=9)
     long_name = models.CharField(max_length=24)
     country = models.CharField(choices=COUNTRIES, default='CH', max_length=2)
@@ -586,10 +623,11 @@ class ChinaBondStaticInfo(models.Model):
         return self.long_name
 
     class Meta:
-        verbose_name = 'China Bonds\' Static Info'
-        verbose_name_plural = 'China Bonds\' Static Info'
+        verbose_name = '(Static Info) China Bonds\''
+        verbose_name_plural = '(Static Info) China Bonds\''
 
 class CanadaBondStaticInfo(models.Model):
+    Type = models.CharField(choices=TYPES, max_length=9, default='bnd')
     short_name = models.CharField(max_length=10)
     long_name = models.CharField(max_length=25)
     country = models.CharField(choices=COUNTRIES, default='CA', max_length=2)
@@ -601,10 +639,11 @@ class CanadaBondStaticInfo(models.Model):
         return self.long_name
 
     class Meta:
-        verbose_name = 'Canada Bonds\' Static Info'
-        verbose_name_plural = 'Canada Bonds\' Static Info'
+        verbose_name = '(Static Info) Canada Bonds\''
+        verbose_name_plural = '(Static Info) Canada Bonds\''
 
 class GermanyBondStaticInfo(models.Model):
+    Type = models.CharField(choices=TYPES, max_length=9, default='bnd')
     short_name = models.CharField(max_length=11)
     long_name = models.CharField(max_length=26)
     country = models.CharField(choices=COUNTRIES, default='GE', max_length=2)
@@ -616,10 +655,11 @@ class GermanyBondStaticInfo(models.Model):
         return self.long_name
 
     class Meta:
-        verbose_name = 'Germany Bonds\' Static Info'
-        verbose_name_plural = 'Germany Bonds\' Static Info'
+        verbose_name = '(Static Info) Germany Bonds\''
+        verbose_name_plural = '(Static Info) Germany Bonds\''
 
 class AustraliaBondStaticInfo(models.Model):
+    Type = models.CharField(choices=TYPES, max_length=9, default='bnd')
     short_name = models.CharField(max_length=13)
     long_name = models.CharField(max_length=28)
     country = models.CharField(choices=COUNTRIES, default='AU', max_length=2)
@@ -631,8 +671,8 @@ class AustraliaBondStaticInfo(models.Model):
         return self.long_name
 
     class Meta:
-        verbose_name = 'Australia Bonds\' Static Info'
-        verbose_name_plural = 'Australia Bonds\' Static Info'
+        verbose_name = '(Static Info) Australia Bonds\''
+        verbose_name_plural = '(Static Info) Australia Bonds\''
 
 class FundIssuers(models.Model):
     name = models.CharField(max_length=55)
@@ -642,8 +682,8 @@ class FundIssuers(models.Model):
         return f'{self.country}' + self.name
 
     class Meta:
-        verbose_name = 'Fund Issuers'
-        verbose_name_plural = 'Fund Issuers'
+        verbose_name = '(Other) Fund Issuers'
+        verbose_name_plural = '(Other) Fund Issuers'
 
 FUND_ISSUERS_US = tuple([(i.name, i.name) for i in list(FundIssuers.objects.filter(country='US'))])
 FUND_ISSUERS_JP = tuple([(i.name, i.name) for i in list(FundIssuers.objects.filter(country='JP'))])
@@ -656,6 +696,7 @@ FUND_ISSUERS_AU = tuple([(i.name, i.name) for i in list(FundIssuers.objects.filt
 
 # *********************** Funds
 class USFundStaticInfo(models.Model):
+    Type = models.CharField(choices=TYPES, max_length=9, default='fnd')
     short_name = models.CharField(max_length=10)
     long_name = models.CharField(max_length=78)
     country = models.CharField(choices=COUNTRIES, default='US', max_length=2)
@@ -673,10 +714,11 @@ class USFundStaticInfo(models.Model):
         return self.long_name
 
     class Meta:
-        verbose_name = 'United States Funds\' Static Info'
-        verbose_name_plural = 'United States Funds\' Static Info'
+        verbose_name = '(Static Info) United States Funds\''
+        verbose_name_plural = '(Static Info) United States Funds\''
 
 class JapanFundStaticInfo(models.Model):
+    Type = models.CharField(choices=TYPES, max_length=9, default='fnd')
     short_name = models.CharField(max_length=10)
     long_name = models.CharField(max_length=70)
     country = models.CharField(choices=COUNTRIES, default='JP', max_length=2)
@@ -694,10 +736,11 @@ class JapanFundStaticInfo(models.Model):
         return self.long_name
 
     class Meta:
-        verbose_name = 'Japan Funds\' Static Info'
-        verbose_name_plural = 'Japan Funds\' Static Info'
+        verbose_name = '(Static Info) Japan Funds\''
+        verbose_name_plural = '(Static Info) Japan Funds\''
 
 class UKFundStaticInfo(models.Model):
+    Type = models.CharField(choices=TYPES, max_length=9, default='fnd')
     short_name = models.CharField(max_length=10)
     long_name = models.CharField(max_length=91)
     country = models.CharField(choices=COUNTRIES, default='UK', max_length=2)
@@ -715,10 +758,11 @@ class UKFundStaticInfo(models.Model):
         return self.long_name
 
     class Meta:
-        verbose_name = 'United Kingdom Funds\' Static Info'
-        verbose_name_plural = 'United Kingdom Funds\' Static Info'
+        verbose_name = '(Static Info) United Kingdom Funds\''
+        verbose_name_plural = '(Static Info) United Kingdom Funds\''
 
 class HKFundStaticInfo(models.Model):
+    Type = models.CharField(choices=TYPES, max_length=9, default='fnd')
     short_name = models.CharField(max_length=10)
     long_name = models.CharField(max_length=93)
     country = models.CharField(choices=COUNTRIES, default='HK', max_length=2)
@@ -736,10 +780,11 @@ class HKFundStaticInfo(models.Model):
         return self.long_name
 
     class Meta:
-        verbose_name = 'Hong Kong Funds\' Static Info'
-        verbose_name_plural = 'Hong Kong Funds\' Static Info'
+        verbose_name = '(Static Info) Hong Kong Funds\''
+        verbose_name_plural = '(Static Info) Hong Kong Funds\''
 
 class ChinaFundStaticInfo(models.Model):
+    Type = models.CharField(choices=TYPES, max_length=9, default='fnd')
     short_name = models.CharField(max_length=10)
     long_name = models.CharField(max_length=47)
     country = models.CharField(choices=COUNTRIES, default='CH', max_length=2)
@@ -756,10 +801,11 @@ class ChinaFundStaticInfo(models.Model):
         return self.long_name
 
     class Meta:
-        verbose_name = 'China Funds\' Static Info'
-        verbose_name_plural = 'China Funds\' Static Info'
+        verbose_name = '(Static Info) China Funds\''
+        verbose_name_plural = '(Static Info) China Funds\''
 
 class CanadaFundStaticInfo(models.Model):
+    Type = models.CharField(choices=TYPES, max_length=9, default='fnd')
     short_name = models.CharField(max_length=10)
     long_name = models.CharField(max_length=57)
     country = models.CharField(choices=COUNTRIES, default='CA', max_length=2)
@@ -776,10 +822,11 @@ class CanadaFundStaticInfo(models.Model):
         return self.long_name
 
     class Meta:
-        verbose_name = 'Canada Funds\' Static Info'
-        verbose_name_plural = 'Canada Funds\' Static Info'
+        verbose_name = '(Static Info) Canada Funds\''
+        verbose_name_plural = '(Static Info) Canada Funds\''
 
 class GermanyFundStaticInfo(models.Model):
+    Type = models.CharField(choices=TYPES, max_length=9, default='fnd')
     short_name = models.CharField(max_length=10)
     long_name = models.CharField(max_length=63)
     country = models.CharField(choices=COUNTRIES, default='GE', max_length=2)
@@ -797,10 +844,11 @@ class GermanyFundStaticInfo(models.Model):
         return self.long_name
 
     class Meta:
-        verbose_name = 'Germany Funds\' Static Info'
-        verbose_name_plural = 'Germany Funds\' Static Info'
+        verbose_name = '(Static Info) Germany Funds\''
+        verbose_name_plural = '(Static Info) Germany Funds\''
 
 class AustraliaFundStaticInfo(models.Model):
+    Type = models.CharField(choices=TYPES, max_length=9, default='fnd')
     short_name = models.CharField(max_length=10)
     long_name = models.CharField(max_length=62)
     country = models.CharField(choices=COUNTRIES, default='AU', max_length=2)
@@ -817,5 +865,5 @@ class AustraliaFundStaticInfo(models.Model):
         return self.long_name
 
     class Meta:
-        verbose_name = 'Australia Funds\' Static Info'
-        verbose_name_plural = 'Australia Funds\' Static Info'
+        verbose_name = '(Static Info) Australia Funds\''
+        verbose_name_plural = '(Static Info) Australia Funds\''
