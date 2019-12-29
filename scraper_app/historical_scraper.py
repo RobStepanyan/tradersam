@@ -59,14 +59,11 @@ class CollectAllAssetsHistoricalMax:
         for link in c_list:
             link = link[2] + '-historical-data'
             driver.get(url)
-$("#data_interval").val("Monthly")
-
             print('Executing JS scripts')
-            driver.execute_script('$("#stocksFilter").val("#all");')
+            driver.execute_script('$("#data_interval").val("Monthly")')
+            driver.execute_script('$("#widgetFieldDateRange").click();')
+            driver.execute_script('$("#startDate").val("01/01/1980");')
+            driver.execute_script('$("#applyBtn").click()')
+            print('Executed JS scripts, sleeping for 5 seconds')
             sleep(5)
-            driver.execute_script("doStocksFilter('select',this)")
-            sleep(15)
-            print('Executed JS scripts, sleeping for 15 seconds')
-            sleep(15)
-            soup = BeautifulSoup(driver.page_source, 'html.parser')
         driver.quit()
