@@ -1,5 +1,6 @@
 import requests, os, datetime
 from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
 from pyvirtualdisplay import Display
 from selenium import webdriver
 from bs4 import BeautifulSoup
@@ -36,34 +37,47 @@ class CollectAllAssetsHistoricalMax:
 # download csv to unstored
 # Import data from csv to db (AllAssetsHistoricalData)
     def commodities(delete='n'):
-        # returns a list of tuples
-        c_list = CommodityStaticInfo.objects.values_list('country', 'short_name', 'link')
+        c_list = CommodityStaticInfo.objects.values_list('country', 'short_name', 'link') # returns a list of tuples
         #--------------------VPS------------------
-        display = Display(visible=0, size=(800, 600))
+        display = Display(visible=0, size=(1000, 1000))
         display.start()
         options = webdriver.ChromeOptions()
         options.add_argument('--no-sandbox')
         driver = webdriver.Chrome(options=options)
         #-----------------------------------------
-        print('Starting CollectAllAssetsHistoricalMax.commodities()')
-        print('Removing old records')
-        delete = input('Are you sure you want to delete all the old records, and scrape new ones? Press Y or y to continue: ')
-        if delete.upper() != 'Y':
-            print('Closing CollectAllAssetsHistoricalMax.commodities()')
-            return ''
-        AllAssetsHistoricalMax.objects.filter(Type='cmdty').delete()
-        print('Old records have been removed')
-        print('Starting to collect new ones')
-        print('Starting Selenium')
-        # driver = webdriver.Chrome()
-        for link in c_list:
-            link = link[2] + '-historical-data'
-            driver.get(url)
-            print('Executing JS scripts')
-            driver.execute_script('$("#data_interval").val("Monthly")')
-            driver.execute_script('$("#widgetFieldDateRange").click();')
-            driver.execute_script('$("#startDate").val("01/01/1980");')
-            driver.execute_script('$("#applyBtn").click()')
-            print('Executed JS scripts, sleeping for 5 seconds')
-            sleep(5)
-        driver.quit()
+        try:
+            print('Starting CollectAllAssetsHistoricalMax.commodities()')
+            print('Removing old records')
+            if delete.upper() != 'Y':
+                print('Closing CollectAllAssetsHistoricalMax.commodities()')
+                return ''
+            AllAssetsHistoricalMax.objects.filter(Type='cmdty').delete()
+            print('Old records have been removed')
+            print('Starting to collect new ones')
+            print('Starting Selenium')
+            # driver = webdriver.Chrome()
+            for link in c_list:
+                link = link[2] + '-historical-data'
+                driver.get(link)
+                print('Executing JS scripts')
+                driver.execute_script('$("#data_interval").val("Monthly");')
+                driver.find_element_by_id('data_interval').value = "Monthly"
+                driver.find_element_by_id('widgetFieldDateRange').click()
+                driver.find_element_by_id('startDate').clear()
+                driver.find_element_by_id('startDate').send_keys('01/01/1980', Keys.ENTER)
+                print('Executed JS scripts, sleeping for 5 seconds')
+                sleep(5)
+                print(link)
+                soup = BeautifulSoup(driver.page_source, 'html.parser')
+                print(soup.find(id='widgetFieldDateRange'))
+                soup = soup.find(class_='genTbl closedTbl historicalTbl')
+                soup = soup.tbody.find_all('tr')
+                print(len(soup))
+                for row in soup:
+                    data = row.find_all('td')
+                    data = [d.get_text() for d in data]
+                    print(data)
+        finally:
+            ('Quiting the driver')
+            driver.quit()
+        print('Downloaded Successfuly')
