@@ -60,7 +60,7 @@ TYPES = (
     ('cmdty', 'Commodity'), ('crncy', 'Currency'), ('crptcrncy', 'Cryptocurrency'),
     ('stck', 'Stock'), ('indx', 'Index'), ('etf', 'ETF'), ('bnd', 'Bond'), ('fnd', ('Fund'))
 )
-
+Types = [i for j in TYPES for i in j]
 class CommodityStaticInfo(models.Model):
     Type = models.CharField(choices=TYPES, max_length=9, default='cmdty')
     fields_to_scrape = (
@@ -908,7 +908,7 @@ class AllAssetsHistoricalMax(models.Model):
         return sum(l)
 
     def __str__(self):
-        return f'Max Years - ({self.country} {self.Type}) {self.short_name} in {self.date}'
+        return f'Max Years - ({self.country} {Types[Types.index(self.Type)+1]}) {self.short_name} in {self.date}'
 
     class Meta:
         verbose_name = '(Max Years) All Asset Types'
