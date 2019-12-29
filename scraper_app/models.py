@@ -81,11 +81,11 @@ class CommodityStaticInfo(models.Model):
     tick_value = models.CharField(max_length=30)
     months = models.CharField(max_length=30)
     point_value = models.CharField(max_length=20)
-    unit = models.CharField(max_length=10, null=True)
+    unit = models.CharField(max_length=12, null=True)
     link = models.URLField()
 
     def __str__(self):
-        return self.country + ' ' + self.long_name + ' (' + self.base_symbol + ')'
+        return f'({self.country})' + ' ' + self.long_name + ' (' + self.base_symbol + ')'
 
     class Meta:
         verbose_name = "(Static Info) Commodities'"
@@ -708,7 +708,7 @@ class USFundStaticInfo(models.Model):
     min_investment = models.CharField(null=True, max_length=12)
     category = models.CharField(max_length=40)
     category_descrptn = models.TextField(null=True)
-    inception_date = models.DateField(default=datetime.date.today, null=True)
+    inception_date = models.DateField(default=None, null=True)
 
     def __str__(self):
         return self.long_name
@@ -730,7 +730,7 @@ class JapanFundStaticInfo(models.Model):
     min_investment = models.CharField(null=True, max_length=12)
     category = models.CharField(max_length=40)
     category_descrptn = models.TextField(null=True)
-    inception_date = models.DateField(default=datetime.date.today, null=True)
+    inception_date = models.DateField(default=None, null=True)
 
     def __str__(self):
         return self.long_name
@@ -752,7 +752,7 @@ class UKFundStaticInfo(models.Model):
     min_investment = models.CharField(null=True, max_length=12)
     category = models.CharField(max_length=40)
     category_descrptn = models.TextField(null=True)
-    inception_date = models.DateField(default=datetime.date.today, null=True)
+    inception_date = models.DateField(default=None, null=True)
 
     def __str__(self): 
         return self.long_name
@@ -774,7 +774,7 @@ class HKFundStaticInfo(models.Model):
     min_investment = models.CharField(null=True, max_length=12)
     category = models.CharField(max_length=45)
     category_descrptn = models.TextField(null=True)
-    inception_date = models.DateField(default=datetime.date.today, null=True)
+    inception_date = models.DateField(default=None, null=True)
 
     def __str__(self):
         return self.long_name
@@ -795,7 +795,7 @@ class ChinaFundStaticInfo(models.Model):
     min_investment = models.CharField(null=True, max_length=12)
     category = models.CharField(max_length=40)
     category_descrptn = models.TextField(null=True)
-    inception_date = models.DateField(default=datetime.date.today, null=True)
+    inception_date = models.DateField(default=None, null=True)
 
     def __str__(self):
         return self.long_name
@@ -816,7 +816,7 @@ class CanadaFundStaticInfo(models.Model):
     min_investment = models.CharField(null=True, max_length=12)
     category = models.CharField(max_length=40)
     category_descrptn = models.TextField(null=True)
-    inception_date = models.DateField(default=datetime.date.today, null=True)
+    inception_date = models.DateField(default=None, null=True)
 
     def __str__(self):
         return self.long_name
@@ -838,7 +838,7 @@ class GermanyFundStaticInfo(models.Model):
     min_investment = models.CharField(null=True, max_length=12)
     category = models.CharField(max_length=41)
     category_descrptn = models.TextField(null=True)
-    inception_date = models.DateField(default=datetime.date.today, null=True)
+    inception_date = models.DateField(default=None, null=True)
 
     def __str__(self):
         return self.long_name
@@ -859,7 +859,7 @@ class AustraliaFundStaticInfo(models.Model):
     min_investment = models.CharField(null=True, max_length=12)
     category = models.CharField(max_length=40)
     category_descrptn = models.TextField(null=True)
-    inception_date = models.DateField(default=datetime.date.today, null=True)
+    inception_date = models.DateField(default=None, null=True)
 
     def __str__(self):
         return self.long_name
@@ -867,3 +867,57 @@ class AustraliaFundStaticInfo(models.Model):
     class Meta:
         verbose_name = '(Static Info) Australia Funds\''
         verbose_name_plural = '(Static Info) Australia Funds\''
+
+
+# Historical Data
+class AllAssetsHistoricalMax(models.Model):
+    Type = models.CharField(choices=TYPES, max_length=9)
+    country = models.CharField(choices=COUNTRIES, max_length=2)
+    short_name = models.CharField(max_length=18)
+    date = models.DateField(default=None, null=True)
+    price = models.CharField(max_length=12, default=None, null=True)
+    Open = models.CharField(max_length=12, default=None, null=True)
+    high = models.CharField(max_length=12, default=None, null=True)
+    low = models.CharField(max_length=12, default=None, null=True)
+    change_perc = models.CharField(max_length=12, default=None, null=True)
+    volume = models.CharField(max_length=12, default=None, null=True)
+
+    def highest(self):
+        l = list(AllAssetsHistoricalMax.objects.filter(short_name=self.short_name, country=self.country).values_list('price'))
+        l = [int(j) for i in l for j in i]
+        return max(l)
+
+    def lowest(self):
+        l = list(AllAssetsHistoricalMax.objects.filter(short_name=self.short_name, country=self.country).values_list('price'))
+        l = [int(j) for i in l for j in i]
+        return min(l)
+
+    def difference(self):
+        highest = AllAssetsHistoricalMax.objects.filter(short_name=self.short_name, country=self.country).first().highest()
+        lowest = AllAssetsHistoricalMax.objects.filter(short_name=self.short_name, country=self.country).first().lowest()
+        return highest-lowest
+
+    def average(self):
+        l = list(AllAssetsHistoricalMax.objects.filter(short_name=self.short_name, country=self.country).values_list('price'))
+        l = [int(j) for i in l for j in i]
+        return sum(l)/len(l)
+    
+    def change(self):
+        l = list(AllAssetsHistoricalMax.objects.filter(short_name=self.short_name, country=self.country).values_list('change_perc'))
+        l = [int(j) for i in l for j in i]
+        return sum(l)
+
+    def __str__(self):
+        return f'Max Years - ({self.country} {self.Type}) {self.short_name} in {self.date}'
+
+    class Meta:
+        verbose_name = '(Max Years) All Asset Types'
+        verbose_name_plural = '(Max Years) All Asset Types'
+
+# class AllHistorical5Y:
+
+#     def __str__(self):
+#         return f'5Years - ({self.country} {self.type}) {self.short_name} in {self.date}'
+
+#     class Meta:
+#         verbose_name = '(5 Years) All Types'

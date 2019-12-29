@@ -55,13 +55,6 @@ class CollectStaticInfo:
             fields = {}
             request = requests.get(link, headers=header)
             soup = BeautifulSoup(request.text, 'html.parser')
-            unit = soup.find('span', text='Unit:').find_next_sibling().get_text().strip()
-            soup = soup.find_all('span')
-            for field in soup:
-                if field.get_text() in fields_to_scrape:
-                    fields[field.get_text()] = field.next_sibling.get_text()
-            static_infos.append({**{'Short Name': name, 'Link': link}, **fields})
-            soup = BeautifulSoup(request.text, 'html.parser')
             country = soup.find('div', id='DropDownContainer').a.span['class'][-1]
             if country not in 'USA UK':
                 country = 'G'
@@ -69,6 +62,15 @@ class CollectStaticInfo:
                 country = 'US'
             else:
                 country = 'UK'
+            soup = BeautifulSoup(request.text, 'html.parser')
+            unit = soup.find('span', text='Unit:').find_next_sibling().get_text().strip()
+            soup = soup.find_all('span')
+            for field in soup:
+                if field.get_text() in fields_to_scrape:
+                    fields[field.get_text()] = field.next_sibling.get_text()
+            fields['Unit'] = unit
+            fields['Country'] = country
+            static_infos.append({**{'Short Name': name, 'Link': link}, **fields})
             print(f'{len(short_names)-short_names.index(name)-1} Commodities Left')
         print('Collected fields of all commodities')
         print('Starting to save data')
@@ -76,10 +78,10 @@ class CollectStaticInfo:
             print(f'Storing {static_info["Short Name"] + " Futures Contract"}')
             CommodityStaticInfo(
                 short_name=static_info['Short Name'], base_symbol=static_info['Base Symbol'],
-                contract_size=static_info['Contract Size'], country=country, unit=unit,
+                contract_size=static_info['Contract Size'], country=static_info['Country'], 
                 tick_size=static_info['Tick Size'], tick_value=static_info['Tick Value'],
                 months=static_info['Months'], point_value=static_info['Point Value'],
-                link=static_info['Link']).save()
+                link=static_info['Link'], unit=static_info['Unit']).save()
         print('Data has been successfuly stored!')
         return ''
 
