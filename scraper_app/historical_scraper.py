@@ -3,6 +3,9 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from pyvirtualdisplay import Display
 from selenium import webdriver
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
 from bs4 import BeautifulSoup
 from time import sleep
 from threading import Thread
@@ -246,7 +249,7 @@ class CollectAllAssetsHistoricalMax:
             """Yield successive n-sized chunks from lst."""
             for i in range(0, len(lst), n):
                 yield lst[i:i + n]
-        x = 1         
+        
         def work(i):
             link = i[1] + '-historical-data' #change here
             x = list(c_list).index(i)+1
@@ -260,7 +263,7 @@ class CollectAllAssetsHistoricalMax:
             driver.find_element_by_id('startDate').clear()
             driver.find_element_by_id('startDate').send_keys('01/01/1980', Keys.ENTER)
             print('Executed JS scripts')
-            sleep(5)
+            sleep(6)
             soup = BeautifulSoup(driver.page_source, 'html.parser')
             soup = soup.find(class_='genTbl closedTbl historicalTbl')
             soup = soup.tbody.find_all('tr')
@@ -299,9 +302,11 @@ class CollectAllAssetsHistoricalMax:
             for l in chunk_list:
                 for sub_l in l:
                     threads[sub_l].start()
+                    sleep(1)
                 for sub_l in l:
                     threads[sub_l].join()
                 print(f'Executed a Chunk {chunk_n}/{chunk_all}')
+                chunk_n += 1
 
         finally:
             ('Quiting the driver')
