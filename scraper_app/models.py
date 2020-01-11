@@ -112,11 +112,11 @@ class CryptocurrencyStaticInfo(models.Model):
     link = models.URLField()
 
     def __str__(self):
-        return self.short_name + ' - ' + self.long_name
+        return f'{self.long_name} ({self.short_name})'
 
     class Meta:
-        verbose_name = "(Static Info) Cryptocurrencies'"
-        verbose_name_plural = "(Static Info) Cryptocurrencies'"
+        verbose_name = "(Static Info) Cryptocurrencies"
+        verbose_name_plural = "(Static Info) Cryptocurrencies"
 
 class USStockStaticInfo(models.Model):
     Type = models.CharField(choices=TYPES, max_length=9, default='stck')
@@ -908,7 +908,7 @@ class AllAssetsHistoricalMax(models.Model):
         return sum(l)
 
     def __str__(self):
-        return f'Max Years - ({self.country} {Types[Types.index(self.Type)+1]}) {self.short_name} in {self.date}'
+        return f'({self.country} {Types[Types.index(self.Type)+1]}) {self.short_name} in {self.date.year} {self.date.strftime("%B")}'
 
     class Meta:
         verbose_name = '(Max Years) All Asset Types'
