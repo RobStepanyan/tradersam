@@ -224,13 +224,24 @@ class CollectAllAssetsHistoricalMax:
 
     def stocks(delete='n'):
         # CollectAllAssetsHistoricalMax.usstocks(delete=delete)
-        CollectAllAssetsHistoricalMax.japanstocks(delete=delete)
+        # CollectAllAssetsHistoricalMax.japanstocks(delete=delete)
         CollectAllAssetsHistoricalMax.ukstocks(delete=delete)
         CollectAllAssetsHistoricalMax.hkstocks(delete=delete)
         CollectAllAssetsHistoricalMax.chinastocks(delete=delete)
         CollectAllAssetsHistoricalMax.canadastocks(delete=delete)
         CollectAllAssetsHistoricalMax.germanystocks(delete=delete)
         CollectAllAssetsHistoricalMax.australiastocks(delete=delete)
+
+    def indices(delete='n'):
+        CollectAllAssetsHistoricalMax.usindices(delete=delete)
+        CollectAllAssetsHistoricalMax.japanindices(delete=delete)
+        CollectAllAssetsHistoricalMax.ukindices(delete=delete)
+        CollectAllAssetsHistoricalMax.hkindices(delete=delete)
+        CollectAllAssetsHistoricalMax.chinaindices(delete=delete)
+        CollectAllAssetsHistoricalMax.canadaindices(delete=delete)
+        CollectAllAssetsHistoricalMax.germanyindices(delete=delete)
+        CollectAllAssetsHistoricalMax.australiaindices(delete=delete)        
+
 
     def usstocks(delete='n'):
         # c_list = commodity_list its an old name never mind
@@ -991,3 +1002,779 @@ class CollectAllAssetsHistoricalMax:
             ('Quiting the driver')
             driver.quit()
         print('Finished Successfuly')
+
+    def usindices(delete='n'):
+        # c_list = commodity_list its an old name never mind
+        c_list = USIndexStaticInfo.objects.values_list('short_name', 'link') # returns a list of tuples #change here
+        quanity = USIndexStaticInfo.objects.count() #change here
+        #--------------------VPS------------------
+        display = Display(visible=0, size=(1000, 1000))
+        display.start()
+        options = webdriver.ChromeOptions()
+        options.add_argument('--no-sandbox')
+        driver = webdriver.Chrome(options=options)
+        #-----------------------------------------
+        print('Starting CollectAllAssetsHistoricalMax.usindices()') #change here
+        if delete.upper() != 'Y':
+            print('Removing old records')
+            print('Closing CollectAllAssetsHistoricalMax.usindices()') #change here
+            return ''
+        AllAssetsHistoricalMax.objects.filter(Type='indx', country='US').delete() #change here
+        print('Old records have been removed')
+        print('Starting to collect new ones')
+        print('Starting Selenium')
+        # driver = webdriver.Chrome()
+        def chunks(lst, n):
+            """Yield successive n-sized chunks from lst."""
+            for i in range(0, len(lst), n):
+                yield lst[i:i + n]
+        
+        def work(i):
+            link = i[1] + '-historical-data' #change here
+            x = list(c_list).index(i)+1
+            print(link)
+            while True:
+                try: 
+                    driver.get(link)
+                    sleep(5)
+                    print('Executing JS scripts')
+                    driver.execute_script('$("#data_interval").val("Monthly");')
+                    driver.find_element_by_id('data_interval').value = "Monthly"
+                    driver.find_element_by_id('widgetFieldDateRange').click()
+                    driver.find_element_by_id('startDate').clear()
+                    driver.find_element_by_id('startDate').send_keys('01/01/1980', Keys.ENTER)
+                    print('Executed JS scripts')
+                    sleep(6)
+                    soup = BeautifulSoup(driver.page_source, 'html.parser')
+                    soup = soup.find(class_='genTbl closedTbl historicalTbl')
+                    soup = soup.tbody.find_all('tr')
+                    for row in soup:
+                        data = row.find_all('td')
+                        data = [d.get_text() for d in data]
+                        date = datetime.datetime.strptime(data[0], '%b %y')
+                        price = data[1]
+                        price = price[:price.index('.')+2+1]
+                        Open = data[2]
+                        high = data[3]
+                        low = data[4]
+                        volume = data[5]  #change here
+                        if volume == '-':
+                            volume = None
+                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        Type = 'indx'  #change here
+                        country = 'US'  #change here
+                        short_name = i[0]  #change here
+                        AllAssetsHistoricalMax( 
+                            Type=Type, country=country, short_name=short_name,
+                            date=date, price=price, Open=Open,
+                            high=high, low=low, change_perc=change_perc,
+                            volume=volume).save()
+                    break
+                except:
+                    pass
+            
+            print(f'Stored {x}/{quanity}')
+            print()
+
+        chunk_list = list(chunks(range(quanity), 3))
+        try:
+            # Code below creates threads for each item, then executes them by chunks
+            threads = []
+            for i in range(quanity):
+                threads.append(Thread(target=work, args=(c_list[i],)))
+            print('Threads are ready')
+            chunk_n = 1
+            chunk_all = len(chunk_list)
+            for l in chunk_list:
+                for sub_l in l:
+                    threads[sub_l].start()
+                    sleep(1)
+                for sub_l in l:
+                    threads[sub_l].join()
+                
+                print(f'Executed Chunk {chunk_n}/{chunk_all}')
+                chunk_n += 1
+
+        finally:
+            ('Quiting the driver')
+            driver.quit()
+        print('Finished Successfuly') 
+
+    def japanindices(delete='n'):
+        # c_list = commodity_list its an old name never mind
+        c_list = JapanIndexStaticInfo.objects.values_list('short_name', 'link') # returns a list of tuples #change here
+        quanity = JapanIndexStaticInfo.objects.count() #change here
+        #--------------------VPS------------------
+        display = Display(visible=0, size=(1000, 1000))
+        display.start()
+        options = webdriver.ChromeOptions()
+        options.add_argument('--no-sandbox')
+        driver = webdriver.Chrome(options=options)
+        #-----------------------------------------
+        print('Starting CollectAllAssetsHistoricalMax.japanindices()') #change here
+        if delete.upper() != 'Y':
+            print('Removing old records')
+            print('Closing CollectAllAssetsHistoricalMax.japanindices()') #change here
+            return ''
+        AllAssetsHistoricalMax.objects.filter(Type='indx', country='JP').delete() #change here
+        print('Old records have been removed')
+        print('Starting to collect new ones')
+        print('Starting Selenium')
+        # driver = webdriver.Chrome()
+        def chunks(lst, n):
+            """Yield successive n-sized chunks from lst."""
+            for i in range(0, len(lst), n):
+                yield lst[i:i + n]
+        
+        def work(i):
+            link = i[1] + '-historical-data' #change here
+            x = list(c_list).index(i)+1
+            print(link)
+            while True:
+                try: 
+                    driver.get(link)
+                    sleep(5)
+                    print('Executing JS scripts')
+                    driver.execute_script('$("#data_interval").val("Monthly");')
+                    driver.find_element_by_id('data_interval').value = "Monthly"
+                    driver.find_element_by_id('widgetFieldDateRange').click()
+                    driver.find_element_by_id('startDate').clear()
+                    driver.find_element_by_id('startDate').send_keys('01/01/1980', Keys.ENTER)
+                    print('Executed JS scripts')
+                    sleep(6)
+                    soup = BeautifulSoup(driver.page_source, 'html.parser')
+                    soup = soup.find(class_='genTbl closedTbl historicalTbl')
+                    soup = soup.tbody.find_all('tr')
+                    for row in soup:
+                        data = row.find_all('td')
+                        data = [d.get_text() for d in data]
+                        date = datetime.datetime.strptime(data[0], '%b %y')
+                        price = data[1]
+                        price = price[:price.index('.')+2+1]
+                        Open = data[2]
+                        high = data[3]
+                        low = data[4]
+                        volume = data[5]  #change here
+                        if volume == '-':
+                            volume = None
+                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        Type = 'indx'  #change here
+                        country = 'JP'  #change here
+                        short_name = i[0]  #change here
+                        AllAssetsHistoricalMax( 
+                            Type=Type, country=country, short_name=short_name,
+                            date=date, price=price, Open=Open,
+                            high=high, low=low, change_perc=change_perc,
+                            volume=volume).save()
+                    break
+                except:
+                    pass
+            
+            print(f'Stored {x}/{quanity}')
+            print()
+
+        chunk_list = list(chunks(range(quanity), 3))
+        try:
+            # Code below creates threads for each item, then executes them by chunks
+            threads = []
+            for i in range(quanity):
+                threads.append(Thread(target=work, args=(c_list[i],)))
+            print('Threads are ready')
+            chunk_n = 1
+            chunk_all = len(chunk_list)
+            for l in chunk_list:
+                for sub_l in l:
+                    threads[sub_l].start()
+                    sleep(1)
+                for sub_l in l:
+                    threads[sub_l].join()
+                
+                print(f'Executed Chunk {chunk_n}/{chunk_all}')
+                chunk_n += 1
+
+        finally:
+            ('Quiting the driver')
+            driver.quit()
+        print('Finished Successfuly')   
+
+    def ukindices(delete='n'):
+        # c_list = commodity_list its an old name never mind
+        c_list = UKIndexStaticInfo.objects.values_list('short_name', 'link') # returns a list of tuples #change here
+        quanity = UKIndexStaticInfo.objects.count() #change here
+        #--------------------VPS------------------
+        display = Display(visible=0, size=(1000, 1000))
+        display.start()
+        options = webdriver.ChromeOptions()
+        options.add_argument('--no-sandbox')
+        driver = webdriver.Chrome(options=options)
+        #-----------------------------------------
+        print('Starting CollectAllAssetsHistoricalMax.ukindices()') #change here
+        if delete.upper() != 'Y':
+            print('Removing old records')
+            print('Closing CollectAllAssetsHistoricalMax.ukindices()') #change here
+            return ''
+        AllAssetsHistoricalMax.objects.filter(Type='indx', country='UK').delete() #change here
+        print('Old records have been removed')
+        print('Starting to collect new ones')
+        print('Starting Selenium')
+        # driver = webdriver.Chrome()
+        def chunks(lst, n):
+            """Yield successive n-sized chunks from lst."""
+            for i in range(0, len(lst), n):
+                yield lst[i:i + n]
+        
+        def work(i):
+            link = i[1] + '-historical-data' #change here
+            x = list(c_list).index(i)+1
+            print(link)
+            while True:
+                try: 
+                    driver.get(link)
+                    sleep(5)
+                    print('Executing JS scripts')
+                    driver.execute_script('$("#data_interval").val("Monthly");')
+                    driver.find_element_by_id('data_interval').value = "Monthly"
+                    driver.find_element_by_id('widgetFieldDateRange').click()
+                    driver.find_element_by_id('startDate').clear()
+                    driver.find_element_by_id('startDate').send_keys('01/01/1980', Keys.ENTER)
+                    print('Executed JS scripts')
+                    sleep(6)
+                    soup = BeautifulSoup(driver.page_source, 'html.parser')
+                    soup = soup.find(class_='genTbl closedTbl historicalTbl')
+                    soup = soup.tbody.find_all('tr')
+                    for row in soup:
+                        data = row.find_all('td')
+                        data = [d.get_text() for d in data]
+                        date = datetime.datetime.strptime(data[0], '%b %y')
+                        price = data[1]
+                        price = price[:price.index('.')+2+1]
+                        Open = data[2]
+                        high = data[3]
+                        low = data[4]
+                        volume = data[5]  #change here
+                        if volume == '-':
+                            volume = None
+                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        Type = 'indx'  #change here
+                        country = 'UK'  #change here
+                        short_name = i[0]  #change here
+                        AllAssetsHistoricalMax( 
+                            Type=Type, country=country, short_name=short_name,
+                            date=date, price=price, Open=Open,
+                            high=high, low=low, change_perc=change_perc,
+                            volume=volume).save()
+                    break
+                except:
+                    pass
+            
+            print(f'Stored {x}/{quanity}')
+            print()
+
+        chunk_list = list(chunks(range(quanity), 3))
+        try:
+            # Code below creates threads for each item, then executes them by chunks
+            threads = []
+            for i in range(quanity):
+                threads.append(Thread(target=work, args=(c_list[i],)))
+            print('Threads are ready')
+            chunk_n = 1
+            chunk_all = len(chunk_list)
+            for l in chunk_list:
+                for sub_l in l:
+                    threads[sub_l].start()
+                    sleep(1)
+                for sub_l in l:
+                    threads[sub_l].join()
+                
+                print(f'Executed Chunk {chunk_n}/{chunk_all}')
+                chunk_n += 1
+
+        finally:
+            ('Quiting the driver')
+            driver.quit()
+        print('Finished Successfuly')       
+
+    def hkindices(delete='n'):
+        # c_list = commodity_list its an old name never mind
+        c_list = HKIndexStaticInfo.objects.values_list('short_name', 'link') # returns a list of tuples #change here
+        quanity = HKIndexStaticInfo.objects.count() #change here
+        #--------------------VPS------------------
+        display = Display(visible=0, size=(1000, 1000))
+        display.start()
+        options = webdriver.ChromeOptions()
+        options.add_argument('--no-sandbox')
+        driver = webdriver.Chrome(options=options)
+        #-----------------------------------------
+        print('Starting CollectAllAssetsHistoricalMax.hkindices()') #change here
+        if delete.upper() != 'Y':
+            print('Removing old records')
+            print('Closing CollectAllAssetsHistoricalMax.hkindices()') #change here
+            return ''
+        AllAssetsHistoricalMax.objects.filter(Type='indx', country='HK').delete() #change here
+        print('Old records have been removed')
+        print('Starting to collect new ones')
+        print('Starting Selenium')
+        # driver = webdriver.Chrome()
+        def chunks(lst, n):
+            """Yield successive n-sized chunks from lst."""
+            for i in range(0, len(lst), n):
+                yield lst[i:i + n]
+        
+        def work(i):
+            link = i[1] + '-historical-data' #change here
+            x = list(c_list).index(i)+1
+            print(link)
+            while True:
+                try: 
+                    driver.get(link)
+                    sleep(5)
+                    print('Executing JS scripts')
+                    driver.execute_script('$("#data_interval").val("Monthly");')
+                    driver.find_element_by_id('data_interval').value = "Monthly"
+                    driver.find_element_by_id('widgetFieldDateRange').click()
+                    driver.find_element_by_id('startDate').clear()
+                    driver.find_element_by_id('startDate').send_keys('01/01/1980', Keys.ENTER)
+                    print('Executed JS scripts')
+                    sleep(6)
+                    soup = BeautifulSoup(driver.page_source, 'html.parser')
+                    soup = soup.find(class_='genTbl closedTbl historicalTbl')
+                    soup = soup.tbody.find_all('tr')
+                    for row in soup:
+                        data = row.find_all('td')
+                        data = [d.get_text() for d in data]
+                        date = datetime.datetime.strptime(data[0], '%b %y')
+                        price = data[1]
+                        price = price[:price.index('.')+2+1]
+                        Open = data[2]
+                        high = data[3]
+                        low = data[4]
+                        volume = data[5]  #change here
+                        if volume == '-':
+                            volume = None
+                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        Type = 'indx'  #change here
+                        country = 'HK'  #change here
+                        short_name = i[0]  #change here
+                        AllAssetsHistoricalMax( 
+                            Type=Type, country=country, short_name=short_name,
+                            date=date, price=price, Open=Open,
+                            high=high, low=low, change_perc=change_perc,
+                            volume=volume).save()
+                    break
+                except:
+                    pass
+            
+            print(f'Stored {x}/{quanity}')
+            print()
+
+        chunk_list = list(chunks(range(quanity), 3))
+        try:
+            # Code below creates threads for each item, then executes them by chunks
+            threads = []
+            for i in range(quanity):
+                threads.append(Thread(target=work, args=(c_list[i],)))
+            print('Threads are ready')
+            chunk_n = 1
+            chunk_all = len(chunk_list)
+            for l in chunk_list:
+                for sub_l in l:
+                    threads[sub_l].start()
+                    sleep(1)
+                for sub_l in l:
+                    threads[sub_l].join()
+                
+                print(f'Executed Chunk {chunk_n}/{chunk_all}')
+                chunk_n += 1
+
+        finally:
+            ('Quiting the driver')
+            driver.quit()
+        print('Finished Successfuly') 
+
+    def chinaindices(delete='n'):
+        # c_list = commodity_list its an old name never mind
+        c_list = ChinaIndexStaticInfo.objects.values_list('short_name', 'link') # returns a list of tuples #change here
+        quanity = ChinaIndexStaticInfo.objects.count() #change here
+        #--------------------VPS------------------
+        display = Display(visible=0, size=(1000, 1000))
+        display.start()
+        options = webdriver.ChromeOptions()
+        options.add_argument('--no-sandbox')
+        driver = webdriver.Chrome(options=options)
+        #-----------------------------------------
+        print('Starting CollectAllAssetsHistoricalMax.chinaindices()') #change here
+        if delete.upper() != 'Y':
+            print('Removing old records')
+            print('Closing CollectAllAssetsHistoricalMax.chinaindices()') #change here
+            return ''
+        AllAssetsHistoricalMax.objects.filter(Type='indx', country='CH').delete() #change here
+        print('Old records have been removed')
+        print('Starting to collect new ones')
+        print('Starting Selenium')
+        # driver = webdriver.Chrome()
+        def chunks(lst, n):
+            """Yield successive n-sized chunks from lst."""
+            for i in range(0, len(lst), n):
+                yield lst[i:i + n]
+        
+        def work(i):
+            link = i[1] + '-historical-data' #change here
+            x = list(c_list).index(i)+1
+            print(link)
+            while True:
+                try: 
+                    driver.get(link)
+                    sleep(5)
+                    print('Executing JS scripts')
+                    driver.execute_script('$("#data_interval").val("Monthly");')
+                    driver.find_element_by_id('data_interval').value = "Monthly"
+                    driver.find_element_by_id('widgetFieldDateRange').click()
+                    driver.find_element_by_id('startDate').clear()
+                    driver.find_element_by_id('startDate').send_keys('01/01/1980', Keys.ENTER)
+                    print('Executed JS scripts')
+                    sleep(6)
+                    soup = BeautifulSoup(driver.page_source, 'html.parser')
+                    soup = soup.find(class_='genTbl closedTbl historicalTbl')
+                    soup = soup.tbody.find_all('tr')
+                    for row in soup:
+                        data = row.find_all('td')
+                        data = [d.get_text() for d in data]
+                        date = datetime.datetime.strptime(data[0], '%b %y')
+                        price = data[1]
+                        price = price[:price.index('.')+2+1]
+                        Open = data[2]
+                        high = data[3]
+                        low = data[4]
+                        volume = data[5]  #change here
+                        if volume == '-':
+                            volume = None
+                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        Type = 'indx'  #change here
+                        country = 'CH'  #change here
+                        short_name = i[0]  #change here
+                        AllAssetsHistoricalMax( 
+                            Type=Type, country=country, short_name=short_name,
+                            date=date, price=price, Open=Open,
+                            high=high, low=low, change_perc=change_perc,
+                            volume=volume).save()
+                    break
+                except:
+                    pass
+            
+            print(f'Stored {x}/{quanity}')
+            print()
+
+        chunk_list = list(chunks(range(quanity), 3))
+        try:
+            # Code below creates threads for each item, then executes them by chunks
+            threads = []
+            for i in range(quanity):
+                threads.append(Thread(target=work, args=(c_list[i],)))
+            print('Threads are ready')
+            chunk_n = 1
+            chunk_all = len(chunk_list)
+            for l in chunk_list:
+                for sub_l in l:
+                    threads[sub_l].start()
+                    sleep(1)
+                for sub_l in l:
+                    threads[sub_l].join()
+                
+                print(f'Executed Chunk {chunk_n}/{chunk_all}')
+                chunk_n += 1
+
+        finally:
+            ('Quiting the driver')
+            driver.quit()
+        print('Finished Successfuly')
+
+    def canadaindices(delete='n'):
+        # c_list = commodity_list its an old name never mind
+        c_list = CanadaIndexStaticInfo.objects.values_list('short_name', 'link') # returns a list of tuples #change here
+        quanity = CanadaIndexStaticInfo.objects.count() #change here
+        #--------------------VPS------------------
+        display = Display(visible=0, size=(1000, 1000))
+        display.start()
+        options = webdriver.ChromeOptions()
+        options.add_argument('--no-sandbox')
+        driver = webdriver.Chrome(options=options)
+        #-----------------------------------------
+        print('Starting CollectAllAssetsHistoricalMax.canadaindices()') #change here
+        if delete.upper() != 'Y':
+            print('Removing old records')
+            print('Closing CollectAllAssetsHistoricalMax.canadaindices()') #change here
+            return ''
+        AllAssetsHistoricalMax.objects.filter(Type='indx', country='CA').delete() #change here
+        print('Old records have been removed')
+        print('Starting to collect new ones')
+        print('Starting Selenium')
+        # driver = webdriver.Chrome()
+        def chunks(lst, n):
+            """Yield successive n-sized chunks from lst."""
+            for i in range(0, len(lst), n):
+                yield lst[i:i + n]
+        
+        def work(i):
+            link = i[1] + '-historical-data' #change here
+            x = list(c_list).index(i)+1
+            print(link)
+            while True:
+                try: 
+                    driver.get(link)
+                    sleep(5)
+                    print('Executing JS scripts')
+                    driver.execute_script('$("#data_interval").val("Monthly");')
+                    driver.find_element_by_id('data_interval').value = "Monthly"
+                    driver.find_element_by_id('widgetFieldDateRange').click()
+                    driver.find_element_by_id('startDate').clear()
+                    driver.find_element_by_id('startDate').send_keys('01/01/1980', Keys.ENTER)
+                    print('Executed JS scripts')
+                    sleep(6)
+                    soup = BeautifulSoup(driver.page_source, 'html.parser')
+                    soup = soup.find(class_='genTbl closedTbl historicalTbl')
+                    soup = soup.tbody.find_all('tr')
+                    for row in soup:
+                        data = row.find_all('td')
+                        data = [d.get_text() for d in data]
+                        date = datetime.datetime.strptime(data[0], '%b %y')
+                        price = data[1]
+                        price = price[:price.index('.')+2+1]
+                        Open = data[2]
+                        high = data[3]
+                        low = data[4]
+                        volume = data[5]  #change here
+                        if volume == '-':
+                            volume = None
+                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        Type = 'indx'  #change here
+                        country = 'CA'  #change here
+                        short_name = i[0]  #change here
+                        AllAssetsHistoricalMax( 
+                            Type=Type, country=country, short_name=short_name,
+                            date=date, price=price, Open=Open,
+                            high=high, low=low, change_perc=change_perc,
+                            volume=volume).save()
+                    break
+                except:
+                    pass
+            
+            print(f'Stored {x}/{quanity}')
+            print()
+
+        chunk_list = list(chunks(range(quanity), 3))
+        try:
+            # Code below creates threads for each item, then executes them by chunks
+            threads = []
+            for i in range(quanity):
+                threads.append(Thread(target=work, args=(c_list[i],)))
+            print('Threads are ready')
+            chunk_n = 1
+            chunk_all = len(chunk_list)
+            for l in chunk_list:
+                for sub_l in l:
+                    threads[sub_l].start()
+                    sleep(1)
+                for sub_l in l:
+                    threads[sub_l].join()
+                
+                print(f'Executed Chunk {chunk_n}/{chunk_all}')
+                chunk_n += 1
+
+        finally:
+            ('Quiting the driver')
+            driver.quit()
+        print('Finished Successfuly') 
+
+    def germanyindices(delete='n'):
+        # c_list = commodity_list its an old name never mind
+        c_list = GermanyIndexStaticInfo.objects.values_list('short_name', 'link') # returns a list of tuples #change here
+        quanity = GermanyIndexStaticInfo.objects.count() #change here
+        #--------------------VPS------------------
+        display = Display(visible=0, size=(1000, 1000))
+        display.start()
+        options = webdriver.ChromeOptions()
+        options.add_argument('--no-sandbox')
+        driver = webdriver.Chrome(options=options)
+        #-----------------------------------------
+        print('Starting CollectAllAssetsHistoricalMax.germanyindices()') #change here
+        if delete.upper() != 'Y':
+            print('Removing old records')
+            print('Closing CollectAllAssetsHistoricalMax.germanyindices()') #change here
+            return ''
+        AllAssetsHistoricalMax.objects.filter(Type='indx', country='GE').delete() #change here
+        print('Old records have been removed')
+        print('Starting to collect new ones')
+        print('Starting Selenium')
+        # driver = webdriver.Chrome()
+        def chunks(lst, n):
+            """Yield successive n-sized chunks from lst."""
+            for i in range(0, len(lst), n):
+                yield lst[i:i + n]
+        
+        def work(i):
+            link = i[1] + '-historical-data' #change here
+            x = list(c_list).index(i)+1
+            print(link)
+            while True:
+                try: 
+                    driver.get(link)
+                    sleep(5)
+                    print('Executing JS scripts')
+                    driver.execute_script('$("#data_interval").val("Monthly");')
+                    driver.find_element_by_id('data_interval').value = "Monthly"
+                    driver.find_element_by_id('widgetFieldDateRange').click()
+                    driver.find_element_by_id('startDate').clear()
+                    driver.find_element_by_id('startDate').send_keys('01/01/1980', Keys.ENTER)
+                    print('Executed JS scripts')
+                    sleep(6)
+                    soup = BeautifulSoup(driver.page_source, 'html.parser')
+                    soup = soup.find(class_='genTbl closedTbl historicalTbl')
+                    soup = soup.tbody.find_all('tr')
+                    for row in soup:
+                        data = row.find_all('td')
+                        data = [d.get_text() for d in data]
+                        date = datetime.datetime.strptime(data[0], '%b %y')
+                        price = data[1]
+                        price = price[:price.index('.')+2+1]
+                        Open = data[2]
+                        high = data[3]
+                        low = data[4]
+                        volume = data[5]  #change here
+                        if volume == '-':
+                            volume = None
+                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        Type = 'indx'  #change here
+                        country = 'GE'  #change here
+                        short_name = i[0]  #change here
+                        AllAssetsHistoricalMax( 
+                            Type=Type, country=country, short_name=short_name,
+                            date=date, price=price, Open=Open,
+                            high=high, low=low, change_perc=change_perc,
+                            volume=volume).save()
+                    break
+                except:
+                    pass
+            
+            print(f'Stored {x}/{quanity}')
+            print()
+
+        chunk_list = list(chunks(range(quanity), 3))
+        try:
+            # Code below creates threads for each item, then executes them by chunks
+            threads = []
+            for i in range(quanity):
+                threads.append(Thread(target=work, args=(c_list[i],)))
+            print('Threads are ready')
+            chunk_n = 1
+            chunk_all = len(chunk_list)
+            for l in chunk_list:
+                for sub_l in l:
+                    threads[sub_l].start()
+                    sleep(1)
+                for sub_l in l:
+                    threads[sub_l].join()
+                
+                print(f'Executed Chunk {chunk_n}/{chunk_all}')
+                chunk_n += 1
+
+        finally:
+            ('Quiting the driver')
+            driver.quit()
+        print('Finished Successfuly') 
+
+    def australiaindices(delete='n'):
+        # c_list = commodity_list its an old name never mind
+        c_list = AustraliaIndexStaticInfo.objects.values_list('short_name', 'link') # returns a list of tuples #change here
+        quanity = AustraliaIndexStaticInfo.objects.count() #change here
+        #--------------------VPS------------------
+        display = Display(visible=0, size=(1000, 1000))
+        display.start()
+        options = webdriver.ChromeOptions()
+        options.add_argument('--no-sandbox')
+        driver = webdriver.Chrome(options=options)
+        #-----------------------------------------
+        print('Starting CollectAllAssetsHistoricalMax.australiaindices()') #change here
+        if delete.upper() != 'Y':
+            print('Removing old records')
+            print('Closing CollectAllAssetsHistoricalMax.australiaindices()') #change here
+            return ''
+        AllAssetsHistoricalMax.objects.filter(Type='indx', country='AU').delete() #change here
+        print('Old records have been removed')
+        print('Starting to collect new ones')
+        print('Starting Selenium')
+        # driver = webdriver.Chrome()
+        def chunks(lst, n):
+            """Yield successive n-sized chunks from lst."""
+            for i in range(0, len(lst), n):
+                yield lst[i:i + n]
+        
+        def work(i):
+            link = i[1] + '-historical-data' #change here
+            x = list(c_list).index(i)+1
+            print(link)
+            while True:
+                try: 
+                    driver.get(link)
+                    sleep(5)
+                    print('Executing JS scripts')
+                    driver.execute_script('$("#data_interval").val("Monthly");')
+                    driver.find_element_by_id('data_interval').value = "Monthly"
+                    driver.find_element_by_id('widgetFieldDateRange').click()
+                    driver.find_element_by_id('startDate').clear()
+                    driver.find_element_by_id('startDate').send_keys('01/01/1980', Keys.ENTER)
+                    print('Executed JS scripts')
+                    sleep(6)
+                    soup = BeautifulSoup(driver.page_source, 'html.parser')
+                    soup = soup.find(class_='genTbl closedTbl historicalTbl')
+                    soup = soup.tbody.find_all('tr')
+                    for row in soup:
+                        data = row.find_all('td')
+                        data = [d.get_text() for d in data]
+                        date = datetime.datetime.strptime(data[0], '%b %y')
+                        price = data[1]
+                        price = price[:price.index('.')+2+1]
+                        Open = data[2]
+                        high = data[3]
+                        low = data[4]
+                        volume = data[5]  #change here
+                        if volume == '-':
+                            volume = None
+                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        Type = 'indx'  #change here
+                        country = 'AU'  #change here
+                        short_name = i[0]  #change here
+                        AllAssetsHistoricalMax( 
+                            Type=Type, country=country, short_name=short_name,
+                            date=date, price=price, Open=Open,
+                            high=high, low=low, change_perc=change_perc,
+                            volume=volume).save()
+                    break
+                except:
+                    pass
+            
+            print(f'Stored {x}/{quanity}')
+            print()
+
+        chunk_list = list(chunks(range(quanity), 3))
+        try:
+            # Code below creates threads for each item, then executes them by chunks
+            threads = []
+            for i in range(quanity):
+                threads.append(Thread(target=work, args=(c_list[i],)))
+            print('Threads are ready')
+            chunk_n = 1
+            chunk_all = len(chunk_list)
+            for l in chunk_list:
+                for sub_l in l:
+                    threads[sub_l].start()
+                    sleep(1)
+                for sub_l in l:
+                    threads[sub_l].join()
+                
+                print(f'Executed Chunk {chunk_n}/{chunk_all}')
+                chunk_n += 1
+
+        finally:
+            ('Quiting the driver')
+            driver.quit()
+        print('Finished Successfuly') 
