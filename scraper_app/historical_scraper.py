@@ -119,7 +119,13 @@ class CollectAllAssetsHistoricalMax:
             print('Starting Selenium')
             # driver = webdriver.Chrome()
             for i in c_list:
-                link = i[1] + '-historical-data' #change here
+                link = i[1]
+            if '?cid' in link:
+                cid = link[link.index('?cid'):]
+                link = link[:link.index('?cid')]
+                link += '-historical-data' + cid
+            else:
+                link += '-historical-data'
                 driver.get(link)
                 print('Executing JS scripts')
                 driver.execute_script('$("#data_interval").val("Monthly");')
@@ -225,7 +231,7 @@ class CollectAllAssetsHistoricalMax:
     def stocks(delete='n'):
         # CollectAllAssetsHistoricalMax.usstocks(delete=delete)
         # CollectAllAssetsHistoricalMax.japanstocks(delete=delete)
-        CollectAllAssetsHistoricalMax.ukstocks(delete=delete)
+        # CollectAllAssetsHistoricalMax.ukstocks(delete=delete)
         CollectAllAssetsHistoricalMax.hkstocks(delete=delete)
         CollectAllAssetsHistoricalMax.chinastocks(delete=delete)
         CollectAllAssetsHistoricalMax.canadastocks(delete=delete)
@@ -270,7 +276,13 @@ class CollectAllAssetsHistoricalMax:
                 yield lst[i:i + n]
         
         def work(i):
-            link = i[1] + '-historical-data' #change here
+            link = i[1]
+            if '?cid' in link:
+                cid = link[link.index('?cid'):]
+                link = link[:link.index('?cid')]
+                link += '-historical-data' + cid
+            else:
+                link += '-historical-data'
             x = list(c_list).index(i)+1
             print(link)
             while True:
@@ -308,7 +320,8 @@ class CollectAllAssetsHistoricalMax:
                             high=high, low=low, change_perc=change_perc,
                             volume=volume).save()
                     break
-                except:
+                except Exception as e:
+                    print(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -365,7 +378,13 @@ class CollectAllAssetsHistoricalMax:
                 yield lst[i:i + n]
         
         def work(i):
-            link = i[1] + '-historical-data' #change here
+            link = i[1]
+            if '?cid' in link:
+                cid = link[link.index('?cid'):]
+                link = link[:link.index('?cid')]
+                link += '-historical-data' + cid
+            else:
+                link += '-historical-data'
             x = list(c_list).index(i)+1
             print(link)
             while True:
@@ -403,7 +422,8 @@ class CollectAllAssetsHistoricalMax:
                             high=high, low=low, change_perc=change_perc,
                             volume=volume).save()
                     break
-                except:
+                except Exception as e:
+                    print(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -460,7 +480,13 @@ class CollectAllAssetsHistoricalMax:
                 yield lst[i:i + n]
         
         def work(i):
-            link = i[1] + '-historical-data' #change here
+            link = i[1]
+            if '?cid' in link:
+                cid = link[link.index('?cid'):]
+                link = link[:link.index('?cid')]
+                link += '-historical-data' + cid
+            else:
+                link += '-historical-data'
             x = list(c_list).index(i)+1
             print(link)
             while True:
@@ -497,8 +523,10 @@ class CollectAllAssetsHistoricalMax:
                             date=date, price=price, Open=Open,
                             high=high, low=low, change_perc=change_perc,
                             volume=volume).save()
+                        # print(date, price, Open, high, low, change_perc, volume)
                     break
-                except:
+                except Exception as e:
+                    print(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -555,7 +583,13 @@ class CollectAllAssetsHistoricalMax:
                 yield lst[i:i + n]
         
         def work(i):
-            link = i[1] + '-historical-data' #change here
+            link = i[1]
+            if '?cid' in link:
+                cid = link[link.index('?cid'):]
+                link = link[:link.index('?cid')]
+                link += '-historical-data' + cid
+            else:
+                link += '-historical-data'
             x = list(c_list).index(i)+1
             print(link)
             while True:
@@ -593,7 +627,8 @@ class CollectAllAssetsHistoricalMax:
                             high=high, low=low, change_perc=change_perc,
                             volume=volume).save()
                     break
-                except:
+                except Exception as e:
+                    print(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -650,7 +685,13 @@ class CollectAllAssetsHistoricalMax:
                 yield lst[i:i + n]
         
         def work(i):
-            link = i[1] + '-historical-data' #change here
+            link = i[1]
+            if '?cid' in link:
+                cid = link[link.index('?cid'):]
+                link = link[:link.index('?cid')]
+                link += '-historical-data' + cid
+            else:
+                link += '-historical-data'
             x = list(c_list).index(i)+1
             print(link)
             while True:
@@ -688,7 +729,8 @@ class CollectAllAssetsHistoricalMax:
                             high=high, low=low, change_perc=change_perc,
                             volume=volume).save()
                     break
-                except:
+                except Exception as e:
+                    print(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -745,7 +787,13 @@ class CollectAllAssetsHistoricalMax:
                 yield lst[i:i + n]
         
         def work(i):
-            link = i[1] + '-historical-data' #change here
+            link = i[1]
+            if '?cid' in link:
+                cid = link[link.index('?cid'):]
+                link = link[:link.index('?cid')]
+                link += '-historical-data' + cid
+            else:
+                link += '-historical-data'
             x = list(c_list).index(i)+1
             print(link)
             while True:
@@ -783,7 +831,8 @@ class CollectAllAssetsHistoricalMax:
                             high=high, low=low, change_perc=change_perc,
                             volume=volume).save()
                     break
-                except:
+                except Exception as e:
+                    print(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -840,7 +889,13 @@ class CollectAllAssetsHistoricalMax:
                 yield lst[i:i + n]
         
         def work(i):
-            link = i[1] + '-historical-data' #change here
+            link = i[1]
+            if '?cid' in link:
+                cid = link[link.index('?cid'):]
+                link = link[:link.index('?cid')]
+                link += '-historical-data' + cid
+            else:
+                link += '-historical-data'
             x = list(c_list).index(i)+1
             print(link)
             while True:
@@ -878,7 +933,8 @@ class CollectAllAssetsHistoricalMax:
                             high=high, low=low, change_perc=change_perc,
                             volume=volume).save()
                     break
-                except:
+                except Exception as e:
+                    print(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -935,7 +991,13 @@ class CollectAllAssetsHistoricalMax:
                 yield lst[i:i + n]
         
         def work(i):
-            link = i[1] + '-historical-data' #change here
+            link = i[1]
+            if '?cid' in link:
+                cid = link[link.index('?cid'):]
+                link = link[:link.index('?cid')]
+                link += '-historical-data' + cid
+            else:
+                link += '-historical-data'
             x = list(c_list).index(i)+1
             print(link)
             while True:
@@ -973,7 +1035,8 @@ class CollectAllAssetsHistoricalMax:
                             high=high, low=low, change_perc=change_perc,
                             volume=volume).save()
                     break
-                except:
+                except Exception as e:
+                    print(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -1030,7 +1093,13 @@ class CollectAllAssetsHistoricalMax:
                 yield lst[i:i + n]
         
         def work(i):
-            link = i[1] + '-historical-data' #change here
+            link = i[1]
+            if '?cid' in link:
+                cid = link[link.index('?cid'):]
+                link = link[:link.index('?cid')]
+                link += '-historical-data' + cid
+            else:
+                link += '-historical-data'
             x = list(c_list).index(i)+1
             print(link)
             while True:
@@ -1070,7 +1139,8 @@ class CollectAllAssetsHistoricalMax:
                             high=high, low=low, change_perc=change_perc,
                             volume=volume).save()
                     break
-                except:
+                except Exception as e:
+                    print(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -1127,7 +1197,13 @@ class CollectAllAssetsHistoricalMax:
                 yield lst[i:i + n]
         
         def work(i):
-            link = i[1] + '-historical-data' #change here
+            link = i[1]
+            if '?cid' in link:
+                cid = link[link.index('?cid'):]
+                link = link[:link.index('?cid')]
+                link += '-historical-data' + cid
+            else:
+                link += '-historical-data'
             x = list(c_list).index(i)+1
             print(link)
             while True:
@@ -1167,7 +1243,8 @@ class CollectAllAssetsHistoricalMax:
                             high=high, low=low, change_perc=change_perc,
                             volume=volume).save()
                     break
-                except:
+                except Exception as e:
+                    print(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -1213,7 +1290,7 @@ class CollectAllAssetsHistoricalMax:
             print('Removing old records')
             print('Closing CollectAllAssetsHistoricalMax.ukindices()') #change here
             return ''
-        AllAssetsHistoricalMax.objects.filter(Type='indx', country='UK').delete() #change here
+        # AllAssetsHistoricalMax.objects.filter(Type='indx', country='UK').delete() #change here
         print('Old records have been removed')
         print('Starting to collect new ones')
         print('Starting Selenium')
@@ -1224,7 +1301,13 @@ class CollectAllAssetsHistoricalMax:
                 yield lst[i:i + n]
         
         def work(i):
-            link = i[1] + '-historical-data' #change here
+            link = i[1]
+            if '?cid' in link:
+                cid = link[link.index('?cid'):]
+                link = link[:link.index('?cid')]
+                link += '-historical-data' + cid
+            else:
+                link += '-historical-data'
             x = list(c_list).index(i)+1
             print(link)
             while True:
@@ -1264,13 +1347,14 @@ class CollectAllAssetsHistoricalMax:
                             high=high, low=low, change_perc=change_perc,
                             volume=volume).save()
                     break
-                except:
+                except Exception as e:
+                    print(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
+        chunk_list = list(chunks(range(885, quanity), 3))
         try:
             # Code below creates threads for each item, then executes them by chunks
             threads = []
@@ -1321,7 +1405,13 @@ class CollectAllAssetsHistoricalMax:
                 yield lst[i:i + n]
         
         def work(i):
-            link = i[1] + '-historical-data' #change here
+            link = i[1]
+            if '?cid' in link:
+                cid = link[link.index('?cid'):]
+                link = link[:link.index('?cid')]
+                link += '-historical-data' + cid
+            else:
+                link += '-historical-data'
             x = list(c_list).index(i)+1
             print(link)
             while True:
@@ -1361,7 +1451,8 @@ class CollectAllAssetsHistoricalMax:
                             high=high, low=low, change_perc=change_perc,
                             volume=volume).save()
                     break
-                except:
+                except Exception as e:
+                    print(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -1418,7 +1509,13 @@ class CollectAllAssetsHistoricalMax:
                 yield lst[i:i + n]
         
         def work(i):
-            link = i[1] + '-historical-data' #change here
+            link = i[1]
+            if '?cid' in link:
+                cid = link[link.index('?cid'):]
+                link = link[:link.index('?cid')]
+                link += '-historical-data' + cid
+            else:
+                link += '-historical-data'
             x = list(c_list).index(i)+1
             print(link)
             while True:
@@ -1458,7 +1555,8 @@ class CollectAllAssetsHistoricalMax:
                             high=high, low=low, change_perc=change_perc,
                             volume=volume).save()
                     break
-                except:
+                except Exception as e:
+                    print(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -1515,7 +1613,13 @@ class CollectAllAssetsHistoricalMax:
                 yield lst[i:i + n]
         
         def work(i):
-            link = i[1] + '-historical-data' #change here
+            link = i[1]
+            if '?cid' in link:
+                cid = link[link.index('?cid'):]
+                link = link[:link.index('?cid')]
+                link += '-historical-data' + cid
+            else:
+                link += '-historical-data'
             x = list(c_list).index(i)+1
             print(link)
             while True:
@@ -1555,7 +1659,8 @@ class CollectAllAssetsHistoricalMax:
                             high=high, low=low, change_perc=change_perc,
                             volume=volume).save()
                     break
-                except:
+                except Exception as e:
+                    print(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -1612,7 +1717,13 @@ class CollectAllAssetsHistoricalMax:
                 yield lst[i:i + n]
         
         def work(i):
-            link = i[1] + '-historical-data' #change here
+            link = i[1]
+            if '?cid' in link:
+                cid = link[link.index('?cid'):]
+                link = link[:link.index('?cid')]
+                link += '-historical-data' + cid
+            else:
+                link += '-historical-data'
             x = list(c_list).index(i)+1
             print(link)
             while True:
@@ -1652,7 +1763,8 @@ class CollectAllAssetsHistoricalMax:
                             high=high, low=low, change_perc=change_perc,
                             volume=volume).save()
                     break
-                except:
+                except Exception as e:
+                    print(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -1709,7 +1821,13 @@ class CollectAllAssetsHistoricalMax:
                 yield lst[i:i + n]
         
         def work(i):
-            link = i[1] + '-historical-data' #change here
+            link = i[1]
+            if '?cid' in link:
+                cid = link[link.index('?cid'):]
+                link = link[:link.index('?cid')]
+                link += '-historical-data' + cid
+            else:
+                link += '-historical-data'
             x = list(c_list).index(i)+1
             print(link)
             while True:
@@ -1749,7 +1867,8 @@ class CollectAllAssetsHistoricalMax:
                             high=high, low=low, change_perc=change_perc,
                             volume=volume).save()
                     break
-                except:
+                except Exception as e:
+                    print(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
