@@ -228,25 +228,50 @@ class CollectAllAssetsHistoricalMax:
             driver.quit()
         print('Finished Successfuly')
 
-    def stocks(delete='n'):
-        # CollectAllAssetsHistoricalMax.usstocks(delete=delete)
-        # CollectAllAssetsHistoricalMax.japanstocks(delete=delete)
-        # CollectAllAssetsHistoricalMax.ukstocks(delete=delete)
-        CollectAllAssetsHistoricalMax.hkstocks(delete=delete)
-        CollectAllAssetsHistoricalMax.chinastocks(delete=delete)
-        CollectAllAssetsHistoricalMax.canadastocks(delete=delete)
-        CollectAllAssetsHistoricalMax.germanystocks(delete=delete)
-        CollectAllAssetsHistoricalMax.australiastocks(delete=delete)
+    def stocks():
+        print('Do you want to delete old records and collect new ones? ')
+        delete = input('Y (Yes) or N (No): ')
+        if delete.upper() == 'Y':
+            CollectAllAssetsHistoricalMax.usstocks(delete=delete)
+            CollectAllAssetsHistoricalMax.japanstocks(delete=delete)
+            CollectAllAssetsHistoricalMax.ukstocks(delete=delete)
+            CollectAllAssetsHistoricalMax.hkstocks(delete=delete)
+            CollectAllAssetsHistoricalMax.chinastocks(delete=delete)
+            CollectAllAssetsHistoricalMax.canadastocks(delete=delete)
+            CollectAllAssetsHistoricalMax.germanystocks(delete=delete)
+            CollectAllAssetsHistoricalMax.australiastocks(delete=delete)
+        else:
+            print(f'Closing... Your answer was: {delete}')
 
-    def indices(delete='n'):
-        CollectAllAssetsHistoricalMax.usindices(delete=delete)
-        CollectAllAssetsHistoricalMax.japanindices(delete=delete)
-        CollectAllAssetsHistoricalMax.ukindices(delete=delete)
-        CollectAllAssetsHistoricalMax.hkindices(delete=delete)
-        CollectAllAssetsHistoricalMax.chinaindices(delete=delete)
-        CollectAllAssetsHistoricalMax.canadaindices(delete=delete)
-        CollectAllAssetsHistoricalMax.germanyindices(delete=delete)
-        CollectAllAssetsHistoricalMax.australiaindices(delete=delete)        
+    def indices():
+        print('Do you want to delete old records and collect new ones? ')
+        delete = input('Y (Yes) or N (No): ')
+        if delete.upper() == 'Y':
+            CollectAllAssetsHistoricalMax.usindices(delete=delete)
+            CollectAllAssetsHistoricalMax.japanindices(delete=delete)
+            CollectAllAssetsHistoricalMax.ukindices(delete=delete)
+            CollectAllAssetsHistoricalMax.hkindices(delete=delete)
+            CollectAllAssetsHistoricalMax.chinaindices(delete=delete)
+            CollectAllAssetsHistoricalMax.canadaindices(delete=delete)
+            CollectAllAssetsHistoricalMax.germanyindices(delete=delete)
+            CollectAllAssetsHistoricalMax.australiaindices(delete=delete)        
+        else:
+            print(f'Closing... Your answer was: {delete}')
+
+    def etfs():
+        print('Do you want to delete old records and collect new ones? ')
+        delete = input('Y (Yes) or N (No): ')
+        if delete.upper() == 'Y':
+            CollectAllAssetsHistoricalMax.usetfs(delete=delete)
+            CollectAllAssetsHistoricalMax.japanetfs(delete=delete)
+            CollectAllAssetsHistoricalMax.uketfs(delete=delete)
+            CollectAllAssetsHistoricalMax.hketfs(delete=delete)
+            CollectAllAssetsHistoricalMax.chinaetfs(delete=delete)
+            CollectAllAssetsHistoricalMax.canadaetfs(delete=delete)
+            CollectAllAssetsHistoricalMax.germanyetfs(delete=delete)
+            CollectAllAssetsHistoricalMax.australiaetfs(delete=delete)        
+        else:
+            print(f'Closing... Your answer was: {delete}')
 
 
     def usstocks(delete='n'):
@@ -1897,3 +1922,819 @@ class CollectAllAssetsHistoricalMax:
             ('Quiting the driver')
             driver.quit()
         print('Finished Successfuly') 
+
+    def usetfs(delete='n'):
+        # c_list = commodity_list its an old name never mind
+        c_list = USETFStaticInfo.objects.values_list('short_name', 'link') # returns a list of tuples #change here
+        quanity = USETFStaticInfo.objects.count() #change here
+        #--------------------VPS------------------
+        display = Display(visible=0, size=(1000, 1000))
+        display.start()
+        options = webdriver.ChromeOptions()
+        options.add_argument('--no-sandbox')
+        driver = webdriver.Chrome(options=options)
+        #-----------------------------------------
+        print('Starting CollectAllAssetsHistoricalMax.usetfs()') #change here
+        if delete.upper() != 'Y':
+            print('Removing old records')
+            print('Closing CollectAllAssetsHistoricalMax.usetfs()') #change here
+            return ''
+        AllAssetsHistoricalMax.objects.filter(Type='etf', country='US').delete() #change here
+        print('Old records have been removed')
+        print('Starting to collect new ones')
+        print('Starting Selenium')
+        # driver = webdriver.Chrome()
+        def chunks(lst, n):
+            """Yield successive n-sized chunks from lst."""
+            for i in range(0, len(lst), n):
+                yield lst[i:i + n]
+        
+        def work(i):
+            link = i[1]
+            if '?cid' in link:
+                cid = link[link.index('?cid'):]
+                link = link[:link.index('?cid')]
+                link += '-historical-data' + cid
+            else:
+                link += '-historical-data'
+            x = list(c_list).index(i)+1
+            print(link)
+            while True:
+                try: 
+                    driver.get(link)
+                    sleep(5)
+                    print('Executing JS scripts')
+                    driver.execute_script('$("#data_interval").val("Monthly");')
+                    driver.find_element_by_id('data_interval').value = "Monthly"
+                    driver.find_element_by_id('widgetFieldDateRange').click()
+                    driver.find_element_by_id('startDate').clear()
+                    driver.find_element_by_id('startDate').send_keys('01/01/1980', Keys.ENTER)
+                    print('Executed JS scripts')
+                    sleep(6)
+                    soup = BeautifulSoup(driver.page_source, 'html.parser')
+                    soup = soup.find(class_='genTbl closedTbl historicalTbl')
+                    soup = soup.tbody.find_all('tr')
+                    for row in soup:
+                        data = row.find_all('td')
+                        data = [d.get_text() for d in data]
+                        date = datetime.datetime.strptime(data[0], '%b %y')
+                        price = data[1]
+                        price = price[:price.index('.')+2+1]
+                        Open = data[2]
+                        high = data[3]
+                        low = data[4]
+                        volume = data[5]  #change here
+                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        Type = 'etf'  #change here
+                        country = 'US'  #change here
+                        short_name = i[0]  #change here
+                        AllAssetsHistoricalMax( 
+                            Type=Type, country=country, short_name=short_name,
+                            date=date, price=price, Open=Open,
+                            high=high, low=low, change_perc=change_perc,
+                            volume=volume).save()
+                    break
+                except Exception as e:
+                    print(e)
+                    pass
+            
+            print(f'Stored {x}/{quanity}')
+            print()
+
+        chunk_list = list(chunks(range(quanity), 3))
+        try:
+            # Code below creates threads for each item, then executes them by chunks
+            threads = []
+            for i in range(quanity):
+                threads.append(Thread(target=work, args=(c_list[i],)))
+            print('Threads are ready')
+            chunk_n = 1
+            chunk_all = len(chunk_list)
+            for l in chunk_list:
+                for sub_l in l:
+                    threads[sub_l].start()
+                    sleep(1)
+                for sub_l in l:
+                    threads[sub_l].join()
+                
+                print(f'Executed Chunk {chunk_n}/{chunk_all}')
+                chunk_n += 1
+
+        finally:
+            ('Quiting the driver')
+            driver.quit()
+        print('Finished Successfuly')
+
+    def japanetfs(delete='n'):
+        # c_list = commodity_list its an old name never mind
+        c_list = JapanETFStaticInfo.objects.values_list('short_name', 'link') # returns a list of tuples #change here
+        quanity = JapanETFStaticInfo.objects.count() #change here
+        #--------------------VPS------------------
+        display = Display(visible=0, size=(1000, 1000))
+        display.start()
+        options = webdriver.ChromeOptions()
+        options.add_argument('--no-sandbox')
+        driver = webdriver.Chrome(options=options)
+        #-----------------------------------------
+        print('Starting CollectAllAssetsHistoricalMax.japanetfs()') #change here
+        if delete.upper() != 'Y':
+            print('Removing old records')
+            print('Closing CollectAllAssetsHistoricalMax.japanetfs()') #change here
+            return ''
+        AllAssetsHistoricalMax.objects.filter(Type='etf', country='JP').delete() #change here
+        print('Old records have been removed')
+        print('Starting to collect new ones')
+        print('Starting Selenium')
+        # driver = webdriver.Chrome()
+        def chunks(lst, n):
+            """Yield successive n-sized chunks from lst."""
+            for i in range(0, len(lst), n):
+                yield lst[i:i + n]
+        
+        def work(i):
+            link = i[1]
+            if '?cid' in link:
+                cid = link[link.index('?cid'):]
+                link = link[:link.index('?cid')]
+                link += '-historical-data' + cid
+            else:
+                link += '-historical-data'
+            x = list(c_list).index(i)+1
+            print(link)
+            while True:
+                try: 
+                    driver.get(link)
+                    sleep(5)
+                    print('Executing JS scripts')
+                    driver.execute_script('$("#data_interval").val("Monthly");')
+                    driver.find_element_by_id('data_interval').value = "Monthly"
+                    driver.find_element_by_id('widgetFieldDateRange').click()
+                    driver.find_element_by_id('startDate').clear()
+                    driver.find_element_by_id('startDate').send_keys('01/01/1980', Keys.ENTER)
+                    print('Executed JS scripts')
+                    sleep(6)
+                    soup = BeautifulSoup(driver.page_source, 'html.parser')
+                    soup = soup.find(class_='genTbl closedTbl historicalTbl')
+                    soup = soup.tbody.find_all('tr')
+                    for row in soup:
+                        data = row.find_all('td')
+                        data = [d.get_text() for d in data]
+                        date = datetime.datetime.strptime(data[0], '%b %y')
+                        price = data[1]
+                        price = price[:price.index('.')+2+1]
+                        Open = data[2]
+                        high = data[3]
+                        low = data[4]
+                        volume = data[5]  #change here
+                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        Type = 'etf'  #change here
+                        country = 'JP'  #change here
+                        short_name = i[0]  #change here
+                        AllAssetsHistoricalMax( 
+                            Type=Type, country=country, short_name=short_name,
+                            date=date, price=price, Open=Open,
+                            high=high, low=low, change_perc=change_perc,
+                            volume=volume).save()
+                    break
+                except Exception as e:
+                    print(e)
+                    pass
+            
+            print(f'Stored {x}/{quanity}')
+            print()
+
+        chunk_list = list(chunks(range(quanity), 3))
+        try:
+            # Code below creates threads for each item, then executes them by chunks
+            threads = []
+            for i in range(quanity):
+                threads.append(Thread(target=work, args=(c_list[i],)))
+            print('Threads are ready')
+            chunk_n = 1
+            chunk_all = len(chunk_list)
+            for l in chunk_list:
+                for sub_l in l:
+                    threads[sub_l].start()
+                    sleep(1)
+                for sub_l in l:
+                    threads[sub_l].join()
+                
+                print(f'Executed Chunk {chunk_n}/{chunk_all}')
+                chunk_n += 1
+
+        finally:
+            ('Quiting the driver')
+            driver.quit()
+        print('Finished Successfuly')
+
+    def uketfs(delete='n'):
+        # c_list = commodity_list its an old name never mind
+        c_list = UKETFStaticInfo.objects.values_list('short_name', 'link') # returns a list of tuples #change here
+        quanity = UKETFStaticInfo.objects.count() #change here
+        #--------------------VPS------------------
+        display = Display(visible=0, size=(1000, 1000))
+        display.start()
+        options = webdriver.ChromeOptions()
+        options.add_argument('--no-sandbox')
+        driver = webdriver.Chrome(options=options)
+        #-----------------------------------------
+        print('Starting CollectAllAssetsHistoricalMax.uketfs()') #change here
+        if delete.upper() != 'Y':
+            print('Removing old records')
+            print('Closing CollectAllAssetsHistoricalMax.uketfs()') #change here
+            return ''
+        AllAssetsHistoricalMax.objects.filter(Type='etf', country='UK').delete() #change here
+        print('Old records have been removed')
+        print('Starting to collect new ones')
+        print('Starting Selenium')
+        # driver = webdriver.Chrome()
+        def chunks(lst, n):
+            """Yield successive n-sized chunks from lst."""
+            for i in range(0, len(lst), n):
+                yield lst[i:i + n]
+        
+        def work(i):
+            link = i[1]
+            if '?cid' in link:
+                cid = link[link.index('?cid'):]
+                link = link[:link.index('?cid')]
+                link += '-historical-data' + cid
+            else:
+                link += '-historical-data'
+            x = list(c_list).index(i)+1
+            print(link)
+            while True:
+                try: 
+                    driver.get(link)
+                    sleep(5)
+                    print('Executing JS scripts')
+                    driver.execute_script('$("#data_interval").val("Monthly");')
+                    driver.find_element_by_id('data_interval').value = "Monthly"
+                    driver.find_element_by_id('widgetFieldDateRange').click()
+                    driver.find_element_by_id('startDate').clear()
+                    driver.find_element_by_id('startDate').send_keys('01/01/1980', Keys.ENTER)
+                    print('Executed JS scripts')
+                    sleep(6)
+                    soup = BeautifulSoup(driver.page_source, 'html.parser')
+                    soup = soup.find(class_='genTbl closedTbl historicalTbl')
+                    soup = soup.tbody.find_all('tr')
+                    for row in soup:
+                        data = row.find_all('td')
+                        data = [d.get_text() for d in data]
+                        date = datetime.datetime.strptime(data[0], '%b %y')
+                        price = data[1]
+                        price = price[:price.index('.')+2+1]
+                        Open = data[2]
+                        high = data[3]
+                        low = data[4]
+                        volume = data[5]  #change here
+                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        Type = 'etf'  #change here
+                        country = 'UK'  #change here
+                        short_name = i[0]  #change here
+                        AllAssetsHistoricalMax( 
+                            Type=Type, country=country, short_name=short_name,
+                            date=date, price=price, Open=Open,
+                            high=high, low=low, change_perc=change_perc,
+                            volume=volume).save()
+                    break
+                except Exception as e:
+                    print(e)
+                    pass
+            
+            print(f'Stored {x}/{quanity}')
+            print()
+
+        chunk_list = list(chunks(range(quanity), 3))
+        try:
+            # Code below creates threads for each item, then executes them by chunks
+            threads = []
+            for i in range(quanity):
+                threads.append(Thread(target=work, args=(c_list[i],)))
+            print('Threads are ready')
+            chunk_n = 1
+            chunk_all = len(chunk_list)
+            for l in chunk_list:
+                for sub_l in l:
+                    threads[sub_l].start()
+                    sleep(1)
+                for sub_l in l:
+                    threads[sub_l].join()
+                
+                print(f'Executed Chunk {chunk_n}/{chunk_all}')
+                chunk_n += 1
+
+        finally:
+            ('Quiting the driver')
+            driver.quit()
+        print('Finished Successfuly')
+
+    def hketfs(delete='n'):
+        # c_list = commodity_list its an old name never mind
+        c_list = HKETFStaticInfo.objects.values_list('short_name', 'link') # returns a list of tuples #change here
+        quanity = HKETFStaticInfo.objects.count() #change here
+        #--------------------VPS------------------
+        display = Display(visible=0, size=(1000, 1000))
+        display.start()
+        options = webdriver.ChromeOptions()
+        options.add_argument('--no-sandbox')
+        driver = webdriver.Chrome(options=options)
+        #-----------------------------------------
+        print('Starting CollectAllAssetsHistoricalMax.hketfs()') #change here
+        if delete.upper() != 'Y':
+            print('Removing old records')
+            print('Closing CollectAllAssetsHistoricalMax.hketfs()') #change here
+            return ''
+        AllAssetsHistoricalMax.objects.filter(Type='etf', country='HK').delete() #change here
+        print('Old records have been removed')
+        print('Starting to collect new ones')
+        print('Starting Selenium')
+        # driver = webdriver.Chrome()
+        def chunks(lst, n):
+            """Yield successive n-sized chunks from lst."""
+            for i in range(0, len(lst), n):
+                yield lst[i:i + n]
+        
+        def work(i):
+            link = i[1]
+            if '?cid' in link:
+                cid = link[link.index('?cid'):]
+                link = link[:link.index('?cid')]
+                link += '-historical-data' + cid
+            else:
+                link += '-historical-data'
+            x = list(c_list).index(i)+1
+            print(link)
+            while True:
+                try: 
+                    driver.get(link)
+                    sleep(5)
+                    print('Executing JS scripts')
+                    driver.execute_script('$("#data_interval").val("Monthly");')
+                    driver.find_element_by_id('data_interval').value = "Monthly"
+                    driver.find_element_by_id('widgetFieldDateRange').click()
+                    driver.find_element_by_id('startDate').clear()
+                    driver.find_element_by_id('startDate').send_keys('01/01/1980', Keys.ENTER)
+                    print('Executed JS scripts')
+                    sleep(6)
+                    soup = BeautifulSoup(driver.page_source, 'html.parser')
+                    soup = soup.find(class_='genTbl closedTbl historicalTbl')
+                    soup = soup.tbody.find_all('tr')
+                    for row in soup:
+                        data = row.find_all('td')
+                        data = [d.get_text() for d in data]
+                        date = datetime.datetime.strptime(data[0], '%b %y')
+                        price = data[1]
+                        price = price[:price.index('.')+2+1]
+                        Open = data[2]
+                        high = data[3]
+                        low = data[4]
+                        volume = data[5]  #change here
+                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        Type = 'etf'  #change here
+                        country = 'HK'  #change here
+                        short_name = i[0]  #change here
+                        AllAssetsHistoricalMax( 
+                            Type=Type, country=country, short_name=short_name,
+                            date=date, price=price, Open=Open,
+                            high=high, low=low, change_perc=change_perc,
+                            volume=volume).save()
+                    break
+                except Exception as e:
+                    print(e)
+                    pass
+            
+            print(f'Stored {x}/{quanity}')
+            print()
+
+        chunk_list = list(chunks(range(quanity), 3))
+        try:
+            # Code below creates threads for each item, then executes them by chunks
+            threads = []
+            for i in range(quanity):
+                threads.append(Thread(target=work, args=(c_list[i],)))
+            print('Threads are ready')
+            chunk_n = 1
+            chunk_all = len(chunk_list)
+            for l in chunk_list:
+                for sub_l in l:
+                    threads[sub_l].start()
+                    sleep(1)
+                for sub_l in l:
+                    threads[sub_l].join()
+                
+                print(f'Executed Chunk {chunk_n}/{chunk_all}')
+                chunk_n += 1
+
+        finally:
+            ('Quiting the driver')
+            driver.quit()
+        print('Finished Successfuly')
+
+    def chinaetfs(delete='n'):
+        # c_list = commodity_list its an old name never mind
+        c_list = ChinaETFStaticInfo.objects.values_list('short_name', 'link') # returns a list of tuples #change here
+        quanity = ChinaETFStaticInfo.objects.count() #change here
+        #--------------------VPS------------------
+        display = Display(visible=0, size=(1000, 1000))
+        display.start()
+        options = webdriver.ChromeOptions()
+        options.add_argument('--no-sandbox')
+        driver = webdriver.Chrome(options=options)
+        #-----------------------------------------
+        print('Starting CollectAllAssetsHistoricalMax.chinaetfs()') #change here
+        if delete.upper() != 'Y':
+            print('Removing old records')
+            print('Closing CollectAllAssetsHistoricalMax.chinaetfs()') #change here
+            return ''
+        AllAssetsHistoricalMax.objects.filter(Type='etf', country='CH').delete() #change here
+        print('Old records have been removed')
+        print('Starting to collect new ones')
+        print('Starting Selenium')
+        # driver = webdriver.Chrome()
+        def chunks(lst, n):
+            """Yield successive n-sized chunks from lst."""
+            for i in range(0, len(lst), n):
+                yield lst[i:i + n]
+        
+        def work(i):
+            link = i[1]
+            if '?cid' in link:
+                cid = link[link.index('?cid'):]
+                link = link[:link.index('?cid')]
+                link += '-historical-data' + cid
+            else:
+                link += '-historical-data'
+            x = list(c_list).index(i)+1
+            print(link)
+            while True:
+                try: 
+                    driver.get(link)
+                    sleep(5)
+                    print('Executing JS scripts')
+                    driver.execute_script('$("#data_interval").val("Monthly");')
+                    driver.find_element_by_id('data_interval').value = "Monthly"
+                    driver.find_element_by_id('widgetFieldDateRange').click()
+                    driver.find_element_by_id('startDate').clear()
+                    driver.find_element_by_id('startDate').send_keys('01/01/1980', Keys.ENTER)
+                    print('Executed JS scripts')
+                    sleep(6)
+                    soup = BeautifulSoup(driver.page_source, 'html.parser')
+                    soup = soup.find(class_='genTbl closedTbl historicalTbl')
+                    soup = soup.tbody.find_all('tr')
+                    for row in soup:
+                        data = row.find_all('td')
+                        data = [d.get_text() for d in data]
+                        date = datetime.datetime.strptime(data[0], '%b %y')
+                        price = data[1]
+                        price = price[:price.index('.')+2+1]
+                        Open = data[2]
+                        high = data[3]
+                        low = data[4]
+                        volume = data[5]  #change here
+                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        Type = 'etf'  #change here
+                        country = 'CH'  #change here
+                        short_name = i[0]  #change here
+                        AllAssetsHistoricalMax( 
+                            Type=Type, country=country, short_name=short_name,
+                            date=date, price=price, Open=Open,
+                            high=high, low=low, change_perc=change_perc,
+                            volume=volume).save()
+                    break
+                except Exception as e:
+                    print(e)
+                    pass
+            
+            print(f'Stored {x}/{quanity}')
+            print()
+
+        chunk_list = list(chunks(range(quanity), 3))
+        try:
+            # Code below creates threads for each item, then executes them by chunks
+            threads = []
+            for i in range(quanity):
+                threads.append(Thread(target=work, args=(c_list[i],)))
+            print('Threads are ready')
+            chunk_n = 1
+            chunk_all = len(chunk_list)
+            for l in chunk_list:
+                for sub_l in l:
+                    threads[sub_l].start()
+                    sleep(1)
+                for sub_l in l:
+                    threads[sub_l].join()
+                
+                print(f'Executed Chunk {chunk_n}/{chunk_all}')
+                chunk_n += 1
+
+        finally:
+            ('Quiting the driver')
+            driver.quit()
+        print('Finished Successfuly')
+
+    def canadaetfs(delete='n'):
+        # c_list = commodity_list its an old name never mind
+        c_list = CanadaETFStaticInfo.objects.values_list('short_name', 'link') # returns a list of tuples #change here
+        quanity = CanadaETFStaticInfo.objects.count() #change here
+        #--------------------VPS------------------
+        display = Display(visible=0, size=(1000, 1000))
+        display.start()
+        options = webdriver.ChromeOptions()
+        options.add_argument('--no-sandbox')
+        driver = webdriver.Chrome(options=options)
+        #-----------------------------------------
+        print('Starting CollectAllAssetsHistoricalMax.canadaetfs()') #change here
+        if delete.upper() != 'Y':
+            print('Removing old records')
+            print('Closing CollectAllAssetsHistoricalMax.canadaetfs()') #change here
+            return ''
+        AllAssetsHistoricalMax.objects.filter(Type='etf', country='CA').delete() #change here
+        print('Old records have been removed')
+        print('Starting to collect new ones')
+        print('Starting Selenium')
+        # driver = webdriver.Chrome()
+        def chunks(lst, n):
+            """Yield successive n-sized chunks from lst."""
+            for i in range(0, len(lst), n):
+                yield lst[i:i + n]
+        
+        def work(i):
+            link = i[1]
+            if '?cid' in link:
+                cid = link[link.index('?cid'):]
+                link = link[:link.index('?cid')]
+                link += '-historical-data' + cid
+            else:
+                link += '-historical-data'
+            x = list(c_list).index(i)+1
+            print(link)
+            while True:
+                try: 
+                    driver.get(link)
+                    sleep(5)
+                    print('Executing JS scripts')
+                    driver.execute_script('$("#data_interval").val("Monthly");')
+                    driver.find_element_by_id('data_interval').value = "Monthly"
+                    driver.find_element_by_id('widgetFieldDateRange').click()
+                    driver.find_element_by_id('startDate').clear()
+                    driver.find_element_by_id('startDate').send_keys('01/01/1980', Keys.ENTER)
+                    print('Executed JS scripts')
+                    sleep(6)
+                    soup = BeautifulSoup(driver.page_source, 'html.parser')
+                    soup = soup.find(class_='genTbl closedTbl historicalTbl')
+                    soup = soup.tbody.find_all('tr')
+                    for row in soup:
+                        data = row.find_all('td')
+                        data = [d.get_text() for d in data]
+                        date = datetime.datetime.strptime(data[0], '%b %y')
+                        price = data[1]
+                        price = price[:price.index('.')+2+1]
+                        Open = data[2]
+                        high = data[3]
+                        low = data[4]
+                        volume = data[5]  #change here
+                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        Type = 'etf'  #change here
+                        country = 'CA'  #change here
+                        short_name = i[0]  #change here
+                        AllAssetsHistoricalMax( 
+                            Type=Type, country=country, short_name=short_name,
+                            date=date, price=price, Open=Open,
+                            high=high, low=low, change_perc=change_perc,
+                            volume=volume).save()
+                    break
+                except Exception as e:
+                    print(e)
+                    pass
+            
+            print(f'Stored {x}/{quanity}')
+            print()
+
+        chunk_list = list(chunks(range(quanity), 3))
+        try:
+            # Code below creates threads for each item, then executes them by chunks
+            threads = []
+            for i in range(quanity):
+                threads.append(Thread(target=work, args=(c_list[i],)))
+            print('Threads are ready')
+            chunk_n = 1
+            chunk_all = len(chunk_list)
+            for l in chunk_list:
+                for sub_l in l:
+                    threads[sub_l].start()
+                    sleep(1)
+                for sub_l in l:
+                    threads[sub_l].join()
+                
+                print(f'Executed Chunk {chunk_n}/{chunk_all}')
+                chunk_n += 1
+
+        finally:
+            ('Quiting the driver')
+            driver.quit()
+        print('Finished Successfuly')
+
+    def germanyetfs(delete='n'):
+        # c_list = commodity_list its an old name never mind
+        c_list = GermanyETFStaticInfo.objects.values_list('short_name', 'link') # returns a list of tuples #change here
+        quanity = GermanyETFStaticInfo.objects.count() #change here
+        #--------------------VPS------------------
+        display = Display(visible=0, size=(1000, 1000))
+        display.start()
+        options = webdriver.ChromeOptions()
+        options.add_argument('--no-sandbox')
+        driver = webdriver.Chrome(options=options)
+        #-----------------------------------------
+        print('Starting CollectAllAssetsHistoricalMax.germanyetfs()') #change here
+        if delete.upper() != 'Y':
+            print('Removing old records')
+            print('Closing CollectAllAssetsHistoricalMax.germanyetfs()') #change here
+            return ''
+        AllAssetsHistoricalMax.objects.filter(Type='etf', country='GE').delete() #change here
+        print('Old records have been removed')
+        print('Starting to collect new ones')
+        print('Starting Selenium')
+        # driver = webdriver.Chrome()
+        def chunks(lst, n):
+            """Yield successive n-sized chunks from lst."""
+            for i in range(0, len(lst), n):
+                yield lst[i:i + n]
+        
+        def work(i):
+            link = i[1]
+            if '?cid' in link:
+                cid = link[link.index('?cid'):]
+                link = link[:link.index('?cid')]
+                link += '-historical-data' + cid
+            else:
+                link += '-historical-data'
+            x = list(c_list).index(i)+1
+            print(link)
+            while True:
+                try: 
+                    driver.get(link)
+                    sleep(5)
+                    print('Executing JS scripts')
+                    driver.execute_script('$("#data_interval").val("Monthly");')
+                    driver.find_element_by_id('data_interval').value = "Monthly"
+                    driver.find_element_by_id('widgetFieldDateRange').click()
+                    driver.find_element_by_id('startDate').clear()
+                    driver.find_element_by_id('startDate').send_keys('01/01/1980', Keys.ENTER)
+                    print('Executed JS scripts')
+                    sleep(6)
+                    soup = BeautifulSoup(driver.page_source, 'html.parser')
+                    soup = soup.find(class_='genTbl closedTbl historicalTbl')
+                    soup = soup.tbody.find_all('tr')
+                    for row in soup:
+                        data = row.find_all('td')
+                        data = [d.get_text() for d in data]
+                        date = datetime.datetime.strptime(data[0], '%b %y')
+                        price = data[1]
+                        price = price[:price.index('.')+2+1]
+                        Open = data[2]
+                        high = data[3]
+                        low = data[4]
+                        volume = data[5]  #change here
+                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        Type = 'etf'  #change here
+                        country = 'GE'  #change here
+                        short_name = i[0]  #change here
+                        AllAssetsHistoricalMax( 
+                            Type=Type, country=country, short_name=short_name,
+                            date=date, price=price, Open=Open,
+                            high=high, low=low, change_perc=change_perc,
+                            volume=volume).save()
+                    break
+                except Exception as e:
+                    print(e)
+                    pass
+            
+            print(f'Stored {x}/{quanity}')
+            print()
+
+        chunk_list = list(chunks(range(quanity), 3))
+        try:
+            # Code below creates threads for each item, then executes them by chunks
+            threads = []
+            for i in range(quanity):
+                threads.append(Thread(target=work, args=(c_list[i],)))
+            print('Threads are ready')
+            chunk_n = 1
+            chunk_all = len(chunk_list)
+            for l in chunk_list:
+                for sub_l in l:
+                    threads[sub_l].start()
+                    sleep(1)
+                for sub_l in l:
+                    threads[sub_l].join()
+                
+                print(f'Executed Chunk {chunk_n}/{chunk_all}')
+                chunk_n += 1
+
+        finally:
+            ('Quiting the driver')
+            driver.quit()
+        print('Finished Successfuly')
+
+    def australiaetfs(delete='n'):
+        # c_list = commodity_list its an old name never mind
+        c_list = AustraliaETFStaticInfo.objects.values_list('short_name', 'link') # returns a list of tuples #change here
+        quanity = AustraliaETFStaticInfo.objects.count() #change here
+        #--------------------VPS------------------
+        display = Display(visible=0, size=(1000, 1000))
+        display.start()
+        options = webdriver.ChromeOptions()
+        options.add_argument('--no-sandbox')
+        driver = webdriver.Chrome(options=options)
+        #-----------------------------------------
+        print('Starting CollectAllAssetsHistoricalMax.australiaetfs()') #change here
+        if delete.upper() != 'Y':
+            print('Removing old records')
+            print('Closing CollectAllAssetsHistoricalMax.australiaetfs()') #change here
+            return ''
+        AllAssetsHistoricalMax.objects.filter(Type='etf', country='AU').delete() #change here
+        print('Old records have been removed')
+        print('Starting to collect new ones')
+        print('Starting Selenium')
+        # driver = webdriver.Chrome()
+        def chunks(lst, n):
+            """Yield successive n-sized chunks from lst."""
+            for i in range(0, len(lst), n):
+                yield lst[i:i + n]
+        
+        def work(i):
+            link = i[1]
+            if '?cid' in link:
+                cid = link[link.index('?cid'):]
+                link = link[:link.index('?cid')]
+                link += '-historical-data' + cid
+            else:
+                link += '-historical-data'
+            x = list(c_list).index(i)+1
+            print(link)
+            while True:
+                try: 
+                    driver.get(link)
+                    sleep(5)
+                    print('Executing JS scripts')
+                    driver.execute_script('$("#data_interval").val("Monthly");')
+                    driver.find_element_by_id('data_interval').value = "Monthly"
+                    driver.find_element_by_id('widgetFieldDateRange').click()
+                    driver.find_element_by_id('startDate').clear()
+                    driver.find_element_by_id('startDate').send_keys('01/01/1980', Keys.ENTER)
+                    print('Executed JS scripts')
+                    sleep(6)
+                    soup = BeautifulSoup(driver.page_source, 'html.parser')
+                    soup = soup.find(class_='genTbl closedTbl historicalTbl')
+                    soup = soup.tbody.find_all('tr')
+                    for row in soup:
+                        data = row.find_all('td')
+                        data = [d.get_text() for d in data]
+                        date = datetime.datetime.strptime(data[0], '%b %y')
+                        price = data[1]
+                        price = price[:price.index('.')+2+1]
+                        Open = data[2]
+                        high = data[3]
+                        low = data[4]
+                        volume = data[5]  #change here
+                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        Type = 'etf'  #change here
+                        country = 'AU'  #change here
+                        short_name = i[0]  #change here
+                        AllAssetsHistoricalMax( 
+                            Type=Type, country=country, short_name=short_name,
+                            date=date, price=price, Open=Open,
+                            high=high, low=low, change_perc=change_perc,
+                            volume=volume).save()
+                    break
+                except Exception as e:
+                    print(e)
+                    pass
+            
+            print(f'Stored {x}/{quanity}')
+            print()
+
+        chunk_list = list(chunks(range(quanity), 3))
+        try:
+            # Code below creates threads for each item, then executes them by chunks
+            threads = []
+            for i in range(quanity):
+                threads.append(Thread(target=work, args=(c_list[i],)))
+            print('Threads are ready')
+            chunk_n = 1
+            chunk_all = len(chunk_list)
+            for l in chunk_list:
+                for sub_l in l:
+                    threads[sub_l].start()
+                    sleep(1)
+                for sub_l in l:
+                    threads[sub_l].join()
+                
+                print(f'Executed Chunk {chunk_n}/{chunk_all}')
+                chunk_n += 1
+
+        finally:
+            ('Quiting the driver')
+            driver.quit()
+        print('Finished Successfuly')
