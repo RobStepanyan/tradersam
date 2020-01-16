@@ -2840,8 +2840,8 @@ class CollectAllAssetsHistoricalMax:
                         Open = data[2]
                         high = data[3]
                         low = data[4]
-                        volume = data[5]  #change here
-                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        volume = None  #change here
+                        change_perc = data[5][:-1] # Removing % symbol #change here
                         Type = 'bnd'  #change here
                         country = 'US'  #change here
                         short_name = i[0]  #change here
@@ -2945,8 +2945,8 @@ class CollectAllAssetsHistoricalMax:
                         Open = data[2]
                         high = data[3]
                         low = data[4]
-                        volume = data[5]  #change here
-                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        volume = None  #change here
+                        change_perc = data[5][:-1] # Removing % symbol #change here
                         Type = 'bnd'  #change here
                         country = 'JP'  #change here
                         short_name = i[0]  #change here
@@ -3050,8 +3050,8 @@ class CollectAllAssetsHistoricalMax:
                         Open = data[2]
                         high = data[3]
                         low = data[4]
-                        volume = data[5]  #change here
-                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        volume = None  #change here
+                        change_perc = data[5][:-1] # Removing % symbol #change here
                         Type = 'bnd'  #change here
                         country = 'UK'  #change here
                         short_name = i[0]  #change here
@@ -3155,8 +3155,8 @@ class CollectAllAssetsHistoricalMax:
                         Open = data[2]
                         high = data[3]
                         low = data[4]
-                        volume = data[5]  #change here
-                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        volume = None  #change here
+                        change_perc = data[5][:-1] # Removing % symbol #change here
                         Type = 'bnd'  #change here
                         country = 'HK'  #change here
                         short_name = i[0]  #change here
@@ -3260,8 +3260,8 @@ class CollectAllAssetsHistoricalMax:
                         Open = data[2]
                         high = data[3]
                         low = data[4]
-                        volume = data[5]  #change here
-                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        volume = None  #change here
+                        change_perc = data[5][:-1] # Removing % symbol #change here
                         Type = 'bnd'  #change here
                         country = 'CH'  #change here
                         short_name = i[0]  #change here
@@ -3365,8 +3365,8 @@ class CollectAllAssetsHistoricalMax:
                         Open = data[2]
                         high = data[3]
                         low = data[4]
-                        volume = data[5]  #change here
-                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        volume = None  #change here
+                        change_perc = data[5][:-1] # Removing % symbol #change here
                         Type = 'bnd'  #change here
                         country = 'CA'  #change here
                         short_name = i[0]  #change here
@@ -3470,8 +3470,8 @@ class CollectAllAssetsHistoricalMax:
                         Open = data[2]
                         high = data[3]
                         low = data[4]
-                        volume = data[5]  #change here
-                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        volume = None  #change here
+                        change_perc = data[5][:-1] # Removing % symbol #change here
                         Type = 'bnd'  #change here
                         country = 'GE'  #change here
                         short_name = i[0]  #change here
@@ -3575,8 +3575,8 @@ class CollectAllAssetsHistoricalMax:
                         Open = data[2]
                         high = data[3]
                         low = data[4]
-                        volume = data[5]  #change here
-                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        volume = None  #change here
+                        change_perc = data[5][:-1] # Removing % symbol #change here
                         Type = 'bnd'  #change here
                         country = 'AU'  #change here
                         short_name = i[0]  #change here
