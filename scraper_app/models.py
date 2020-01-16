@@ -73,7 +73,6 @@ class CommodityStaticInfo(models.Model):
         return self.short_name + ' Futures Contract'
 
     country = models.CharField(choices=COUNTRIES, max_length=2)
-    
     base_symbol = models.CharField(max_length=6)
     contract_size = models.CharField(max_length=30)
     settlement_type = models.CharField(default='Physical', max_length=30)
