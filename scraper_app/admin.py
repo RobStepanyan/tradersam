@@ -53,4 +53,5 @@ admin.site.register(models.CanadaFundStaticInfo)
 admin.site.register(models.GermanyFundStaticInfo)
 admin.site.register(models.AustraliaFundStaticInfo)
 # Historical
-admin.site.register(models.AllAssetsHistoricalMax) #All Assets Max Date Range (1step=1month)
+admin.site.register(models.AllAssetsHistoricalMax) # All Assets Max Date Range (1step=1month)
+admin.site.register(models.AllAssetsHistorical5Y) # All Assets 5 Years Date Range (1step=1week)
