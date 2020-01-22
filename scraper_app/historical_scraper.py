@@ -1,3 +1,4 @@
+# FOR SCRAPING (COLLECTING) DATA FROM MAX TO 1M
 import requests, os, datetime
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
@@ -359,6 +360,9 @@ class CollectAllAssetsHistoricalMax:
                     soup = BeautifulSoup(driver.page_source, 'html.parser')
                     soup = soup.find(class_='genTbl closedTbl historicalTbl')
                     soup = soup.tbody.find_all('tr')
+                    if soup[0].td.get_text() == 'No results found':
+                        print('No results found')
+                        break
                     for row in soup:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
@@ -461,6 +465,9 @@ class CollectAllAssetsHistoricalMax:
                     soup = BeautifulSoup(driver.page_source, 'html.parser')
                     soup = soup.find(class_='genTbl closedTbl historicalTbl')
                     soup = soup.tbody.find_all('tr')
+                    if soup[0].td.get_text() == 'No results found':
+                        print('No results found')
+                        break
                     for row in soup:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
@@ -563,6 +570,9 @@ class CollectAllAssetsHistoricalMax:
                     soup = BeautifulSoup(driver.page_source, 'html.parser')
                     soup = soup.find(class_='genTbl closedTbl historicalTbl')
                     soup = soup.tbody.find_all('tr')
+                    if soup[0].td.get_text() == 'No results found':
+                        print('No results found')
+                        break
                     for row in soup:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
@@ -666,6 +676,9 @@ class CollectAllAssetsHistoricalMax:
                     soup = BeautifulSoup(driver.page_source, 'html.parser')
                     soup = soup.find(class_='genTbl closedTbl historicalTbl')
                     soup = soup.tbody.find_all('tr')
+                    if soup[0].td.get_text() == 'No results found':
+                        print('No results found')
+                        break
                     for row in soup:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
@@ -768,6 +781,9 @@ class CollectAllAssetsHistoricalMax:
                     soup = BeautifulSoup(driver.page_source, 'html.parser')
                     soup = soup.find(class_='genTbl closedTbl historicalTbl')
                     soup = soup.tbody.find_all('tr')
+                    if soup[0].td.get_text() == 'No results found':
+                        print('No results found')
+                        break
                     for row in soup:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
@@ -870,6 +886,9 @@ class CollectAllAssetsHistoricalMax:
                     soup = BeautifulSoup(driver.page_source, 'html.parser')
                     soup = soup.find(class_='genTbl closedTbl historicalTbl')
                     soup = soup.tbody.find_all('tr')
+                    if soup[0].td.get_text() == 'No results found':
+                        print('No results found')
+                        break
                     for row in soup:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
@@ -972,6 +991,9 @@ class CollectAllAssetsHistoricalMax:
                     soup = BeautifulSoup(driver.page_source, 'html.parser')
                     soup = soup.find(class_='genTbl closedTbl historicalTbl')
                     soup = soup.tbody.find_all('tr')
+                    if soup[0].td.get_text() == 'No results found':
+                        print('No results found')
+                        break
                     for row in soup:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
@@ -1074,6 +1096,9 @@ class CollectAllAssetsHistoricalMax:
                     soup = BeautifulSoup(driver.page_source, 'html.parser')
                     soup = soup.find(class_='genTbl closedTbl historicalTbl')
                     soup = soup.tbody.find_all('tr')
+                    if soup[0].td.get_text() == 'No results found':
+                        print('No results found')
+                        break
                     for row in soup:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
@@ -1176,6 +1201,9 @@ class CollectAllAssetsHistoricalMax:
                     soup = BeautifulSoup(driver.page_source, 'html.parser')
                     soup = soup.find(class_='genTbl closedTbl historicalTbl')
                     soup = soup.tbody.find_all('tr')
+                    if soup[0].td.get_text() == 'No results found':
+                        print('No results found')
+                        break
                     for row in soup:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
@@ -1280,6 +1308,9 @@ class CollectAllAssetsHistoricalMax:
                     soup = BeautifulSoup(driver.page_source, 'html.parser')
                     soup = soup.find(class_='genTbl closedTbl historicalTbl')
                     soup = soup.tbody.find_all('tr')
+                    if soup[0].td.get_text() == 'No results found':
+                        print('No results found')
+                        break
                     for row in soup:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
@@ -1384,6 +1415,9 @@ class CollectAllAssetsHistoricalMax:
                     soup = BeautifulSoup(driver.page_source, 'html.parser')
                     soup = soup.find(class_='genTbl closedTbl historicalTbl')
                     soup = soup.tbody.find_all('tr')
+                    if soup[0].td.get_text() == 'No results found':
+                        print('No results found')
+                        break
                     for row in soup:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
@@ -1488,6 +1522,9 @@ class CollectAllAssetsHistoricalMax:
                     soup = BeautifulSoup(driver.page_source, 'html.parser')
                     soup = soup.find(class_='genTbl closedTbl historicalTbl')
                     soup = soup.tbody.find_all('tr')
+                    if soup[0].td.get_text() == 'No results found':
+                        print('No results found')
+                        break
                     for row in soup:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
@@ -1592,6 +1629,9 @@ class CollectAllAssetsHistoricalMax:
                     soup = BeautifulSoup(driver.page_source, 'html.parser')
                     soup = soup.find(class_='genTbl closedTbl historicalTbl')
                     soup = soup.tbody.find_all('tr')
+                    if soup[0].td.get_text() == 'No results found':
+                        print('No results found')
+                        break
                     for row in soup:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
@@ -1696,6 +1736,9 @@ class CollectAllAssetsHistoricalMax:
                     soup = BeautifulSoup(driver.page_source, 'html.parser')
                     soup = soup.find(class_='genTbl closedTbl historicalTbl')
                     soup = soup.tbody.find_all('tr')
+                    if soup[0].td.get_text() == 'No results found':
+                        print('No results found')
+                        break
                     for row in soup:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
@@ -1800,6 +1843,9 @@ class CollectAllAssetsHistoricalMax:
                     soup = BeautifulSoup(driver.page_source, 'html.parser')
                     soup = soup.find(class_='genTbl closedTbl historicalTbl')
                     soup = soup.tbody.find_all('tr')
+                    if soup[0].td.get_text() == 'No results found':
+                        print('No results found')
+                        break
                     for row in soup:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
@@ -1904,6 +1950,9 @@ class CollectAllAssetsHistoricalMax:
                     soup = BeautifulSoup(driver.page_source, 'html.parser')
                     soup = soup.find(class_='genTbl closedTbl historicalTbl')
                     soup = soup.tbody.find_all('tr')
+                    if soup[0].td.get_text() == 'No results found':
+                        print('No results found')
+                        break
                     for row in soup:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
@@ -4689,10 +4738,10 @@ class CollectAllAssetsHistorical5Y:
             driver.quit()
         print('Finished Successfuly')
 
-    def stocks():
+    def stocks(delete='n'):
         print('Do you want to delete old records and collect new ones? ')
-        delete = input('Y (Yes) or N (No): ')
         if delete.upper() == 'Y':
+            print(f'Your answer was "{delete.upper()}. Removing old records..."')
             CollectAllAssetsHistorical5Y.usstocks(delete=delete)
             CollectAllAssetsHistorical5Y.japanstocks(delete=delete)
             CollectAllAssetsHistorical5Y.ukstocks(delete=delete)
@@ -4703,11 +4752,11 @@ class CollectAllAssetsHistorical5Y:
             CollectAllAssetsHistorical5Y.australiastocks(delete=delete)
         else:
             print(f'Closing... Your answer was: {delete}')
-
-    def indices():
+   
+    def indices(delete='n'):
         print('Do you want to delete old records and collect new ones? ')
-        delete = input('Y (Yes) or N (No): ')
         if delete.upper() == 'Y':
+            print(f'Your answer was "{delete.upper()}. Removing old records..."')
             CollectAllAssetsHistorical5Y.usindices(delete=delete)
             CollectAllAssetsHistorical5Y.japanindices(delete=delete)
             CollectAllAssetsHistorical5Y.ukindices(delete=delete)
@@ -4719,10 +4768,10 @@ class CollectAllAssetsHistorical5Y:
         else:
             print(f'Closing... Your answer was: {delete}')
 
-    def etfs():
+    def etfs(delete='n'):
         print('Do you want to delete old records and collect new ones? ')
-        delete = input('Y (Yes) or N (No): ')
         if delete.upper() == 'Y':
+            print(f'Your answer was "{delete.upper()}. Removing old records..."')
             CollectAllAssetsHistorical5Y.usetfs(delete=delete)
             CollectAllAssetsHistorical5Y.japanetfs(delete=delete)
             CollectAllAssetsHistorical5Y.uketfs(delete=delete)
@@ -4734,10 +4783,10 @@ class CollectAllAssetsHistorical5Y:
         else:
             print(f'Closing... Your answer was: {delete}')
 
-    def bonds():
+    def bonds(delete='n'):
         print('Do you want to delete old records and collect new ones? ')
-        delete = input('Y (Yes) or N (No): ')
         if delete.upper() == 'Y':
+            print(f'Your answer was "{delete.upper()}. Removing old records..."')
             CollectAllAssetsHistorical5Y.usbonds(delete=delete)
             CollectAllAssetsHistorical5Y.japanbonds(delete=delete)
             CollectAllAssetsHistorical5Y.ukbonds(delete=delete)
@@ -4749,10 +4798,10 @@ class CollectAllAssetsHistorical5Y:
         else:
             print(f'Closing... Your answer was: {delete}')
 
-    def funds():
+    def funds(delete='n'):
         print('Do you want to delete old records and collect new ones? ')
-        delete = input('Y (Yes) or N (No): ')
         if delete.upper() == 'Y':
+            print(f'Your answer was "{delete.upper()}. Removing old records..."')
             CollectAllAssetsHistorical5Y.usfunds(delete=delete)
             CollectAllAssetsHistorical5Y.japanfunds(delete=delete)
             CollectAllAssetsHistorical5Y.ukfunds(delete=delete)
@@ -4799,11 +4848,11 @@ class CollectAllAssetsHistorical5Y:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
             while True:
                 try: 
+                    print(link)
                     driver.get(link)
                     sleep(5)
                     print('Executing JS scripts')
@@ -4817,6 +4866,9 @@ class CollectAllAssetsHistorical5Y:
                     soup = BeautifulSoup(driver.page_source, 'html.parser')
                     soup = soup.find(class_='genTbl closedTbl historicalTbl')
                     soup = soup.tbody.find_all('tr')
+                    if soup[0].td.get_text() == 'No results found':
+                        print('No results found')
+                        break
                     for row in soup:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
@@ -4884,7 +4936,7 @@ class CollectAllAssetsHistorical5Y:
             print('Closing CollectAllAssetsHistorical5Y.japanstocks()') #change here
             return ''
         print('Removing old records')
-        AllAssetsHistorical5Y.objects.filter(Type='stck', country='Japan').delete() #change here
+        AllAssetsHistorical5Y.objects.filter(Type='stck', country='JP').delete() #change here
         print('Old records have been removed')
         print('Starting to collect new ones')
         print('Starting Selenium')
@@ -4903,11 +4955,11 @@ class CollectAllAssetsHistorical5Y:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
             while True:
                 try: 
+                    print(link)
                     driver.get(link)
                     sleep(5)
                     print('Executing JS scripts')
@@ -4921,6 +4973,9 @@ class CollectAllAssetsHistorical5Y:
                     soup = BeautifulSoup(driver.page_source, 'html.parser')
                     soup = soup.find(class_='genTbl closedTbl historicalTbl')
                     soup = soup.tbody.find_all('tr')
+                    if soup[0].td.get_text() == 'No results found':
+                        print('No results found')
+                        break
                     for row in soup:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
@@ -4933,7 +4988,7 @@ class CollectAllAssetsHistorical5Y:
                         volume = data[5]  #change here
                         change_perc = data[6][:-1] # Removing % symbol #change here
                         Type = 'stck'  #change here
-                        country = 'Japan'  #change here
+                        country = 'JP'  #change here
                         short_name = i[0]  #change here
                         AllAssetsHistorical5Y( 
                             Type=Type, country=country, short_name=short_name,
@@ -5007,11 +5062,11 @@ class CollectAllAssetsHistorical5Y:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
             while True:
                 try: 
+                    print(link)
                     driver.get(link)
                     sleep(5)
                     print('Executing JS scripts')
@@ -5025,6 +5080,9 @@ class CollectAllAssetsHistorical5Y:
                     soup = BeautifulSoup(driver.page_source, 'html.parser')
                     soup = soup.find(class_='genTbl closedTbl historicalTbl')
                     soup = soup.tbody.find_all('tr')
+                    if soup[0].td.get_text() == 'No results found':
+                        print('No results found')
+                        break
                     for row in soup:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
@@ -5111,11 +5169,11 @@ class CollectAllAssetsHistorical5Y:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
             while True:
                 try: 
+                    print(link)
                     driver.get(link)
                     sleep(5)
                     print('Executing JS scripts')
@@ -5129,6 +5187,9 @@ class CollectAllAssetsHistorical5Y:
                     soup = BeautifulSoup(driver.page_source, 'html.parser')
                     soup = soup.find(class_='genTbl closedTbl historicalTbl')
                     soup = soup.tbody.find_all('tr')
+                    if soup[0].td.get_text() == 'No results found':
+                        print('No results found')
+                        break
                     for row in soup:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
@@ -5215,11 +5276,11 @@ class CollectAllAssetsHistorical5Y:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
             while True:
                 try: 
+                    print(link)
                     driver.get(link)
                     sleep(5)
                     print('Executing JS scripts')
@@ -5233,6 +5294,9 @@ class CollectAllAssetsHistorical5Y:
                     soup = BeautifulSoup(driver.page_source, 'html.parser')
                     soup = soup.find(class_='genTbl closedTbl historicalTbl')
                     soup = soup.tbody.find_all('tr')
+                    if soup[0].td.get_text() == 'No results found':
+                        print('No results found')
+                        break
                     for row in soup:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
@@ -5319,11 +5383,11 @@ class CollectAllAssetsHistorical5Y:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
             while True:
                 try: 
+                    print(link)
                     driver.get(link)
                     sleep(5)
                     print('Executing JS scripts')
@@ -5337,6 +5401,9 @@ class CollectAllAssetsHistorical5Y:
                     soup = BeautifulSoup(driver.page_source, 'html.parser')
                     soup = soup.find(class_='genTbl closedTbl historicalTbl')
                     soup = soup.tbody.find_all('tr')
+                    if soup[0].td.get_text() == 'No results found':
+                        print('No results found')
+                        break
                     for row in soup:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
@@ -5423,11 +5490,11 @@ class CollectAllAssetsHistorical5Y:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
             while True:
                 try: 
+                    print(link)
                     driver.get(link)
                     sleep(5)
                     print('Executing JS scripts')
@@ -5441,6 +5508,9 @@ class CollectAllAssetsHistorical5Y:
                     soup = BeautifulSoup(driver.page_source, 'html.parser')
                     soup = soup.find(class_='genTbl closedTbl historicalTbl')
                     soup = soup.tbody.find_all('tr')
+                    if soup[0].td.get_text() == 'No results found':
+                        print('No results found')
+                        break
                     for row in soup:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
@@ -5527,11 +5597,11 @@ class CollectAllAssetsHistorical5Y:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
             while True:
                 try: 
+                    print(link)
                     driver.get(link)
                     sleep(5)
                     print('Executing JS scripts')
@@ -5545,6 +5615,9 @@ class CollectAllAssetsHistorical5Y:
                     soup = BeautifulSoup(driver.page_source, 'html.parser')
                     soup = soup.find(class_='genTbl closedTbl historicalTbl')
                     soup = soup.tbody.find_all('tr')
+                    if soup[0].td.get_text() == 'No results found':
+                        print('No results found')
+                        break
                     for row in soup:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
@@ -5631,11 +5704,11 @@ class CollectAllAssetsHistorical5Y:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
             while True:
                 try: 
+                    print(link)
                     driver.get(link)
                     sleep(5)
                     print('Executing JS scripts')
@@ -5649,6 +5722,9 @@ class CollectAllAssetsHistorical5Y:
                     soup = BeautifulSoup(driver.page_source, 'html.parser')
                     soup = soup.find(class_='genTbl closedTbl historicalTbl')
                     soup = soup.tbody.find_all('tr')
+                    if soup[0].td.get_text() == 'No results found':
+                        print('No results found')
+                        break
                     for row in soup:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
@@ -5735,11 +5811,11 @@ class CollectAllAssetsHistorical5Y:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
             while True:
                 try: 
+                    print(link)
                     driver.get(link)
                     sleep(5)
                     print('Executing JS scripts')
@@ -5753,6 +5829,9 @@ class CollectAllAssetsHistorical5Y:
                     soup = BeautifulSoup(driver.page_source, 'html.parser')
                     soup = soup.find(class_='genTbl closedTbl historicalTbl')
                     soup = soup.tbody.find_all('tr')
+                    if soup[0].td.get_text() == 'No results found':
+                        print('No results found')
+                        break
                     for row in soup:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
@@ -5839,11 +5918,11 @@ class CollectAllAssetsHistorical5Y:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
             while True:
                 try: 
+                    print(link)
                     driver.get(link)
                     sleep(5)
                     print('Executing JS scripts')
@@ -5857,6 +5936,9 @@ class CollectAllAssetsHistorical5Y:
                     soup = BeautifulSoup(driver.page_source, 'html.parser')
                     soup = soup.find(class_='genTbl closedTbl historicalTbl')
                     soup = soup.tbody.find_all('tr')
+                    if soup[0].td.get_text() == 'No results found':
+                        print('No results found')
+                        break
                     for row in soup:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
@@ -5943,11 +6025,11 @@ class CollectAllAssetsHistorical5Y:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
             while True:
                 try: 
+                    print(link)
                     driver.get(link)
                     sleep(5)
                     print('Executing JS scripts')
@@ -5961,6 +6043,9 @@ class CollectAllAssetsHistorical5Y:
                     soup = BeautifulSoup(driver.page_source, 'html.parser')
                     soup = soup.find(class_='genTbl closedTbl historicalTbl')
                     soup = soup.tbody.find_all('tr')
+                    if soup[0].td.get_text() == 'No results found':
+                        print('No results found')
+                        break
                     for row in soup:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
@@ -6047,11 +6132,11 @@ class CollectAllAssetsHistorical5Y:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
             while True:
                 try: 
+                    print(link)
                     driver.get(link)
                     sleep(5)
                     print('Executing JS scripts')
@@ -6065,6 +6150,9 @@ class CollectAllAssetsHistorical5Y:
                     soup = BeautifulSoup(driver.page_source, 'html.parser')
                     soup = soup.find(class_='genTbl closedTbl historicalTbl')
                     soup = soup.tbody.find_all('tr')
+                    if soup[0].td.get_text() == 'No results found':
+                        print('No results found')
+                        break
                     for row in soup:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
@@ -6151,11 +6239,11 @@ class CollectAllAssetsHistorical5Y:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
             while True:
                 try: 
+                    print(link)
                     driver.get(link)
                     sleep(5)
                     print('Executing JS scripts')
@@ -6169,6 +6257,9 @@ class CollectAllAssetsHistorical5Y:
                     soup = BeautifulSoup(driver.page_source, 'html.parser')
                     soup = soup.find(class_='genTbl closedTbl historicalTbl')
                     soup = soup.tbody.find_all('tr')
+                    if soup[0].td.get_text() == 'No results found':
+                        print('No results found')
+                        break
                     for row in soup:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
@@ -6255,11 +6346,11 @@ class CollectAllAssetsHistorical5Y:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
             while True:
                 try: 
+                    print(link)
                     driver.get(link)
                     sleep(5)
                     print('Executing JS scripts')
@@ -6273,6 +6364,9 @@ class CollectAllAssetsHistorical5Y:
                     soup = BeautifulSoup(driver.page_source, 'html.parser')
                     soup = soup.find(class_='genTbl closedTbl historicalTbl')
                     soup = soup.tbody.find_all('tr')
+                    if soup[0].td.get_text() == 'No results found':
+                        print('No results found')
+                        break
                     for row in soup:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
@@ -6359,11 +6453,11 @@ class CollectAllAssetsHistorical5Y:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
             while True:
                 try: 
+                    print(link)
                     driver.get(link)
                     sleep(5)
                     print('Executing JS scripts')
@@ -6377,6 +6471,9 @@ class CollectAllAssetsHistorical5Y:
                     soup = BeautifulSoup(driver.page_source, 'html.parser')
                     soup = soup.find(class_='genTbl closedTbl historicalTbl')
                     soup = soup.tbody.find_all('tr')
+                    if soup[0].td.get_text() == 'No results found':
+                        print('No results found')
+                        break
                     for row in soup:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
@@ -6463,11 +6560,11 @@ class CollectAllAssetsHistorical5Y:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
             while True:
                 try: 
+                    print(link)
                     driver.get(link)
                     sleep(5)
                     print('Executing JS scripts')
@@ -6481,6 +6578,9 @@ class CollectAllAssetsHistorical5Y:
                     soup = BeautifulSoup(driver.page_source, 'html.parser')
                     soup = soup.find(class_='genTbl closedTbl historicalTbl')
                     soup = soup.tbody.find_all('tr')
+                    if soup[0].td.get_text() == 'No results found':
+                        print('No results found')
+                        break
                     for row in soup:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
@@ -6567,11 +6667,11 @@ class CollectAllAssetsHistorical5Y:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
             while True:
                 try: 
+                    print(link)
                     driver.get(link)
                     sleep(5)
                     print('Executing JS scripts')
@@ -6585,6 +6685,9 @@ class CollectAllAssetsHistorical5Y:
                     soup = BeautifulSoup(driver.page_source, 'html.parser')
                     soup = soup.find(class_='genTbl closedTbl historicalTbl')
                     soup = soup.tbody.find_all('tr')
+                    if soup[0].td.get_text() == 'No results found':
+                        print('No results found')
+                        break
                     for row in soup:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
@@ -6671,11 +6774,11 @@ class CollectAllAssetsHistorical5Y:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
             while True:
                 try: 
+                    print(link)
                     driver.get(link)
                     sleep(5)
                     print('Executing JS scripts')
@@ -6689,6 +6792,9 @@ class CollectAllAssetsHistorical5Y:
                     soup = BeautifulSoup(driver.page_source, 'html.parser')
                     soup = soup.find(class_='genTbl closedTbl historicalTbl')
                     soup = soup.tbody.find_all('tr')
+                    if soup[0].td.get_text() == 'No results found':
+                        print('No results found')
+                        break
                     for row in soup:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
@@ -6775,11 +6881,11 @@ class CollectAllAssetsHistorical5Y:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
             while True:
                 try: 
+                    print(link)
                     driver.get(link)
                     sleep(5)
                     print('Executing JS scripts')
@@ -6793,6 +6899,9 @@ class CollectAllAssetsHistorical5Y:
                     soup = BeautifulSoup(driver.page_source, 'html.parser')
                     soup = soup.find(class_='genTbl closedTbl historicalTbl')
                     soup = soup.tbody.find_all('tr')
+                    if soup[0].td.get_text() == 'No results found':
+                        print('No results found')
+                        break
                     for row in soup:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
@@ -6879,11 +6988,11 @@ class CollectAllAssetsHistorical5Y:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
             while True:
                 try: 
+                    print(link)
                     driver.get(link)
                     sleep(5)
                     print('Executing JS scripts')
@@ -6897,6 +7006,9 @@ class CollectAllAssetsHistorical5Y:
                     soup = BeautifulSoup(driver.page_source, 'html.parser')
                     soup = soup.find(class_='genTbl closedTbl historicalTbl')
                     soup = soup.tbody.find_all('tr')
+                    if soup[0].td.get_text() == 'No results found':
+                        print('No results found')
+                        break
                     for row in soup:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
@@ -6983,11 +7095,11 @@ class CollectAllAssetsHistorical5Y:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
             while True:
                 try: 
+                    print(link)
                     driver.get(link)
                     sleep(5)
                     print('Executing JS scripts')
@@ -7001,6 +7113,9 @@ class CollectAllAssetsHistorical5Y:
                     soup = BeautifulSoup(driver.page_source, 'html.parser')
                     soup = soup.find(class_='genTbl closedTbl historicalTbl')
                     soup = soup.tbody.find_all('tr')
+                    if soup[0].td.get_text() == 'No results found':
+                        print('No results found')
+                        break
                     for row in soup:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
@@ -7087,11 +7202,11 @@ class CollectAllAssetsHistorical5Y:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
             while True:
                 try: 
+                    print(link)
                     driver.get(link)
                     sleep(5)
                     print('Executing JS scripts')
@@ -7105,6 +7220,9 @@ class CollectAllAssetsHistorical5Y:
                     soup = BeautifulSoup(driver.page_source, 'html.parser')
                     soup = soup.find(class_='genTbl closedTbl historicalTbl')
                     soup = soup.tbody.find_all('tr')
+                    if soup[0].td.get_text() == 'No results found':
+                        print('No results found')
+                        break
                     for row in soup:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
@@ -7191,11 +7309,11 @@ class CollectAllAssetsHistorical5Y:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
             while True:
                 try: 
+                    print(link)
                     driver.get(link)
                     sleep(5)
                     print('Executing JS scripts')
@@ -7209,6 +7327,9 @@ class CollectAllAssetsHistorical5Y:
                     soup = BeautifulSoup(driver.page_source, 'html.parser')
                     soup = soup.find(class_='genTbl closedTbl historicalTbl')
                     soup = soup.tbody.find_all('tr')
+                    if soup[0].td.get_text() == 'No results found':
+                        print('No results found')
+                        break
                     for row in soup:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
@@ -7295,11 +7416,11 @@ class CollectAllAssetsHistorical5Y:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
             while True:
                 try: 
+                    print(link)
                     driver.get(link)
                     sleep(5)
                     print('Executing JS scripts')
@@ -7313,6 +7434,9 @@ class CollectAllAssetsHistorical5Y:
                     soup = BeautifulSoup(driver.page_source, 'html.parser')
                     soup = soup.find(class_='genTbl closedTbl historicalTbl')
                     soup = soup.tbody.find_all('tr')
+                    if soup[0].td.get_text() == 'No results found':
+                        print('No results found')
+                        break
                     for row in soup:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
@@ -7399,11 +7523,11 @@ class CollectAllAssetsHistorical5Y:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
             while True:
                 try: 
+                    print(link)
                     driver.get(link)
                     sleep(5)
                     print('Executing JS scripts')
@@ -7417,6 +7541,9 @@ class CollectAllAssetsHistorical5Y:
                     soup = BeautifulSoup(driver.page_source, 'html.parser')
                     soup = soup.find(class_='genTbl closedTbl historicalTbl')
                     soup = soup.tbody.find_all('tr')
+                    if soup[0].td.get_text() == 'No results found':
+                        print('No results found')
+                        break
                     for row in soup:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
@@ -7503,11 +7630,11 @@ class CollectAllAssetsHistorical5Y:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
             while True:
                 try: 
+                    print(link)
                     driver.get(link)
                     sleep(5)
                     print('Executing JS scripts')
@@ -7521,6 +7648,9 @@ class CollectAllAssetsHistorical5Y:
                     soup = BeautifulSoup(driver.page_source, 'html.parser')
                     soup = soup.find(class_='genTbl closedTbl historicalTbl')
                     soup = soup.tbody.find_all('tr')
+                    if soup[0].td.get_text() == 'No results found':
+                        print('No results found')
+                        break
                     for row in soup:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
@@ -7607,11 +7737,11 @@ class CollectAllAssetsHistorical5Y:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
             while True:
                 try: 
+                    print(link)
                     driver.get(link)
                     sleep(5)
                     print('Executing JS scripts')
@@ -7625,6 +7755,9 @@ class CollectAllAssetsHistorical5Y:
                     soup = BeautifulSoup(driver.page_source, 'html.parser')
                     soup = soup.find(class_='genTbl closedTbl historicalTbl')
                     soup = soup.tbody.find_all('tr')
+                    if soup[0].td.get_text() == 'No results found':
+                        print('No results found')
+                        break
                     for row in soup:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
@@ -7711,11 +7844,11 @@ class CollectAllAssetsHistorical5Y:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
             while True:
                 try: 
+                    print(link)
                     driver.get(link)
                     sleep(5)
                     print('Executing JS scripts')
@@ -7729,6 +7862,9 @@ class CollectAllAssetsHistorical5Y:
                     soup = BeautifulSoup(driver.page_source, 'html.parser')
                     soup = soup.find(class_='genTbl closedTbl historicalTbl')
                     soup = soup.tbody.find_all('tr')
+                    if soup[0].td.get_text() == 'No results found':
+                        print('No results found')
+                        break
                     for row in soup:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
@@ -7815,11 +7951,11 @@ class CollectAllAssetsHistorical5Y:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
             while True:
                 try: 
+                    print(link)
                     driver.get(link)
                     sleep(5)
                     print('Executing JS scripts')
@@ -7833,6 +7969,9 @@ class CollectAllAssetsHistorical5Y:
                     soup = BeautifulSoup(driver.page_source, 'html.parser')
                     soup = soup.find(class_='genTbl closedTbl historicalTbl')
                     soup = soup.tbody.find_all('tr')
+                    if soup[0].td.get_text() == 'No results found':
+                        print('No results found')
+                        break
                     for row in soup:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
@@ -7919,11 +8058,11 @@ class CollectAllAssetsHistorical5Y:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
             while True:
                 try: 
+                    print(link)
                     driver.get(link)
                     sleep(5)
                     print('Executing JS scripts')
@@ -7937,6 +8076,9 @@ class CollectAllAssetsHistorical5Y:
                     soup = BeautifulSoup(driver.page_source, 'html.parser')
                     soup = soup.find(class_='genTbl closedTbl historicalTbl')
                     soup = soup.tbody.find_all('tr')
+                    if soup[0].td.get_text() == 'No results found':
+                        print('No results found')
+                        break
                     for row in soup:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
@@ -8023,11 +8165,11 @@ class CollectAllAssetsHistorical5Y:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
             while True:
                 try: 
+                    print(link)
                     driver.get(link)
                     sleep(5)
                     print('Executing JS scripts')
@@ -8041,6 +8183,9 @@ class CollectAllAssetsHistorical5Y:
                     soup = BeautifulSoup(driver.page_source, 'html.parser')
                     soup = soup.find(class_='genTbl closedTbl historicalTbl')
                     soup = soup.tbody.find_all('tr')
+                    if soup[0].td.get_text() == 'No results found':
+                        print('No results found')
+                        break
                     for row in soup:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
@@ -8127,11 +8272,11 @@ class CollectAllAssetsHistorical5Y:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
             while True:
                 try: 
+                    print(link)
                     driver.get(link)
                     sleep(5)
                     print('Executing JS scripts')
@@ -8145,6 +8290,9 @@ class CollectAllAssetsHistorical5Y:
                     soup = BeautifulSoup(driver.page_source, 'html.parser')
                     soup = soup.find(class_='genTbl closedTbl historicalTbl')
                     soup = soup.tbody.find_all('tr')
+                    if soup[0].td.get_text() == 'No results found':
+                        print('No results found')
+                        break
                     for row in soup:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
@@ -8231,11 +8379,11 @@ class CollectAllAssetsHistorical5Y:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
             while True:
                 try: 
+                    print(link)
                     driver.get(link)
                     sleep(5)
                     print('Executing JS scripts')
@@ -8249,6 +8397,9 @@ class CollectAllAssetsHistorical5Y:
                     soup = BeautifulSoup(driver.page_source, 'html.parser')
                     soup = soup.find(class_='genTbl closedTbl historicalTbl')
                     soup = soup.tbody.find_all('tr')
+                    if soup[0].td.get_text() == 'No results found':
+                        print('No results found')
+                        break
                     for row in soup:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
@@ -8335,11 +8486,11 @@ class CollectAllAssetsHistorical5Y:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
             while True:
                 try: 
+                    print(link)
                     driver.get(link)
                     sleep(5)
                     print('Executing JS scripts')
@@ -8353,6 +8504,9 @@ class CollectAllAssetsHistorical5Y:
                     soup = BeautifulSoup(driver.page_source, 'html.parser')
                     soup = soup.find(class_='genTbl closedTbl historicalTbl')
                     soup = soup.tbody.find_all('tr')
+                    if soup[0].td.get_text() == 'No results found':
+                        print('No results found')
+                        break
                     for row in soup:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
@@ -8439,11 +8593,11 @@ class CollectAllAssetsHistorical5Y:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
             while True:
                 try: 
+                    print(link)
                     driver.get(link)
                     sleep(5)
                     print('Executing JS scripts')
@@ -8457,6 +8611,9 @@ class CollectAllAssetsHistorical5Y:
                     soup = BeautifulSoup(driver.page_source, 'html.parser')
                     soup = soup.find(class_='genTbl closedTbl historicalTbl')
                     soup = soup.tbody.find_all('tr')
+                    if soup[0].td.get_text() == 'No results found':
+                        print('No results found')
+                        break
                     for row in soup:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
@@ -8543,11 +8700,11 @@ class CollectAllAssetsHistorical5Y:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
             while True:
                 try: 
+                    print(link)
                     driver.get(link)
                     sleep(5)
                     print('Executing JS scripts')
@@ -8561,6 +8718,9 @@ class CollectAllAssetsHistorical5Y:
                     soup = BeautifulSoup(driver.page_source, 'html.parser')
                     soup = soup.find(class_='genTbl closedTbl historicalTbl')
                     soup = soup.tbody.find_all('tr')
+                    if soup[0].td.get_text() == 'No results found':
+                        print('No results found')
+                        break
                     for row in soup:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
@@ -8647,11 +8807,11 @@ class CollectAllAssetsHistorical5Y:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
             while True:
                 try: 
+                    print(link)
                     driver.get(link)
                     sleep(5)
                     print('Executing JS scripts')
@@ -8665,6 +8825,9 @@ class CollectAllAssetsHistorical5Y:
                     soup = BeautifulSoup(driver.page_source, 'html.parser')
                     soup = soup.find(class_='genTbl closedTbl historicalTbl')
                     soup = soup.tbody.find_all('tr')
+                    if soup[0].td.get_text() == 'No results found':
+                        print('No results found')
+                        break
                     for row in soup:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
@@ -8751,11 +8914,11 @@ class CollectAllAssetsHistorical5Y:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
             while True:
                 try: 
+                    print(link)
                     driver.get(link)
                     sleep(5)
                     print('Executing JS scripts')
@@ -8769,6 +8932,9 @@ class CollectAllAssetsHistorical5Y:
                     soup = BeautifulSoup(driver.page_source, 'html.parser')
                     soup = soup.find(class_='genTbl closedTbl historicalTbl')
                     soup = soup.tbody.find_all('tr')
+                    if soup[0].td.get_text() == 'No results found':
+                        print('No results found')
+                        break
                     for row in soup:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
@@ -8855,11 +9021,11 @@ class CollectAllAssetsHistorical5Y:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
             while True:
                 try: 
+                    print(link)
                     driver.get(link)
                     sleep(5)
                     print('Executing JS scripts')
@@ -8873,6 +9039,9 @@ class CollectAllAssetsHistorical5Y:
                     soup = BeautifulSoup(driver.page_source, 'html.parser')
                     soup = soup.find(class_='genTbl closedTbl historicalTbl')
                     soup = soup.tbody.find_all('tr')
+                    if soup[0].td.get_text() == 'No results found':
+                        print('No results found')
+                        break
                     for row in soup:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
