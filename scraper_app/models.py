@@ -73,14 +73,14 @@ class CommodityStaticInfo(models.Model):
         return self.short_name + ' Futures Contract'
 
     country = models.CharField(choices=COUNTRIES, max_length=2)
-    base_symbol = models.CharField(max_length=6)
+    base_symbol = models.CharField(max_length=7)
     contract_size = models.CharField(max_length=30)
     settlement_type = models.CharField(default='Physical', max_length=30)
     tick_size = models.CharField(max_length=30)
     tick_value = models.CharField(max_length=30)
     months = models.CharField(max_length=30)
     point_value = models.CharField(max_length=20)
-    unit = models.CharField(max_length=12, null=True)
+    unit = models.CharField(max_length=15, null=True)
     link = models.URLField()
 
     def __str__(self):

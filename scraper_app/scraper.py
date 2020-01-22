@@ -1,3 +1,4 @@
+# FOR SCRAPING (COLLECTING) STATIC(UNCHANGABLE) DATA
 import requests, os, datetime
 from selenium import webdriver
 from pyvirtualdisplay import Display
@@ -35,17 +36,18 @@ class CollectStaticInfo:
         print('Starting to collect new ones')
         short_names = []
         links = []
-        url = 'https://www.investing.com/commodities/'
+        url = 'https://www.investing.com/commodities/real-time-futures'
         url2 = 'https://www.investing.com'
         header={'User-Agent':'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2227.0 Safari/537.36'}
         request = requests.get(url, headers=header)
         soup = BeautifulSoup(request.text, 'html.parser')
-        soup = soup.find_all('td', class_='noWrap bold left noWrap')
+        soup = soup.find_all('td', class_='bold left plusIconTd noWrap elp')
         fields_to_scrape = CommodityStaticInfo.fields_to_scrape
 
         for td in soup:
-            short_names.append(td.find('a').get_text())
-            links.append(url2+str(td.a['href']))
+            if not td.a['title'] == 'XAU/USD - Gold Spot US Dollar':
+                short_names.append(td.find('a').get_text())
+                links.append(url2+str(td.a['href']))
         print('Collected names and links')
         name_link = dict(zip(short_names, links))
         static_infos = []
@@ -63,7 +65,10 @@ class CollectStaticInfo:
             else:
                 country = 'UK'
             soup = BeautifulSoup(request.text, 'html.parser')
-            unit = soup.find('span', text='Unit:').find_next_sibling().get_text().strip()
+            try:
+                unit = soup.find('span', text='Unit:').find_next_sibling().get_text().strip()
+            except AttributeError:
+                unit = None
             soup = soup.find_all('span')
             for field in soup:
                 if field.get_text() in fields_to_scrape:
@@ -72,6 +77,7 @@ class CollectStaticInfo:
             fields['Country'] = country
             static_infos.append({**{'Short Name': name, 'Link': link}, **fields})
             print(f'{len(short_names)-short_names.index(name)-1} Commodities Left')
+        
         print('Collected fields of all commodities')
         print('Starting to save data')
         for static_info in static_infos:

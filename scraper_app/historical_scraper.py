@@ -34,14 +34,15 @@ from .models import (
 )
 
 class CollectAllAssetsHistoricalMax:
-# CollectAllAssetsHistoricalMax.commodities(delete='n')
-# CollectAllAssetsHistoricalMax.currencies(delete='n')
-# CollectAllAssetsHistoricalMax.cryptocurrencies(delete='n')
-# CollectAllAssetsHistoricalMax.stocks()
-# CollectAllAssetsHistoricalMax.indices()
-# CollectAllAssetsHistoricalMax.etfs()
-# CollectAllAssetsHistoricalMax.bonds()
-# CollectAllAssetsHistoricalMax.funds()
+# from scraper_app import historical_scraper as h
+# h.CollectAllAssetsHistoricalMax.commodities(delete='n')
+# h.CollectAllAssetsHistoricalMax.currencies(delete='n')
+# h.CollectAllAssetsHistoricalMax.cryptocurrencies(delete='n')
+# h.CollectAllAssetsHistoricalMax.stocks()
+# h.CollectAllAssetsHistoricalMax.indices()
+# h.CollectAllAssetsHistoricalMax.etfs()
+# h.CollectAllAssetsHistoricalMax.bonds()
+# h.CollectAllAssetsHistoricalMax.funds()
 
     def commodities(delete='n'):
         c_list = CommodityStaticInfo.objects.values_list('country', 'short_name', 'link') # returns a list of tuples
@@ -55,49 +56,62 @@ class CollectAllAssetsHistoricalMax:
         try:
             print('Starting CollectAllAssetsHistoricalMax.commodities()')
             if delete.upper() != 'Y':
-                print('Removing old records')
                 print('Closing CollectAllAssetsHistoricalMax.commodities()')
                 return ''
+            print('Removing old records')
             AllAssetsHistoricalMax.objects.filter(Type='cmdty').delete()
             print('Old records have been removed')
             print('Starting to collect new ones')
             print('Starting Selenium')
             # driver = webdriver.Chrome()
+            x = 1
             for i in c_list:
-                link = i[2] + '-historical-data'
-                driver.get(link)
-                print('Executing JS scripts')
-                driver.execute_script('$("#data_interval").val("Monthly");')
-                driver.find_element_by_id('data_interval').value = "Monthly"
-                driver.find_element_by_id('widgetFieldDateRange').click()
-                driver.find_element_by_id('startDate').clear()
-                driver.find_element_by_id('startDate').send_keys('01/01/1980', Keys.ENTER)
-                print('Executed JS scripts, sleeping for 5 seconds')
-                sleep(5)
-                print(link)
-                soup = BeautifulSoup(driver.page_source, 'html.parser')
-                print(soup.find(id='widgetFieldDateRange'))
-                soup = soup.find(class_='genTbl closedTbl historicalTbl')
-                soup = soup.tbody.find_all('tr')
-                print(len(soup))
-                for row in soup:
-                    data = row.find_all('td')
-                    data = [d.get_text() for d in data]
-                    date = datetime.datetime.strptime(data[0], '%b %y')
-                    price = data[1]
-                    Open = data[2]
-                    high = data[3]
-                    low = data[4]
-                    volume = data[5]
-                    change_perc = data[6][:-1] # Removing % symbol
-                    Type = 'cmdty'
-                    country = i[0]
-                    short_name = i[1]
-                    AllAssetsHistoricalMax(
-                        Type=Type, country=country, short_name=short_name,
-                        date=date, price=price, Open=Open,
-                        high=high, low=low, change_perc=change_perc,
-                        volume=volume).save()
+                while True:
+                    try:
+                        link = i[2]
+                        if '?cid' in link:
+                            cid = link[link.index('?cid'):]
+                            link = link[:link.index('?cid')]
+                            link += '-historical-data' + cid
+                        else:
+                            link += '-historical-data'
+                        driver.get(link)
+                        print(link)
+                        print('Executing JS scripts')
+                        driver.execute_script('$("#data_interval").val("Monthly");')
+                        driver.find_element_by_id('data_interval').value = "Monthly"
+                        driver.find_element_by_id('widgetFieldDateRange').click()
+                        driver.find_element_by_id('startDate').clear()
+                        driver.find_element_by_id('startDate').send_keys('01/01/1980', Keys.ENTER)
+                        print('Executed JS scripts, sleeping for 5 seconds')
+                        sleep(5)
+                        soup = BeautifulSoup(driver.page_source, 'html.parser')
+                        soup = soup.find(class_='genTbl closedTbl historicalTbl')
+                        soup = soup.tbody.find_all('tr')
+                        for row in soup:
+                            data = row.find_all('td')
+                            data = [d.get_text() for d in data]
+                            date = datetime.datetime.strptime(data[0], '%b %y')
+                            price = data[1]
+                            Open = data[2]
+                            high = data[3]
+                            low = data[4]
+                            volume = data[5]
+                            change_perc = data[6][:-1] # Removing % symbol
+                            Type = 'cmdty'
+                            country = i[0]
+                            short_name = i[1]
+                            AllAssetsHistoricalMax(
+                                Type=Type, country=country, short_name=short_name,
+                                date=date, price=price, Open=Open,
+                                high=high, low=low, change_perc=change_perc,
+                                volume=volume).save()
+                        print(f'Stored {x}/{len(c_list)}')
+                        x += 1
+                        break
+                    except Exception as e:
+                        print(e)
+                        continue
 
         finally:
             ('Quiting the driver')
@@ -116,9 +130,10 @@ class CollectAllAssetsHistoricalMax:
         try:
             print('Starting CollectAllAssetsHistoricalMax.currencies()') #change here
             if delete.upper() != 'Y':
-                print('Removing old records')
+                
                 print('Closing CollectAllAssetsHistoricalMax.currencies()') #change here
                 return ''
+            print('Removing old records')
             AllAssetsHistoricalMax.objects.filter(Type='crncy').delete() #change here
             print('Old records have been removed')
             print('Starting to collect new ones')
@@ -184,9 +199,9 @@ class CollectAllAssetsHistoricalMax:
         try:
             print('Starting CollectAllAssetsHistoricalMax.cryptocurrencies()') #change here
             if delete.upper() != 'Y':
-                print('Removing old records')
                 print('Closing CollectAllAssetsHistoricalMax.cryptocurrencies()') #change here
                 return ''
+            print('Removing old records')
             AllAssetsHistoricalMax.objects.filter(Type='crptcrncy').delete() #change here
             print('Old records have been removed')
             print('Starting to collect new ones')
