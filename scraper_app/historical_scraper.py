@@ -1,5 +1,5 @@
 # FOR SCRAPING (COLLECTING) DATA FROM MAX TO 1M
-import requests, os, datetime
+import os, datetime
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from pyvirtualdisplay import Display

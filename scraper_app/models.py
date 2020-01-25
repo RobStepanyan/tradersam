@@ -956,11 +956,12 @@ class AllAssetsHistorical5Y(models.Model):
         verbose_name = '(5 Years) All Asset Types'
         verbose_name_plural = '(5 Years) All Asset Types'
 
-class CommodityBeforeLive:
+class CommodityBeforeLive(models.Model):
     Type = models.CharField(choices=TYPES, max_length=9, default='cmdty')
     short_name = models.CharField(max_length=16) 
     link = models.URLField()
     
+    date = models.DateField(default=None, null=True)
     prev_close = models.CharField(max_length=15, null=True)
     Open = models.CharField(max_length=15, null=True)
 
@@ -971,11 +972,14 @@ class CommodityBeforeLive:
         verbose_name = '(Before Live Commodities)'
         verbose_name_plural = '(Before Live Commodities)'
 
-class CommodityLive:
+class CommodityLive(models.Model):
     Type = models.CharField(choices=TYPES, max_length=9, default='cmdty')
     short_name = models.CharField(max_length=16) 
     link = models.URLField()
     
+    month = models.DateField(default=None, null=True)
+    last_price = models.CharField(max_length=15, null=True)
+    last_price_time = models.CharField(max_length=10, null=True)
     high = models.CharField(max_length=15, null=True)
     low = models.CharField(max_length=15, null=True)
     change = models.CharField(max_length=15, null=True)
@@ -991,15 +995,15 @@ class CommodityLive:
         verbose_name = '(Live Commodities) All Asset Types'
         verbose_name_plural = '(Live Commodities) All Asset Types'
 
-class CommodityAfterLive:
+class CommodityAfterLive(models.Model):
     Type = models.CharField(choices=TYPES, max_length=9, default='cmdty')
     short_name = models.CharField(max_length=16) 
     link = models.URLField()
     
-    date = models.DateField(default=datetime.date.today, null=True)
+    date = models.DateField(default=None, null=True)
     one_year_rng = models.CharField(max_length=30)
     one_year_chg = models.CharField(max_length=7)
-    month = models.DateField(default=None, null=True)
+    months = models.DateField(default=None, null=True)
     settlement_day = models.DateField(default=None, null=True)
     last_roll_day = models.DateField(default=None, null=True)
 
@@ -1010,10 +1014,26 @@ class CommodityAfterLive:
         verbose_name = '(After Live Commodities)'
         verbose_name_plural = '(After Live Commodities)'
 
-class CommodityHistorical1D:
+class CommodityHistorical1D(models.Model):
     Type = models.CharField(choices=TYPES, max_length=9, default='cmdty')
     short_name = models.CharField(max_length=16) 
     link = models.URLField()
 
     date = models.DateTimeField(default=None, null=True)
     price = models.CharField(max_length=12, default=None, null=True)
+
+    class Meta:
+        verbose_name = '(1 Day) Commodities'
+        verbose_name_plural = '(1 Day) Commodities'
+
+class CommodityHistorical5D(models.Model):
+    Type = models.CharField(choices=TYPES, max_length=9, default='cmdty')
+    short_name = models.CharField(max_length=16) 
+    link = models.URLField()
+
+    date = models.DateTimeField(default=None, null=True)
+    price = models.CharField(max_length=12, default=None, null=True)
+
+    class Meta:
+        verbose_name = '(5 Days) Commodities'
+        verbose_name_plural = '(5 Days) Commodities'
