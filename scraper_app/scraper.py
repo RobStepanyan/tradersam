@@ -104,6 +104,7 @@ class CollectStaticInfo:
         header={'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/601.3.9 (KHTML, like Gecko) Version/9.0.2 Safari/601.3.9'}
         request = requests.get(url, headers=header)
         soup = BeautifulSoup(request.text, 'html.parser')
+        soup = soup.find('table', id='cr1')
         soup = soup.find_all('td', class_='noWrap bold left noWrap')
         for td in soup:
             short_names.append(td.find('a').get_text())
@@ -133,28 +134,41 @@ class CollectStaticInfo:
         print('Data has been successfuly stored!')
         return ''
 
-    def cryptocurrencies():
+    def cryptocurrencies(delete='n'):
         print('Starting CollectStaticInfo.cryptocurrencies()')
+        if delete.upper() != 'Y':
+            print('Quiting')
+            return None
         print('Removing old records')
         CryptocurrencyStaticInfo.objects.all().delete()
         print('Old records have been removed')
         print('Starting to collect new ones')
+        #--------------------VPS------------------
+        display = Display(visible=0, size=(1000, 1000))
+        display.start()
+        options = webdriver.ChromeOptions()
+        options.add_argument('--no-sandbox')
+        driver = webdriver.Chrome(options=options)
+        #-----------------------------------------
         short_names = []
         long_names = []
         links = []
-        url = 'https://www.investing.com/crypto/'
+        url = 'https://www.investing.com/crypto/currencies'
         url2 = 'https://www.investing.com'
-        header={'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/601.3.9 (KHTML, like Gecko) Version/9.0.2 Safari/601.3.9'}
-        request = requests.get(url, headers=header)
-        soup = BeautifulSoup(request.text, 'html.parser')
+        driver.get(url)
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight)")
+        print('Sleeping for 60 seconds')
+        sleep(60)
+        soup = BeautifulSoup(driver.page_source, 'html.parser')
         soup1 = soup.find_all('td', class_='left bold elp name cryptoName first js-currency-name')
-        soup2 = soup.find_all('td', class_='left noWrap elp symb js-currency-symbol')
+        soup2 = soup.find_all('td', class_='left noWrap elp symb js-currency-symbol') # Another column of short_names (tickers)
         for td1, td2 in zip(soup1, soup2):
             try:
                 long_names.append(td1.find('a').get_text())
                 links.append(url2+str(td1.a['href']))
                 short_names.append(td2.get_text())
-            except:
+            except Exception as e:
+                print(e)
                 pass
         print('Collected all data')
         print('Starting to store data')

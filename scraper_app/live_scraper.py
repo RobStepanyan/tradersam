@@ -1,4 +1,5 @@
 import requests, os, datetime
+from . import models
 from selenium import webdriver
 from pyvirtualdisplay import Display
 from selenium import webdriver
@@ -27,9 +28,9 @@ from .models import (
 
 TABLE_LINKS = {
     # JS Scripts are not used to access the table
-    'Commodities': 'https://www.investing.com/commodities/',
+    'Commodities': 'https://www.investing.com/commodities/real-time-futures',
     'Currencies': 'https://www.investing.com/currencies/',
-    'Cryptocurrencies': 'https://www.investing.com/crypto/',
+    'Cryptocurrencies': 'https://www.investing.com/crypto/currencies',
     # Stocks - Same JS Scripts
     'US Stocks': 'https://www.investing.com/equities/united-states',
     'Japan Stocks': 'https://www.investing.com/equities/japan',
@@ -77,6 +78,10 @@ TABLE_LINKS = {
     'Australia Funds': 'https://www.investing.com/funds/australia-funds?&issuer_filter=0',
 }
 
+
+
+
+
 class CollectAllAssetsLive:
 # CollectAllAssetsLive.commodities()
 # CollectAllAssetsLive.currencies()
@@ -97,3 +102,23 @@ class CollectAllAssetsLive:
         #-----------------------------------------
         url = TABLE_LINKS['Commodities']
         driver.get(url)
+        while True:
+            
+            soup = BeautifulSoup(driver.page_source, 'html.parser')
+            table = soup.find('table', class_='genTbl closedTbl crossRatesTbl').tbody
+            trs = []
+            for tr in table.find_all('tr'):
+                tds = []
+                for td in tr.find_all('td')[1:-1]:
+                    tds.append(td.get_text())
+                link = 'https://www.investing.com/' + tr.find_all('td')[1].a['href'][0]
+                time_icon = tr.find_all('td')[-1].span['class'][0]
+                if time_icon == 'redClockIcon':
+                    # if close check whether CommodityAfterLive is up to date
+
+
+                tds.append(time)
+                trs.append(tds)
+            
+
+                

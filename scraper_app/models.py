@@ -61,17 +61,16 @@ TYPES = (
     ('stck', 'Stock'), ('indx', 'Index'), ('etf', 'ETF'), ('bnd', 'Bond'), ('fnd', ('Fund'))
 )
 Types = [i for j in TYPES for i in j]
+
 class CommodityStaticInfo(models.Model):
-    Type = models.CharField(choices=TYPES, max_length=9, default='cmdty')
     fields_to_scrape = (
         'Contract Size', 'Tick Size', 'Tick Value', 'Base Symbol', 'Point Value', 'Months')
     
+    Type = models.CharField(choices=TYPES, max_length=9, default='cmdty')
     short_name = models.CharField(max_length=16)
-    
     @property
     def long_name(self):
         return self.short_name + ' Futures Contract'
-
     country = models.CharField(choices=COUNTRIES, max_length=2)
     base_symbol = models.CharField(max_length=7)
     contract_size = models.CharField(max_length=30)
@@ -956,3 +955,65 @@ class AllAssetsHistorical5Y(models.Model):
     class Meta:
         verbose_name = '(5 Years) All Asset Types'
         verbose_name_plural = '(5 Years) All Asset Types'
+
+class CommodityBeforeLive:
+    Type = models.CharField(choices=TYPES, max_length=9, default='cmdty')
+    short_name = models.CharField(max_length=16) 
+    link = models.URLField()
+    
+    prev_close = models.CharField(max_length=15, null=True)
+    Open = models.CharField(max_length=15, null=True)
+
+    def __str__(self):
+        return f'({Types[Types.index(self.Type)+1]}) {self.short_name} in {self.date.strftime("%b %d, %Y")}'
+    
+    class Meta:
+        verbose_name = '(Before Live Commodities)'
+        verbose_name_plural = '(Before Live Commodities)'
+
+class CommodityLive:
+    Type = models.CharField(choices=TYPES, max_length=9, default='cmdty')
+    short_name = models.CharField(max_length=16) 
+    link = models.URLField()
+    
+    high = models.CharField(max_length=15, null=True)
+    low = models.CharField(max_length=15, null=True)
+    change = models.CharField(max_length=15, null=True)
+    change_perc = models.CharField(max_length=12, null=True)
+    @property
+    def day_range(self):
+        return f'{self.low}-{self.high}'
+
+    def __str__(self):
+        return f'({Types[Types.index(self.Type)+1]}) {self.short_name} in {self.date.strftime("%b %d, %Y")}'
+    
+    class Meta:
+        verbose_name = '(Live Commodities) All Asset Types'
+        verbose_name_plural = '(Live Commodities) All Asset Types'
+
+class CommodityAfterLive:
+    Type = models.CharField(choices=TYPES, max_length=9, default='cmdty')
+    short_name = models.CharField(max_length=16) 
+    link = models.URLField()
+    
+    date = models.DateField(default=datetime.date.today, null=True)
+    one_year_rng = models.CharField(max_length=30)
+    one_year_chg = models.CharField(max_length=7)
+    month = models.DateField(default=None, null=True)
+    settlement_day = models.DateField(default=None, null=True)
+    last_roll_day = models.DateField(default=None, null=True)
+
+    def __str__(self):
+        return f'({Types[Types.index(self.Type)+1]}) {self.short_name} in {self.date.strftime("%b %d, %Y")}'
+    
+    class Meta:
+        verbose_name = '(After Live Commodities)'
+        verbose_name_plural = '(After Live Commodities)'
+
+class CommodityHistorical1D:
+    Type = models.CharField(choices=TYPES, max_length=9, default='cmdty')
+    short_name = models.CharField(max_length=16) 
+    link = models.URLField()
+
+    date = models.DateTimeField(default=None, null=True)
+    price = models.CharField(max_length=12, default=None, null=True)
