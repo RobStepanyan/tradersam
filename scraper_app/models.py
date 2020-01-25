@@ -1002,8 +1002,8 @@ class CommodityAfterLive(models.Model):
     
     date = models.DateField(default=None, null=True)
     one_year_rng = models.CharField(max_length=30)
-    one_year_chg = models.CharField(max_length=7)
-    months = models.DateField(default=None, null=True)
+    one_year_chg = models.CharField(max_length=12)
+    months = models.CharField(max_length=15)
     settlement_day = models.DateField(default=None, null=True)
     last_roll_day = models.DateField(default=None, null=True)
 
