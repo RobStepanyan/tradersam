@@ -4758,8 +4758,8 @@ class CollectAllAssetsHistorical5Y:
         print('Finished Successfuly')
 
     def cryptocurrencies(delete='n'):
-        c_list = CryptocurrenciesStaticInfo.objects.values_list('short_name', 'link') # returns a list of tuples #change here
-        quanity = CryptocurrenciesStaticInfo.objects.count()
+        c_list = CryptocurrencyStaticInfo.objects.values_list('short_name', 'link') # returns a list of tuples #change here
+        quanity = CryptocurrencyStaticInfo.objects.count()
         #--------------------VPS------------------
         display = Display(visible=0, size=(1000, 1000))
         display.start()
@@ -4803,7 +4803,7 @@ class CollectAllAssetsHistorical5Y:
                             data = row.find_all('td')
                             data = [d.get_text() for d in data]
                             date = datetime.datetime.strptime(data[0], '%b %d, %Y')
-                            price = data[1][:data.index('.')+2+1]
+                            price = data[1][:data[1].index('.')+2+1]
                             Open = data[2]
                             high = data[3]
                             low = data[4]
