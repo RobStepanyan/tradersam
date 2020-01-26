@@ -1,5 +1,5 @@
 # FOR SCRAPING (COLLECTING) DATA FROM MAX TO 1M
-import os, datetime
+import os, datetime, sys
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from pyvirtualdisplay import Display
@@ -32,6 +32,11 @@ from .models import (
     
     AllAssetsHistoricalMax, AllAssetsHistorical5Y
 )
+
+def print_exception(e):
+    exc_type, exc_obj, exc_tb = sys.exc_info()
+    fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+    print(f'{exc_type} {e} in {fname} at {exc_tb.tb_lineno}') # printing exception details
 
 class CollectAllAssetsHistoricalMax:
 # from scraper_app import historical_scraper as h
@@ -110,7 +115,7 @@ class CollectAllAssetsHistoricalMax:
                         x += 1
                         break
                     except Exception as e:
-                        print(e)
+                        print_exception(e)
                         continue
 
         finally:
@@ -139,6 +144,7 @@ class CollectAllAssetsHistoricalMax:
             print('Starting to collect new ones')
             print('Starting Selenium')
             # driver = webdriver.Chrome()
+            x = 1
             for i in c_list:
                 while True:
                     try:
@@ -186,7 +192,7 @@ class CollectAllAssetsHistoricalMax:
                         x += 1
                         break
                     except Exception as e:
-                        print(e)
+                        print_exception(e)
                         continue
         finally:
             ('Quiting the driver')
@@ -263,7 +269,7 @@ class CollectAllAssetsHistoricalMax:
                     x+=1
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     continue
         
         chunk_list = list(chunks(range(quanity), 3))
@@ -440,7 +446,7 @@ class CollectAllAssetsHistoricalMax:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -545,7 +551,7 @@ class CollectAllAssetsHistoricalMax:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -651,7 +657,7 @@ class CollectAllAssetsHistoricalMax:
                         # print(date, price, Open, high, low, change_perc, volume)
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -756,7 +762,7 @@ class CollectAllAssetsHistoricalMax:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -861,7 +867,7 @@ class CollectAllAssetsHistoricalMax:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -966,7 +972,7 @@ class CollectAllAssetsHistoricalMax:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -1071,7 +1077,7 @@ class CollectAllAssetsHistoricalMax:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -1176,7 +1182,7 @@ class CollectAllAssetsHistoricalMax:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -1283,7 +1289,7 @@ class CollectAllAssetsHistoricalMax:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -1390,7 +1396,7 @@ class CollectAllAssetsHistoricalMax:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -1497,7 +1503,7 @@ class CollectAllAssetsHistoricalMax:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -1604,7 +1610,7 @@ class CollectAllAssetsHistoricalMax:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -1711,7 +1717,7 @@ class CollectAllAssetsHistoricalMax:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -1818,7 +1824,7 @@ class CollectAllAssetsHistoricalMax:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -1925,7 +1931,7 @@ class CollectAllAssetsHistoricalMax:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -2032,7 +2038,7 @@ class CollectAllAssetsHistoricalMax:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -2137,7 +2143,7 @@ class CollectAllAssetsHistoricalMax:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -2242,7 +2248,7 @@ class CollectAllAssetsHistoricalMax:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -2347,7 +2353,7 @@ class CollectAllAssetsHistoricalMax:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -2452,7 +2458,7 @@ class CollectAllAssetsHistoricalMax:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -2557,7 +2563,7 @@ class CollectAllAssetsHistoricalMax:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -2662,7 +2668,7 @@ class CollectAllAssetsHistoricalMax:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -2767,7 +2773,7 @@ class CollectAllAssetsHistoricalMax:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -2872,7 +2878,7 @@ class CollectAllAssetsHistoricalMax:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -2977,7 +2983,7 @@ class CollectAllAssetsHistoricalMax:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -3082,7 +3088,7 @@ class CollectAllAssetsHistoricalMax:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -3187,7 +3193,7 @@ class CollectAllAssetsHistoricalMax:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -3292,7 +3298,7 @@ class CollectAllAssetsHistoricalMax:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -3397,7 +3403,7 @@ class CollectAllAssetsHistoricalMax:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -3502,7 +3508,7 @@ class CollectAllAssetsHistoricalMax:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -3607,7 +3613,7 @@ class CollectAllAssetsHistoricalMax:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -3712,7 +3718,7 @@ class CollectAllAssetsHistoricalMax:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -3817,7 +3823,7 @@ class CollectAllAssetsHistoricalMax:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -3922,7 +3928,7 @@ class CollectAllAssetsHistoricalMax:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -4027,7 +4033,7 @@ class CollectAllAssetsHistoricalMax:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -4132,7 +4138,7 @@ class CollectAllAssetsHistoricalMax:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -4237,7 +4243,7 @@ class CollectAllAssetsHistoricalMax:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -4342,7 +4348,7 @@ class CollectAllAssetsHistoricalMax:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -4447,7 +4453,7 @@ class CollectAllAssetsHistoricalMax:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -4552,7 +4558,7 @@ class CollectAllAssetsHistoricalMax:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -4607,25 +4613,26 @@ class CollectAllAssetsHistorical5Y:
                 print('Closing CollectAllAssetsHistorical5Y.commodities()')
                 return ''
             print('Removing old records')
-            AllAssetsHistoricalMax.objects.filter(Type='cmdty').delete()
+            AllAssetsHistorical5Y.objects.filter(Type='cmdty').delete()
             print('Old records have been removed')
             print('Starting to collect new ones')
             print('Starting Selenium')
             # driver = webdriver.Chrome()
             x = 1
             for i in c_list:
+                startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
+                startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
+                link = i[2]
+                if '?cid' in link:
+                    cid = link[link.index('?cid'):]
+                    link = link[:link.index('?cid')]
+                    link += '-historical-data' + cid
+                else:
+                    link += '-historical-data'
+                driver.get(link)
+                sleep(2)
                 while True:
                     try:
-                        startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
-                        startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
-                        link = i[2]
-                        if '?cid' in link:
-                            cid = link[link.index('?cid'):]
-                            link = link[:link.index('?cid')]
-                            link += '-historical-data' + cid
-                        else:
-                            link += '-historical-data'
-                        driver.get(link)
                         print(link)
                         print('Executing JS scripts')
                         driver.execute_script('$("#data_interval").val("Weekly");')
@@ -4641,7 +4648,7 @@ class CollectAllAssetsHistorical5Y:
                         for row in soup:
                             data = row.find_all('td')
                             data = [d.get_text() for d in data]
-                            date = datetime.datetime.strptime(data[0], '%b %y')
+                            date = datetime.datetime.strptime(data[0], '%b %d, %Y')
                             price = data[1]
                             Open = data[2]
                             high = data[3]
@@ -4651,7 +4658,7 @@ class CollectAllAssetsHistorical5Y:
                             Type = 'cmdty'
                             country = i[0]
                             short_name = i[1]
-                            AllAssetsHistoricalMax(
+                            AllAssetsHistorical5Y(
                                 Type=Type, country=country, short_name=short_name,
                                 date=date, price=price, Open=Open,
                                 high=high, low=low, change_perc=change_perc,
@@ -4660,7 +4667,9 @@ class CollectAllAssetsHistorical5Y:
                         x += 1
                         break
                     except Exception as e:
-                        print(e)
+                        print_exception(e)
+                        print('Waiting for 5 more seconds')
+                        sleep(5)
                         continue
 
         finally:
@@ -4684,24 +4693,25 @@ class CollectAllAssetsHistorical5Y:
                 print('Closing CollectAllAssetsHistorical5Y.currencies()') #change here
                 return ''
             print('Removing old records')
-            AllAssetsHistoricalMax.objects.filter(Type='crncy').delete() #change here
+            AllAssetsHistorical5Y.objects.filter(Type='crncy').delete() #change here
             print('Old records have been removed')
             print('Starting to collect new ones')
             print('Starting Selenium')
             # driver = webdriver.Chrome()
+            x = 1
             for i in c_list:
+                startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
+                startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
+                link = i[1]
+                if '?cid' in link:
+                    cid = link[link.index('?cid'):]
+                    link = link[:link.index('?cid')]
+                    link += '-historical-data' + cid
+                else:
+                    link += '-historical-data'
+                driver.get(link)
                 while True:
                     try:
-                        startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
-                        startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
-                        link = i[1]
-                        if '?cid' in link:
-                            cid = link[link.index('?cid'):]
-                            link = link[:link.index('?cid')]
-                            link += '-historical-data' + cid
-                        else:
-                            link += '-historical-data'
-                        driver.get(link)
                         print(link)
                         print('Executing JS scripts')
                         driver.execute_script('$("#data_interval").val("Monthly");')
@@ -4720,7 +4730,7 @@ class CollectAllAssetsHistorical5Y:
                         for row in soup:
                             data = row.find_all('td')
                             data = [d.get_text() for d in data]
-                            date = datetime.datetime.strptime(data[0], '%b %y')
+                            date = datetime.datetime.strptime(data[0], '%b %d, %Y')
                             price = data[1]
                             Open = data[2]
                             high = data[3]
@@ -4730,7 +4740,7 @@ class CollectAllAssetsHistorical5Y:
                             Type = 'crncy'  #change here
                             country = 'G'  #change here
                             short_name = i[0]  #change here
-                            AllAssetsHistoricalMax( 
+                            AllAssetsHistorical5Y( 
                                 Type=Type, country=country, short_name=short_name,
                                 date=date, price=price, Open=Open,
                                 high=high, low=low, change_perc=change_perc,
@@ -4739,7 +4749,8 @@ class CollectAllAssetsHistorical5Y:
                         x += 1
                         break
                     except Exception as e:
-                        print(e)
+                        print_exception(e)
+                        print('Waiting for 5 more seconds')
                         continue
         finally:
             ('Quiting the driver')
@@ -4747,8 +4758,8 @@ class CollectAllAssetsHistorical5Y:
         print('Finished Successfuly')
 
     def cryptocurrencies(delete='n'):
-        c_list = USStockStaticInfo.objects.values_list('short_name', 'link') # returns a list of tuples #change here
-        quanity = USStockStaticInfo.objects.count()
+        c_list = CryptocurrenciesStaticInfo.objects.values_list('short_name', 'link') # returns a list of tuples #change here
+        quanity = CryptocurrenciesStaticInfo.objects.count()
         #--------------------VPS------------------
         display = Display(visible=0, size=(1000, 1000))
         display.start()
@@ -4762,19 +4773,19 @@ class CollectAllAssetsHistorical5Y:
                 print('Closing CollectAllAssetsHistorical5Y.cryptocurrencies()') #change here
                 return ''
             print('Removing old records')
-            AllAssetsHistoricalMax.objects.filter(Type='crptcrncy').delete() #change here
+            AllAssetsHistorical5Y.objects.filter(Type='crptcrncy').delete() #change here
             print('Old records have been removed')
             print('Starting to collect new ones')
             print('Starting Selenium')
             # driver = webdriver.Chrome()
             x = 1
             for i in c_list:
+                startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
+                startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
+                link = i[1] + '/historical-data' #change here
+                driver.get(link)
                 while True:
                     try:
-                        startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
-                        startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
-                        link = i[1] + '/historical-data' #change here
-                        driver.get(link)
                         print(link)
                         print('Executing JS scripts')
                         driver.execute_script('$("#data_interval").val("Weekly");')
@@ -4791,7 +4802,7 @@ class CollectAllAssetsHistorical5Y:
                         for row in soup:
                             data = row.find_all('td')
                             data = [d.get_text() for d in data]
-                            date = datetime.datetime.strptime(data[0], '%b %y')
+                            date = datetime.datetime.strptime(data[0], '%b %d, %Y')
                             price = data[1][:data.index('.')+2+1]
                             Open = data[2]
                             high = data[3]
@@ -4801,7 +4812,7 @@ class CollectAllAssetsHistorical5Y:
                             Type = 'crptcrncy'  #change here
                             country = 'G'  #change here
                             short_name = i[0]  #change here
-                            AllAssetsHistoricalMax( 
+                            AllAssetsHistorical5Y( 
                                 Type=Type, country=country, short_name=short_name,
                                 date=date, price=price, Open=Open,
                                 high=high, low=low, change_perc=change_perc,
@@ -4810,7 +4821,8 @@ class CollectAllAssetsHistorical5Y:
                         x+=1
                         break
                     except Exception as e:
-                        print(e)
+                        print_exception(e)
+                        print('Waiting for 5 more seconds')
                         continue
         finally:
             ('Quiting the driver')
@@ -4969,7 +4981,7 @@ class CollectAllAssetsHistorical5Y:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -5076,7 +5088,7 @@ class CollectAllAssetsHistorical5Y:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -5183,7 +5195,7 @@ class CollectAllAssetsHistorical5Y:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -5290,7 +5302,7 @@ class CollectAllAssetsHistorical5Y:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -5397,7 +5409,7 @@ class CollectAllAssetsHistorical5Y:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -5504,7 +5516,7 @@ class CollectAllAssetsHistorical5Y:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -5611,7 +5623,7 @@ class CollectAllAssetsHistorical5Y:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -5718,7 +5730,7 @@ class CollectAllAssetsHistorical5Y:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -5825,7 +5837,7 @@ class CollectAllAssetsHistorical5Y:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -5932,7 +5944,7 @@ class CollectAllAssetsHistorical5Y:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -6039,7 +6051,7 @@ class CollectAllAssetsHistorical5Y:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -6146,7 +6158,7 @@ class CollectAllAssetsHistorical5Y:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -6253,7 +6265,7 @@ class CollectAllAssetsHistorical5Y:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -6360,7 +6372,7 @@ class CollectAllAssetsHistorical5Y:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -6467,7 +6479,7 @@ class CollectAllAssetsHistorical5Y:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -6574,7 +6586,7 @@ class CollectAllAssetsHistorical5Y:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -6681,7 +6693,7 @@ class CollectAllAssetsHistorical5Y:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -6788,7 +6800,7 @@ class CollectAllAssetsHistorical5Y:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -6895,7 +6907,7 @@ class CollectAllAssetsHistorical5Y:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -7002,7 +7014,7 @@ class CollectAllAssetsHistorical5Y:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -7109,7 +7121,7 @@ class CollectAllAssetsHistorical5Y:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -7216,7 +7228,7 @@ class CollectAllAssetsHistorical5Y:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -7323,7 +7335,7 @@ class CollectAllAssetsHistorical5Y:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -7430,7 +7442,7 @@ class CollectAllAssetsHistorical5Y:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -7537,7 +7549,7 @@ class CollectAllAssetsHistorical5Y:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -7644,7 +7656,7 @@ class CollectAllAssetsHistorical5Y:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -7751,7 +7763,7 @@ class CollectAllAssetsHistorical5Y:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -7858,7 +7870,7 @@ class CollectAllAssetsHistorical5Y:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -7965,7 +7977,7 @@ class CollectAllAssetsHistorical5Y:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -8072,7 +8084,7 @@ class CollectAllAssetsHistorical5Y:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -8179,7 +8191,7 @@ class CollectAllAssetsHistorical5Y:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -8286,7 +8298,7 @@ class CollectAllAssetsHistorical5Y:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -8393,7 +8405,7 @@ class CollectAllAssetsHistorical5Y:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -8500,7 +8512,7 @@ class CollectAllAssetsHistorical5Y:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -8607,7 +8619,7 @@ class CollectAllAssetsHistorical5Y:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -8714,7 +8726,7 @@ class CollectAllAssetsHistorical5Y:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -8821,7 +8833,7 @@ class CollectAllAssetsHistorical5Y:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -8928,7 +8940,7 @@ class CollectAllAssetsHistorical5Y:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -9035,7 +9047,7 @@ class CollectAllAssetsHistorical5Y:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
@@ -9142,7 +9154,7 @@ class CollectAllAssetsHistorical5Y:
                             volume=volume).save()
                     break
                 except Exception as e:
-                    print(e)
+                    print_exception(e)
                     pass
             
             print(f'Stored {x}/{quanity}')
