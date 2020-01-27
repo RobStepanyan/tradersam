@@ -38,6 +38,37 @@ def print_exception(e):
     fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
     print(f'{exc_type} {e} in {fname} at {exc_tb.tb_lineno}') # printing exception details
 
+def validate_price(x):
+    if len(x)>=12:
+        return None
+    return x
+
+def threads_by_chunks(target, c_list):
+    def chunks(lst, n):
+        """Yield successive n-sized chunks from lst."""
+        for i in range(0, len(lst), n):
+            yield lst[i:i + n]
+
+    # Code below creates threads for each item, then executes them by chunks
+    quanity = len(c_list)
+    chunk_list = list(chunks(range(quanity), 3))
+    threads = []
+    for i in range(quanity):
+        threads.append(Thread(target=target, args=(c_list[i],)))
+    print('Threads are ready')
+    chunk_n = 1
+    chunk_all = len(chunk_list)
+    for l in chunk_list:
+        for sub_l in l:
+            threads[sub_l].start()
+            sleep(1)
+        for sub_l in l:
+            threads[sub_l].join()
+        
+        print(f'Executed Chunk {chunk_n}/{chunk_all}')
+        chunk_n += 1
+    
+
 class CollectAllAssetsHistoricalMax:
 # from scraper_app import historical_scraper as h
 # h.CollectAllAssetsHistoricalMax.commodities(delete='n')
@@ -58,66 +89,71 @@ class CollectAllAssetsHistoricalMax:
         options.add_argument('--no-sandbox')
         driver = webdriver.Chrome(options=options)
         #-----------------------------------------
-        try:
-            print('Starting CollectAllAssetsHistoricalMax.commodities()')
-            if delete.upper() != 'Y':
-                print('Closing CollectAllAssetsHistoricalMax.commodities()')
-                return ''
-            print('Removing old records')
-            AllAssetsHistoricalMax.objects.filter(Type='cmdty').delete()
-            print('Old records have been removed')
-            print('Starting to collect new ones')
-            print('Starting Selenium')
-            # driver = webdriver.Chrome()
-            x = 1
-            for i in c_list:
-                while True:
-                    try:
-                        link = i[2]
-                        if '?cid' in link:
-                            cid = link[link.index('?cid'):]
-                            link = link[:link.index('?cid')]
-                            link += '-historical-data' + cid
-                        else:
-                            link += '-historical-data'
-                        driver.get(link)
-                        print(link)
-                        print('Executing JS scripts')
-                        driver.execute_script('$("#data_interval").val("Monthly");')
-                        driver.find_element_by_id('data_interval').value = "Monthly"
-                        driver.find_element_by_id('widgetFieldDateRange').click()
-                        driver.find_element_by_id('startDate').clear()
-                        driver.find_element_by_id('startDate').send_keys('01/01/1980', Keys.ENTER)
-                        print('Executed JS scripts, sleeping for 5 seconds')
-                        sleep(5)
-                        soup = BeautifulSoup(driver.page_source, 'html.parser')
-                        soup = soup.find(class_='genTbl closedTbl historicalTbl')
-                        soup = soup.tbody.find_all('tr')
-                        for row in soup:
-                            data = row.find_all('td')
-                            data = [d.get_text() for d in data]
-                            date = datetime.datetime.strptime(data[0], '%b %y')
-                            price = data[1]
-                            Open = data[2]
-                            high = data[3]
-                            low = data[4]
-                            volume = data[5]
-                            change_perc = data[6][:-1] # Removing % symbol
-                            Type = 'cmdty'
-                            country = i[0]
-                            short_name = i[1]
-                            AllAssetsHistoricalMax(
-                                Type=Type, country=country, short_name=short_name,
-                                date=date, price=price, Open=Open,
-                                high=high, low=low, change_perc=change_perc,
-                                volume=volume).save()
-                        print(f'Stored {x}/{len(c_list)}')
-                        x += 1
-                        break
-                    except Exception as e:
-                        print_exception(e)
-                        continue
+        print('Starting CollectAllAssetsHistoricalMax.commodities()')
+        if delete.upper() != 'Y':
+            print('Closing CollectAllAssetsHistoricalMax.commodities()')
+            return ''
+        print('Removing old records')
+        AllAssetsHistoricalMax.objects.filter(Type='cmdty').delete()
+        print('Old records have been removed')
+        print('Starting to collect new ones')
+        print('Starting Selenium')
+        # driver = webdriver.Chrome()
+        def work(i):
+            x = list(c_list).index(i)+1
+            link = i[2]
+            if '?cid' in link:
+                cid = link[link.index('?cid'):]
+                link = link[:link.index('?cid')]
+                link += '-historical-data' + cid
+            else:
+                link += '-historical-data'
+            driver.get(link)
+            sleep(2)
+            x = list(c_list).index(i) + 1
+            while True:
+                try:
+                    print(link)
+                    print('Executing JS scripts')
+                    driver.execute_script('$("#data_interval").val("Monthly");')
+                    driver.find_element_by_id('data_interval').value = "Monthly"
+                    driver.find_element_by_id('widgetFieldDateRange').click()
+                    driver.find_element_by_id('startDate').clear()
+                    driver.find_element_by_id('startDate').send_keys('01/01/1980', Keys.ENTER)
+                    print('Executed JS scripts, sleeping for 5 seconds')
+                    sleep(5)
+                    soup = BeautifulSoup(driver.page_source, 'html.parser')
+                    soup = soup.find(class_='genTbl closedTbl historicalTbl')
+                    soup = soup.tbody.find_all('tr')
+                    for row in soup:
+                        data = row.find_all('td')
+                        data = [d.get_text() for d in data]
+                        date = datetime.datetime.strptime(data[0], '%b %y')
+                        price = validate_price(data[1])
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
+                        volume = validate_price(data[5])
+                        change_perc = data[6][:-1] # Removing % symbol
+                        Type = 'cmdty'
+                        country = i[0]
+                        short_name = i[1]
+                        AllAssetsHistoricalMax(
+                            Type=Type, country=country, short_name=short_name,
+                            date=date, price=price, Open=Open,
+                            high=high, low=low, change_perc=change_perc,
+                            volume=volume).save()
+                    print(f'Stored {x}/{len(c_list)}')
+                    x += 1
+                    break
+                except Exception as e:
+                    print_exception(e)
+                    print('Waiting for 3 more seconds')
+                    sleep(3)
+                    continue
 
+        try:
+            threads_by_chunks(target=work, c_list=c_list)
         finally:
             ('Quiting the driver')
             driver.quit()
@@ -144,18 +180,20 @@ class CollectAllAssetsHistoricalMax:
             print('Starting to collect new ones')
             print('Starting Selenium')
             # driver = webdriver.Chrome()
-            x = 1
-            for i in c_list:
+            def work(i):
+                link = i[1]
+                if '?cid' in link:
+                    cid = link[link.index('?cid'):]
+                    link = link[:link.index('?cid')]
+                    link += '-historical-data' + cid
+                else:
+                    link += '-historical-data'
+                driver.get(link)
+                x = list(c_list).index(i) + 1
                 while True:
                     try:
-                        link = i[1]
-                        if '?cid' in link:
-                            cid = link[link.index('?cid'):]
-                            link = link[:link.index('?cid')]
-                            link += '-historical-data' + cid
-                        else:
-                            link += '-historical-data'
-                        driver.get(link)
+                        x = list(c_list).index(i) + 1
+                        print(link)
                         print('Executing JS scripts')
                         driver.execute_script('$("#data_interval").val("Monthly");')
                         driver.find_element_by_id('data_interval').value = "Monthly"
@@ -164,7 +202,6 @@ class CollectAllAssetsHistoricalMax:
                         driver.find_element_by_id('startDate').send_keys('01/01/1980', Keys.ENTER)
                         print('Executed JS scripts, sleeping for 5 seconds')
                         sleep(5)
-                        print(link)
                         soup = BeautifulSoup(driver.page_source, 'html.parser')
                         print(soup.find(id='widgetFieldDateRange'))
                         soup = soup.find(class_='genTbl closedTbl historicalTbl')
@@ -174,10 +211,10 @@ class CollectAllAssetsHistoricalMax:
                             data = row.find_all('td')
                             data = [d.get_text() for d in data]
                             date = datetime.datetime.strptime(data[0], '%b %y')
-                            price = data[1]
-                            Open = data[2]
-                            high = data[3]
-                            low = data[4]
+                            price = validate_price(data[1])
+                            Open = validate_price(data[2])
+                            high = validate_price(data[3])
+                            low = validate_price(data[4])
                             volume = None  #change here
                             change_perc = data[5][:-1] # Removing % symbol
                             Type = 'crncy'  #change here
@@ -193,6 +230,8 @@ class CollectAllAssetsHistoricalMax:
                         break
                     except Exception as e:
                         print_exception(e)
+                        print('Waiting for 3 more seconds')
+                        sleep(3)
                         continue
         finally:
             ('Quiting the driver')
@@ -226,12 +265,13 @@ class CollectAllAssetsHistoricalMax:
     
         def work(i):
             x = list(c_list).index(i)+1
+            link = i[1] + '/historical-data' #change here
+            driver.get(link)
+            sleep(2)
+            x = list(c_list).index(i) + 1
             while True:
                 try:
-                    link = i[1] + '/historical-data' #change here
                     print(link)
-                    driver.get(link)
-                    sleep(2)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Monthly");')
                     driver.find_element_by_id('data_interval').value = "Monthly"
@@ -240,7 +280,6 @@ class CollectAllAssetsHistoricalMax:
                     driver.find_element_by_id('startDate').send_keys('01/01/1980', Keys.ENTER)
                     print('Executed JS scripts, sleeping for 5 seconds')
                     sleep(5)
-                    print(link)
                     soup = BeautifulSoup(driver.page_source, 'html.parser')
                     print(soup.find(id='widgetFieldDateRange'))
                     soup = soup.find(class_='genTbl closedTbl historicalTbl')
@@ -249,13 +288,13 @@ class CollectAllAssetsHistoricalMax:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         if len(price) > 12: # in case of invalid data
                             price = None
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
-                        volume = data[5]  #change here
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
+                        volume = validate_price(data[5])  #change here
                         change_perc = data[6][:-1] # Removing % symbol #change here
                         Type = 'crptcrncy'  #change here
                         country = 'G'  #change here
@@ -270,26 +309,12 @@ class CollectAllAssetsHistoricalMax:
                     break
                 except Exception as e:
                     print_exception(e)
+                    print('Waiting for 3 more seconds')
+                    sleep(3)
                     continue
         
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -406,11 +431,12 @@ class CollectAllAssetsHistoricalMax:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
+            
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
-                    driver.get(link)
-                    sleep(5)
+                    print(link)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Monthly");')
                     driver.find_element_by_id('data_interval').value = "Monthly"
@@ -429,12 +455,12 @@ class CollectAllAssetsHistoricalMax:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
-                        volume = data[5]  #change here
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
+                        volume = validate_price(data[5])  #change here
                         change_perc = data[6][:-1] # Removing % symbol #change here
                         Type = 'stck'  #change here
                         country = 'US'  #change here
@@ -452,24 +478,8 @@ class CollectAllAssetsHistoricalMax:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -511,11 +521,11 @@ class CollectAllAssetsHistoricalMax:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
-                    driver.get(link)
-                    sleep(5)
+                    print(link)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Monthly");')
                     driver.find_element_by_id('data_interval').value = "Monthly"
@@ -534,12 +544,12 @@ class CollectAllAssetsHistoricalMax:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
-                        volume = data[5]  #change here
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
+                        volume = validate_price(data[5])  #change here
                         change_perc = data[6][:-1] # Removing % symbol #change here
                         Type = 'stck'  #change here
                         country = 'JP'  #change here
@@ -557,24 +567,8 @@ class CollectAllAssetsHistoricalMax:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -616,11 +610,11 @@ class CollectAllAssetsHistoricalMax:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
-                    driver.get(link)
-                    sleep(5)
+                    print(link)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Monthly");')
                     driver.find_element_by_id('data_interval').value = "Monthly"
@@ -639,12 +633,12 @@ class CollectAllAssetsHistoricalMax:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
-                        volume = data[5]  #change here
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
+                        volume = validate_price(data[5])  #change here
                         change_perc = data[6][:-1] # Removing % symbol #change here
                         Type = 'stck'  #change here
                         country = 'UK'  #change here
@@ -663,24 +657,8 @@ class CollectAllAssetsHistoricalMax:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -722,11 +700,11 @@ class CollectAllAssetsHistoricalMax:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
-                    driver.get(link)
-                    sleep(5)
+                    print(link)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Monthly");')
                     driver.find_element_by_id('data_interval').value = "Monthly"
@@ -745,12 +723,12 @@ class CollectAllAssetsHistoricalMax:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
-                        volume = data[5]  #change here
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
+                        volume = validate_price(data[5])  #change here
                         change_perc = data[6][:-1] # Removing % symbol #change here
                         Type = 'stck'  #change here
                         country = 'HK'  #change here
@@ -768,24 +746,8 @@ class CollectAllAssetsHistoricalMax:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -827,11 +789,11 @@ class CollectAllAssetsHistoricalMax:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
-                    driver.get(link)
-                    sleep(5)
+                    print(link)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Monthly");')
                     driver.find_element_by_id('data_interval').value = "Monthly"
@@ -850,12 +812,12 @@ class CollectAllAssetsHistoricalMax:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
-                        volume = data[5]  #change here
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
+                        volume = validate_price(data[5])  #change here
                         change_perc = data[6][:-1] # Removing % symbol #change here
                         Type = 'stck'  #change here
                         country = 'CH'  #change here
@@ -873,24 +835,8 @@ class CollectAllAssetsHistoricalMax:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -932,11 +878,11 @@ class CollectAllAssetsHistoricalMax:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
-                    driver.get(link)
-                    sleep(5)
+                    print(link)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Monthly");')
                     driver.find_element_by_id('data_interval').value = "Monthly"
@@ -955,12 +901,12 @@ class CollectAllAssetsHistoricalMax:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
-                        volume = data[5]  #change here
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
+                        volume = validate_price(data[5])  #change here
                         change_perc = data[6][:-1] # Removing % symbol #change here
                         Type = 'stck'  #change here
                         country = 'CA'  #change here
@@ -978,24 +924,8 @@ class CollectAllAssetsHistoricalMax:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -1037,11 +967,11 @@ class CollectAllAssetsHistoricalMax:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
-                    driver.get(link)
-                    sleep(5)
+                    print(link)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Monthly");')
                     driver.find_element_by_id('data_interval').value = "Monthly"
@@ -1060,12 +990,12 @@ class CollectAllAssetsHistoricalMax:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
-                        volume = data[5]  #change here
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
+                        volume = validate_price(data[5])  #change here
                         change_perc = data[6][:-1] # Removing % symbol #change here
                         Type = 'stck'  #change here
                         country = 'GE'  #change here
@@ -1083,24 +1013,8 @@ class CollectAllAssetsHistoricalMax:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -1142,11 +1056,11 @@ class CollectAllAssetsHistoricalMax:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
-                    driver.get(link)
-                    sleep(5)
+                    print(link)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Monthly");')
                     driver.find_element_by_id('data_interval').value = "Monthly"
@@ -1165,12 +1079,12 @@ class CollectAllAssetsHistoricalMax:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
-                        volume = data[5]  #change here
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
+                        volume = validate_price(data[5])  #change here
                         change_perc = data[6][:-1] # Removing % symbol #change here
                         Type = 'stck'  #change here
                         country = 'AU'  #change here
@@ -1188,24 +1102,8 @@ class CollectAllAssetsHistoricalMax:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -1247,11 +1145,11 @@ class CollectAllAssetsHistoricalMax:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
-                    driver.get(link)
-                    sleep(5)
+                    print(link)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Monthly");')
                     driver.find_element_by_id('data_interval').value = "Monthly"
@@ -1270,12 +1168,12 @@ class CollectAllAssetsHistoricalMax:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
-                        volume = data[5]  #change here
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
+                        volume = validate_price(data[5])  #change here
                         if volume == '-':
                             volume = None
                         change_perc = data[6][:-1] # Removing % symbol #change here
@@ -1295,24 +1193,8 @@ class CollectAllAssetsHistoricalMax:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -1354,11 +1236,11 @@ class CollectAllAssetsHistoricalMax:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
-                    driver.get(link)
-                    sleep(5)
+                    print(link)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Monthly");')
                     driver.find_element_by_id('data_interval').value = "Monthly"
@@ -1377,12 +1259,12 @@ class CollectAllAssetsHistoricalMax:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
-                        volume = data[5]  #change here
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
+                        volume = validate_price(data[5])  #change here
                         if volume == '-':
                             volume = None
                         change_perc = data[6][:-1] # Removing % symbol #change here
@@ -1402,24 +1284,8 @@ class CollectAllAssetsHistoricalMax:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -1461,11 +1327,11 @@ class CollectAllAssetsHistoricalMax:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
-                    driver.get(link)
-                    sleep(5)
+                    print(link)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Monthly");')
                     driver.find_element_by_id('data_interval').value = "Monthly"
@@ -1484,12 +1350,12 @@ class CollectAllAssetsHistoricalMax:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
-                        volume = data[5]  #change here
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
+                        volume = validate_price(data[5])  #change here
                         if volume == '-':
                             volume = None
                         change_perc = data[6][:-1] # Removing % symbol #change here
@@ -1511,22 +1377,7 @@ class CollectAllAssetsHistoricalMax:
 
         chunk_list = list(chunks(range(885, quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -1568,11 +1419,11 @@ class CollectAllAssetsHistoricalMax:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
-                    driver.get(link)
-                    sleep(5)
+                    print(link)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Monthly");')
                     driver.find_element_by_id('data_interval').value = "Monthly"
@@ -1591,12 +1442,12 @@ class CollectAllAssetsHistoricalMax:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
-                        volume = data[5]  #change here
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
+                        volume = validate_price(data[5])  #change here
                         if volume == '-':
                             volume = None
                         change_perc = data[6][:-1] # Removing % symbol #change here
@@ -1616,24 +1467,8 @@ class CollectAllAssetsHistoricalMax:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -1675,11 +1510,11 @@ class CollectAllAssetsHistoricalMax:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
-                    driver.get(link)
-                    sleep(5)
+                    print(link)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Monthly");')
                     driver.find_element_by_id('data_interval').value = "Monthly"
@@ -1698,12 +1533,12 @@ class CollectAllAssetsHistoricalMax:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
-                        volume = data[5]  #change here
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
+                        volume = validate_price(data[5])  #change here
                         if volume == '-':
                             volume = None
                         change_perc = data[6][:-1] # Removing % symbol #change here
@@ -1723,24 +1558,8 @@ class CollectAllAssetsHistoricalMax:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -1782,11 +1601,11 @@ class CollectAllAssetsHistoricalMax:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
-                    driver.get(link)
-                    sleep(5)
+                    print(link)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Monthly");')
                     driver.find_element_by_id('data_interval').value = "Monthly"
@@ -1805,12 +1624,12 @@ class CollectAllAssetsHistoricalMax:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
-                        volume = data[5]  #change here
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
+                        volume = validate_price(data[5])  #change here
                         if volume == '-':
                             volume = None
                         change_perc = data[6][:-1] # Removing % symbol #change here
@@ -1830,24 +1649,8 @@ class CollectAllAssetsHistoricalMax:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -1889,11 +1692,11 @@ class CollectAllAssetsHistoricalMax:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
-                    driver.get(link)
-                    sleep(5)
+                    print(link)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Monthly");')
                     driver.find_element_by_id('data_interval').value = "Monthly"
@@ -1912,12 +1715,12 @@ class CollectAllAssetsHistoricalMax:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
-                        volume = data[5]  #change here
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
+                        volume = validate_price(data[5])  #change here
                         if volume == '-':
                             volume = None
                         change_perc = data[6][:-1] # Removing % symbol #change here
@@ -1937,24 +1740,8 @@ class CollectAllAssetsHistoricalMax:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -1996,11 +1783,11 @@ class CollectAllAssetsHistoricalMax:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
-                    driver.get(link)
-                    sleep(5)
+                    print(link)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Monthly");')
                     driver.find_element_by_id('data_interval').value = "Monthly"
@@ -2019,12 +1806,12 @@ class CollectAllAssetsHistoricalMax:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
-                        volume = data[5]  #change here
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
+                        volume = validate_price(data[5])  #change here
                         if volume == '-':
                             volume = None
                         change_perc = data[6][:-1] # Removing % symbol #change here
@@ -2044,24 +1831,8 @@ class CollectAllAssetsHistoricalMax:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -2103,11 +1874,11 @@ class CollectAllAssetsHistoricalMax:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
-                    driver.get(link)
-                    sleep(5)
+                    print(link)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Monthly");')
                     driver.find_element_by_id('data_interval').value = "Monthly"
@@ -2126,12 +1897,12 @@ class CollectAllAssetsHistoricalMax:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
-                        volume = data[5]  #change here
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
+                        volume = validate_price(data[5])  #change here
                         change_perc = data[6][:-1] # Removing % symbol #change here
                         Type = 'etf'  #change here
                         country = 'US'  #change here
@@ -2149,24 +1920,8 @@ class CollectAllAssetsHistoricalMax:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -2208,11 +1963,11 @@ class CollectAllAssetsHistoricalMax:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
-                    driver.get(link)
-                    sleep(5)
+                    print(link)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Monthly");')
                     driver.find_element_by_id('data_interval').value = "Monthly"
@@ -2231,12 +1986,12 @@ class CollectAllAssetsHistoricalMax:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
-                        volume = data[5]  #change here
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
+                        volume = validate_price(data[5])  #change here
                         change_perc = data[6][:-1] # Removing % symbol #change here
                         Type = 'etf'  #change here
                         country = 'JP'  #change here
@@ -2254,24 +2009,8 @@ class CollectAllAssetsHistoricalMax:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -2313,11 +2052,11 @@ class CollectAllAssetsHistoricalMax:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
-                    driver.get(link)
-                    sleep(5)
+                    print(link)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Monthly");')
                     driver.find_element_by_id('data_interval').value = "Monthly"
@@ -2336,12 +2075,12 @@ class CollectAllAssetsHistoricalMax:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
-                        volume = data[5]  #change here
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
+                        volume = validate_price(data[5])  #change here
                         change_perc = data[6][:-1] # Removing % symbol #change here
                         Type = 'etf'  #change here
                         country = 'UK'  #change here
@@ -2359,24 +2098,8 @@ class CollectAllAssetsHistoricalMax:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -2418,11 +2141,11 @@ class CollectAllAssetsHistoricalMax:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
-                    driver.get(link)
-                    sleep(5)
+                    print(link)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Monthly");')
                     driver.find_element_by_id('data_interval').value = "Monthly"
@@ -2441,12 +2164,12 @@ class CollectAllAssetsHistoricalMax:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
-                        volume = data[5]  #change here
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
+                        volume = validate_price(data[5])  #change here
                         change_perc = data[6][:-1] # Removing % symbol #change here
                         Type = 'etf'  #change here
                         country = 'HK'  #change here
@@ -2464,24 +2187,8 @@ class CollectAllAssetsHistoricalMax:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -2523,11 +2230,11 @@ class CollectAllAssetsHistoricalMax:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
-                    driver.get(link)
-                    sleep(5)
+                    print(link)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Monthly");')
                     driver.find_element_by_id('data_interval').value = "Monthly"
@@ -2546,12 +2253,12 @@ class CollectAllAssetsHistoricalMax:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
-                        volume = data[5]  #change here
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
+                        volume = validate_price(data[5])  #change here
                         change_perc = data[6][:-1] # Removing % symbol #change here
                         Type = 'etf'  #change here
                         country = 'CH'  #change here
@@ -2569,24 +2276,8 @@ class CollectAllAssetsHistoricalMax:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -2628,11 +2319,11 @@ class CollectAllAssetsHistoricalMax:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
-                    driver.get(link)
-                    sleep(5)
+                    print(link)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Monthly");')
                     driver.find_element_by_id('data_interval').value = "Monthly"
@@ -2651,12 +2342,12 @@ class CollectAllAssetsHistoricalMax:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
-                        volume = data[5]  #change here
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
+                        volume = validate_price(data[5])  #change here
                         change_perc = data[6][:-1] # Removing % symbol #change here
                         Type = 'etf'  #change here
                         country = 'CA'  #change here
@@ -2674,24 +2365,8 @@ class CollectAllAssetsHistoricalMax:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -2733,11 +2408,11 @@ class CollectAllAssetsHistoricalMax:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
-                    driver.get(link)
-                    sleep(5)
+                    print(link)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Monthly");')
                     driver.find_element_by_id('data_interval').value = "Monthly"
@@ -2756,12 +2431,12 @@ class CollectAllAssetsHistoricalMax:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
-                        volume = data[5]  #change here
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
+                        volume = validate_price(data[5])  #change here
                         change_perc = data[6][:-1] # Removing % symbol #change here
                         Type = 'etf'  #change here
                         country = 'GE'  #change here
@@ -2779,24 +2454,8 @@ class CollectAllAssetsHistoricalMax:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -2838,11 +2497,11 @@ class CollectAllAssetsHistoricalMax:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
-                    driver.get(link)
-                    sleep(5)
+                    print(link)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Monthly");')
                     driver.find_element_by_id('data_interval').value = "Monthly"
@@ -2861,12 +2520,12 @@ class CollectAllAssetsHistoricalMax:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
-                        volume = data[5]  #change here
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
+                        volume = validate_price(data[5])  #change here
                         change_perc = data[6][:-1] # Removing % symbol #change here
                         Type = 'etf'  #change here
                         country = 'AU'  #change here
@@ -2884,24 +2543,8 @@ class CollectAllAssetsHistoricalMax:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -2943,11 +2586,11 @@ class CollectAllAssetsHistoricalMax:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
-                    driver.get(link)
-                    sleep(5)
+                    print(link)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Monthly");')
                     driver.find_element_by_id('data_interval').value = "Monthly"
@@ -2966,11 +2609,11 @@ class CollectAllAssetsHistoricalMax:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
                         volume = None  #change here
                         change_perc = data[5][:-1] # Removing % symbol #change here
                         Type = 'bnd'  #change here
@@ -2989,24 +2632,8 @@ class CollectAllAssetsHistoricalMax:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -3048,11 +2675,11 @@ class CollectAllAssetsHistoricalMax:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
-                    driver.get(link)
-                    sleep(5)
+                    print(link)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Monthly");')
                     driver.find_element_by_id('data_interval').value = "Monthly"
@@ -3071,11 +2698,11 @@ class CollectAllAssetsHistoricalMax:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
                         volume = None  #change here
                         change_perc = data[5][:-1] # Removing % symbol #change here
                         Type = 'bnd'  #change here
@@ -3094,24 +2721,8 @@ class CollectAllAssetsHistoricalMax:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -3153,11 +2764,11 @@ class CollectAllAssetsHistoricalMax:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
-                    driver.get(link)
-                    sleep(5)
+                    print(link)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Monthly");')
                     driver.find_element_by_id('data_interval').value = "Monthly"
@@ -3176,11 +2787,11 @@ class CollectAllAssetsHistoricalMax:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
                         volume = None  #change here
                         change_perc = data[5][:-1] # Removing % symbol #change here
                         Type = 'bnd'  #change here
@@ -3199,24 +2810,8 @@ class CollectAllAssetsHistoricalMax:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -3258,11 +2853,11 @@ class CollectAllAssetsHistoricalMax:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
-                    driver.get(link)
-                    sleep(5)
+                    print(link)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Monthly");')
                     driver.find_element_by_id('data_interval').value = "Monthly"
@@ -3281,11 +2876,11 @@ class CollectAllAssetsHistoricalMax:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
                         volume = None  #change here
                         change_perc = data[5][:-1] # Removing % symbol #change here
                         Type = 'bnd'  #change here
@@ -3304,24 +2899,8 @@ class CollectAllAssetsHistoricalMax:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -3363,11 +2942,11 @@ class CollectAllAssetsHistoricalMax:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
-                    driver.get(link)
-                    sleep(5)
+                    print(link)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Monthly");')
                     driver.find_element_by_id('data_interval').value = "Monthly"
@@ -3386,11 +2965,11 @@ class CollectAllAssetsHistoricalMax:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
                         volume = None  #change here
                         change_perc = data[5][:-1] # Removing % symbol #change here
                         Type = 'bnd'  #change here
@@ -3409,24 +2988,8 @@ class CollectAllAssetsHistoricalMax:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -3468,11 +3031,11 @@ class CollectAllAssetsHistoricalMax:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
-                    driver.get(link)
-                    sleep(5)
+                    print(link)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Monthly");')
                     driver.find_element_by_id('data_interval').value = "Monthly"
@@ -3491,11 +3054,11 @@ class CollectAllAssetsHistoricalMax:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
                         volume = None  #change here
                         change_perc = data[5][:-1] # Removing % symbol #change here
                         Type = 'bnd'  #change here
@@ -3514,24 +3077,8 @@ class CollectAllAssetsHistoricalMax:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -3573,11 +3120,11 @@ class CollectAllAssetsHistoricalMax:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
-                    driver.get(link)
-                    sleep(5)
+                    print(link)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Monthly");')
                     driver.find_element_by_id('data_interval').value = "Monthly"
@@ -3596,11 +3143,11 @@ class CollectAllAssetsHistoricalMax:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
                         volume = None  #change here
                         change_perc = data[5][:-1] # Removing % symbol #change here
                         Type = 'bnd'  #change here
@@ -3619,24 +3166,8 @@ class CollectAllAssetsHistoricalMax:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -3678,11 +3209,11 @@ class CollectAllAssetsHistoricalMax:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
-                    driver.get(link)
-                    sleep(5)
+                    print(link)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Monthly");')
                     driver.find_element_by_id('data_interval').value = "Monthly"
@@ -3701,11 +3232,11 @@ class CollectAllAssetsHistoricalMax:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
                         volume = None  #change here
                         change_perc = data[5][:-1] # Removing % symbol #change here
                         Type = 'bnd'  #change here
@@ -3724,24 +3255,8 @@ class CollectAllAssetsHistoricalMax:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -3783,11 +3298,11 @@ class CollectAllAssetsHistoricalMax:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
-                    driver.get(link)
-                    sleep(5)
+                    print(link)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Monthly");')
                     driver.find_element_by_id('data_interval').value = "Monthly"
@@ -3806,11 +3321,11 @@ class CollectAllAssetsHistoricalMax:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
                         volume = None  #change here
                         change_perc = data[5][:-1] # Removing % symbol #change here
                         Type = 'fnd'  #change here
@@ -3829,24 +3344,8 @@ class CollectAllAssetsHistoricalMax:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -3888,11 +3387,11 @@ class CollectAllAssetsHistoricalMax:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
-                    driver.get(link)
-                    sleep(5)
+                    print(link)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Monthly");')
                     driver.find_element_by_id('data_interval').value = "Monthly"
@@ -3911,11 +3410,11 @@ class CollectAllAssetsHistoricalMax:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
                         volume = None  #change here
                         change_perc = data[5][:-1] # Removing % symbol #change here
                         Type = 'fnd'  #change here
@@ -3934,24 +3433,8 @@ class CollectAllAssetsHistoricalMax:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -3993,11 +3476,11 @@ class CollectAllAssetsHistoricalMax:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
-                    driver.get(link)
-                    sleep(5)
+                    print(link)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Monthly");')
                     driver.find_element_by_id('data_interval').value = "Monthly"
@@ -4016,11 +3499,11 @@ class CollectAllAssetsHistoricalMax:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
                         volume = None  #change here
                         change_perc = data[5][:-1] # Removing % symbol #change here
                         Type = 'fnd'  #change here
@@ -4039,24 +3522,8 @@ class CollectAllAssetsHistoricalMax:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -4098,11 +3565,11 @@ class CollectAllAssetsHistoricalMax:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
-                    driver.get(link)
-                    sleep(5)
+                    print(link)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Monthly");')
                     driver.find_element_by_id('data_interval').value = "Monthly"
@@ -4121,11 +3588,11 @@ class CollectAllAssetsHistoricalMax:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
                         volume = None  #change here
                         change_perc = data[5][:-1] # Removing % symbol #change here
                         Type = 'fnd'  #change here
@@ -4144,24 +3611,8 @@ class CollectAllAssetsHistoricalMax:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -4203,11 +3654,11 @@ class CollectAllAssetsHistoricalMax:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
-                    driver.get(link)
-                    sleep(5)
+                    print(link)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Monthly");')
                     driver.find_element_by_id('data_interval').value = "Monthly"
@@ -4226,11 +3677,11 @@ class CollectAllAssetsHistoricalMax:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
                         volume = None  #change here
                         change_perc = data[5][:-1] # Removing % symbol #change here
                         Type = 'fnd'  #change here
@@ -4249,24 +3700,8 @@ class CollectAllAssetsHistoricalMax:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -4308,11 +3743,11 @@ class CollectAllAssetsHistoricalMax:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
-                    driver.get(link)
-                    sleep(5)
+                    print(link)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Monthly");')
                     driver.find_element_by_id('data_interval').value = "Monthly"
@@ -4331,11 +3766,11 @@ class CollectAllAssetsHistoricalMax:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
                         volume = None  #change here
                         change_perc = data[5][:-1] # Removing % symbol #change here
                         Type = 'fnd'  #change here
@@ -4354,24 +3789,8 @@ class CollectAllAssetsHistoricalMax:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -4413,11 +3832,11 @@ class CollectAllAssetsHistoricalMax:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
-                    driver.get(link)
-                    sleep(5)
+                    print(link)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Monthly");')
                     driver.find_element_by_id('data_interval').value = "Monthly"
@@ -4436,11 +3855,11 @@ class CollectAllAssetsHistoricalMax:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
                         volume = None  #change here
                         change_perc = data[5][:-1] # Removing % symbol #change here
                         Type = 'fnd'  #change here
@@ -4459,24 +3878,8 @@ class CollectAllAssetsHistoricalMax:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -4518,11 +3921,11 @@ class CollectAllAssetsHistoricalMax:
             else:
                 link += '-historical-data'
             x = list(c_list).index(i)+1
-            print(link)
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
-                    driver.get(link)
-                    sleep(5)
+                    print(link)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Monthly");')
                     driver.find_element_by_id('data_interval').value = "Monthly"
@@ -4541,11 +3944,11 @@ class CollectAllAssetsHistoricalMax:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
                         volume = None  #change here
                         change_perc = data[5][:-1] # Removing % symbol #change here
                         Type = 'fnd'  #change here
@@ -4564,24 +3967,8 @@ class CollectAllAssetsHistoricalMax:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -4607,70 +3994,72 @@ class CollectAllAssetsHistorical5Y:
         options.add_argument('--no-sandbox')
         driver = webdriver.Chrome(options=options)
         #-----------------------------------------
+        print('Starting CollectAllAssetsHistorical5Y.commodities()')
+        if delete.upper() != 'Y':
+            print('Closing CollectAllAssetsHistorical5Y.commodities()')
+            return ''
+        print('Removing old records')
+        AllAssetsHistorical5Y.objects.filter(Type='cmdty').delete()
+        print('Old records have been removed')
+        print('Starting to collect new ones')
+        print('Starting Selenium')
+        # driver = webdriver.Chrome()
+        def work(i):
+            startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
+            startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
+            link = i[2]
+            if '?cid' in link:
+                cid = link[link.index('?cid'):]
+                link = link[:link.index('?cid')]
+                link += '-historical-data' + cid
+            else:
+                link += '-historical-data'
+            driver.get(link)
+            sleep(2)
+            x = list(c_list).index(i) + 1
+            while True:
+                try:
+                    print(link)
+                    print('Executing JS scripts')
+                    driver.execute_script('$("#data_interval").val("Weekly");')
+                    driver.find_element_by_id('data_interval').value = "Weekly"
+                    driver.find_element_by_id('widgetFieldDateRange').click()
+                    driver.find_element_by_id('startDate').clear()
+                    driver.find_element_by_id('startDate').send_keys(startDate, Keys.ENTER)
+                    print('Executed JS scripts, sleeping for 5 seconds')
+                    sleep(5)
+                    soup = BeautifulSoup(driver.page_source, 'html.parser')
+                    soup = soup.find(class_='genTbl closedTbl historicalTbl')
+                    soup = soup.tbody.find_all('tr')
+                    for row in soup:
+                        data = row.find_all('td')
+                        data = [d.get_text() for d in data]
+                        date = datetime.datetime.strptime(data[0], '%b %d, %Y')
+                        price = validate_price(data[1])
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
+                        volume = validate_price(data[5])
+                        change_perc = data[6][:-1] # Removing % symbol
+                        Type = 'cmdty'
+                        country = i[0]
+                        short_name = i[1]
+                        AllAssetsHistorical5Y(
+                            Type=Type, country=country, short_name=short_name,
+                            date=date, price=price, Open=Open,
+                            high=high, low=low, change_perc=change_perc,
+                            volume=volume).save()
+                    print(f'Stored {x}/{len(c_list)}')
+                    x += 1
+                    break
+                except Exception as e:
+                    print_exception(e)
+                    print('Waiting for 5 more seconds')
+                    sleep(5)
+                    continue
+
         try:
-            print('Starting CollectAllAssetsHistorical5Y.commodities()')
-            if delete.upper() != 'Y':
-                print('Closing CollectAllAssetsHistorical5Y.commodities()')
-                return ''
-            print('Removing old records')
-            AllAssetsHistorical5Y.objects.filter(Type='cmdty').delete()
-            print('Old records have been removed')
-            print('Starting to collect new ones')
-            print('Starting Selenium')
-            # driver = webdriver.Chrome()
-            x = 1
-            for i in c_list:
-                startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
-                startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
-                link = i[2]
-                if '?cid' in link:
-                    cid = link[link.index('?cid'):]
-                    link = link[:link.index('?cid')]
-                    link += '-historical-data' + cid
-                else:
-                    link += '-historical-data'
-                driver.get(link)
-                sleep(2)
-                while True:
-                    try:
-                        print(link)
-                        print('Executing JS scripts')
-                        driver.execute_script('$("#data_interval").val("Weekly");')
-                        driver.find_element_by_id('data_interval').value = "Weekly"
-                        driver.find_element_by_id('widgetFieldDateRange').click()
-                        driver.find_element_by_id('startDate').clear()
-                        driver.find_element_by_id('startDate').send_keys(startDate, Keys.ENTER)
-                        print('Executed JS scripts, sleeping for 5 seconds')
-                        sleep(5)
-                        soup = BeautifulSoup(driver.page_source, 'html.parser')
-                        soup = soup.find(class_='genTbl closedTbl historicalTbl')
-                        soup = soup.tbody.find_all('tr')
-                        for row in soup:
-                            data = row.find_all('td')
-                            data = [d.get_text() for d in data]
-                            date = datetime.datetime.strptime(data[0], '%b %d, %Y')
-                            price = data[1]
-                            Open = data[2]
-                            high = data[3]
-                            low = data[4]
-                            volume = data[5]
-                            change_perc = data[6][:-1] # Removing % symbol
-                            Type = 'cmdty'
-                            country = i[0]
-                            short_name = i[1]
-                            AllAssetsHistorical5Y(
-                                Type=Type, country=country, short_name=short_name,
-                                date=date, price=price, Open=Open,
-                                high=high, low=low, change_perc=change_perc,
-                                volume=volume).save()
-                        print(f'Stored {x}/{len(c_list)}')
-                        x += 1
-                        break
-                    except Exception as e:
-                        print_exception(e)
-                        print('Waiting for 5 more seconds')
-                        sleep(5)
-                        continue
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -4686,72 +4075,76 @@ class CollectAllAssetsHistorical5Y:
         options.add_argument('--no-sandbox')
         driver = webdriver.Chrome(options=options)
         #-----------------------------------------
+        print('Starting CollectAllAssetsHistorical5Y.currencies()') #change here
+        if delete.upper() != 'Y':
+            
+            print('Closing CollectAllAssetsHistorical5Y.currencies()') #change here
+            return ''
+        print('Removing old records')
+        AllAssetsHistorical5Y.objects.filter(Type='crncy').delete() #change here
+        print('Old records have been removed')
+        print('Starting to collect new ones')
+        print('Starting Selenium')
+        # driver = webdriver.Chrome()
+        def work(i):
+            startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
+            startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
+            link = i[1]
+            if '?cid' in link:
+                cid = link[link.index('?cid'):]
+                link = link[:link.index('?cid')]
+                link += '-historical-data' + cid
+            else:
+                link += '-historical-data'
+            driver.get(link)
+            x = list(c_list).index(i) + 1
+            sleep(2)
+            while True:
+                try:
+                    print(link)
+                    print('Executing JS scripts')
+                    driver.execute_script('$("#data_interval").val("Monthly");')
+                    driver.execute_script('$("#data_interval").val("Weekly");')
+                    driver.find_element_by_id('data_interval').value = "Weekly"
+                    driver.find_element_by_id('widgetFieldDateRange').click()
+                    driver.find_element_by_id('startDate').clear()
+                    driver.find_element_by_id('startDate').send_keys(startDate, Keys.ENTER)
+                    print('Executed JS scripts, sleeping for 5 seconds')
+                    sleep(5)
+                    soup = BeautifulSoup(driver.page_source, 'html.parser')
+                    print(soup.find(id='widgetFieldDateRange').get_text())
+                    soup = soup.find(class_='genTbl closedTbl historicalTbl')
+                    soup = soup.tbody.find_all('tr')
+                    print(len(soup))
+                    for row in soup:
+                        data = row.find_all('td')
+                        data = [d.get_text() for d in data]
+                        date = datetime.datetime.strptime(data[0], '%b %d, %Y')
+                        price = validate_price(data[1])
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
+                        volume = None  #change here
+                        change_perc = data[5][:-1] # Removing % symbol
+                        Type = 'crncy'  #change here
+                        country = 'G'  #change here
+                        short_name = i[0]  #change here
+                        AllAssetsHistorical5Y( 
+                            Type=Type, country=country, short_name=short_name,
+                            date=date, price=price, Open=Open,
+                            high=high, low=low, change_perc=change_perc,
+                            volume=volume).save()
+                    print(f'Stored {x}/{len(c_list)}')
+                    x += 1
+                    break
+                except Exception as e:
+                    print_exception(e)
+                    print('Waiting for 5 more seconds')
+                    sleep(5)
+                    continue
         try:
-            print('Starting CollectAllAssetsHistorical5Y.currencies()') #change here
-            if delete.upper() != 'Y':
-                
-                print('Closing CollectAllAssetsHistorical5Y.currencies()') #change here
-                return ''
-            print('Removing old records')
-            AllAssetsHistorical5Y.objects.filter(Type='crncy').delete() #change here
-            print('Old records have been removed')
-            print('Starting to collect new ones')
-            print('Starting Selenium')
-            # driver = webdriver.Chrome()
-            x = 1
-            for i in c_list:
-                startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
-                startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
-                link = i[1]
-                if '?cid' in link:
-                    cid = link[link.index('?cid'):]
-                    link = link[:link.index('?cid')]
-                    link += '-historical-data' + cid
-                else:
-                    link += '-historical-data'
-                driver.get(link)
-                while True:
-                    try:
-                        print(link)
-                        print('Executing JS scripts')
-                        driver.execute_script('$("#data_interval").val("Monthly");')
-                        driver.execute_script('$("#data_interval").val("Weekly");')
-                        driver.find_element_by_id('data_interval').value = "Weekly"
-                        driver.find_element_by_id('widgetFieldDateRange').click()
-                        driver.find_element_by_id('startDate').clear()
-                        driver.find_element_by_id('startDate').send_keys(startDate, Keys.ENTER)
-                        print('Executed JS scripts, sleeping for 5 seconds')
-                        sleep(5)
-                        soup = BeautifulSoup(driver.page_source, 'html.parser')
-                        print(soup.find(id='widgetFieldDateRange'))
-                        soup = soup.find(class_='genTbl closedTbl historicalTbl')
-                        soup = soup.tbody.find_all('tr')
-                        print(len(soup))
-                        for row in soup:
-                            data = row.find_all('td')
-                            data = [d.get_text() for d in data]
-                            date = datetime.datetime.strptime(data[0], '%b %d, %Y')
-                            price = data[1]
-                            Open = data[2]
-                            high = data[3]
-                            low = data[4]
-                            volume = None  #change here
-                            change_perc = data[5][:-1] # Removing % symbol
-                            Type = 'crncy'  #change here
-                            country = 'G'  #change here
-                            short_name = i[0]  #change here
-                            AllAssetsHistorical5Y( 
-                                Type=Type, country=country, short_name=short_name,
-                                date=date, price=price, Open=Open,
-                                high=high, low=low, change_perc=change_perc,
-                                volume=volume).save()
-                        print(f'Stored {x}/{len(c_list)}')
-                        x += 1
-                        break
-                    except Exception as e:
-                        print_exception(e)
-                        print('Waiting for 5 more seconds')
-                        continue
+            threads_by_chunks(target=work, c_list=c_list)
+
         finally:
             ('Quiting the driver')
             driver.quit()
@@ -4767,63 +4160,67 @@ class CollectAllAssetsHistorical5Y:
         options.add_argument('--no-sandbox')
         driver = webdriver.Chrome(options=options)
         #-----------------------------------------
+        print('Starting CollectAllAssetsHistorical5Y.cryptocurrencies()') #change here
+        if delete.upper() != 'Y':
+            print('Closing CollectAllAssetsHistorical5Y.cryptocurrencies()') #change here
+            return ''
+        print('Removing old records')
+        AllAssetsHistorical5Y.objects.filter(Type='crptcrncy').delete() #change here
+        print('Old records have been removed')
+        print('Starting to collect new ones')
+        print('Starting Selenium')
+        # driver = webdriver.Chrome()
+        def work(i):
+            startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
+            startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
+            link = i[1] + '/historical-data' #change here
+            driver.get(link)
+            x = list(c_list).index(i) + 1
+            sleep(2)
+            while True:
+                try:
+                    print(link)
+                    print('Executing JS scripts')
+                    driver.execute_script('$("#data_interval").val("Weekly");')
+                    driver.find_element_by_id('data_interval').value = "Weekly"
+                    driver.find_element_by_id('widgetFieldDateRange').click()
+                    driver.find_element_by_id('startDate').clear()
+                    driver.find_element_by_id('startDate').send_keys(startDate, Keys.ENTER)
+                    print('Executed JS scripts, sleeping for 5 seconds')
+                    sleep(5)
+                    soup = BeautifulSoup(driver.page_source, 'html.parser')
+                    print(soup.find(id='widgetFieldDateRange').get_text())
+                    soup = soup.find(class_='genTbl closedTbl historicalTbl')
+                    soup = soup.tbody.find_all('tr')
+                    for row in soup:
+                        data = row.find_all('td')
+                        data = [d.get_text() for d in data]
+                        date = datetime.datetime.strptime(data[0], '%b %d, %Y')
+                        price = validate_price(data[1][:data[1].index('.')+2+1])
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
+                        volume = validate_price(data[5])  #change here
+                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        Type = 'crptcrncy'  #change here
+                        country = 'G'  #change here
+                        short_name = i[0]  #change here
+                        AllAssetsHistorical5Y( 
+                            Type=Type, country=country, short_name=short_name,
+                            date=date, price=price, Open=Open,
+                            high=high, low=low, change_perc=change_perc,
+                            volume=volume).save()
+                    print(f'Stored {x}/{quanity}: {short_name}')
+                    x+=1
+                    break
+                except Exception as e:
+                    print_exception(e)
+                    print('Waiting for 5 more seconds')
+                    sleep(5)
+                    continue
         try:
-            print('Starting CollectAllAssetsHistorical5Y.cryptocurrencies()') #change here
-            if delete.upper() != 'Y':
-                print('Closing CollectAllAssetsHistorical5Y.cryptocurrencies()') #change here
-                return ''
-            print('Removing old records')
-            AllAssetsHistorical5Y.objects.filter(Type='crptcrncy').delete() #change here
-            print('Old records have been removed')
-            print('Starting to collect new ones')
-            print('Starting Selenium')
-            # driver = webdriver.Chrome()
-            x = 1
-            for i in c_list:
-                startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
-                startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
-                link = i[1] + '/historical-data' #change here
-                driver.get(link)
-                while True:
-                    try:
-                        print(link)
-                        print('Executing JS scripts')
-                        driver.execute_script('$("#data_interval").val("Weekly");')
-                        driver.find_element_by_id('data_interval').value = "Weekly"
-                        driver.find_element_by_id('widgetFieldDateRange').click()
-                        driver.find_element_by_id('startDate').clear()
-                        driver.find_element_by_id('startDate').send_keys(startDate, Keys.ENTER)
-                        print('Executed JS scripts, sleeping for 5 seconds')
-                        sleep(5)
-                        soup = BeautifulSoup(driver.page_source, 'html.parser')
-                        print(soup.find(id='widgetFieldDateRange'))
-                        soup = soup.find(class_='genTbl closedTbl historicalTbl')
-                        soup = soup.tbody.find_all('tr')
-                        for row in soup:
-                            data = row.find_all('td')
-                            data = [d.get_text() for d in data]
-                            date = datetime.datetime.strptime(data[0], '%b %d, %Y')
-                            price = data[1][:data[1].index('.')+2+1]
-                            Open = data[2]
-                            high = data[3]
-                            low = data[4]
-                            volume = data[5]  #change here
-                            change_perc = data[6][:-1] # Removing % symbol #change here
-                            Type = 'crptcrncy'  #change here
-                            country = 'G'  #change here
-                            short_name = i[0]  #change here
-                            AllAssetsHistorical5Y( 
-                                Type=Type, country=country, short_name=short_name,
-                                date=date, price=price, Open=Open,
-                                high=high, low=low, change_perc=change_perc,
-                                volume=volume).save()
-                        print(f'Stored {x}/{quanity}: {short_name}')
-                        x+=1
-                        break
-                    except Exception as e:
-                        print_exception(e)
-                        print('Waiting for 5 more seconds')
-                        continue
+            threads_by_chunks(target=work, c_list=c_list)
+
         finally:
             ('Quiting the driver')
             driver.quit()
@@ -4941,11 +4338,11 @@ class CollectAllAssetsHistorical5Y:
             x = list(c_list).index(i)+1
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
                     print(link)
-                    driver.get(link)
-                    sleep(5)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Weekly");')
                     driver.find_element_by_id('data_interval').value = "Weekly"
@@ -4964,12 +4361,12 @@ class CollectAllAssetsHistorical5Y:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %d, %Y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
-                        volume = data[5]  #change here
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
+                        volume = validate_price(data[5])  #change here
                         change_perc = data[6][:-1] # Removing % symbol #change here
                         Type = 'stck'  #change here
                         country = 'US'  #change here
@@ -4987,24 +4384,8 @@ class CollectAllAssetsHistorical5Y:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -5048,11 +4429,11 @@ class CollectAllAssetsHistorical5Y:
             x = list(c_list).index(i)+1
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
                     print(link)
-                    driver.get(link)
-                    sleep(5)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Weekly");')
                     driver.find_element_by_id('data_interval').value = "Weekly"
@@ -5071,12 +4452,12 @@ class CollectAllAssetsHistorical5Y:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %d, %Y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
-                        volume = data[5]  #change here
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
+                        volume = validate_price(data[5])  #change here
                         change_perc = data[6][:-1] # Removing % symbol #change here
                         Type = 'stck'  #change here
                         country = 'JP'  #change here
@@ -5094,24 +4475,8 @@ class CollectAllAssetsHistorical5Y:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -5155,11 +4520,11 @@ class CollectAllAssetsHistorical5Y:
             x = list(c_list).index(i)+1
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
                     print(link)
-                    driver.get(link)
-                    sleep(5)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Weekly");')
                     driver.find_element_by_id('data_interval').value = "Weekly"
@@ -5178,12 +4543,12 @@ class CollectAllAssetsHistorical5Y:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %d, %Y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
-                        volume = data[5]  #change here
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
+                        volume = validate_price(data[5])  #change here
                         change_perc = data[6][:-1] # Removing % symbol #change here
                         Type = 'stck'  #change here
                         country = 'UK'  #change here
@@ -5201,24 +4566,8 @@ class CollectAllAssetsHistorical5Y:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -5262,11 +4611,11 @@ class CollectAllAssetsHistorical5Y:
             x = list(c_list).index(i)+1
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
                     print(link)
-                    driver.get(link)
-                    sleep(5)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Weekly");')
                     driver.find_element_by_id('data_interval').value = "Weekly"
@@ -5285,12 +4634,12 @@ class CollectAllAssetsHistorical5Y:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %d, %Y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
-                        volume = data[5]  #change here
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
+                        volume = validate_price(data[5])  #change here
                         change_perc = data[6][:-1] # Removing % symbol #change here
                         Type = 'stck'  #change here
                         country = 'HK'  #change here
@@ -5308,24 +4657,8 @@ class CollectAllAssetsHistorical5Y:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -5369,11 +4702,11 @@ class CollectAllAssetsHistorical5Y:
             x = list(c_list).index(i)+1
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
                     print(link)
-                    driver.get(link)
-                    sleep(5)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Weekly");')
                     driver.find_element_by_id('data_interval').value = "Weekly"
@@ -5392,12 +4725,12 @@ class CollectAllAssetsHistorical5Y:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %d, %Y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
-                        volume = data[5]  #change here
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
+                        volume = validate_price(data[5])  #change here
                         change_perc = data[6][:-1] # Removing % symbol #change here
                         Type = 'stck'  #change here
                         country = 'CH'  #change here
@@ -5415,24 +4748,8 @@ class CollectAllAssetsHistorical5Y:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -5476,11 +4793,11 @@ class CollectAllAssetsHistorical5Y:
             x = list(c_list).index(i)+1
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
                     print(link)
-                    driver.get(link)
-                    sleep(5)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Weekly");')
                     driver.find_element_by_id('data_interval').value = "Weekly"
@@ -5499,12 +4816,12 @@ class CollectAllAssetsHistorical5Y:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %d, %Y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
-                        volume = data[5]  #change here
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
+                        volume = validate_price(data[5])  #change here
                         change_perc = data[6][:-1] # Removing % symbol #change here
                         Type = 'stck'  #change here
                         country = 'CA'  #change here
@@ -5522,24 +4839,8 @@ class CollectAllAssetsHistorical5Y:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -5583,11 +4884,11 @@ class CollectAllAssetsHistorical5Y:
             x = list(c_list).index(i)+1
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
                     print(link)
-                    driver.get(link)
-                    sleep(5)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Weekly");')
                     driver.find_element_by_id('data_interval').value = "Weekly"
@@ -5606,12 +4907,12 @@ class CollectAllAssetsHistorical5Y:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %d, %Y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
-                        volume = data[5]  #change here
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
+                        volume = validate_price(data[5])  #change here
                         change_perc = data[6][:-1] # Removing % symbol #change here
                         Type = 'stck'  #change here
                         country = 'GE'  #change here
@@ -5629,24 +4930,8 @@ class CollectAllAssetsHistorical5Y:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -5690,11 +4975,11 @@ class CollectAllAssetsHistorical5Y:
             x = list(c_list).index(i)+1
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
                     print(link)
-                    driver.get(link)
-                    sleep(5)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Weekly");')
                     driver.find_element_by_id('data_interval').value = "Weekly"
@@ -5713,12 +4998,12 @@ class CollectAllAssetsHistorical5Y:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %d, %Y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
-                        volume = data[5]  #change here
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
+                        volume = validate_price(data[5])  #change here
                         change_perc = data[6][:-1] # Removing % symbol #change here
                         Type = 'stck'  #change here
                         country = 'AU'  #change here
@@ -5736,24 +5021,8 @@ class CollectAllAssetsHistorical5Y:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -5797,11 +5066,11 @@ class CollectAllAssetsHistorical5Y:
             x = list(c_list).index(i)+1
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
                     print(link)
-                    driver.get(link)
-                    sleep(5)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Weekly");')
                     driver.find_element_by_id('data_interval').value = "Weekly"
@@ -5820,12 +5089,12 @@ class CollectAllAssetsHistorical5Y:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %d, %Y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
-                        volume = data[5]  #change here
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
+                        volume = validate_price(data[5])  #change here
                         change_perc = data[6][:-1] # Removing % symbol #change here
                         Type = 'indx'  #change here
                         country = 'US'  #change here
@@ -5843,24 +5112,8 @@ class CollectAllAssetsHistorical5Y:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -5904,11 +5157,11 @@ class CollectAllAssetsHistorical5Y:
             x = list(c_list).index(i)+1
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
                     print(link)
-                    driver.get(link)
-                    sleep(5)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Weekly");')
                     driver.find_element_by_id('data_interval').value = "Weekly"
@@ -5927,12 +5180,12 @@ class CollectAllAssetsHistorical5Y:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %d, %Y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
-                        volume = data[5]  #change here
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
+                        volume = validate_price(data[5])  #change here
                         change_perc = data[6][:-1] # Removing % symbol #change here
                         Type = 'indx'  #change here
                         country = 'JP'  #change here
@@ -5950,24 +5203,8 @@ class CollectAllAssetsHistorical5Y:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -6011,11 +5248,11 @@ class CollectAllAssetsHistorical5Y:
             x = list(c_list).index(i)+1
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
                     print(link)
-                    driver.get(link)
-                    sleep(5)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Weekly");')
                     driver.find_element_by_id('data_interval').value = "Weekly"
@@ -6034,12 +5271,12 @@ class CollectAllAssetsHistorical5Y:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %d, %Y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
-                        volume = data[5]  #change here
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
+                        volume = validate_price(data[5])  #change here
                         change_perc = data[6][:-1] # Removing % symbol #change here
                         Type = 'indx'  #change here
                         country = 'UK'  #change here
@@ -6057,24 +5294,8 @@ class CollectAllAssetsHistorical5Y:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -6118,11 +5339,11 @@ class CollectAllAssetsHistorical5Y:
             x = list(c_list).index(i)+1
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
                     print(link)
-                    driver.get(link)
-                    sleep(5)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Weekly");')
                     driver.find_element_by_id('data_interval').value = "Weekly"
@@ -6141,12 +5362,12 @@ class CollectAllAssetsHistorical5Y:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %d, %Y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
-                        volume = data[5]  #change here
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
+                        volume = validate_price(data[5])  #change here
                         change_perc = data[6][:-1] # Removing % symbol #change here
                         Type = 'indx'  #change here
                         country = 'HK'  #change here
@@ -6164,24 +5385,8 @@ class CollectAllAssetsHistorical5Y:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -6225,11 +5430,11 @@ class CollectAllAssetsHistorical5Y:
             x = list(c_list).index(i)+1
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
                     print(link)
-                    driver.get(link)
-                    sleep(5)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Weekly");')
                     driver.find_element_by_id('data_interval').value = "Weekly"
@@ -6248,12 +5453,12 @@ class CollectAllAssetsHistorical5Y:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %d, %Y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
-                        volume = data[5]  #change here
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
+                        volume = validate_price(data[5])  #change here
                         change_perc = data[6][:-1] # Removing % symbol #change here
                         Type = 'indx'  #change here
                         country = 'CH'  #change here
@@ -6271,24 +5476,8 @@ class CollectAllAssetsHistorical5Y:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -6332,11 +5521,11 @@ class CollectAllAssetsHistorical5Y:
             x = list(c_list).index(i)+1
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
                     print(link)
-                    driver.get(link)
-                    sleep(5)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Weekly");')
                     driver.find_element_by_id('data_interval').value = "Weekly"
@@ -6355,12 +5544,12 @@ class CollectAllAssetsHistorical5Y:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %d, %Y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
-                        volume = data[5]  #change here
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
+                        volume = validate_price(data[5])  #change here
                         change_perc = data[6][:-1] # Removing % symbol #change here
                         Type = 'indx'  #change here
                         country = 'CA'  #change here
@@ -6378,24 +5567,8 @@ class CollectAllAssetsHistorical5Y:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -6439,11 +5612,11 @@ class CollectAllAssetsHistorical5Y:
             x = list(c_list).index(i)+1
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
                     print(link)
-                    driver.get(link)
-                    sleep(5)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Weekly");')
                     driver.find_element_by_id('data_interval').value = "Weekly"
@@ -6462,12 +5635,12 @@ class CollectAllAssetsHistorical5Y:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %d, %Y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
-                        volume = data[5]  #change here
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
+                        volume = validate_price(data[5])  #change here
                         change_perc = data[6][:-1] # Removing % symbol #change here
                         Type = 'indx'  #change here
                         country = 'GE'  #change here
@@ -6485,24 +5658,8 @@ class CollectAllAssetsHistorical5Y:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -6546,11 +5703,11 @@ class CollectAllAssetsHistorical5Y:
             x = list(c_list).index(i)+1
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
                     print(link)
-                    driver.get(link)
-                    sleep(5)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Weekly");')
                     driver.find_element_by_id('data_interval').value = "Weekly"
@@ -6569,12 +5726,12 @@ class CollectAllAssetsHistorical5Y:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %d, %Y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
-                        volume = data[5]  #change here
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
+                        volume = validate_price(data[5])  #change here
                         change_perc = data[6][:-1] # Removing % symbol #change here
                         Type = 'indx'  #change here
                         country = 'AU'  #change here
@@ -6592,24 +5749,8 @@ class CollectAllAssetsHistorical5Y:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -6653,11 +5794,11 @@ class CollectAllAssetsHistorical5Y:
             x = list(c_list).index(i)+1
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
                     print(link)
-                    driver.get(link)
-                    sleep(5)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Weekly");')
                     driver.find_element_by_id('data_interval').value = "Weekly"
@@ -6676,12 +5817,12 @@ class CollectAllAssetsHistorical5Y:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %d, %Y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
-                        volume = data[5]  #change here
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
+                        volume = validate_price(data[5])  #change here
                         change_perc = data[6][:-1] # Removing % symbol #change here
                         Type = 'etf'  #change here
                         country = 'US'  #change here
@@ -6699,24 +5840,8 @@ class CollectAllAssetsHistorical5Y:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -6760,11 +5885,11 @@ class CollectAllAssetsHistorical5Y:
             x = list(c_list).index(i)+1
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
                     print(link)
-                    driver.get(link)
-                    sleep(5)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Weekly");')
                     driver.find_element_by_id('data_interval').value = "Weekly"
@@ -6783,12 +5908,12 @@ class CollectAllAssetsHistorical5Y:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %d, %Y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
-                        volume = data[5]  #change here
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
+                        volume = validate_price(data[5])  #change here
                         change_perc = data[6][:-1] # Removing % symbol #change here
                         Type = 'etf'  #change here
                         country = 'JP'  #change here
@@ -6806,24 +5931,8 @@ class CollectAllAssetsHistorical5Y:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -6867,11 +5976,11 @@ class CollectAllAssetsHistorical5Y:
             x = list(c_list).index(i)+1
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
                     print(link)
-                    driver.get(link)
-                    sleep(5)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Weekly");')
                     driver.find_element_by_id('data_interval').value = "Weekly"
@@ -6890,12 +5999,12 @@ class CollectAllAssetsHistorical5Y:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %d, %Y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
-                        volume = data[5]  #change here
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
+                        volume = validate_price(data[5])  #change here
                         change_perc = data[6][:-1] # Removing % symbol #change here
                         Type = 'etf'  #change here
                         country = 'UK'  #change here
@@ -6913,24 +6022,8 @@ class CollectAllAssetsHistorical5Y:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -6974,11 +6067,11 @@ class CollectAllAssetsHistorical5Y:
             x = list(c_list).index(i)+1
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
                     print(link)
-                    driver.get(link)
-                    sleep(5)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Weekly");')
                     driver.find_element_by_id('data_interval').value = "Weekly"
@@ -6997,12 +6090,12 @@ class CollectAllAssetsHistorical5Y:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %d, %Y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
-                        volume = data[5]  #change here
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
+                        volume = validate_price(data[5])  #change here
                         change_perc = data[6][:-1] # Removing % symbol #change here
                         Type = 'etf'  #change here
                         country = 'HK'  #change here
@@ -7020,24 +6113,8 @@ class CollectAllAssetsHistorical5Y:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -7081,11 +6158,11 @@ class CollectAllAssetsHistorical5Y:
             x = list(c_list).index(i)+1
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
                     print(link)
-                    driver.get(link)
-                    sleep(5)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Weekly");')
                     driver.find_element_by_id('data_interval').value = "Weekly"
@@ -7104,12 +6181,12 @@ class CollectAllAssetsHistorical5Y:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %d, %Y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
-                        volume = data[5]  #change here
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
+                        volume = validate_price(data[5])  #change here
                         change_perc = data[6][:-1] # Removing % symbol #change here
                         Type = 'etf'  #change here
                         country = 'CH'  #change here
@@ -7127,24 +6204,8 @@ class CollectAllAssetsHistorical5Y:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -7188,11 +6249,11 @@ class CollectAllAssetsHistorical5Y:
             x = list(c_list).index(i)+1
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
                     print(link)
-                    driver.get(link)
-                    sleep(5)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Weekly");')
                     driver.find_element_by_id('data_interval').value = "Weekly"
@@ -7211,12 +6272,12 @@ class CollectAllAssetsHistorical5Y:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %d, %Y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
-                        volume = data[5]  #change here
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
+                        volume = validate_price(data[5])  #change here
                         change_perc = data[6][:-1] # Removing % symbol #change here
                         Type = 'etf'  #change here
                         country = 'CA'  #change here
@@ -7234,24 +6295,8 @@ class CollectAllAssetsHistorical5Y:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -7295,11 +6340,11 @@ class CollectAllAssetsHistorical5Y:
             x = list(c_list).index(i)+1
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
                     print(link)
-                    driver.get(link)
-                    sleep(5)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Weekly");')
                     driver.find_element_by_id('data_interval').value = "Weekly"
@@ -7318,12 +6363,12 @@ class CollectAllAssetsHistorical5Y:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %d, %Y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
-                        volume = data[5]  #change here
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
+                        volume = validate_price(data[5])  #change here
                         change_perc = data[6][:-1] # Removing % symbol #change here
                         Type = 'etf'  #change here
                         country = 'GE'  #change here
@@ -7341,24 +6386,8 @@ class CollectAllAssetsHistorical5Y:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -7402,11 +6431,11 @@ class CollectAllAssetsHistorical5Y:
             x = list(c_list).index(i)+1
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
                     print(link)
-                    driver.get(link)
-                    sleep(5)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Weekly");')
                     driver.find_element_by_id('data_interval').value = "Weekly"
@@ -7425,12 +6454,12 @@ class CollectAllAssetsHistorical5Y:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %d, %Y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
-                        volume = data[5]  #change here
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
+                        volume = validate_price(data[5])  #change here
                         change_perc = data[6][:-1] # Removing % symbol #change here
                         Type = 'etf'  #change here
                         country = 'AU'  #change here
@@ -7448,24 +6477,8 @@ class CollectAllAssetsHistorical5Y:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -7509,11 +6522,11 @@ class CollectAllAssetsHistorical5Y:
             x = list(c_list).index(i)+1
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
                     print(link)
-                    driver.get(link)
-                    sleep(5)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Weekly");')
                     driver.find_element_by_id('data_interval').value = "Weekly"
@@ -7532,11 +6545,11 @@ class CollectAllAssetsHistorical5Y:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %d, %Y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
                         volume = None  #change here
                         change_perc = data[5][:-1] # Removing % symbol #change here
                         Type = 'bnd'  #change here
@@ -7555,24 +6568,8 @@ class CollectAllAssetsHistorical5Y:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -7616,11 +6613,11 @@ class CollectAllAssetsHistorical5Y:
             x = list(c_list).index(i)+1
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
                     print(link)
-                    driver.get(link)
-                    sleep(5)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Weekly");')
                     driver.find_element_by_id('data_interval').value = "Weekly"
@@ -7639,11 +6636,11 @@ class CollectAllAssetsHistorical5Y:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %d, %Y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
                         volume = None  #change here
                         change_perc = data[5][:-1] # Removing % symbol #change here
                         Type = 'bnd'  #change here
@@ -7662,24 +6659,8 @@ class CollectAllAssetsHistorical5Y:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -7723,11 +6704,11 @@ class CollectAllAssetsHistorical5Y:
             x = list(c_list).index(i)+1
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
                     print(link)
-                    driver.get(link)
-                    sleep(5)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Weekly");')
                     driver.find_element_by_id('data_interval').value = "Weekly"
@@ -7746,11 +6727,11 @@ class CollectAllAssetsHistorical5Y:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %d, %Y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
                         volume = None  #change here
                         change_perc = data[5][:-1] # Removing % symbol #change here
                         Type = 'bnd'  #change here
@@ -7769,24 +6750,8 @@ class CollectAllAssetsHistorical5Y:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -7830,11 +6795,11 @@ class CollectAllAssetsHistorical5Y:
             x = list(c_list).index(i)+1
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
                     print(link)
-                    driver.get(link)
-                    sleep(5)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Weekly");')
                     driver.find_element_by_id('data_interval').value = "Weekly"
@@ -7853,11 +6818,11 @@ class CollectAllAssetsHistorical5Y:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %d, %Y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
                         volume = None  #change here
                         change_perc = data[5][:-1] # Removing % symbol #change here
                         Type = 'bnd'  #change here
@@ -7876,24 +6841,8 @@ class CollectAllAssetsHistorical5Y:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -7937,11 +6886,11 @@ class CollectAllAssetsHistorical5Y:
             x = list(c_list).index(i)+1
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
                     print(link)
-                    driver.get(link)
-                    sleep(5)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Weekly");')
                     driver.find_element_by_id('data_interval').value = "Weekly"
@@ -7960,11 +6909,11 @@ class CollectAllAssetsHistorical5Y:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %d, %Y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
                         volume = None  #change here
                         change_perc = data[5][:-1] # Removing % symbol #change here
                         Type = 'bnd'  #change here
@@ -7983,24 +6932,8 @@ class CollectAllAssetsHistorical5Y:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -8044,11 +6977,11 @@ class CollectAllAssetsHistorical5Y:
             x = list(c_list).index(i)+1
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
                     print(link)
-                    driver.get(link)
-                    sleep(5)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Weekly");')
                     driver.find_element_by_id('data_interval').value = "Weekly"
@@ -8067,11 +7000,11 @@ class CollectAllAssetsHistorical5Y:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %d, %Y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
                         volume = None  #change here
                         change_perc = data[5][:-1] # Removing % symbol #change here
                         Type = 'bnd'  #change here
@@ -8090,24 +7023,8 @@ class CollectAllAssetsHistorical5Y:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -8151,11 +7068,11 @@ class CollectAllAssetsHistorical5Y:
             x = list(c_list).index(i)+1
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
                     print(link)
-                    driver.get(link)
-                    sleep(5)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Weekly");')
                     driver.find_element_by_id('data_interval').value = "Weekly"
@@ -8174,11 +7091,11 @@ class CollectAllAssetsHistorical5Y:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %d, %Y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
                         volume = None  #change here
                         change_perc = data[5][:-1] # Removing % symbol #change here
                         Type = 'bnd'  #change here
@@ -8197,24 +7114,8 @@ class CollectAllAssetsHistorical5Y:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -8258,11 +7159,11 @@ class CollectAllAssetsHistorical5Y:
             x = list(c_list).index(i)+1
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
                     print(link)
-                    driver.get(link)
-                    sleep(5)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Weekly");')
                     driver.find_element_by_id('data_interval').value = "Weekly"
@@ -8281,11 +7182,11 @@ class CollectAllAssetsHistorical5Y:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %d, %Y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
                         volume = None  #change here
                         change_perc = data[5][:-1] # Removing % symbol #change here
                         Type = 'bnd'  #change here
@@ -8304,24 +7205,8 @@ class CollectAllAssetsHistorical5Y:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -8365,11 +7250,11 @@ class CollectAllAssetsHistorical5Y:
             x = list(c_list).index(i)+1
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
                     print(link)
-                    driver.get(link)
-                    sleep(5)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Weekly");')
                     driver.find_element_by_id('data_interval').value = "Weekly"
@@ -8388,11 +7273,11 @@ class CollectAllAssetsHistorical5Y:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %d, %Y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
                         volume = None  #change here
                         change_perc = data[5][:-1] # Removing % symbol #change here
                         Type = 'fnd'  #change here
@@ -8411,24 +7296,8 @@ class CollectAllAssetsHistorical5Y:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -8472,11 +7341,11 @@ class CollectAllAssetsHistorical5Y:
             x = list(c_list).index(i)+1
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
                     print(link)
-                    driver.get(link)
-                    sleep(5)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Weekly");')
                     driver.find_element_by_id('data_interval').value = "Weekly"
@@ -8495,11 +7364,11 @@ class CollectAllAssetsHistorical5Y:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %d, %Y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
                         volume = None  #change here
                         change_perc = data[5][:-1] # Removing % symbol #change here
                         Type = 'fnd'  #change here
@@ -8518,24 +7387,8 @@ class CollectAllAssetsHistorical5Y:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -8579,11 +7432,11 @@ class CollectAllAssetsHistorical5Y:
             x = list(c_list).index(i)+1
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
                     print(link)
-                    driver.get(link)
-                    sleep(5)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Weekly");')
                     driver.find_element_by_id('data_interval').value = "Weekly"
@@ -8602,11 +7455,11 @@ class CollectAllAssetsHistorical5Y:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %d, %Y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
                         volume = None  #change here
                         change_perc = data[5][:-1] # Removing % symbol #change here
                         Type = 'fnd'  #change here
@@ -8625,24 +7478,8 @@ class CollectAllAssetsHistorical5Y:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -8686,11 +7523,11 @@ class CollectAllAssetsHistorical5Y:
             x = list(c_list).index(i)+1
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
                     print(link)
-                    driver.get(link)
-                    sleep(5)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Weekly");')
                     driver.find_element_by_id('data_interval').value = "Weekly"
@@ -8709,11 +7546,11 @@ class CollectAllAssetsHistorical5Y:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %d, %Y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
                         volume = None  #change here
                         change_perc = data[5][:-1] # Removing % symbol #change here
                         Type = 'fnd'  #change here
@@ -8732,24 +7569,8 @@ class CollectAllAssetsHistorical5Y:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -8793,11 +7614,11 @@ class CollectAllAssetsHistorical5Y:
             x = list(c_list).index(i)+1
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
                     print(link)
-                    driver.get(link)
-                    sleep(5)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Weekly");')
                     driver.find_element_by_id('data_interval').value = "Weekly"
@@ -8816,11 +7637,11 @@ class CollectAllAssetsHistorical5Y:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %d, %Y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
                         volume = None  #change here
                         change_perc = data[5][:-1] # Removing % symbol #change here
                         Type = 'fnd'  #change here
@@ -8839,24 +7660,8 @@ class CollectAllAssetsHistorical5Y:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -8900,11 +7705,11 @@ class CollectAllAssetsHistorical5Y:
             x = list(c_list).index(i)+1
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
                     print(link)
-                    driver.get(link)
-                    sleep(5)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Weekly");')
                     driver.find_element_by_id('data_interval').value = "Weekly"
@@ -8923,11 +7728,11 @@ class CollectAllAssetsHistorical5Y:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %d, %Y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
                         volume = None  #change here
                         change_perc = data[5][:-1] # Removing % symbol #change here
                         Type = 'fnd'  #change here
@@ -8946,24 +7751,8 @@ class CollectAllAssetsHistorical5Y:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -9007,11 +7796,11 @@ class CollectAllAssetsHistorical5Y:
             x = list(c_list).index(i)+1
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
                     print(link)
-                    driver.get(link)
-                    sleep(5)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Weekly");')
                     driver.find_element_by_id('data_interval').value = "Weekly"
@@ -9030,11 +7819,11 @@ class CollectAllAssetsHistorical5Y:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %d, %Y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
                         volume = None  #change here
                         change_perc = data[5][:-1] # Removing % symbol #change here
                         Type = 'fnd'  #change here
@@ -9053,24 +7842,8 @@ class CollectAllAssetsHistorical5Y:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
@@ -9114,11 +7887,11 @@ class CollectAllAssetsHistorical5Y:
             x = list(c_list).index(i)+1
             startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
             startDate = f'{startDate.month}/{startDate.day}/{startDate.year}'
+            driver.get(link)
+            sleep(5)
             while True:
                 try: 
                     print(link)
-                    driver.get(link)
-                    sleep(5)
                     print('Executing JS scripts')
                     driver.execute_script('$("#data_interval").val("Weekly");')
                     driver.find_element_by_id('data_interval').value = "Weekly"
@@ -9137,11 +7910,11 @@ class CollectAllAssetsHistorical5Y:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %d, %Y')
-                        price = data[1]
+                        price = validate_price(data[1])
                         price = price[:price.index('.')+2+1]
-                        Open = data[2]
-                        high = data[3]
-                        low = data[4]
+                        Open = validate_price(data[2])
+                        high = validate_price(data[3])
+                        low = validate_price(data[4])
                         volume = None  #change here
                         change_perc = data[5][:-1] # Removing % symbol #change here
                         Type = 'fnd'  #change here
@@ -9160,24 +7933,8 @@ class CollectAllAssetsHistorical5Y:
             print(f'Stored {x}/{quanity}')
             print()
 
-        chunk_list = list(chunks(range(quanity), 3))
         try:
-            # Code below creates threads for each item, then executes them by chunks
-            threads = []
-            for i in range(quanity):
-                threads.append(Thread(target=work, args=(c_list[i],)))
-            print('Threads are ready')
-            chunk_n = 1
-            chunk_all = len(chunk_list)
-            for l in chunk_list:
-                for sub_l in l:
-                    threads[sub_l].start()
-                    sleep(1)
-                for sub_l in l:
-                    threads[sub_l].join()
-                
-                print(f'Executed Chunk {chunk_n}/{chunk_all}')
-                chunk_n += 1
+            threads_by_chunks(target=work, c_list=c_list)
 
         finally:
             ('Quiting the driver')
