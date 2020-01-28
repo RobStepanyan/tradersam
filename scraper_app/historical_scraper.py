@@ -67,6 +67,18 @@ def threads_by_chunks(target, c_list):
         
         print(f'Executed Chunk {chunk_n}/{chunk_all}')
         chunk_n += 1
+
+def remove_already_saved(l, c_list):
+    """l is the list which contains links (urls) of already saved instances"""
+    new_c_list = []
+    for item in c_list:
+        in_list = False
+        for link in l:
+            if link in item:
+                in_list=True
+        if not in_list:
+            new_c_list.append(item)
+    return new_c_list
     
 
 class CollectAllAssetsHistoricalMax:
@@ -134,7 +146,7 @@ class CollectAllAssetsHistoricalMax:
                         high = validate_price(data[3])
                         low = validate_price(data[4])
                         volume = validate_price(data[5])
-                        change_perc = data[6][:-1] # Removing % symbol
+                        change_perc = validate_price(data[6][:-1]) # Removing % symbol
                         Type = 'cmdty'
                         country = i[0]
                         short_name = i[1]
@@ -295,7 +307,7 @@ class CollectAllAssetsHistoricalMax:
                         high = validate_price(data[3])
                         low = validate_price(data[4])
                         volume = validate_price(data[5])  #change here
-                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        change_perc = validate_price(data[6][:-1]) # Removing % symbol #change here
                         Type = 'crptcrncy'  #change here
                         country = 'G'  #change here
                         short_name = i[0]  #change here
@@ -461,7 +473,7 @@ class CollectAllAssetsHistoricalMax:
                         high = validate_price(data[3])
                         low = validate_price(data[4])
                         volume = validate_price(data[5])  #change here
-                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        change_perc = validate_price(data[6][:-1]) # Removing % symbol #change here
                         Type = 'stck'  #change here
                         country = 'US'  #change here
                         short_name = i[0]  #change here
@@ -550,7 +562,7 @@ class CollectAllAssetsHistoricalMax:
                         high = validate_price(data[3])
                         low = validate_price(data[4])
                         volume = validate_price(data[5])  #change here
-                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        change_perc = validate_price(data[6][:-1]) # Removing % symbol #change here
                         Type = 'stck'  #change here
                         country = 'JP'  #change here
                         short_name = i[0]  #change here
@@ -639,7 +651,7 @@ class CollectAllAssetsHistoricalMax:
                         high = validate_price(data[3])
                         low = validate_price(data[4])
                         volume = validate_price(data[5])  #change here
-                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        change_perc = validate_price(data[6][:-1]) # Removing % symbol #change here
                         Type = 'stck'  #change here
                         country = 'UK'  #change here
                         short_name = i[0]  #change here
@@ -729,7 +741,7 @@ class CollectAllAssetsHistoricalMax:
                         high = validate_price(data[3])
                         low = validate_price(data[4])
                         volume = validate_price(data[5])  #change here
-                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        change_perc = validate_price(data[6][:-1]) # Removing % symbol #change here
                         Type = 'stck'  #change here
                         country = 'HK'  #change here
                         short_name = i[0]  #change here
@@ -818,7 +830,7 @@ class CollectAllAssetsHistoricalMax:
                         high = validate_price(data[3])
                         low = validate_price(data[4])
                         volume = validate_price(data[5])  #change here
-                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        change_perc = validate_price(data[6][:-1]) # Removing % symbol #change here
                         Type = 'stck'  #change here
                         country = 'CH'  #change here
                         short_name = i[0]  #change here
@@ -907,7 +919,7 @@ class CollectAllAssetsHistoricalMax:
                         high = validate_price(data[3])
                         low = validate_price(data[4])
                         volume = validate_price(data[5])  #change here
-                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        change_perc = validate_price(data[6][:-1]) # Removing % symbol #change here
                         Type = 'stck'  #change here
                         country = 'CA'  #change here
                         short_name = i[0]  #change here
@@ -996,7 +1008,7 @@ class CollectAllAssetsHistoricalMax:
                         high = validate_price(data[3])
                         low = validate_price(data[4])
                         volume = validate_price(data[5])  #change here
-                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        change_perc = validate_price(data[6][:-1]) # Removing % symbol #change here
                         Type = 'stck'  #change here
                         country = 'GE'  #change here
                         short_name = i[0]  #change here
@@ -1085,7 +1097,7 @@ class CollectAllAssetsHistoricalMax:
                         high = validate_price(data[3])
                         low = validate_price(data[4])
                         volume = validate_price(data[5])  #change here
-                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        change_perc = validate_price(data[6][:-1]) # Removing % symbol #change here
                         Type = 'stck'  #change here
                         country = 'AU'  #change here
                         short_name = i[0]  #change here
@@ -1176,7 +1188,7 @@ class CollectAllAssetsHistoricalMax:
                         volume = validate_price(data[5])  #change here
                         if volume == '-':
                             volume = None
-                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        change_perc = validate_price(data[6][:-1]) # Removing % symbol #change here
                         Type = 'indx'  #change here
                         country = 'US'  #change here
                         short_name = i[0]  #change here
@@ -1267,7 +1279,7 @@ class CollectAllAssetsHistoricalMax:
                         volume = validate_price(data[5])  #change here
                         if volume == '-':
                             volume = None
-                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        change_perc = validate_price(data[6][:-1]) # Removing % symbol #change here
                         Type = 'indx'  #change here
                         country = 'JP'  #change here
                         short_name = i[0]  #change here
@@ -1358,7 +1370,7 @@ class CollectAllAssetsHistoricalMax:
                         volume = validate_price(data[5])  #change here
                         if volume == '-':
                             volume = None
-                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        change_perc = validate_price(data[6][:-1]) # Removing % symbol #change here
                         Type = 'indx'  #change here
                         country = 'UK'  #change here
                         short_name = i[0]  #change here
@@ -1450,7 +1462,7 @@ class CollectAllAssetsHistoricalMax:
                         volume = validate_price(data[5])  #change here
                         if volume == '-':
                             volume = None
-                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        change_perc = validate_price(data[6][:-1]) # Removing % symbol #change here
                         Type = 'indx'  #change here
                         country = 'HK'  #change here
                         short_name = i[0]  #change here
@@ -1541,7 +1553,7 @@ class CollectAllAssetsHistoricalMax:
                         volume = validate_price(data[5])  #change here
                         if volume == '-':
                             volume = None
-                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        change_perc = validate_price(data[6][:-1]) # Removing % symbol #change here
                         Type = 'indx'  #change here
                         country = 'CH'  #change here
                         short_name = i[0]  #change here
@@ -1632,7 +1644,7 @@ class CollectAllAssetsHistoricalMax:
                         volume = validate_price(data[5])  #change here
                         if volume == '-':
                             volume = None
-                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        change_perc = validate_price(data[6][:-1]) # Removing % symbol #change here
                         Type = 'indx'  #change here
                         country = 'CA'  #change here
                         short_name = i[0]  #change here
@@ -1723,7 +1735,7 @@ class CollectAllAssetsHistoricalMax:
                         volume = validate_price(data[5])  #change here
                         if volume == '-':
                             volume = None
-                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        change_perc = validate_price(data[6][:-1]) # Removing % symbol #change here
                         Type = 'indx'  #change here
                         country = 'GE'  #change here
                         short_name = i[0]  #change here
@@ -1814,7 +1826,7 @@ class CollectAllAssetsHistoricalMax:
                         volume = validate_price(data[5])  #change here
                         if volume == '-':
                             volume = None
-                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        change_perc = validate_price(data[6][:-1]) # Removing % symbol #change here
                         Type = 'indx'  #change here
                         country = 'AU'  #change here
                         short_name = i[0]  #change here
@@ -1903,7 +1915,7 @@ class CollectAllAssetsHistoricalMax:
                         high = validate_price(data[3])
                         low = validate_price(data[4])
                         volume = validate_price(data[5])  #change here
-                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        change_perc = validate_price(data[6][:-1]) # Removing % symbol #change here
                         Type = 'etf'  #change here
                         country = 'US'  #change here
                         short_name = i[0]  #change here
@@ -1992,7 +2004,7 @@ class CollectAllAssetsHistoricalMax:
                         high = validate_price(data[3])
                         low = validate_price(data[4])
                         volume = validate_price(data[5])  #change here
-                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        change_perc = validate_price(data[6][:-1]) # Removing % symbol #change here
                         Type = 'etf'  #change here
                         country = 'JP'  #change here
                         short_name = i[0]  #change here
@@ -2081,7 +2093,7 @@ class CollectAllAssetsHistoricalMax:
                         high = validate_price(data[3])
                         low = validate_price(data[4])
                         volume = validate_price(data[5])  #change here
-                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        change_perc = validate_price(data[6][:-1]) # Removing % symbol #change here
                         Type = 'etf'  #change here
                         country = 'UK'  #change here
                         short_name = i[0]  #change here
@@ -2170,7 +2182,7 @@ class CollectAllAssetsHistoricalMax:
                         high = validate_price(data[3])
                         low = validate_price(data[4])
                         volume = validate_price(data[5])  #change here
-                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        change_perc = validate_price(data[6][:-1]) # Removing % symbol #change here
                         Type = 'etf'  #change here
                         country = 'HK'  #change here
                         short_name = i[0]  #change here
@@ -2259,7 +2271,7 @@ class CollectAllAssetsHistoricalMax:
                         high = validate_price(data[3])
                         low = validate_price(data[4])
                         volume = validate_price(data[5])  #change here
-                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        change_perc = validate_price(data[6][:-1]) # Removing % symbol #change here
                         Type = 'etf'  #change here
                         country = 'CH'  #change here
                         short_name = i[0]  #change here
@@ -2348,7 +2360,7 @@ class CollectAllAssetsHistoricalMax:
                         high = validate_price(data[3])
                         low = validate_price(data[4])
                         volume = validate_price(data[5])  #change here
-                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        change_perc = validate_price(data[6][:-1]) # Removing % symbol #change here
                         Type = 'etf'  #change here
                         country = 'CA'  #change here
                         short_name = i[0]  #change here
@@ -2437,7 +2449,7 @@ class CollectAllAssetsHistoricalMax:
                         high = validate_price(data[3])
                         low = validate_price(data[4])
                         volume = validate_price(data[5])  #change here
-                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        change_perc = validate_price(data[6][:-1]) # Removing % symbol #change here
                         Type = 'etf'  #change here
                         country = 'GE'  #change here
                         short_name = i[0]  #change here
@@ -2526,7 +2538,7 @@ class CollectAllAssetsHistoricalMax:
                         high = validate_price(data[3])
                         low = validate_price(data[4])
                         volume = validate_price(data[5])  #change here
-                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        change_perc = validate_price(data[6][:-1]) # Removing % symbol #change here
                         Type = 'etf'  #change here
                         country = 'AU'  #change here
                         short_name = i[0]  #change here
@@ -4040,7 +4052,7 @@ class CollectAllAssetsHistorical5Y:
                         high = validate_price(data[3])
                         low = validate_price(data[4])
                         volume = validate_price(data[5])
-                        change_perc = data[6][:-1] # Removing % symbol
+                        change_perc = validate_price(data[6][:-1]) # Removing % symbol
                         Type = 'cmdty'
                         country = i[0]
                         short_name = i[1]
@@ -4143,7 +4155,7 @@ class CollectAllAssetsHistorical5Y:
                     sleep(5)
                     continue
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=remove_already_saved(already_saved,c_list))
 
         finally:
             ('Quiting the driver')
@@ -4196,19 +4208,28 @@ class CollectAllAssetsHistorical5Y:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
                         date = datetime.datetime.strptime(data[0], '%b %d, %Y')
-                        price = validate_price(data[1][:data[1].index('.')+2+1])
+                        try:
+                            price = validate_price(data[1][:data[1].index('.')+2+1])
+                        except:
+                            price = validate_price(data[1])
                         Open = validate_price(data[2])
                         high = validate_price(data[3])
                         low = validate_price(data[4])
                         volume = validate_price(data[5])  #change here
-                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        change_perc = validate_price(data[6][:-1]) # Removing % symbol #change here
                         Type = 'crptcrncy'  #change here
                         country = 'G'  #change here
                         short_name = i[0]  #change here
                         AllAssetsHistorical5Y( 
-                            Type=Type, country=country, short_name=short_name,
-                            date=date, price=price, Open=Open,
-                            high=high, low=low, change_perc=change_perc,
+                            Type=Type, 
+                            country=country, 
+                            short_name=short_name,
+                            date=date, 
+                            price=price, 
+                            Open=Open,
+                            high=high, 
+                            low=low, 
+                            change_perc=change_perc,
                             volume=volume).save()
                     print(f'Stored {x}/{quanity}: {short_name}')
                     x+=1
@@ -4219,7 +4240,10 @@ class CollectAllAssetsHistorical5Y:
                     sleep(5)
                     continue
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            # Comment the line that removes all the old data (at the begining of the current function) before using the code below
+            # already_saved = AllAssetsHistorical5Y.objects.filter(Type='crptcrncy').values_list('short_name')
+            # already_saved = [i[0] for i in already_saved]
+            threads_by_chunks(target=work, c_list=remove_already_saved(already_saved, c_list))
 
         finally:
             ('Quiting the driver')
@@ -4367,7 +4391,7 @@ class CollectAllAssetsHistorical5Y:
                         high = validate_price(data[3])
                         low = validate_price(data[4])
                         volume = validate_price(data[5])  #change here
-                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        change_perc = validate_price(data[6][:-1]) # Removing % symbol #change here
                         Type = 'stck'  #change here
                         country = 'US'  #change here
                         short_name = i[0]  #change here
@@ -4458,7 +4482,7 @@ class CollectAllAssetsHistorical5Y:
                         high = validate_price(data[3])
                         low = validate_price(data[4])
                         volume = validate_price(data[5])  #change here
-                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        change_perc = validate_price(data[6][:-1]) # Removing % symbol #change here
                         Type = 'stck'  #change here
                         country = 'JP'  #change here
                         short_name = i[0]  #change here
@@ -4549,7 +4573,7 @@ class CollectAllAssetsHistorical5Y:
                         high = validate_price(data[3])
                         low = validate_price(data[4])
                         volume = validate_price(data[5])  #change here
-                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        change_perc = validate_price(data[6][:-1]) # Removing % symbol #change here
                         Type = 'stck'  #change here
                         country = 'UK'  #change here
                         short_name = i[0]  #change here
@@ -4640,7 +4664,7 @@ class CollectAllAssetsHistorical5Y:
                         high = validate_price(data[3])
                         low = validate_price(data[4])
                         volume = validate_price(data[5])  #change here
-                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        change_perc = validate_price(data[6][:-1]) # Removing % symbol #change here
                         Type = 'stck'  #change here
                         country = 'HK'  #change here
                         short_name = i[0]  #change here
@@ -4731,7 +4755,7 @@ class CollectAllAssetsHistorical5Y:
                         high = validate_price(data[3])
                         low = validate_price(data[4])
                         volume = validate_price(data[5])  #change here
-                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        change_perc = validate_price(data[6][:-1]) # Removing % symbol #change here
                         Type = 'stck'  #change here
                         country = 'CH'  #change here
                         short_name = i[0]  #change here
@@ -4822,7 +4846,7 @@ class CollectAllAssetsHistorical5Y:
                         high = validate_price(data[3])
                         low = validate_price(data[4])
                         volume = validate_price(data[5])  #change here
-                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        change_perc = validate_price(data[6][:-1]) # Removing % symbol #change here
                         Type = 'stck'  #change here
                         country = 'CA'  #change here
                         short_name = i[0]  #change here
@@ -4913,7 +4937,7 @@ class CollectAllAssetsHistorical5Y:
                         high = validate_price(data[3])
                         low = validate_price(data[4])
                         volume = validate_price(data[5])  #change here
-                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        change_perc = validate_price(data[6][:-1]) # Removing % symbol #change here
                         Type = 'stck'  #change here
                         country = 'GE'  #change here
                         short_name = i[0]  #change here
@@ -5004,7 +5028,7 @@ class CollectAllAssetsHistorical5Y:
                         high = validate_price(data[3])
                         low = validate_price(data[4])
                         volume = validate_price(data[5])  #change here
-                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        change_perc = validate_price(data[6][:-1]) # Removing % symbol #change here
                         Type = 'stck'  #change here
                         country = 'AU'  #change here
                         short_name = i[0]  #change here
@@ -5095,7 +5119,7 @@ class CollectAllAssetsHistorical5Y:
                         high = validate_price(data[3])
                         low = validate_price(data[4])
                         volume = validate_price(data[5])  #change here
-                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        change_perc = validate_price(data[6][:-1]) # Removing % symbol #change here
                         Type = 'indx'  #change here
                         country = 'US'  #change here
                         short_name = i[0]  #change here
@@ -5186,7 +5210,7 @@ class CollectAllAssetsHistorical5Y:
                         high = validate_price(data[3])
                         low = validate_price(data[4])
                         volume = validate_price(data[5])  #change here
-                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        change_perc = validate_price(data[6][:-1]) # Removing % symbol #change here
                         Type = 'indx'  #change here
                         country = 'JP'  #change here
                         short_name = i[0]  #change here
@@ -5277,7 +5301,7 @@ class CollectAllAssetsHistorical5Y:
                         high = validate_price(data[3])
                         low = validate_price(data[4])
                         volume = validate_price(data[5])  #change here
-                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        change_perc = validate_price(data[6][:-1]) # Removing % symbol #change here
                         Type = 'indx'  #change here
                         country = 'UK'  #change here
                         short_name = i[0]  #change here
@@ -5368,7 +5392,7 @@ class CollectAllAssetsHistorical5Y:
                         high = validate_price(data[3])
                         low = validate_price(data[4])
                         volume = validate_price(data[5])  #change here
-                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        change_perc = validate_price(data[6][:-1]) # Removing % symbol #change here
                         Type = 'indx'  #change here
                         country = 'HK'  #change here
                         short_name = i[0]  #change here
@@ -5459,7 +5483,7 @@ class CollectAllAssetsHistorical5Y:
                         high = validate_price(data[3])
                         low = validate_price(data[4])
                         volume = validate_price(data[5])  #change here
-                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        change_perc = validate_price(data[6][:-1]) # Removing % symbol #change here
                         Type = 'indx'  #change here
                         country = 'CH'  #change here
                         short_name = i[0]  #change here
@@ -5550,7 +5574,7 @@ class CollectAllAssetsHistorical5Y:
                         high = validate_price(data[3])
                         low = validate_price(data[4])
                         volume = validate_price(data[5])  #change here
-                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        change_perc = validate_price(data[6][:-1]) # Removing % symbol #change here
                         Type = 'indx'  #change here
                         country = 'CA'  #change here
                         short_name = i[0]  #change here
@@ -5641,7 +5665,7 @@ class CollectAllAssetsHistorical5Y:
                         high = validate_price(data[3])
                         low = validate_price(data[4])
                         volume = validate_price(data[5])  #change here
-                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        change_perc = validate_price(data[6][:-1]) # Removing % symbol #change here
                         Type = 'indx'  #change here
                         country = 'GE'  #change here
                         short_name = i[0]  #change here
@@ -5732,7 +5756,7 @@ class CollectAllAssetsHistorical5Y:
                         high = validate_price(data[3])
                         low = validate_price(data[4])
                         volume = validate_price(data[5])  #change here
-                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        change_perc = validate_price(data[6][:-1]) # Removing % symbol #change here
                         Type = 'indx'  #change here
                         country = 'AU'  #change here
                         short_name = i[0]  #change here
@@ -5823,7 +5847,7 @@ class CollectAllAssetsHistorical5Y:
                         high = validate_price(data[3])
                         low = validate_price(data[4])
                         volume = validate_price(data[5])  #change here
-                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        change_perc = validate_price(data[6][:-1]) # Removing % symbol #change here
                         Type = 'etf'  #change here
                         country = 'US'  #change here
                         short_name = i[0]  #change here
@@ -5914,7 +5938,7 @@ class CollectAllAssetsHistorical5Y:
                         high = validate_price(data[3])
                         low = validate_price(data[4])
                         volume = validate_price(data[5])  #change here
-                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        change_perc = validate_price(data[6][:-1]) # Removing % symbol #change here
                         Type = 'etf'  #change here
                         country = 'JP'  #change here
                         short_name = i[0]  #change here
@@ -6005,7 +6029,7 @@ class CollectAllAssetsHistorical5Y:
                         high = validate_price(data[3])
                         low = validate_price(data[4])
                         volume = validate_price(data[5])  #change here
-                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        change_perc = validate_price(data[6][:-1]) # Removing % symbol #change here
                         Type = 'etf'  #change here
                         country = 'UK'  #change here
                         short_name = i[0]  #change here
@@ -6096,7 +6120,7 @@ class CollectAllAssetsHistorical5Y:
                         high = validate_price(data[3])
                         low = validate_price(data[4])
                         volume = validate_price(data[5])  #change here
-                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        change_perc = validate_price(data[6][:-1]) # Removing % symbol #change here
                         Type = 'etf'  #change here
                         country = 'HK'  #change here
                         short_name = i[0]  #change here
@@ -6187,7 +6211,7 @@ class CollectAllAssetsHistorical5Y:
                         high = validate_price(data[3])
                         low = validate_price(data[4])
                         volume = validate_price(data[5])  #change here
-                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        change_perc = validate_price(data[6][:-1]) # Removing % symbol #change here
                         Type = 'etf'  #change here
                         country = 'CH'  #change here
                         short_name = i[0]  #change here
@@ -6278,7 +6302,7 @@ class CollectAllAssetsHistorical5Y:
                         high = validate_price(data[3])
                         low = validate_price(data[4])
                         volume = validate_price(data[5])  #change here
-                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        change_perc = validate_price(data[6][:-1]) # Removing % symbol #change here
                         Type = 'etf'  #change here
                         country = 'CA'  #change here
                         short_name = i[0]  #change here
@@ -6369,7 +6393,7 @@ class CollectAllAssetsHistorical5Y:
                         high = validate_price(data[3])
                         low = validate_price(data[4])
                         volume = validate_price(data[5])  #change here
-                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        change_perc = validate_price(data[6][:-1]) # Removing % symbol #change here
                         Type = 'etf'  #change here
                         country = 'GE'  #change here
                         short_name = i[0]  #change here
@@ -6460,7 +6484,7 @@ class CollectAllAssetsHistorical5Y:
                         high = validate_price(data[3])
                         low = validate_price(data[4])
                         volume = validate_price(data[5])  #change here
-                        change_perc = data[6][:-1] # Removing % symbol #change here
+                        change_perc = validate_price(data[6][:-1]) # Removing % symbol #change here
                         Type = 'etf'  #change here
                         country = 'AU'  #change here
                         short_name = i[0]  #change here
