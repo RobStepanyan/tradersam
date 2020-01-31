@@ -1,10 +1,8 @@
 # FOR SCRAPING (COLLECTING) STATIC(UNCHANGABLE) DATA
 import requests, os, datetime
-from selenium import webdriver
-from pyvirtualdisplay import Display
-from selenium import webdriver
 from bs4 import BeautifulSoup
 from time import sleep
+from .scraper_functions import *
 from .models import (
     CommodityStaticInfo, CurrencyStaticInfo, CryptocurrencyStaticInfo, USStockStaticInfo, JapanStockStaticInfo,
     UKStockStaticInfo, HKStockStaticInfo, ChinaStockStaticInfo, CanadaStockStaticInfo, GermanyStockStaticInfo,
@@ -25,6 +23,7 @@ from .models import (
     FundIssuers, USFundStaticInfo, JapanFundStaticInfo, UKFundStaticInfo, HKFundStaticInfo, 
     ChinaFundStaticInfo, CanadaFundStaticInfo, GermanyFundStaticInfo, AustraliaFundStaticInfo,
 )
+
 
 # This class is used only for cryptocurrencies, currencies, commodities, stocks and indices
 class CollectStaticInfo:
@@ -143,13 +142,7 @@ class CollectStaticInfo:
         CryptocurrencyStaticInfo.objects.all().delete()
         print('Old records have been removed')
         print('Starting to collect new ones')
-        #--------------------VPS------------------
-        display = Display(visible=0, size=(1000, 1000))
-        display.start()
-        options = webdriver.ChromeOptions()
-        options.add_argument('--no-sandbox')
-        driver = webdriver.Chrome(options=options)
-        #-----------------------------------------
+        driver = vps_selenium_setup()
         short_names = []
         long_names = []
         links = []
@@ -182,13 +175,7 @@ class CollectStaticInfo:
         return ''
 
     def usstocks():
-        #--------------------VPS------------------
-        display = Display(visible=0, size=(800, 600))
-        display.start()
-        options = webdriver.ChromeOptions()
-        options.add_argument('--no-sandbox')
-        driver = webdriver.Chrome(options=options)
-        #-----------------------------------------
+        driver = vps_selenium_setup()
         print('Starting CollectStaticInfo.usstocks()')
         print('Removing old records')
         dd = input('Are you sure you want to delete all the old records, and scrape new ones? Press Y or y to continue: ')
@@ -275,13 +262,7 @@ class CollectStaticInfo:
         return ''
 
     def japanstocks():
-        #--------------------VPS------------------
-        display = Display(visible=0, size=(800, 600))
-        display.start()
-        options = webdriver.ChromeOptions()
-        options.add_argument('--no-sandbox')
-        driver = webdriver.Chrome(options=options)
-        #-----------------------------------------
+        driver = vps_selenium_setup()
         print('Starting CollectStaticInfo.japanstocks()')
         print('Removing old records')
         dd = input('Are you sure you want to delete all the old records, and scrape new ones? Press Y or y to continue: ')
@@ -368,13 +349,7 @@ class CollectStaticInfo:
         return ''
 
     def ukstocks():
-        #--------------------VPS------------------
-        display = Display(visible=0, size=(800, 600))
-        display.start()
-        options = webdriver.ChromeOptions()
-        options.add_argument('--no-sandbox')
-        driver = webdriver.Chrome(options=options)
-        #-----------------------------------------
+        driver = vps_selenium_setup()
         print('Starting CollectStaticInfo.ukstocks()')
         print('Removing old records')
         dd = input('Are you sure you want to delete all the old records, and scrape new ones? Press Y or y to continue: ')
@@ -443,13 +418,7 @@ class CollectStaticInfo:
         return ''
 
     def hkstocks():
-        #--------------------VPS------------------
-        display = Display(visible=0, size=(800, 600))
-        display.start()
-        options = webdriver.ChromeOptions()
-        options.add_argument('--no-sandbox')
-        driver = webdriver.Chrome(options=options)
-        #-----------------------------------------
+        driver = vps_selenium_setup()
         print('Starting CollectStaticInfo.hkstocks()')
         print('Removing old records')
         dd = input('Are you sure you want to delete all the old records, and scrape new ones? Press Y or y to continue: ')
@@ -517,13 +486,7 @@ class CollectStaticInfo:
         return ''
 
     def chinastocks():
-        #--------------------VPS------------------
-        display = Display(visible=0, size=(800, 600))
-        display.start()
-        options = webdriver.ChromeOptions()
-        options.add_argument('--no-sandbox')
-        driver = webdriver.Chrome(options=options)
-        #-----------------------------------------
+        driver = vps_selenium_setup()
         print('Starting CollectStaticInfo.chinastocks()')
         print('Removing old records')
         dd = input('Are you sure you want to delete all the old records, and scrape new ones? Press Y or y to continue: ')
@@ -594,13 +557,7 @@ class CollectStaticInfo:
         return ''
 
     def canadastocks():
-        #--------------------VPS------------------
-        display = Display(visible=0, size=(800, 600))
-        display.start()
-        options = webdriver.ChromeOptions()
-        options.add_argument('--no-sandbox')
-        driver = webdriver.Chrome(options=options)
-        #-----------------------------------------
+        driver = vps_selenium_setup()
         print('Starting CollectStaticInfo.canadastocks()')
         print('Removing old records')
         dd = input('Are you sure you want to delete all the old records, and scrape new ones? Press Y or y to continue: ')
@@ -688,13 +645,7 @@ class CollectStaticInfo:
         return ''
 
     def germanystocks():
-        #--------------------VPS------------------
-        display = Display(visible=0, size=(800, 600))
-        display.start()
-        options = webdriver.ChromeOptions()
-        options.add_argument('--no-sandbox')
-        driver = webdriver.Chrome(options=options)
-        #-----------------------------------------
+        driver = vps_selenium_setup()
         print('Starting CollectStaticInfo.germanystocks()')
         print('Removing old records')
         dd = input('Are you sure you want to delete all the old records, and scrape new ones? Press Y or y to continue: ')
@@ -781,13 +732,7 @@ class CollectStaticInfo:
         return ''
 
     def australiastocks():
-        #--------------------VPS------------------
-        display = Display(visible=0, size=(800, 600))
-        display.start()
-        options = webdriver.ChromeOptions()
-        options.add_argument('--no-sandbox')
-        driver = webdriver.Chrome(options=options)
-        #-----------------------------------------
+        driver = vps_selenium_setup()
         print('Starting CollectStaticInfo.australiastocks()')
         print('Removing old records')
         dd = input('Are you sure you want to delete all the old records, and scrape new ones? Press Y or y to continue: ')
@@ -856,13 +801,7 @@ class CollectStaticInfo:
 
     # INDICES' STATIC INFO AREA
     def usindices():
-        #--------------------VPS------------------
-        display = Display(visible=0, size=(800, 600))
-        display.start()
-        options = webdriver.ChromeOptions()
-        options.add_argument('--no-sandbox')
-        driver = webdriver.Chrome(options=options)
-        #-----------------------------------------
+        driver = vps_selenium_setup()
         print('Starting CollectStaticInfo.usindices()')
         dd = input('Are you sure you want to delete all the old records, and scrape new ones? Press Y or y to continue: ')
         print('Removing old records')
@@ -940,13 +879,7 @@ class CollectStaticInfo:
         return ''
 
     def japanindices():
-        #--------------------VPS------------------
-        display = Display(visible=0, size=(800, 600))
-        display.start()
-        options = webdriver.ChromeOptions()
-        options.add_argument('--no-sandbox')
-        driver = webdriver.Chrome(options=options)
-        #-----------------------------------------
+        driver = vps_selenium_setup()
         print('Starting CollectStaticInfo.japanindices()')
         dd = input('Are you sure you want to delete all the old records, and scrape new ones? Press Y or y to continue: ')
         print('Removing old records')
@@ -1024,13 +957,7 @@ class CollectStaticInfo:
         return ''
 
     def ukindices():
-        #--------------------VPS------------------
-        display = Display(visible=0, size=(800, 600))
-        display.start()
-        options = webdriver.ChromeOptions()
-        options.add_argument('--no-sandbox')
-        driver = webdriver.Chrome(options=options)
-        #-----------------------------------------
+        driver = vps_selenium_setup()
         print('Starting CollectStaticInfo.ukindices()')
         dd = input('Are you sure you want to delete all the old records, and scrape new ones? Press Y or y to continue: ')
         print('Removing old records')
@@ -1088,13 +1015,7 @@ class CollectStaticInfo:
         return ''
 
     def hkindices():
-        #--------------------VPS------------------
-        display = Display(visible=0, size=(800, 600))
-        display.start()
-        options = webdriver.ChromeOptions()
-        options.add_argument('--no-sandbox')
-        driver = webdriver.Chrome(options=options)
-        #-----------------------------------------
+        driver = vps_selenium_setup()
         print('Starting CollectStaticInfo.hkindices()')
         dd = input('Are you sure you want to delete all the old records, and scrape new ones? Press Y or y to continue: ')
         print('Removing old records')
@@ -1154,13 +1075,7 @@ class CollectStaticInfo:
         return ''
 
     def chinaindices():
-        #--------------------VPS------------------
-        display = Display(visible=0, size=(800, 600))
-        display.start()
-        options = webdriver.ChromeOptions()
-        options.add_argument('--no-sandbox')
-        driver = webdriver.Chrome(options=options)
-        #-----------------------------------------
+        driver = vps_selenium_setup()
         print('Starting CollectStaticInfo.chinaindices()')
         dd = input('Are you sure you want to delete all the old records, and scrape new ones? Press Y or y to continue: ')
         print('Removing old records')
@@ -1239,13 +1154,7 @@ class CollectStaticInfo:
         return ''
 
     def canadaindices():
-        #--------------------VPS------------------
-        display = Display(visible=0, size=(800, 600))
-        display.start()
-        options = webdriver.ChromeOptions()
-        options.add_argument('--no-sandbox')
-        driver = webdriver.Chrome(options=options)
-        #-----------------------------------------
+        driver = vps_selenium_setup()
         print('Starting CollectStaticInfo.canadaindices()')
         dd = input('Are you sure you want to delete all the old records, and scrape new ones? Press Y or y to continue: ')
         if dd.upper() != 'Y':
@@ -1324,13 +1233,7 @@ class CollectStaticInfo:
         return ''
 
     def germanyindices():
-        #--------------------VPS------------------
-        display = Display(visible=0, size=(800, 600))
-        display.start()
-        options = webdriver.ChromeOptions()
-        options.add_argument('--no-sandbox')
-        driver = webdriver.Chrome(options=options)
-        #-----------------------------------------
+        driver = vps_selenium_setup()
         print('Starting CollectStaticInfo.germanyindices()')
         dd = input('Are you sure you want to delete all the old records, and scrape new ones? Press Y or y to continue: ')
         if dd.upper() != 'Y':
@@ -1409,13 +1312,7 @@ class CollectStaticInfo:
         return ''
 
     def australiaindices():
-        #--------------------VPS------------------
-        display = Display(visible=0, size=(800, 600))
-        display.start()
-        options = webdriver.ChromeOptions()
-        options.add_argument('--no-sandbox')
-        driver = webdriver.Chrome(options=options)
-        #-----------------------------------------
+        driver = vps_selenium_setup()
         print('Starting CollectStaticInfo.australiaindices()')
         dd = input('Are you sure you want to delete all the old records, and scrape new ones? Press Y or y to continue: ')
         if dd.upper() != 'Y':
@@ -1496,13 +1393,7 @@ class CollectETFIssuers:
 
 
     def us():
-        #--------------------VPS------------------
-        display = Display(visible=0, size=(800, 600))
-        display.start()
-        options = webdriver.ChromeOptions()
-        options.add_argument('--no-sandbox')
-        driver = webdriver.Chrome(options=options)
-        #-----------------------------------------
+        driver = vps_selenium_setup()
         print('Starting get_etf_issuers.us()')
         print('Starting Selenium')
         url = 'https://www.investing.com/etfs/usa-etfs?&issuer_filter=0'
@@ -1548,13 +1439,7 @@ class CollectETFIssuers:
         return ''
 
     def japan():
-        #--------------------VPS------------------
-        display = Display(visible=0, size=(800, 600))
-        display.start()
-        options = webdriver.ChromeOptions()
-        options.add_argument('--no-sandbox')
-        driver = webdriver.Chrome(options=options)
-        #-----------------------------------------
+        driver = vps_selenium_setup()
         print('Starting get_etf_issuers.japan()')
         print('Starting Selenium')
         url = 'https://www.investing.com/etfs/japan-etfs?&issuer_filter=0'
@@ -1600,13 +1485,7 @@ class CollectETFIssuers:
         return ''
 
     def uk():
-        #--------------------VPS------------------
-        display = Display(visible=0, size=(800, 600))
-        display.start()
-        options = webdriver.ChromeOptions()
-        options.add_argument('--no-sandbox')
-        driver = webdriver.Chrome(options=options)
-        #-----------------------------------------
+        driver = vps_selenium_setup()
         print('Starting get_etf_issuers.uk()')
         print('Starting Selenium')
         url = 'https://www.investing.com/etfs/uk-etfs?&issuer_filter=0'
@@ -1653,13 +1532,7 @@ class CollectETFIssuers:
         return ''
 
     def hk():
-        #--------------------VPS------------------
-        display = Display(visible=0, size=(800, 600))
-        display.start()
-        options = webdriver.ChromeOptions()
-        options.add_argument('--no-sandbox')
-        driver = webdriver.Chrome(options=options)
-        #-----------------------------------------
+        driver = vps_selenium_setup()
         print('Starting get_etf_issuers.hk()')
         print('Starting Selenium')
         url = 'https://www.investing.com/etfs/hong-kong-etfs?&issuer_filter=0'
@@ -1706,13 +1579,7 @@ class CollectETFIssuers:
         return ''
 
     def china():
-        #--------------------VPS------------------
-        display = Display(visible=0, size=(800, 600))
-        display.start()
-        options = webdriver.ChromeOptions()
-        options.add_argument('--no-sandbox')
-        driver = webdriver.Chrome(options=options)
-        #-----------------------------------------
+        driver = vps_selenium_setup()
         print('Starting get_etf_issuers.china()')
         print('Starting Selenium')
         url = 'https://www.investing.com/etfs/china-etfs?&issuer_filter=0'
@@ -1759,13 +1626,7 @@ class CollectETFIssuers:
         return ''
 
     def canada():
-        #--------------------VPS------------------
-        display = Display(visible=0, size=(800, 600))
-        display.start()
-        options = webdriver.ChromeOptions()
-        options.add_argument('--no-sandbox')
-        driver = webdriver.Chrome(options=options)
-        #-----------------------------------------
+        driver = vps_selenium_setup()
         print('Starting get_etf_issuers.canada()')
         print('Starting Selenium')
         url = 'https://www.investing.com/etfs/canada-etfs?&issuer_filter=0'
@@ -1812,13 +1673,7 @@ class CollectETFIssuers:
         return ''
 
     def germany():
-        #--------------------VPS------------------
-        display = Display(visible=0, size=(800, 600))
-        display.start()
-        options = webdriver.ChromeOptions()
-        options.add_argument('--no-sandbox')
-        driver = webdriver.Chrome(options=options)
-        #-----------------------------------------
+        driver = vps_selenium_setup()
         print('Starting get_etf_issuers.germany()')
         print('Starting Selenium')
         url = 'https://www.investing.com/etfs/germany-etfs?&issuer_filter=0'
@@ -1865,13 +1720,7 @@ class CollectETFIssuers:
         return ''
 
     def australia():
-        #--------------------VPS------------------
-        display = Display(visible=0, size=(800, 600))
-        display.start()
-        options = webdriver.ChromeOptions()
-        options.add_argument('--no-sandbox')
-        driver = webdriver.Chrome(options=options)
-        #-----------------------------------------
+        driver = vps_selenium_setup()
         print('Starting get_etf_issuers.australia()')
         print('Starting Selenium')
         url = 'https://www.investing.com/etfs/australia-etfs?&issuer_filter=0'
@@ -1939,13 +1788,7 @@ class CollectETFStaticInfo:
 
 
     def us():
-        #--------------------VPS------------------
-        display = Display(visible=0, size=(800, 600))
-        display.start()
-        options = webdriver.ChromeOptions()
-        options.add_argument('--no-sandbox')
-        driver = webdriver.Chrome(options=options)
-        #-----------------------------------------
+        driver = vps_selenium_setup()
         print('Starting get_etf_issuers.us()')
         print('Starting Selenium')
         url = 'https://www.investing.com/etfs/usa-etfs?&issuer_filter=0'
@@ -2022,13 +1865,7 @@ class CollectETFStaticInfo:
         return ''
 
     def japan():
-        #--------------------VPS------------------
-        display = Display(visible=0, size=(800, 600))
-        display.start()
-        options = webdriver.ChromeOptions()
-        options.add_argument('--no-sandbox')
-        driver = webdriver.Chrome(options=options)
-        #-----------------------------------------
+        driver = vps_selenium_setup()
         print('Starting get_etf_issuers.japan()')
         print('Starting Selenium')
         url = 'https://www.investing.com/etfs/japan-etfs?&issuer_filter=0'
@@ -2106,13 +1943,7 @@ class CollectETFStaticInfo:
         return ''
 
     def uk():
-        #--------------------VPS------------------
-        display = Display(visible=0, size=(800, 600))
-        display.start()
-        options = webdriver.ChromeOptions()
-        options.add_argument('--no-sandbox')
-        driver = webdriver.Chrome(options=options)
-        #-----------------------------------------
+        driver = vps_selenium_setup()
         print('Starting get_etf_issuers.uk()')
         print('Starting Selenium')
         url = 'https://www.investing.com/etfs/uk-etfs?&issuer_filter=0'
@@ -2172,13 +2003,7 @@ class CollectETFStaticInfo:
         return ''
 
     def hk():
-        #--------------------VPS------------------
-        display = Display(visible=0, size=(800, 600))
-        display.start()
-        options = webdriver.ChromeOptions()
-        options.add_argument('--no-sandbox')
-        driver = webdriver.Chrome(options=options)
-        #-----------------------------------------
+        driver = vps_selenium_setup()
         print('Starting get_etf_issuers.hk()')
         print('Starting Selenium')
         url = 'https://www.investing.com/etfs/hong-kong-etfs?&issuer_filter=0'
@@ -2238,13 +2063,7 @@ class CollectETFStaticInfo:
         return ''
 
     def china():
-        #--------------------VPS------------------
-        display = Display(visible=0, size=(800, 600))
-        display.start()
-        options = webdriver.ChromeOptions()
-        options.add_argument('--no-sandbox')
-        driver = webdriver.Chrome(options=options)
-        #-----------------------------------------
+        driver = vps_selenium_setup()
         print('Starting get_etf_issuers.china()')
         print('Starting Selenium')
         url = 'https://www.investing.com/etfs/china-etfs?&issuer_filter=0'
@@ -2322,13 +2141,7 @@ class CollectETFStaticInfo:
         return ''
 
     def canada():
-        #--------------------VPS------------------
-        display = Display(visible=0, size=(800, 600))
-        display.start()
-        options = webdriver.ChromeOptions()
-        options.add_argument('--no-sandbox')
-        driver = webdriver.Chrome(options=options)
-        #-----------------------------------------
+        driver = vps_selenium_setup()
         print('Starting get_etf_issuers.canada()')
         print('Starting Selenium')
         url = 'https://www.investing.com/etfs/canada-etfs?&issuer_filter=0'
@@ -2406,13 +2219,7 @@ class CollectETFStaticInfo:
         return ''
 
     def germany():
-        #--------------------VPS------------------
-        display = Display(visible=0, size=(800, 600))
-        display.start()
-        options = webdriver.ChromeOptions()
-        options.add_argument('--no-sandbox')
-        driver = webdriver.Chrome(options=options)
-        #-----------------------------------------
+        driver = vps_selenium_setup()
         print('Starting get_etf_issuers.germany()')
         print('Starting Selenium')
         url = 'https://www.investing.com/etfs/germany-etfs?&issuer_filter=0'
@@ -2490,13 +2297,7 @@ class CollectETFStaticInfo:
         return ''
 
     def australia():
-        #--------------------VPS------------------
-        display = Display(visible=0, size=(800, 600))
-        display.start()
-        options = webdriver.ChromeOptions()
-        options.add_argument('--no-sandbox')
-        driver = webdriver.Chrome(options=options)
-        #-----------------------------------------
+        driver = vps_selenium_setup()
         print('Starting get_etf_issuers.australia()')
         print('Starting Selenium')
         url = 'https://www.investing.com/etfs/australia-etfs?&issuer_filter=0'
@@ -2578,13 +2379,7 @@ class CollectBondStaticInfo:
 
 
     def us():
-        #--------------------VPS------------------
-        display = Display(visible=0, size=(800, 600))
-        display.start()
-        options = webdriver.ChromeOptions()
-        options.add_argument('--no-sandbox')
-        driver = webdriver.Chrome(options=options)
-        #-----------------------------------------
+        driver = vps_selenium_setup()
         print('Starting CollectBondStaticInfo.us()')
         print('Starting Selenium')
         url = 'https://www.investing.com/rates-bonds/usa-government-bonds?maturity_from=40&maturity_to=290'
@@ -2652,13 +2447,7 @@ class CollectBondStaticInfo:
         return ''
 
     def japan():
-        #--------------------VPS------------------
-        display = Display(visible=0, size=(800, 600))
-        display.start()
-        options = webdriver.ChromeOptions()
-        options.add_argument('--no-sandbox')
-        driver = webdriver.Chrome(options=options)
-        #-----------------------------------------
+        driver = vps_selenium_setup()
         print('Starting CollectBondStaticInfo.japan()')
         print('Starting Selenium')
         url = 'https://www.investing.com/rates-bonds/japan-government-bonds?maturity_from=40&maturity_to=300'
@@ -2727,13 +2516,7 @@ class CollectBondStaticInfo:
         return ''
 
     def uk():
-        #--------------------VPS------------------
-        display = Display(visible=0, size=(800, 600))
-        display.start()
-        options = webdriver.ChromeOptions()
-        options.add_argument('--no-sandbox')
-        driver = webdriver.Chrome(options=options)
-        #-----------------------------------------
+        driver = vps_selenium_setup()
         print('Starting CollectBondStaticInfo.uk()')
         print('Starting Selenium')
         url = 'https://www.investing.com/rates-bonds/uk-government-bonds?maturity_from=40&maturity_to=310'
@@ -2783,13 +2566,7 @@ class CollectBondStaticInfo:
         return ''
 
     def hk():
-        #--------------------VPS------------------
-        display = Display(visible=0, size=(800, 600))
-        display.start()
-        options = webdriver.ChromeOptions()
-        options.add_argument('--no-sandbox')
-        driver = webdriver.Chrome(options=options)
-        #-----------------------------------------
+        driver = vps_selenium_setup()
         print('Starting CollectBondStaticInfo.hk()')
         print('Starting Selenium')
         url = 'https://www.investing.com/rates-bonds/hong-kong-government-bonds?maturity_from=20&maturity_to=230'
@@ -2839,13 +2616,7 @@ class CollectBondStaticInfo:
         return ''
 
     def china():
-        #--------------------VPS------------------
-        display = Display(visible=0, size=(800, 600))
-        display.start()
-        options = webdriver.ChromeOptions()
-        options.add_argument('--no-sandbox')
-        driver = webdriver.Chrome(options=options)
-        #-----------------------------------------
+        driver = vps_selenium_setup()
         print('Starting CollectBondStaticInfo.china()')
         print('Starting Selenium')
         url = 'https://www.investing.com/rates-bonds/china-government-bonds?maturity_from=90&maturity_to=290'
@@ -2914,13 +2685,7 @@ class CollectBondStaticInfo:
         return ''
 
     def canada():
-        #--------------------VPS------------------
-        display = Display(visible=0, size=(800, 600))
-        display.start()
-        options = webdriver.ChromeOptions()
-        options.add_argument('--no-sandbox')
-        driver = webdriver.Chrome(options=options)
-        #-----------------------------------------
+        driver = vps_selenium_setup()
         print('Starting CollectBondStaticInfo.canada()')
         print('Starting Selenium')
         url = 'https://www.investing.com/rates-bonds/canada-government-bonds?maturity_from=40&maturity_to=290'
@@ -2989,13 +2754,7 @@ class CollectBondStaticInfo:
         return ''
 
     def germany():
-        #--------------------VPS------------------
-        display = Display(visible=0, size=(800, 600))
-        display.start()
-        options = webdriver.ChromeOptions()
-        options.add_argument('--no-sandbox')
-        driver = webdriver.Chrome(options=options)
-        #-----------------------------------------
+        driver = vps_selenium_setup()
         print('Starting CollectBondStaticInfo.germany()')
         print('Starting Selenium')
         url = 'https://www.investing.com/rates-bonds/germany-government-bonds?maturity_from=40&maturity_to=290'
@@ -3064,13 +2823,7 @@ class CollectBondStaticInfo:
         return ''
 
     def australia():
-        #--------------------VPS------------------
-        display = Display(visible=0, size=(800, 600))
-        display.start()
-        options = webdriver.ChromeOptions()
-        options.add_argument('--no-sandbox')
-        driver = webdriver.Chrome(options=options)
-        #-----------------------------------------
+        driver = vps_selenium_setup()
         print('Starting CollectBondStaticInfo.australia()')
         print('Starting Selenium')
         url = 'https://www.investing.com/rates-bonds/australia-government-bonds?maturity_from=40&maturity_to=290'
@@ -3140,13 +2893,7 @@ class CollectFundIssuers:
         CollectFundIssuers.australia()
     
     def us():
-        #--------------------VPS------------------
-        display = Display(visible=0, size=(800, 600))
-        display.start()
-        options = webdriver.ChromeOptions()
-        options.add_argument('--no-sandbox')
-        driver = webdriver.Chrome(options=options)
-        #-----------------------------------------
+        driver = vps_selenium_setup()
         print('Starting CollectFundIssuers.us()')
         print('Starting Selenium')
         url = 'https://www.investing.com/funds/usa-funds?&issuer_filter=0'
@@ -3193,13 +2940,7 @@ class CollectFundIssuers:
         return ''
 
     def japan():
-        #--------------------VPS------------------
-        display = Display(visible=0, size=(800, 600))
-        display.start()
-        options = webdriver.ChromeOptions()
-        options.add_argument('--no-sandbox')
-        driver = webdriver.Chrome(options=options)
-        #-----------------------------------------
+        driver = vps_selenium_setup()
         print('Starting CollectFundIssuers.japan()')
         print('Starting Selenium')
         url = 'https://www.investing.com/funds/japan-funds?&issuer_filter=0'
@@ -3246,13 +2987,7 @@ class CollectFundIssuers:
         return ''
 
     def uk():
-        #--------------------VPS------------------
-        display = Display(visible=0, size=(800, 600))
-        display.start()
-        options = webdriver.ChromeOptions()
-        options.add_argument('--no-sandbox')
-        driver = webdriver.Chrome(options=options)
-        #-----------------------------------------
+        driver = vps_selenium_setup()
         print('Starting CollectFundIssuers.uk()')
         print('Starting Selenium')
         url = 'https://www.investing.com/funds/uk-funds?&issuer_filter=0'
@@ -3299,13 +3034,7 @@ class CollectFundIssuers:
         return ''
 
     def hk():
-        #--------------------VPS------------------
-        display = Display(visible=0, size=(800, 600))
-        display.start()
-        options = webdriver.ChromeOptions()
-        options.add_argument('--no-sandbox')
-        driver = webdriver.Chrome(options=options)
-        #-----------------------------------------
+        driver = vps_selenium_setup()
         print('Starting CollectFundIssuers.hk()')
         print('Starting Selenium')
         url = 'https://www.investing.com/funds/hong-kong-funds?&issuer_filter=0'
@@ -3352,13 +3081,7 @@ class CollectFundIssuers:
         return ''
 
     def china():
-        #--------------------VPS------------------
-        display = Display(visible=0, size=(800, 600))
-        display.start()
-        options = webdriver.ChromeOptions()
-        options.add_argument('--no-sandbox')
-        driver = webdriver.Chrome(options=options)
-        #-----------------------------------------
+        driver = vps_selenium_setup()
         print('Starting CollectFundIssuers.china()')
         print('Starting Selenium')
         url = 'https://www.investing.com/funds/china-funds?&issuer_filter=0'
@@ -3405,13 +3128,7 @@ class CollectFundIssuers:
         return ''
 
     def canada():
-        #--------------------VPS------------------
-        display = Display(visible=0, size=(800, 600))
-        display.start()
-        options = webdriver.ChromeOptions()
-        options.add_argument('--no-sandbox')
-        driver = webdriver.Chrome(options=options)
-        #-----------------------------------------
+        driver = vps_selenium_setup()
         print('Starting CollectFundIssuers.canada()')
         print('Starting Selenium')
         url = 'https://www.investing.com/funds/canada-funds?&issuer_filter=0'
@@ -3458,13 +3175,7 @@ class CollectFundIssuers:
         return ''
 
     def germany():
-        #--------------------VPS------------------
-        display = Display(visible=0, size=(800, 600))
-        display.start()
-        options = webdriver.ChromeOptions()
-        options.add_argument('--no-sandbox')
-        driver = webdriver.Chrome(options=options)
-        #-----------------------------------------
+        driver = vps_selenium_setup()
         print('Starting CollectFundIssuers.germany()')
         print('Starting Selenium')
         url = 'https://www.investing.com/funds/germany-funds?&issuer_filter=0'
@@ -3511,13 +3222,7 @@ class CollectFundIssuers:
         return ''
 
     def australia():
-        #--------------------VPS------------------
-        display = Display(visible=0, size=(800, 600))
-        display.start()
-        options = webdriver.ChromeOptions()
-        options.add_argument('--no-sandbox')
-        driver = webdriver.Chrome(options=options)
-        #-----------------------------------------
+        driver = vps_selenium_setup()
         print('Starting CollectFundIssuers.australia()')
         print('Starting Selenium')
         url = 'https://www.investing.com/funds/australia-funds?&issuer_filter=0'
@@ -3588,13 +3293,7 @@ class CollectFundStaticInfo:
 
         
     def us():
-        #--------------------VPS------------------
-        display = Display(visible=0, size=(800, 600))
-        display.start()
-        options = webdriver.ChromeOptions()
-        options.add_argument('--no-sandbox')
-        driver = webdriver.Chrome(options=options)
-        #-----------------------------------------
+        driver = vps_selenium_setup()
         print('Starting CollectFundStaticInfo.us()')
         print('Starting Selenium')
         url = 'https://www.investing.com/funds/usa-funds?&issuer_filter=0'
@@ -3698,13 +3397,7 @@ class CollectFundStaticInfo:
         return ''
 
     def japan():
-        #--------------------VPS------------------
-        display = Display(visible=0, size=(800, 600))
-        display.start()
-        options = webdriver.ChromeOptions()
-        options.add_argument('--no-sandbox')
-        driver = webdriver.Chrome(options=options)
-        #-----------------------------------------
+        driver = vps_selenium_setup()
         print('Starting CollectFundStaticInfo.japan()')
         print('Starting Selenium')
         url = 'https://www.investing.com/funds/japan-funds?&issuer_filter=0'
@@ -3804,13 +3497,7 @@ class CollectFundStaticInfo:
         return ''
 
     def uk():
-        #--------------------VPS------------------
-        display = Display(visible=0, size=(800, 600))
-        display.start()
-        options = webdriver.ChromeOptions()
-        options.add_argument('--no-sandbox')
-        driver = webdriver.Chrome(options=options)
-        #-----------------------------------------
+        driver = vps_selenium_setup()
         print('Starting CollectFundStaticInfo.uk()')
         print('Starting Selenium')
         url = 'https://www.investing.com/funds/uk-funds?&issuer_filter=0'
@@ -3892,13 +3579,7 @@ class CollectFundStaticInfo:
         return ''
 
     def hk():
-        #--------------------VPS------------------
-        display = Display(visible=0, size=(800, 600))
-        display.start()
-        options = webdriver.ChromeOptions()
-        options.add_argument('--no-sandbox')
-        driver = webdriver.Chrome(options=options)
-        #-----------------------------------------
+        driver = vps_selenium_setup()
         print('Starting CollectFundStaticInfo.hk()')
         print('Starting Selenium')
         url = 'https://www.investing.com/funds/hong-kong-funds?&issuer_filter=0'
@@ -3991,13 +3672,7 @@ class CollectFundStaticInfo:
         return ''
 
     def china():
-        #--------------------VPS------------------
-        display = Display(visible=0, size=(800, 600))
-        display.start()
-        options = webdriver.ChromeOptions()
-        options.add_argument('--no-sandbox')
-        driver = webdriver.Chrome(options=options)
-        #-----------------------------------------
+        driver = vps_selenium_setup()
         print('Starting CollectFundStaticInfo.china()')
         print('Starting Selenium')
         url = 'https://www.investing.com/funds/china-funds?&issuer_filter=0'
@@ -4095,13 +3770,7 @@ class CollectFundStaticInfo:
         return ''
 
     def canada():
-        #--------------------VPS------------------
-        display = Display(visible=0, size=(800, 600))
-        display.start()
-        options = webdriver.ChromeOptions()
-        options.add_argument('--no-sandbox')
-        driver = webdriver.Chrome(options=options)
-        #-----------------------------------------
+        driver = vps_selenium_setup()
         print('Starting CollectFundStaticInfo.canada()')
         print('Starting Selenium')
         url = 'https://www.investing.com/funds/canada-funds?&issuer_filter=0'
@@ -4199,13 +3868,7 @@ class CollectFundStaticInfo:
         return ''
 
     def germany():
-        #--------------------VPS------------------
-        display = Display(visible=0, size=(800, 600))
-        display.start()
-        options = webdriver.ChromeOptions()
-        options.add_argument('--no-sandbox')
-        driver = webdriver.Chrome(options=options)
-        #-----------------------------------------
+        driver = vps_selenium_setup()
         print('Starting CollectFundStaticInfo.germany()')
         print('Starting Selenium')
         url = 'https://www.investing.com/funds/germany-funds?&issuer_filter=0'
@@ -4305,13 +3968,7 @@ class CollectFundStaticInfo:
         return ''
 
     def australia():
-        #--------------------VPS------------------
-        display = Display(visible=0, size=(800, 600))
-        display.start()
-        options = webdriver.ChromeOptions()
-        options.add_argument('--no-sandbox')
-        driver = webdriver.Chrome(options=options)
-        #-----------------------------------------
+        driver = vps_selenium_setup()
         print('Starting CollectFundStaticInfo.australia()')
         print('Starting Selenium')
         url = 'https://www.investing.com/funds/australia-funds?&issuer_filter=0'

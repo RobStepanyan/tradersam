@@ -1,12 +1,11 @@
-import requests, os, datetime, sys
-from . import models
-from selenium import webdriver
-from pyvirtualdisplay import Display
-from selenium import webdriver
+import requests, datetime, pytz
+from django.utils.timezone import make_aware
 from bs4 import BeautifulSoup
 from time import sleep
+from .scraper_functions import *
+from . import models
 from .models import (
-    CommodityBeforeLive, CommodityAfterLive, CommodityLive, CommodityHistorical1D, CommodityHistorical5D,
+    AllAssetsBeforeLive, AllAssetsAfterLive, AllAssetsLive, AllAssetsHistorical1D, AllAssetsHistorical5D,
     
 )
 
@@ -82,13 +81,8 @@ class CollectAllAssetsLive:
         it to "historical 1D", every 5m to "historical 5D",  then check whether "before live data" for
         the last "live data" day is collected
         """
-        print('Starting CollectAllAssetsLive.commodities()')
-        #--------------------VPS------------------
-        display = Display(visible=0, size=(800, 600))
-        display.start()
-        options = webdriver.ChromeOptions()
-        options.add_argument('--no-sandbox')
-        driver = webdriver.Chrome(options=options)
+        #----------------- ---VPS------------------
+        driver = vps_selenium_setup()
         #-----------------------------------------
         print('Commodities: driver is ready')
         url = TABLE_LINKS['Commodities']
@@ -111,21 +105,23 @@ class CollectAllAssetsLive:
                         continue # skip row 
                     link = 'https://www.investing.com' + tr.find_all('td')[1].a['href']
                     time_icon = tr.find_all('td')[-1].span['class'][0]
-                    now = datetime.datetime.now()
+                    now = make_aware(datetime.datetime.now())
                     if time_icon == 'greenClockIcon':
+                        month = tds[1].strip()
                         # Update Live Data
                         if month in '  ':
                             month = None
                         else:
-                            month = datetime.datetime.strptime(tds[1], '%b %y')
+                            month = datetime.datetime.strptime(month, '%b %y')
 
-                        CommodityLive.objects.filter(link=link).delete()
-                        CommodityLive(
+                        AllAssetsLive.objects.filter(link=link).delete()
+                        AllAssetsLive(
                             short_name=tds[0], link=link, 
                             month=month,
                             last_price=tds[2], last_price_time=tds[7],
                             high=tds[3], low=tds[4],
-                            change=tds[5], change_perc=[tds[6]]
+                            change=tds[5], change_perc=[tds[6]],
+                            Type='cmdty'
                         ).save()
                         print('Commodities: saved LIVE')
 
@@ -140,76 +136,78 @@ class CollectAllAssetsLive:
                                     Open = soup.find('span', text='Open:').find_next_sibling('span').get_text()
                                     break
                                 except Exception as e:
-                                    exc_type, exc_obj, exc_tb = sys.exc_info()
-                                    fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-                                    print(f'{exc_type} {e} in {fname} at {exc_tb.tb_lineno}') # printing exception details
-                                    
+                                    print_exception(e)
                                     sleep(3)
                             
-                            CommodityBeforeLive(
+                            AllAssetsBeforeLive(
                                 short_name=tds[0], link=link,
                                 date=now.date(),
-                                prev_close=prev_close, Open=Open
+                                prev_close=prev_close, Open=Open,
+                                Type='cmdty'
                             ).save()
                             print('Commodities: saved BEFORELIVE')
 
-                        last_obj_before_count = CommodityBeforeLive.objects.filter(link=link).count()
+                        last_obj_before_count = AllAssetsBeforeLive.objects.filter(link=link).count()
                         if last_obj_before_count > 0:
-                            last_obj_before = CommodityBeforeLive.objects.filter(link=link).order_by('-id')[0]
+                            last_obj_before = AllAssetsBeforeLive.objects.filter(link=link).order_by('-id')[0]
                         
                         if last_obj_before_count == 0:
                             collectBeforeLive()
                         elif (now.date() - last_obj_before.date).days >= 1:
                             collectBeforeLive()
                     
-                        # Send data to CommodityHistorical1D once a minute, ...Historical5D once 5 minutes
-                        last_obj_1d_count = CommodityHistorical1D.objects.filter(link=link).count()
+                        # Send data to AllAssetsHistorical1D once a minute, ...Historical5D once 5 minutes
+                        last_obj_1d_count = AllAssetsHistorical1D.objects.filter(link=link).count()
                         if last_obj_1d_count > 0:
-                            last_obj_1d = CommodityHistorical1D.objects.filter(link=link).order_by('-id')[0]
+                            last_obj_1d = AllAssetsHistorical1D.objects.filter(link=link).order_by('-id')[0]
                         
-                        last_obj_5d_count = CommodityHistorical5D.objects.filter(link=link).count()
+                        last_obj_5d_count = AllAssetsHistorical5D.objects.filter(link=link).count()
                         if last_obj_5d_count > 0:
-                            last_obj_5d = CommodityHistorical5D.objects.filter(link=link).order_by('-id')[0]
+                            last_obj_5d = AllAssetsHistorical5D.objects.filter(link=link).order_by('-id')[0]
                         
                         if last_obj_1d_count == 0 or last_obj_1d.date.minute<now.minute:
                             # if there's no data at all or latest data is already outdated
                             # send (Save) data
-                            CommodityHistorical1D(
+                            AllAssetsHistorical1D(
                                 short_name=tds[0], link=link,
                                 date=now,
-                                price=tds[2]
+                                price=tds[2],
+                                Type='cmdty'
                             ).save()
                             print('Commodities: saved HISTORICAL1D')
 
-                            data1 = last_obj_1d.date
-                            data2 = now
-                            diff = data2 - data1
-                            days, seconds = diff.days, diff.seconds
-                            hours = days * 24 + seconds // 3600
-                            if hours > 24:
-                                CommodityHistorical1D.objects.filter(link=link).order_by('id')[0].delete()
+                            if last_obj_1d_count:
+                                data1 = last_obj_1d.date
+                                data2 = now
+                                diff = data2 - data1
+                                days, seconds = diff.days, diff.seconds
+                                hours = days * 24 + seconds // 3600
+                                if hours > 24:
+                                    AllAssetsHistorical1D.objects.filter(link=link).order_by('id')[0].delete()
                         if (last_obj_5d_count == 0 or now.minute - last_obj_5d.date.minute>=5) and now.minute % 5 == 0:
                             # if there's no data at all or latest data is already outdated also divisible by 5
                             # send (Save) data
-                            CommodityHistorical5D(
+                            AllAssetsHistorical5D(
                                 short_name=tds[0], link=link,
                                 date=now,
-                                price=tds[2]
+                                price=tds[2],
+                                Type='cmdty'
                             ).save()
                             print('Commodities: saved HISTORICAL5D')
                             
-                            data1 = last_obj_5d.date
-                            data2 = now
-                            diff = data2 - data1
-                            days, seconds = diff.days, diff.seconds
-                            hours = days * 24 + seconds // 3600
-                            if hours > 24*5:
-                                CommodityHistorical5D.objects.filter(link=link).order_by('id')[0].delete()
+                            if last_obj_5d_count:
+                                data1 = last_obj_5d.date
+                                data2 = now
+                                diff = data2 - data1
+                                days, seconds = diff.days, diff.seconds
+                                hours = days * 24 + seconds // 3600
+                                if hours > 24*5:
+                                    AllAssetsHistorical5D.objects.filter(link=link).order_by('id')[0].delete()
                     elif time_icon == 'redClockIcon':
                         # check whether "after live data" for today is available
-                        last_obj_after_count = CommodityAfterLive.objects.filter(link=link).count()
+                        last_obj_after_count = AllAssetsAfterLive.objects.filter(link=link).count()
                         if last_obj_after_count > 0:
-                            last_obj_after = CommodityAfterLive.objects.filter(link=link).order_by('-id')[0]
+                            last_obj_after = AllAssetsAfterLive.objects.filter(link=link).order_by('-id')[0]
 
                         def collectAfterLive():
                             header={'User-Agent':'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2227.0 Safari/537.36'}
@@ -233,17 +231,16 @@ class CollectAllAssetsLive:
                                         last_roll_day = None
                                     break
                                 except Exception as e:
-                                    exc_type, exc_obj, exc_tb = sys.exc_info()
-                                    fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-                                    print(f'{exc_type} {e} in {fname} at {exc_tb.tb_lineno}') # printing exception details
+                                    print_exception(e)
                                     sleep(3)
 
-                            CommodityAfterLive(
+                            AllAssetsAfterLive(
                                 short_name=tds[0], link=link,
                                 date=now.date(),
                                 one_year_rng=one_year_rng, one_year_chg=one_year_chg.strip(),
                                 months=months, 
-                                settlement_day=settlement_day, last_roll_day=last_roll_day
+                                settlement_day=settlement_day, last_roll_day=last_roll_day,
+                                Type='cmdty'
                             ).save()
                             print(f'Commodities: saved AFTERLIVE for {tds[0]}')
 

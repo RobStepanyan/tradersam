@@ -1,3 +1,5 @@
 {
-    "python.pythonPath": "tradersam_env/bin/python"
+    "python.pythonPath": "tradersam_env/bin/python",
+    "python.linting.pylintEnabled": true,
+    "python.linting.enabled": true
 }

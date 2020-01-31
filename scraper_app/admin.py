@@ -55,12 +55,10 @@ admin.site.register(models.AustraliaFundStaticInfo)
 # Historical
 admin.site.register(models.AllAssetsHistoricalMax) # All Assets Max Date Range (1step=1month)
 admin.site.register(models.AllAssetsHistorical5Y) # All Assets 5 Years Date Range (1step=1week)
-# Historical - Commodities
-admin.site.register(models.CommodityHistorical5D)
-admin.site.register(models.CommodityHistorical1D)
+admin.site.register(models.AllAssetsHistorical5D)
+admin.site.register(models.AllAssetsHistorical1D)
 
 # Live
-# Live - Commodities
-admin.site.register(models.CommodityBeforeLive)
-admin.site.register(models.CommodityAfterLive)
-admin.site.register(models.CommodityLive)
+admin.site.register(models.AllAssetsBeforeLive)
+admin.site.register(models.AllAssetsAfterLive)
+admin.site.register(models.AllAssetsLive)

@@ -956,8 +956,8 @@ class AllAssetsHistorical5Y(models.Model):
         verbose_name = '(5 Years) All Asset Types'
         verbose_name_plural = '(5 Years) All Asset Types'
 
-class CommodityBeforeLive(models.Model):
-    Type = models.CharField(choices=TYPES, max_length=9, default='cmdty')
+class AllAssetsBeforeLive(models.Model):
+    Type = models.CharField(choices=TYPES, max_length=9)
     short_name = models.CharField(max_length=16) 
     link = models.URLField()
     
@@ -969,11 +969,11 @@ class CommodityBeforeLive(models.Model):
         return f'({Types[Types.index(self.Type)+1]}) {self.short_name} in {self.date.strftime("%b %d, %Y")}'
     
     class Meta:
-        verbose_name = '(Before Live Commodities)'
-        verbose_name_plural = '(Before Live Commodities)'
+        verbose_name = '(Before Live) All Assets'
+        verbose_name_plural = '(Before Live) All Assets'
 
-class CommodityLive(models.Model):
-    Type = models.CharField(choices=TYPES, max_length=9, default='cmdty')
+class AllAssetsLive(models.Model):
+    Type = models.CharField(choices=TYPES, max_length=9)
     short_name = models.CharField(max_length=16) 
     link = models.URLField()
     
@@ -992,11 +992,11 @@ class CommodityLive(models.Model):
         return f'({Types[Types.index(self.Type)+1]}) {self.short_name} in {self.date.strftime("%b %d, %Y")}'
     
     class Meta:
-        verbose_name = '(Live Commodities) All Asset Types'
-        verbose_name_plural = '(Live Commodities) All Asset Types'
+        verbose_name = '(Live All) Assets'
+        verbose_name_plural = '(Live) All Assets'
 
-class CommodityAfterLive(models.Model):
-    Type = models.CharField(choices=TYPES, max_length=9, default='cmdty')
+class AllAssetsAfterLive(models.Model):
+    Type = models.CharField(choices=TYPES, max_length=9)
     short_name = models.CharField(max_length=16) 
     link = models.URLField()
     
@@ -1011,11 +1011,11 @@ class CommodityAfterLive(models.Model):
         return f'({Types[Types.index(self.Type)+1]}) {self.short_name} in {self.date.strftime("%b %d, %Y")}'
     
     class Meta:
-        verbose_name = '(After Live Commodities)'
-        verbose_name_plural = '(After Live Commodities)'
+        verbose_name = '(After Live) All Assets'
+        verbose_name_plural = '(After Live) All Assets'
 
-class CommodityHistorical1D(models.Model):
-    Type = models.CharField(choices=TYPES, max_length=9, default='cmdty')
+class AllAssetsHistorical1D(models.Model):
+    Type = models.CharField(choices=TYPES, max_length=9)
     short_name = models.CharField(max_length=16) 
     link = models.URLField()
 
@@ -1023,11 +1023,11 @@ class CommodityHistorical1D(models.Model):
     price = models.CharField(max_length=12, default=None, null=True)
 
     class Meta:
-        verbose_name = '(1 Day) Commodities'
-        verbose_name_plural = '(1 Day) Commodities'
+        verbose_name = '(1 Day) All Assets'
+        verbose_name_plural = '(1 Day) All Assets'
 
-class CommodityHistorical5D(models.Model):
-    Type = models.CharField(choices=TYPES, max_length=9, default='cmdty')
+class AllAssetsHistorical5D(models.Model):
+    Type = models.CharField(choices=TYPES, max_length=9)
     short_name = models.CharField(max_length=16) 
     link = models.URLField()
 
@@ -1035,5 +1035,5 @@ class CommodityHistorical5D(models.Model):
     price = models.CharField(max_length=12, default=None, null=True)
 
     class Meta:
-        verbose_name = '(5 Days) Commodities'
-        verbose_name_plural = '(5 Days) Commodities'
+        verbose_name = '(5 Days) All Assets'
+        verbose_name_plural = '(5 Days) All Assets'
