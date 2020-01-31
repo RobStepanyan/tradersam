@@ -3,7 +3,7 @@ from selenium import webdriver
 from pyvirtualdisplay import Display
 from threading import Thread
 from time import sleep
-from datetime import datetime
+import datetime
 from selenium.webdriver.common.keys import Keys
 
 def print_exception(e):
@@ -56,7 +56,8 @@ def remove_already_saved(l, c_list):
     return new_c_list
 
 def vps_selenium_setup():
-    """This function creates virtual display and returns set up chrome driver"""
+    """This function creates virtual display and returns set up chrome driver.
+    Execution time: ~ 1.2seconds"""
     display = Display(visible=0, size=(1000, 1000))
     display.start()
     options = webdriver.ChromeOptions()
