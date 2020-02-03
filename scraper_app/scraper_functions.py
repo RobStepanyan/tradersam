@@ -18,30 +18,57 @@ def validate_price(x):
         return None
     return x
 
-def threads_by_chunks(target, c_list):
-    """This function creates threads for each item, then executes them by chunks"""
-    def chunks(lst, n):
-        """Yield successive n-sized chunks from lst."""
-        for i in range(0, len(lst), n):
-            yield lst[i:i + n]
+def chunks(lst, n):
+    """Yield successive n-sized chunks from lst."""
+    for i in range(0, len(lst), n):
+        yield lst[i:i + n]
+
+def dct_chunks(dct, n):
+    """Return tuples with n-sized chunks from a dictinary(dct)."""
+    lst = []
+    for key, value in dct.items():
+        lst.append((key, value))
+    return list(chunks(lst, n))
+
+def threads_by_chunks(target, c_list, n):
+    """This function creates threads for each item, then executes them by n-sized chunks"""
 
     quanity = len(c_list)
     chunk_list = list(chunks(range(quanity), 3))
     threads = []
     for i in range(quanity):
         threads.append(Thread(target=target, args=(c_list[i],)))
-    print('Threads are ready')
+    print('Threads are ready!')
     chunk_n = 1
     chunk_all = len(chunk_list)
     for l in chunk_list:
-        for sub_l in l:
-            threads[sub_l].start()
-            sleep(1)
-        for sub_l in l:
-            threads[sub_l].join()
+        for item in l:
+            threads[item].start()
+        for item in l:
+            threads[item].join()
         
         print(f'Executed Chunk {chunk_n}/{chunk_all}')
         chunk_n += 1
+
+# def live_threads_by_chunks(driver, target, dct, n):
+#     """Takes a dictionary runs threads by n-sized chunks"""
+#     lst_of_items = [(key, value) for key, value in dct.items()]
+#     quanity = len(dct)
+#     chunk_list = list(chunks(range(quanity), n))
+#     threads = []
+#     for i in range(quanity):
+#         threads.append(Thread(target=target, args=(driver, lst_of_items[i][0], lst_of_items[i][1])))
+#     print('Threads are ready!')
+#     chunk_n = 1
+#     chunk_all = len(chunk_list)
+#     for l in chunk_list:
+#         for item in l:
+#             threads[item].start()
+#         for item in l:
+#             threads[item].join()
+        
+#         print(f'Executed Chunk {chunk_n}/{chunk_all}')
+#         chunk_n += 1
 
 def remove_already_saved(l, c_list):
     """l is the list which contains links (urls) of already saved instances"""
@@ -62,7 +89,7 @@ def vps_selenium_setup():
     display.start()
     options = webdriver.ChromeOptions()
     options.add_argument('--no-sandbox')
-    options.add_argument("--headless") 
+    # options.add_argument("--headless") 
     driver = webdriver.Chrome(options=options)
     return driver
 

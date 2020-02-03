@@ -99,7 +99,7 @@ class CollectAllAssetsHistoricalMax:
                     continue
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
         finally:
             ('Quiting the driver')
             driver.quit()
@@ -230,7 +230,7 @@ class CollectAllAssetsHistoricalMax:
                     continue
         
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -377,7 +377,7 @@ class CollectAllAssetsHistoricalMax:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -448,7 +448,7 @@ class CollectAllAssetsHistoricalMax:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -520,7 +520,7 @@ class CollectAllAssetsHistoricalMax:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -591,7 +591,7 @@ class CollectAllAssetsHistoricalMax:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -662,7 +662,7 @@ class CollectAllAssetsHistoricalMax:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -733,7 +733,7 @@ class CollectAllAssetsHistoricalMax:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -804,7 +804,7 @@ class CollectAllAssetsHistoricalMax:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -875,7 +875,7 @@ class CollectAllAssetsHistoricalMax:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -948,7 +948,7 @@ class CollectAllAssetsHistoricalMax:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -1021,7 +1021,7 @@ class CollectAllAssetsHistoricalMax:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -1094,7 +1094,7 @@ class CollectAllAssetsHistoricalMax:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -1167,7 +1167,7 @@ class CollectAllAssetsHistoricalMax:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -1240,7 +1240,7 @@ class CollectAllAssetsHistoricalMax:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -1313,7 +1313,7 @@ class CollectAllAssetsHistoricalMax:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -1386,7 +1386,7 @@ class CollectAllAssetsHistoricalMax:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -1459,7 +1459,7 @@ class CollectAllAssetsHistoricalMax:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -1530,7 +1530,7 @@ class CollectAllAssetsHistoricalMax:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -1601,7 +1601,7 @@ class CollectAllAssetsHistoricalMax:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -1672,7 +1672,7 @@ class CollectAllAssetsHistoricalMax:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -1743,7 +1743,7 @@ class CollectAllAssetsHistoricalMax:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -1814,7 +1814,7 @@ class CollectAllAssetsHistoricalMax:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -1885,7 +1885,7 @@ class CollectAllAssetsHistoricalMax:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -1956,7 +1956,7 @@ class CollectAllAssetsHistoricalMax:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -2027,7 +2027,7 @@ class CollectAllAssetsHistoricalMax:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -2098,7 +2098,7 @@ class CollectAllAssetsHistoricalMax:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -2169,7 +2169,7 @@ class CollectAllAssetsHistoricalMax:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -2240,7 +2240,7 @@ class CollectAllAssetsHistoricalMax:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -2311,7 +2311,7 @@ class CollectAllAssetsHistoricalMax:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -2382,7 +2382,7 @@ class CollectAllAssetsHistoricalMax:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -2453,7 +2453,7 @@ class CollectAllAssetsHistoricalMax:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -2524,7 +2524,7 @@ class CollectAllAssetsHistoricalMax:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -2595,7 +2595,7 @@ class CollectAllAssetsHistoricalMax:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -2666,7 +2666,7 @@ class CollectAllAssetsHistoricalMax:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -2737,7 +2737,7 @@ class CollectAllAssetsHistoricalMax:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -2808,7 +2808,7 @@ class CollectAllAssetsHistoricalMax:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -2879,7 +2879,7 @@ class CollectAllAssetsHistoricalMax:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -2950,7 +2950,7 @@ class CollectAllAssetsHistoricalMax:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -3021,7 +3021,7 @@ class CollectAllAssetsHistoricalMax:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -3092,7 +3092,7 @@ class CollectAllAssetsHistoricalMax:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -3163,7 +3163,7 @@ class CollectAllAssetsHistoricalMax:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -3239,7 +3239,7 @@ class CollectAllAssetsHistorical5Y:
                     continue
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -3311,7 +3311,7 @@ class CollectAllAssetsHistorical5Y:
             # already_saved = AllAssetsHistorical5Y.objects.filter(Type='crptcrncy').values_list('short_name')
             # already_saved = [i[0] for i in already_saved]
             # c_list=remove_already_saved(already_saved, c_list)
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -3385,7 +3385,7 @@ class CollectAllAssetsHistorical5Y:
             # already_saved = AllAssetsHistorical5Y.objects.filter(Type='crptcrncy').values_list('short_name')
             # already_saved = [i[0] for i in already_saved]
             # c_list=remove_already_saved(already_saved, c_list)
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -3531,7 +3531,7 @@ class CollectAllAssetsHistorical5Y:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -3602,7 +3602,7 @@ class CollectAllAssetsHistorical5Y:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -3673,7 +3673,7 @@ class CollectAllAssetsHistorical5Y:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -3744,7 +3744,7 @@ class CollectAllAssetsHistorical5Y:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -3815,7 +3815,7 @@ class CollectAllAssetsHistorical5Y:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -3886,7 +3886,7 @@ class CollectAllAssetsHistorical5Y:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -3957,7 +3957,7 @@ class CollectAllAssetsHistorical5Y:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -4028,7 +4028,7 @@ class CollectAllAssetsHistorical5Y:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -4099,7 +4099,7 @@ class CollectAllAssetsHistorical5Y:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -4170,7 +4170,7 @@ class CollectAllAssetsHistorical5Y:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -4241,7 +4241,7 @@ class CollectAllAssetsHistorical5Y:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -4312,7 +4312,7 @@ class CollectAllAssetsHistorical5Y:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -4383,7 +4383,7 @@ class CollectAllAssetsHistorical5Y:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -4454,7 +4454,7 @@ class CollectAllAssetsHistorical5Y:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -4525,7 +4525,7 @@ class CollectAllAssetsHistorical5Y:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -4596,7 +4596,7 @@ class CollectAllAssetsHistorical5Y:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -4667,7 +4667,7 @@ class CollectAllAssetsHistorical5Y:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -4738,7 +4738,7 @@ class CollectAllAssetsHistorical5Y:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -4809,7 +4809,7 @@ class CollectAllAssetsHistorical5Y:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -4880,7 +4880,7 @@ class CollectAllAssetsHistorical5Y:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -4951,7 +4951,7 @@ class CollectAllAssetsHistorical5Y:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -5022,7 +5022,7 @@ class CollectAllAssetsHistorical5Y:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -5093,7 +5093,7 @@ class CollectAllAssetsHistorical5Y:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -5164,7 +5164,7 @@ class CollectAllAssetsHistorical5Y:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -5235,7 +5235,7 @@ class CollectAllAssetsHistorical5Y:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -5306,7 +5306,7 @@ class CollectAllAssetsHistorical5Y:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -5377,7 +5377,7 @@ class CollectAllAssetsHistorical5Y:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -5448,7 +5448,7 @@ class CollectAllAssetsHistorical5Y:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -5519,7 +5519,7 @@ class CollectAllAssetsHistorical5Y:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -5590,7 +5590,7 @@ class CollectAllAssetsHistorical5Y:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -5661,7 +5661,7 @@ class CollectAllAssetsHistorical5Y:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -5732,7 +5732,7 @@ class CollectAllAssetsHistorical5Y:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -5803,7 +5803,7 @@ class CollectAllAssetsHistorical5Y:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -5874,7 +5874,7 @@ class CollectAllAssetsHistorical5Y:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -5945,7 +5945,7 @@ class CollectAllAssetsHistorical5Y:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -6016,7 +6016,7 @@ class CollectAllAssetsHistorical5Y:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -6087,7 +6087,7 @@ class CollectAllAssetsHistorical5Y:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -6158,7 +6158,7 @@ class CollectAllAssetsHistorical5Y:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -6229,7 +6229,7 @@ class CollectAllAssetsHistorical5Y:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
@@ -6300,7 +6300,7 @@ class CollectAllAssetsHistorical5Y:
             print()
 
         try:
-            threads_by_chunks(target=work, c_list=c_list)
+            threads_by_chunks(target=work, c_list=c_list, n=3)
 
         finally:
             ('Quiting the driver')
