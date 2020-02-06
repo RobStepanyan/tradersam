@@ -95,18 +95,18 @@ STATIC_OBJECTS = {
         'object': USStockStaticInfo, 'type': 'stck', 'link': TABLE_LINKS['US Stocks'], 'table class': table_class1},
     'Japan Stocks': {
         'object': JapanStockStaticInfo, 'type': 'stck', 'link': TABLE_LINKS['Japan Stocks'], 'table class': table_class1},
-    # 'UK Stocks': {
-    #     'object': UKStockStaticInfo, 'type': 'stck', 'link': TABLE_LINKS['UK Stocks'], 'table class': table_class1},
-    # 'HK Stocks': {
-    #     'object': HKStockStaticInfo, 'type': 'stck', 'link': TABLE_LINKS['HK Stocks'], 'table class': table_class1},
-    # 'China Stocks': {
-    #     'object': ChinaStockStaticInfo, 'type': 'stck', 'link': TABLE_LINKS['China Stocks'], 'table class': table_class1},
-    # 'Canada Stocks': {
-    #     'object': CanadaStockStaticInfo, 'type': 'stck', 'link': TABLE_LINKS['Canada Stocks'], 'table class': table_class1},
-    # 'Germany Stocks': {
-    #     'object': GermanyStockStaticInfo, 'type': 'stck', 'link': TABLE_LINKS['Germany Stocks'], 'table class': table_class1},
-    # 'Australia Stocks': {
-    #     'object': AustraliaStockStaticInfo, 'type': 'stck', 'link': TABLE_LINKS['Australia Stocks'], 'table class': table_class1},
+    'UK Stocks': {
+        'object': UKStockStaticInfo, 'type': 'stck', 'link': TABLE_LINKS['UK Stocks'], 'table class': table_class1},
+    'HK Stocks': {
+        'object': HKStockStaticInfo, 'type': 'stck', 'link': TABLE_LINKS['HK Stocks'], 'table class': table_class1},
+    'China Stocks': {
+        'object': ChinaStockStaticInfo, 'type': 'stck', 'link': TABLE_LINKS['China Stocks'], 'table class': table_class1},
+    'Canada Stocks': {
+        'object': CanadaStockStaticInfo, 'type': 'stck', 'link': TABLE_LINKS['Canada Stocks'], 'table class': table_class1},
+    'Germany Stocks': {
+        'object': GermanyStockStaticInfo, 'type': 'stck', 'link': TABLE_LINKS['Germany Stocks'], 'table class': table_class1},
+    'Australia Stocks': {
+        'object': AustraliaStockStaticInfo, 'type': 'stck', 'link': TABLE_LINKS['Australia Stocks'], 'table class': table_class1},
     
     'US Indices': {
         'object': USIndexStaticInfo, 'type': 'indx', 'link': TABLE_LINKS['US Indices'], 'table class': table_class2},
@@ -177,26 +177,21 @@ STATIC_OBJECTS = {
         'object': AustraliaFundStaticInfo, 'type': 'fnd', 'link': TABLE_LINKS['Australia Funds'], 'table class': table_class3},
 }
 
-def init_selenium_tabs(driver, selenium_dct):
-    # Opening a tab
-    def work(driver, title, object_, type_, link, table_class):
+def init_selenium_tabs(selenium_dct):
+    # Opening a new driver
+    def work(title, object_, type_, link, table_class):
         print(f'{title}: Visiting the Table')
-        driver.execute_script(f'window.open("","_blank");') # open new blank tab
-        for tab in driver.window_handles[::-1]:
-            driver.switch_to.window(tab)
-            if driver.current_url == 'about:blank':
-                break
-            
+        driver = vps_selenium_setup()
         print(f'{title}: Waiting the page to load')
         driver.get(link) # visit the link
         print('Executing JS scripts')
         driver.execute_script('$("#stocksFilter").val("#all");')
         driver.execute_script("doStocksFilter('select',this)")
         print('Executed JS scripts, sleeping for 15 seconds')
-        sleep(15)
         while True:
             try:
-                soup = BeautifulSoup(driver.page_source, 'html.parser')
+                page_source = driver.page_source
+                soup = BeautifulSoup(page_source, 'html.parser')
                 table = soup.find('table', class_=table_class)
                 if len(table.find_all('tr')) < object_.objects.count():
                     continue
@@ -204,19 +199,24 @@ def init_selenium_tabs(driver, selenium_dct):
             except Exception as e: 
                 print_exception(e)
                 sleep(1)
-    
+        return driver
+
     start = time.time()
-    for key, value in selenium_dct.items():
-        work(driver, key, value['object'], value['type'], value['link'], value['table class'])
+    drivers = []
+    try:
+        for key, value in selenium_dct.items():
+            drivers.append(work(key, value['object'], value['type'], value['link'], value['table class']))
+    finally:
+        for driver in drivers:
+            driver.quit()
     
     print('Selenium Tabs are ready!')
     print(f'Init Selenium Tabs: {time.time() - start}')
+    return drivers
 
-def loop_selenium_tabs(driver):
+def loop_selenium_tabs(drivers):
     start = time.time()
-    tabs = driver.window_handles
-    for tab in tabs:
-        driver.switch_to.window(tab)
+    for driver in drivers:
         print(driver.current_url)
         if driver.current_url in 'data:, about:blank':
             continue
@@ -270,25 +270,24 @@ def seperate_dct(dct):
 # 2. Check condition
 # 3. Call appropriate function
 # 4. Repeat
-driver = vps_selenium_setup()
-print('Driver is ready')
 try:
     start = time.time()
     
     selenium_dct, non_selenium_dct = seperate_dct(STATIC_OBJECTS)
-    init_selenium_tabs(driver, selenium_dct)
+    drivers = init_selenium_tabs(selenium_dct)
     # non_selenium_requests(non_selenium_dct)
     
     with_init = time.time() - start
     
     start = time.time()
     
-    loop_selenium_tabs(driver)
+    loop_selenium_tabs(drivers)
     # non_selenium_requests(non_selenium_dct)
 
     print(f'With init: {with_init}, Without: {time.time() - start}')
 finally:
-    driver.quit()
+    for driver in drivers:
+        driver.quit()
     print('Driver is closed!')
 
 
