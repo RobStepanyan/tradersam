@@ -95,18 +95,18 @@ STATIC_OBJECTS = {
         'object': USStockStaticInfo, 'type': 'stck', 'link': TABLE_LINKS['US Stocks'], 'table class': table_class1},
     'Japan Stocks': {
         'object': JapanStockStaticInfo, 'type': 'stck', 'link': TABLE_LINKS['Japan Stocks'], 'table class': table_class1},
-    'UK Stocks': {
-        'object': UKStockStaticInfo, 'type': 'stck', 'link': TABLE_LINKS['UK Stocks'], 'table class': table_class1},
-    'HK Stocks': {
-        'object': HKStockStaticInfo, 'type': 'stck', 'link': TABLE_LINKS['HK Stocks'], 'table class': table_class1},
-    'China Stocks': {
-        'object': ChinaStockStaticInfo, 'type': 'stck', 'link': TABLE_LINKS['China Stocks'], 'table class': table_class1},
-    'Canada Stocks': {
-        'object': CanadaStockStaticInfo, 'type': 'stck', 'link': TABLE_LINKS['Canada Stocks'], 'table class': table_class1},
-    'Germany Stocks': {
-        'object': GermanyStockStaticInfo, 'type': 'stck', 'link': TABLE_LINKS['Germany Stocks'], 'table class': table_class1},
-    'Australia Stocks': {
-        'object': AustraliaStockStaticInfo, 'type': 'stck', 'link': TABLE_LINKS['Australia Stocks'], 'table class': table_class1},
+    # 'UK Stocks': {
+    #     'object': UKStockStaticInfo, 'type': 'stck', 'link': TABLE_LINKS['UK Stocks'], 'table class': table_class1},
+    # 'HK Stocks': {
+    #     'object': HKStockStaticInfo, 'type': 'stck', 'link': TABLE_LINKS['HK Stocks'], 'table class': table_class1},
+    # 'China Stocks': {
+    #     'object': ChinaStockStaticInfo, 'type': 'stck', 'link': TABLE_LINKS['China Stocks'], 'table class': table_class1},
+    # 'Canada Stocks': {
+    #     'object': CanadaStockStaticInfo, 'type': 'stck', 'link': TABLE_LINKS['Canada Stocks'], 'table class': table_class1},
+    # 'Germany Stocks': {
+    #     'object': GermanyStockStaticInfo, 'type': 'stck', 'link': TABLE_LINKS['Germany Stocks'], 'table class': table_class1},
+    # 'Australia Stocks': {
+    #     'object': AustraliaStockStaticInfo, 'type': 'stck', 'link': TABLE_LINKS['Australia Stocks'], 'table class': table_class1},
     
     'US Indices': {
         'object': USIndexStaticInfo, 'type': 'indx', 'link': TABLE_LINKS['US Indices'], 'table class': table_class2},
