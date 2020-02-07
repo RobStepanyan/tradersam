@@ -149,20 +149,29 @@ class CollectStaticInfo:
         url = 'https://www.investing.com/crypto/currencies'
         url2 = 'https://www.investing.com'
         driver.get(url)
-        driver.execute_script("window.scrollTo(0, document.body.scrollHeight)")
-        print('Sleeping for 60 seconds')
-        sleep(60)
-        soup = BeautifulSoup(driver.page_source, 'html.parser')
-        soup1 = soup.find_all('td', class_='left bold elp name cryptoName first js-currency-name')
-        soup2 = soup.find_all('td', class_='left noWrap elp symb js-currency-symbol') # Another column of short_names (tickers)
-        for td1, td2 in zip(soup1, soup2):
+        while True:
             try:
-                long_names.append(td1.find('a').get_text())
-                links.append(url2+str(td1.a['href']))
-                short_names.append(td2.get_text())
+                soup = BeautifulSoup(driver.page_source, 'html.parser')
+                num_of_curr = soup.find('span', text='Number of Currencies').find_next_sibling().get_text()
+                break
             except Exception as e:
-                print(e)
-                pass
+                print_exception(e)
+                sleep(1)
+        while True:
+            try:
+                soup = BeautifulSoup(driver.page_source, 'html.parser')
+                soup1 = soup.find_all('td', class_='left bold elp name cryptoName first js-currency-name')
+                soup2 = soup.find_all('td', class_='left noWrap elp symb js-currency-symbol') # Another column of short_names (tickers)
+                for td1, td2 in zip(soup1, soup2):
+                    long_names.append(td1.find('a').get_text())
+                    links.append(url2+str(td1.a['href']))
+                    short_names.append(td2.get_text())
+                if len(soup1) < num_of_curr:
+                    continue
+                break
+            except Exception as e:
+                print_exception(e)
+                sleep(1)
         print('Collected all data')
         print('Starting to store data')
         for i in range(len(short_names)):

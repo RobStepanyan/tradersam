@@ -183,10 +183,11 @@ def init_selenium_tabs(driver, selenium_dct):
         print(f'{title}: Visiting the Table')
         print(f'{title}: Waiting the page to load')
         driver.get(link) # visit the link
-        print('Executing JS scripts')
-        driver.execute_script('$("#stocksFilter").val("#all");')
-        driver.execute_script("doStocksFilter('select',this)")
-        print('Executed JS scripts, sleeping for 15 seconds')
+        if 'Stock' in title:
+            print('Executing JS scripts')
+            driver.execute_script('$("#stocksFilter").val("#all");')
+            driver.execute_script("doStocksFilter('select',this)")
+            print('Executed JS scripts, sleeping for 15 seconds')
         while True:
             try:
                 page_source = driver.page_source
@@ -201,7 +202,7 @@ def init_selenium_tabs(driver, selenium_dct):
         return driver
 
     start = time.time()
-    for _ in range(selenium_dct)-1:
+    for _ in range(len(selenium_dct)-1):
         driver.execute_script("window.open('', '_blank')")
     for key, value in selenium_dct.items():
         i = list(selenium_dct.keys()).index(key)
@@ -239,11 +240,21 @@ def non_selenium_requests(non_selenium_dct):
         print(f'{title}: Waiting the page to load')
         soup = BeautifulSoup(req.text, 'html.parser')
         table = soup.find('table', class_=table_class)
-        print(len(table.find_all('tr')))
+        len_table = len(table.find_all('tr'))
+        print(f'{len_table}/{object_.objects.count()}')
 
+    dct_chnks = dct_chunks(non_selenium_dct, 3)
     start = time.time()
-    for key, value in non_selenium_dct.items():
-        work(key, value['object'], value['type'], value['link'], value['table class'])
+    for chunk in dct_chnks:
+        threads = []
+        for pair in chunk:
+            key, value = pair[0], pair[1]
+            threads.append(
+                Thread(target=work, args=(key, value['object'], value['type'], value['link'], value['table class'])))
+        for thread in threads:
+            thread.start()
+        for thread in threads:
+            thread.join()
     print(f'Non-Selenium Requests: {time.time()-start}')
 
 def seperate_dct(dct):
@@ -271,21 +282,20 @@ print('Driver is ready!')
 try:
     start = time.time()
     
-    selenium_dct, non_selenium_dct = seperate_dct(STATIC_OBJECTS)
-    drivers = init_selenium_tabs(driver, selenium_dct)
+    # selenium_dct, non_selenium_dct = seperate_dct(STATIC_OBJECTS)
+    # init_selenium_tabs(driver, selenium_dct)
     # non_selenium_requests(non_selenium_dct)
-    
+    init_selenium_tabs(driver, STATIC_OBJECTS)
     with_init = time.time() - start
     
     start = time.time()
     
-    loop_selenium_tabs(drivers)
+    loop_selenium_tabs(driver)
     # non_selenium_requests(non_selenium_dct)
 
     print(f'With init: {with_init}, Without: {time.time() - start}')
 finally:
-    for driver in drivers:
-        driver.quit()
+    driver.quit()
     print('Driver is closed!')
 
 
