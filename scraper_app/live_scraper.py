@@ -177,11 +177,10 @@ STATIC_OBJECTS = {
         'object': AustraliaFundStaticInfo, 'type': 'fnd', 'link': TABLE_LINKS['Australia Funds'], 'table class': table_class3},
 }
 
-def init_selenium_tabs(selenium_dct):
+def init_selenium_tabs(driver, selenium_dct):
     # Opening a new driver
-    def work(title, object_, type_, link, table_class):
+    def work(driver, title, object_, type_, link, table_class):
         print(f'{title}: Visiting the Table')
-        driver = vps_selenium_setup()
         print(f'{title}: Waiting the page to load')
         driver.get(link) # visit the link
         print('Executing JS scripts')
@@ -202,24 +201,21 @@ def init_selenium_tabs(selenium_dct):
         return driver
 
     start = time.time()
-    drivers = []
-    try:
-        for key, value in selenium_dct.items():
-            drivers.append(work(key, value['object'], value['type'], value['link'], value['table class']))
-    finally:
-        for driver in drivers:
-            driver.quit()
+    for _ in range(selenium_dct)-1:
+        driver.execute_script("window.open('', '_blank')")
+    for key, value in selenium_dct.items():
+        i = list(selenium_dct.keys()).index(key)
+        driver.switch_to.window(driver.window_handles[i])
+        work(driver, key, value['object'], value['type'], value['link'], value['table class'])
     
     print('Selenium Tabs are ready!')
     print(f'Init Selenium Tabs: {time.time() - start}')
-    return drivers
 
-def loop_selenium_tabs(drivers):
+def loop_selenium_tabs(driver):
     start = time.time()
-    for driver in drivers:
+    for tab in driver.window_handles:
+        driver.switch_to.window(tab)
         print(driver.current_url)
-        if driver.current_url in 'data:, about:blank':
-            continue
         title = [key for key, value in TABLE_LINKS.items() if value == driver.current_url][0]
         table_class = STATIC_OBJECTS[title]['table class']
         while True:
@@ -270,11 +266,13 @@ def seperate_dct(dct):
 # 2. Check condition
 # 3. Call appropriate function
 # 4. Repeat
+driver = vps_selenium_setup()
+print('Driver is ready!')
 try:
     start = time.time()
     
     selenium_dct, non_selenium_dct = seperate_dct(STATIC_OBJECTS)
-    drivers = init_selenium_tabs(selenium_dct)
+    drivers = init_selenium_tabs(driver, selenium_dct)
     # non_selenium_requests(non_selenium_dct)
     
     with_init = time.time() - start

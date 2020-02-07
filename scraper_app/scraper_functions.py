@@ -85,13 +85,13 @@ def remove_already_saved(l, c_list):
 def vps_selenium_setup():
     """This function creates virtual display and returns set up chrome driver.
     Execution time: ~ 1.2seconds"""
-    # display = Display(visible=0, size=(1000, 1000))
-    # display.start()
-    # options = webdriver.ChromeOptions()
-    # options.add_argument('--no-sandbox')
-    # # options.add_argument("--headless") 
-    # driver = webdriver.Chrome(options=options)
-    driver = webdriver.Chrome()
+    display = Display(visible=0, size=(1000, 1000))
+    display.start()
+    options = webdriver.ChromeOptions()
+    options.add_argument('--no-sandbox')
+    # options.add_argument("--headless") 
+    driver = webdriver.Chrome(options=options)
+    # driver = webdriver.Chrome()
     return driver
 
 def execute_js_scripts_max(driver):
