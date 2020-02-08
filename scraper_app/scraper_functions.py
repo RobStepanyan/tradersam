@@ -85,10 +85,18 @@ def remove_already_saved(l, c_list):
 def vps_selenium_setup():
     """This function creates virtual display and returns set up chrome driver.
     Execution time: ~ 1.2seconds"""
-    display = Display(visible=0, size=(1000, 1000))
-    display.start()
+    # display = Display(visible=0, size=(1000, 1000))
+    # display.start()
     options = webdriver.ChromeOptions()
-    prefs = {"profile.managed_default_content_settings.images": 2}
+    prefs = {
+        "profile.managed_default_content_settings.images":2,
+        "profile.default_content_setting_values.notifications":2,
+        "profile.managed_default_content_settings.stylesheets":2,
+        "profile.managed_default_content_settings.plugins":1,
+        "profile.managed_default_content_settings.popups":2,
+        "profile.managed_default_content_settings.geolocation":2,
+        "profile.managed_default_content_settings.media_stream":2,
+    }
     options.add_experimental_option("prefs", prefs)
     options.add_argument('--no-sandbox')
     options.add_argument('--ignore-certificate-errors')

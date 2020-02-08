@@ -107,7 +107,7 @@ class CryptocurrencyStaticInfo(models.Model):
     Type = models.CharField(choices=TYPES, max_length=9, default='crptcrncy')
     short_name = models.CharField(max_length=10)
     long_name = models.CharField(max_length=50)
-    link = models.URLField()
+    link = models.URLField(null=True)
 
     def __str__(self):
         return f'{self.long_name} ({self.short_name})'
