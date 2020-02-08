@@ -3171,14 +3171,14 @@ class CollectAllAssetsHistoricalMax:
         print('Finished Successfuly')
 
 class CollectAllAssetsHistorical5Y:
-# CollectAllAssetsHistorical5Y.commodities(delete='n')
-# CollectAllAssetsHistorical5Y.currencies(delete='n')
-# CollectAllAssetsHistorical5Y.cryptocurrencies(delete='n')
-# CollectAllAssetsHistorical5Y.stocks()
-# CollectAllAssetsHistorical5Y.indices()
-# CollectAllAssetsHistorical5Y.etfs()
-# CollectAllAssetsHistorical5Y.bonds()
-# CollectAllAssetsHistorical5Y.funds()
+# h.CollectAllAssetsHistorical5Y.commodities(delete='n')
+# h.CollectAllAssetsHistorical5Y.currencies(delete='n')
+# h.CollectAllAssetsHistorical5Y.cryptocurrencies(delete='n')
+# h.CollectAllAssetsHistorical5Y.stocks()
+# h.CollectAllAssetsHistorical5Y.indices()
+# h.CollectAllAssetsHistorical5Y.etfs()
+# h.CollectAllAssetsHistorical5Y.bonds()
+# h.CollectAllAssetsHistorical5Y.funds()
 
     def commodities(delete='n'):
         c_list = CommodityStaticInfo.objects.values_list('country', 'short_name', 'link') # returns a list of tuples
