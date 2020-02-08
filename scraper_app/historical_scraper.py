@@ -187,6 +187,8 @@ class CollectAllAssetsHistoricalMax:
         # driver = webdriver.Chrome()
     
         def work(i):
+            if link == None:
+                return
             x = list(c_list).index(i)+1
             link = i[1] + '/historical-data' #change here
             driver.get(link)
@@ -3333,6 +3335,8 @@ class CollectAllAssetsHistorical5Y:
         print('Starting Selenium')
         # driver = webdriver.Chrome()
         def work(i):
+            if link == None:
+                return
             link = i[1] + '/historical-data' #change here
             driver.get(link)
             x = list(c_list).index(i) + 1
