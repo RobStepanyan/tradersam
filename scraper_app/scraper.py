@@ -152,22 +152,24 @@ class CollectStaticInfo:
         while True:
             try:
                 soup = BeautifulSoup(driver.page_source, 'html.parser')
-                num_of_curr = soup.find('span', text='Number of Currencies').find_next_sibling().get_text()
+                num_of_curr = int(soup.find('span', text='Number of Currencies').find_next_sibling().get_text().replace(',','').strip())
                 break
             except Exception as e:
                 print_exception(e)
                 sleep(1)
         while True:
             try:
+                driver.execute_script("window.scrollTo(0,document.body.scrollHeight);")
                 soup = BeautifulSoup(driver.page_source, 'html.parser')
                 soup1 = soup.find_all('td', class_='left bold elp name cryptoName first js-currency-name')
-                soup2 = soup.find_all('td', class_='left noWrap elp symb js-currency-symbol') # Another column of short_names (tickers)
-                for td1, td2 in zip(soup1, soup2):
-                    long_names.append(td1.find('a').get_text())
-                    links.append(url2+str(td1.a['href']))
-                    short_names.append(td2.get_text())
+                soup2 = soup.find_all('td', class_='left noWrap elp symb js-currency-symbol') # Column of short_names (tickers)
                 if len(soup1) < num_of_curr:
                     continue
+                for col1, col2 in zip(soup1, soup2):
+                    print(col1)
+                    long_names.append(col1['title'])
+                    links.append(url2+col1.a['href'])
+                    short_names.append(col2.get_text())
                 break
             except Exception as e:
                 print_exception(e)
