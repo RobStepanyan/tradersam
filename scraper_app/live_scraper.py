@@ -280,20 +280,21 @@ def seperate_dct(dct):
 driver = vps_selenium_setup()
 print('Driver is ready!')
 try:
+    results = []
     start = time.time()
     
     # selenium_dct, non_selenium_dct = seperate_dct(STATIC_OBJECTS)
     # init_selenium_tabs(driver, selenium_dct)
     # non_selenium_requests(non_selenium_dct)
     init_selenium_tabs(driver, STATIC_OBJECTS)
-    with_init = time.time() - start
+    results.append(time.time() - start)
     
-    start = time.time()
-    
-    loop_selenium_tabs(driver)
+    for _ in range(3):
+        start = time.time()
+        loop_selenium_tabs(driver)
+        results.append(time.time()-start)
+    print(results)
     # non_selenium_requests(non_selenium_dct)
-
-    print(f'With init: {with_init}, Without: {time.time() - start}')
 finally:
     driver.quit()
     print('Driver is closed!')
