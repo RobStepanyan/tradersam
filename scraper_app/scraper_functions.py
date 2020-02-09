@@ -4,6 +4,7 @@ from pyvirtualdisplay import Display
 from threading import Thread
 from time import sleep
 import datetime
+from dateutil.relativedelta import relativedelta
 from selenium.webdriver.common.keys import Keys
 
 def print_exception(e):
@@ -104,10 +105,6 @@ def vps_selenium_setup():
     driver = webdriver.Chrome(options=options)
     return driver
 
-def execute_js_scripts_1y1m(driver, data_age):
-    print('Executing JS scripts')
-
-
 def execute_js_scripts_max(driver):
     print('Executing JS scripts')
     driver.execute_script('$("#data_interval").val("Monthly");')
@@ -129,3 +126,20 @@ def execute_js_scripts_5y(driver):
     driver.find_element_by_id('startDate').send_keys(startDate, Keys.ENTER)
     print('Executed JS scripts, sleeping for 5 seconds')
     sleep(5)
+
+def execute_js_scripts_1y1m(driver, data_age):
+    today = datetime.date.today()
+    if data_age == '1y':
+        start_date = today - relativedelta(years=+1)
+        start_date = f'{start_date.month}/{start_date.day}/{start_date.year}'
+    else:
+        months = data_age[0] # '1m' -> 1
+        start_date = today - relativedelta(months=+months)
+        start_date = f'{start_date.month}/{start_date.day}/{start_date.year}'
+    print('Executing JS scripts')
+    driver.execute_script('$("#data_interval").val("Daily");')
+    driver.find_element_by_id('data_interval').value = "Daily"
+    driver.find_element_by_id('widgetFieldDateRange').click()
+    driver.find_element_by_id('startDate').clear()
+    driver.find_element_by_id('startDate').send_keys(start_date, Keys.ENTER)
+    print('Executed JS scripts')

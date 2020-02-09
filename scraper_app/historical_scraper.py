@@ -6319,9 +6319,9 @@ class CollectAllAssetsHistorical1Y1M:
     from .live_scraper import STATIC_OBJECTS
     driver = vps_selenium_setup()
     print('Driver is ready!')
-    def collect1y1m(dct, driver):
+    def collect1y1m(driver, dct):
         """takes dct(STATIC_OBJECT's part or all of it) collect historical data"""
-        time_frames = ['1m-6m', '1y']
+        data_ages = ['1m', '3m', '6m', '1y']
         for key, value in dct.items():
             print(f'Started collectallassets1y1m {key}')
             if value['type_'] == 'crptcrncy':
@@ -6329,10 +6329,7 @@ class CollectAllAssetsHistorical1Y1M:
             else:
                 hist_link = '-historical-data'
 
-            if value['type_'] == 'cmdty': 
-                obj_list = value['object_'].objects.values_list('short_name', 'link', 'country')
-            else:
-                obj_list = value['object_'].objects.values_list('short_name', 'link')
+            obj_list = value['object_'].objects.values_list('short_name', 'link')
             quanity = len(obj_list)
 
             for obj in obj_list:
@@ -6348,35 +6345,54 @@ class CollectAllAssetsHistorical1Y1M:
                 while True:
                     try: 
                         print(link)
-                        for time_frame
-                        
-                        execute_js_scripts_by_time_frame(driver)
                         soup = BeautifulSoup(driver.page_source, 'html.parser')
-                        soup = soup.find(class_='genTbl closedTbl historicalTbl')
-                        soup = soup.tbody.find_all('tr')
-                        if soup[0].td.get_text() == 'No results found':
+                        table = soup.find(class_=value['table class'])
+                        trs = table.tbody.find_all('tr')
+                        if trs[0].td.get_text() == 'No results found':
                             print('No results found')
                             break
-                        for row in soup:
-                            data = row.find_all('td')
-                            data = [d.get_text() for d in data]
-                            date = datetime.datetime.strptime(data[0], '%b %d, %Y')
-                            price = validate_price(data[1])
-                            price = price[:price.index('.')+2+1]
-                            Open = validate_price(data[2])
-                            high = validate_price(data[3])
-                            low = validate_price(data[4])
-                            volume = None  #change here
-                            change_perc = data[5][:-1] # Removing % symbol #change here
-                            Type = 'fnd'  #change here
-                            country = 'AU'  #change here
-                            short_name = i[0]  #change here
-                            AllAssetsHistorical5Y( 
-                                Type=Type, country=country, short_name=short_name,
-                                date=date, price=price, Open=Open,
-                                high=high, low=low, change_perc=change_perc,
-                                volume=volume).save()
+                        for data_age in data_ages:
+                            execute_js_scripts_1y1m(driver, data_age)
+                        
+                            while len(trs) < quanity:
+                                try:
+                                    soup = BeautifulSoup(driver.page_source, 'html.parser')
+                                    table = soup.find(class_=value['table class'])
+                                    trs = table.tbody.find_all('tr')
+                                except Exception as e:
+                                    print_exception(e)
+                                    sleep(1)
+                            
+                            for row in trs:
+                                data = row.find_all('td')
+                                data = [d.get_text() for d in data]
+                                date = datetime.datetime.strptime(data[0], '%b %d, %Y')
+                                price = validate_price(data[1])
+                                price = price[:price.index('.')+2+1]
+                                Open = validate_price(data[2])
+                                high = validate_price(data[3])
+                                low = validate_price(data[4])
+                                if value['type_'] in 'crncybndfnd':
+                                    volume = None  #change here
+                                    change_perc = data[5][:-1] # Removing % symbol #change here
+                                else:
+                                    volume = data[5]
+                                    if volume == '-':
+                                        volume = None
+                                    change_perc = data[6][:-1] # Removing % symbol #change here
+                                Type = value['type_']  #change here
+                                if Type in 'crptcrncy':
+                                    country = 'G'
+                                else:
+                                    country = value['object_'].objects.filter(link=obj[1]).first().country  #change here
+                                short_name = obj[0]  #change here
+                                AllAssetsHistorical5Y( 
+                                    Type=Type, country=country, short_name=short_name,
+                                    date=date, price=price, Open=Open,
+                                    high=high, low=low, change_perc=change_perc,
+                                    volume=volume).save()
                         break
                     except Exception as e:
                         print_exception(e)
+                        sleep(1)
                         pass 
