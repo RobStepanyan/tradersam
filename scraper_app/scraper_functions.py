@@ -104,6 +104,10 @@ def vps_selenium_setup():
     driver = webdriver.Chrome(options=options)
     return driver
 
+def execute_js_scripts_1y1m(driver, data_age):
+    print('Executing JS scripts')
+
+
 def execute_js_scripts_max(driver):
     print('Executing JS scripts')
     driver.execute_script('$("#data_interval").val("Monthly");')

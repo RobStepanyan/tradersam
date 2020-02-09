@@ -3349,6 +3349,9 @@ class CollectAllAssetsHistorical5Y:
                     print(soup.find(id='widgetFieldDateRange').get_text())
                     soup = soup.find(class_='genTbl closedTbl historicalTbl')
                     soup = soup.tbody.find_all('tr')
+                    if soup[0].td.get_text() == 'No results found':
+                        print('No results found')
+                        break
                     for row in soup:
                         data = row.find_all('td')
                         data = [d.get_text() for d in data]
@@ -6309,4 +6312,71 @@ class CollectAllAssetsHistorical5Y:
         finally:
             ('Quiting the driver')
             driver.quit()
-        print('Finished Successfuly')        
+        print('Finished Successfuly')      
+
+
+class CollectAllAssetsHistorical1Y1M:
+    from .live_scraper import STATIC_OBJECTS
+    driver = vps_selenium_setup()
+    print('Driver is ready!')
+    def collect1y1m(dct, driver):
+        """takes dct(STATIC_OBJECT's part or all of it) collect historical data"""
+        time_frames = ['1m-6m', '1y']
+        for key, value in dct.items():
+            print(f'Started collectallassets1y1m {key}')
+            if value['type_'] == 'crptcrncy':
+                hist_link = '/historical-data'
+            else:
+                hist_link = '-historical-data'
+
+            if value['type_'] == 'cmdty': 
+                obj_list = value['object_'].objects.values_list('short_name', 'link', 'country')
+            else:
+                obj_list = value['object_'].objects.values_list('short_name', 'link')
+            quanity = len(obj_list)
+
+            for obj in obj_list:
+                link = obj[1]
+                if '?cid' in link:
+                    cid = link[link.index('?cid'):]
+                    link = link[:link.index('?cid')]
+                    link += hist_link + cid
+                else:
+                    link += hist_link
+                x = list(obj_list).index(obj)+1
+                driver.get(link)
+                while True:
+                    try: 
+                        print(link)
+                        for time_frame
+                        
+                        execute_js_scripts_by_time_frame(driver)
+                        soup = BeautifulSoup(driver.page_source, 'html.parser')
+                        soup = soup.find(class_='genTbl closedTbl historicalTbl')
+                        soup = soup.tbody.find_all('tr')
+                        if soup[0].td.get_text() == 'No results found':
+                            print('No results found')
+                            break
+                        for row in soup:
+                            data = row.find_all('td')
+                            data = [d.get_text() for d in data]
+                            date = datetime.datetime.strptime(data[0], '%b %d, %Y')
+                            price = validate_price(data[1])
+                            price = price[:price.index('.')+2+1]
+                            Open = validate_price(data[2])
+                            high = validate_price(data[3])
+                            low = validate_price(data[4])
+                            volume = None  #change here
+                            change_perc = data[5][:-1] # Removing % symbol #change here
+                            Type = 'fnd'  #change here
+                            country = 'AU'  #change here
+                            short_name = i[0]  #change here
+                            AllAssetsHistorical5Y( 
+                                Type=Type, country=country, short_name=short_name,
+                                date=date, price=price, Open=Open,
+                                high=high, low=low, change_perc=change_perc,
+                                volume=volume).save()
+                        break
+                    except Exception as e:
+                        print_exception(e)
+                        pass 
