@@ -878,7 +878,7 @@ class AllAssetsHistoricalMax(models.Model):
     volume = models.CharField(max_length=12, default=None, null=True)
 
     def __str__(self):
-        return f'({self.country} {Types[Types.index(self.Type)+1]}) {self.short_name} in {self.date.year} {self.date.strftime("%B")}'
+        return f'({Types[Types.index(self.Type)+1]}) {self.short_name} in {self.date.year} {self.date.strftime("%B")}'
 
     class Meta:
         verbose_name = '(Max Years) All Assets'
@@ -894,23 +894,87 @@ class AllAssetsHistorical5Y(models.Model):
     volume = models.CharField(max_length=12, default=None, null=True)
     
     def __str__(self):
-        return f'({self.country} {Types[Types.index(self.Type)+1]}) {self.short_name} in {self.date.strftime("%b %d, %Y")}'
+        return f'({Types[Types.index(self.Type)+1]}) {self.short_name} in {self.date.year} {self.date.strftime("%B")}'
 
     class Meta:
         verbose_name = '(5 Years) All Assets'
         verbose_name_plural = '(5 Years) All Assets'
 
+class AllAssetsHistorical1Y(models.Model):
+    Type = models.CharField(choices=TYPES, max_length=9)
+    short_name = models.CharField(max_length=18)
+    link = models.URLField(null=True)
+    
+    date = models.DateField(default=None, null=True)
+    price = models.CharField(max_length=12, default=None, null=True)
+    volume = models.CharField(max_length=12, default=None, null=True)
+    
+    def __str__(self):
+        return f'({Types[Types.index(self.Type)+1]}) {self.short_name} in {self.date.year} {self.date.strftime("%B")}'
+
+    class Meta:
+        verbose_name = '(1 Year) All Assets'
+        verbose_name_plural = '(1 Year) All Assets'
+
+class AllAssetsHistorical6M1M(models.Model):
+    Type = models.CharField(choices=TYPES, max_length=9)
+    short_name = models.CharField(max_length=18)
+    link = models.URLField(null=True)
+    
+    date = models.DateField(default=None, null=True)
+    price = models.CharField(max_length=12, default=None, null=True)
+    volume = models.CharField(max_length=12, default=None, null=True)
+    
+    def __str__(self):
+        return f'({Types[Types.index(self.Type)+1]}) {self.short_name} in {self.date.year} {self.date.strftime("%B")}'
+
+    class Meta:
+        verbose_name = '(6M-1M) All Assets'
+        verbose_name_plural = '(6M-1M) All Assets'
+
+class AllAssetsHistorical5D(models.Model):
+    Type = models.CharField(choices=TYPES, max_length=9)
+    short_name = models.CharField(max_length=16) 
+    link = models.URLField(null=True)
+
+    date = models.DateTimeField(default=None, null=True)
+    price = models.CharField(max_length=12, default=None, null=True)
+    volume = models.CharField(max_length=12, default=None, null=True)
+
+    def __str__(self):
+        return f'({Types[Types.index(self.Type)+1]}) {self.short_name} in {self.date.year} {self.date.strftime("%B")}'
+
+    class Meta:
+        verbose_name = '(5 Days) All Assets'
+        verbose_name_plural = '(5 Days) All Assets'
+
+class AllAssetsHistorical1D(models.Model):
+    Type = models.CharField(choices=TYPES, max_length=9)
+    short_name = models.CharField(max_length=16) 
+    link = models.URLField(null=True)
+
+    date = models.DateTimeField(default=None, null=True)
+    price = models.CharField(max_length=12, default=None, null=True)
+    volume = models.CharField(max_length=12, default=None, null=True)
+
+    def __str__(self):
+        return f'({Types[Types.index(self.Type)+1]}) {self.short_name} in {self.date.year} {self.date.strftime("%B")}'
+
+    class Meta:
+        verbose_name = '(1 Day) All Assets'
+        verbose_name_plural = '(1 Day) All Assets'
+
 class AllAssetsBeforeLive(models.Model):
     Type = models.CharField(choices=TYPES, max_length=9)
     short_name = models.CharField(max_length=16) 
-    link = models.URLField()
+    link = models.URLField(null=True)
     
     date = models.DateField(default=None, null=True)
     prev_close = models.CharField(max_length=15, null=True)
     Open = models.CharField(max_length=15, null=True)
 
     def __str__(self):
-        return f'({Types[Types.index(self.Type)+1]}) {self.short_name} in {self.date.strftime("%b %d, %Y")}'
+        return f'({Types[Types.index(self.Type)+1]}) {self.short_name} in {self.date.year} {self.date.strftime("%B")}'
     
     class Meta:
         verbose_name = '(Before Live) All Assets'
@@ -919,7 +983,7 @@ class AllAssetsBeforeLive(models.Model):
 class AllAssetsLive(models.Model):
     Type = models.CharField(choices=TYPES, max_length=9)
     short_name = models.CharField(max_length=16) 
-    link = models.URLField()
+    link = models.URLField(null=True)
     
     month = models.DateField(default=None, null=True)
     last_price = models.CharField(max_length=15, null=True)
@@ -928,12 +992,13 @@ class AllAssetsLive(models.Model):
     low = models.CharField(max_length=15, null=True)
     change = models.CharField(max_length=15, null=True)
     change_perc = models.CharField(max_length=12, null=True)
+    volume = models.CharField(max_length=12, default=None, null=True)
     @property
     def day_range(self):
         return f'{self.low}-{self.high}'
 
     def __str__(self):
-        return f'({Types[Types.index(self.Type)+1]}) {self.short_name} in {self.date.strftime("%b %d, %Y")}'
+        return f'({Types[Types.index(self.Type)+1]}) {self.short_name} in {self.date.year} {self.date.strftime("%B")}'
     
     class Meta:
         verbose_name = '(Live All) Assets'
@@ -942,7 +1007,7 @@ class AllAssetsLive(models.Model):
 class AllAssetsAfterLive(models.Model):
     Type = models.CharField(choices=TYPES, max_length=9)
     short_name = models.CharField(max_length=16) 
-    link = models.URLField()
+    link = models.URLField(null=True)
     
     date = models.DateField(default=None, null=True)
     one_year_rng = models.CharField(max_length=30)
@@ -952,32 +1017,9 @@ class AllAssetsAfterLive(models.Model):
     last_roll_day = models.DateField(default=None, null=True)
 
     def __str__(self):
-        return f'({Types[Types.index(self.Type)+1]}) {self.short_name} in {self.date.strftime("%b %d, %Y")}'
+        return f'({Types[Types.index(self.Type)+1]}) {self.short_name} in {self.date.year} {self.date.strftime("%B")}'
     
     class Meta:
         verbose_name = '(After Live) All Assets'
         verbose_name_plural = '(After Live) All Assets'
 
-class AllAssetsHistorical1D(models.Model):
-    Type = models.CharField(choices=TYPES, max_length=9)
-    short_name = models.CharField(max_length=16) 
-    link = models.URLField()
-
-    date = models.DateTimeField(default=None, null=True)
-    price = models.CharField(max_length=12, default=None, null=True)
-
-    class Meta:
-        verbose_name = '(1 Day) All Assets'
-        verbose_name_plural = '(1 Day) All Assets'
-
-class AllAssetsHistorical5D(models.Model):
-    Type = models.CharField(choices=TYPES, max_length=9)
-    short_name = models.CharField(max_length=16) 
-    link = models.URLField()
-
-    date = models.DateTimeField(default=None, null=True)
-    price = models.CharField(max_length=12, default=None, null=True)
-
-    class Meta:
-        verbose_name = '(5 Days) All Assets'
-        verbose_name_plural = '(5 Days) All Assets'
