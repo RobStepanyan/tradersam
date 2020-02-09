@@ -870,91 +870,35 @@ class AustraliaFundStaticInfo(models.Model):
 # Historical Data
 class AllAssetsHistoricalMax(models.Model):
     Type = models.CharField(choices=TYPES, max_length=9)
-    country = models.CharField(choices=COUNTRIES, max_length=2)
     short_name = models.CharField(max_length=18)
+    link = models.URLField(null=True)
+
     date = models.DateField(default=None, null=True)
     price = models.CharField(max_length=12, default=None, null=True)
-    Open = models.CharField(max_length=12, default=None, null=True)
-    high = models.CharField(max_length=12, default=None, null=True)
-    low = models.CharField(max_length=12, default=None, null=True)
-    change_perc = models.CharField(max_length=12, default=None, null=True)
     volume = models.CharField(max_length=12, default=None, null=True)
-
-    def highest(self):
-        l = list(AllAssetsHistoricalMax.objects.filter(short_name=self.short_name, country=self.country).values_list('price'))
-        l = [int(j) for i in l for j in i]
-        return max(l)
-
-    def lowest(self):
-        l = list(AllAssetsHistoricalMax.objects.filter(short_name=self.short_name, country=self.country).values_list('price'))
-        l = [int(j) for i in l for j in i]
-        return min(l)
-
-    def difference(self):
-        highest = AllAssetsHistoricalMax.objects.filter(short_name=self.short_name, country=self.country).first().highest()
-        lowest = AllAssetsHistoricalMax.objects.filter(short_name=self.short_name, country=self.country).first().lowest()
-        return highest-lowest
-
-    def average(self):
-        l = list(AllAssetsHistoricalMax.objects.filter(short_name=self.short_name, country=self.country).values_list('price'))
-        l = [int(j) for i in l for j in i]
-        return sum(l)/len(l)
-    
-    def change(self):
-        l = list(AllAssetsHistoricalMax.objects.filter(short_name=self.short_name, country=self.country).values_list('change_perc'))
-        l = [int(j) for i in l for j in i]
-        return sum(l)
 
     def __str__(self):
         return f'({self.country} {Types[Types.index(self.Type)+1]}) {self.short_name} in {self.date.year} {self.date.strftime("%B")}'
 
     class Meta:
-        verbose_name = '(Max Years) All Asset Types'
-        verbose_name_plural = '(Max Years) All Asset Types'
+        verbose_name = '(Max Years) All Assets'
+        verbose_name_plural = '(Max Years) All Assets'
 
 class AllAssetsHistorical5Y(models.Model):
     Type = models.CharField(choices=TYPES, max_length=9)
-    country = models.CharField(choices=COUNTRIES, max_length=2)
     short_name = models.CharField(max_length=18)
+    link = models.URLField(null=True)
+    
     date = models.DateField(default=None, null=True)
     price = models.CharField(max_length=12, default=None, null=True)
-    Open = models.CharField(max_length=12, default=None, null=True)
-    high = models.CharField(max_length=12, default=None, null=True)
-    low = models.CharField(max_length=12, default=None, null=True)
-    change_perc = models.CharField(max_length=12, default=None, null=True)
     volume = models.CharField(max_length=12, default=None, null=True)
-
-    def highest(self):
-        l = list(AllAssetsHistorical5Y.objects.filter(short_name=self.short_name, country=self.country).values_list('price'))
-        l = [int(j) for i in l for j in i]
-        return max(l)
-
-    def lowest(self):
-        l = list(AllAssetsHistorical5Y.objects.filter(short_name=self.short_name, country=self.country).values_list('price'))
-        l = [int(j) for i in l for j in i]
-        return min(l)
-
-    def difference(self):
-        highest = AllAssetsHistorical5Y.objects.filter(short_name=self.short_name, country=self.country).first().highest()
-        lowest = AllAssetsHistorical5Y.objects.filter(short_name=self.short_name, country=self.country).first().lowest()
-        return highest-lowest
-
-    def average(self):
-        l = list(AllAssetsHistorical5Y.objects.filter(short_name=self.short_name, country=self.country).values_list('price'))
-        l = [int(j) for i in l for j in i]
-        return sum(l)/len(l)
     
-    def change(self):
-        l = list(AllAssetsHistorical5Y.objects.filter(short_name=self.short_name, country=self.country).values_list('change_perc'))
-        l = [int(j) for i in l for j in i]
-        return sum(l)
-
     def __str__(self):
         return f'({self.country} {Types[Types.index(self.Type)+1]}) {self.short_name} in {self.date.strftime("%b %d, %Y")}'
 
     class Meta:
-        verbose_name = '(5 Years) All Asset Types'
-        verbose_name_plural = '(5 Years) All Asset Types'
+        verbose_name = '(5 Years) All Assets'
+        verbose_name_plural = '(5 Years) All Assets'
 
 class AllAssetsBeforeLive(models.Model):
     Type = models.CharField(choices=TYPES, max_length=9)
