@@ -5,7 +5,7 @@
 (time frame, start date, waiting until the table is fully loaded)
 4. Take appropriate Django model and save an instance
 """
-import datetime
+import datetime, time
 from bs4 import BeautifulSoup
 from time import sleep
 from .scraper_functions import (
@@ -23,6 +23,12 @@ hist_objects = {
     '1M': AllAssetsHistorical6M1M, '3M': AllAssetsHistorical6M1M, '6M': AllAssetsHistorical6M1M, 
     '1Y': AllAssetsHistorical1Y, '5Y': AllAssetsHistorical5Y, 'Max': AllAssetsHistoricalMax}
 
+# Deleting old historical data
+for obj in hist_objects.values():
+    obj.objects.all().delete()
+print('Old data has been removed')
+
+start = time.time()
 try:
     for key, value in STATIC_OBJECTS.items():
         if value['type'] == 'crptcrncy':
@@ -41,7 +47,6 @@ try:
                 link += hist_link + cid
             else:
                 link += hist_link
-            x = list(obj_list).index(obj)+1
             driver.get(link)
             for data_age in data_ages:
                 while True:
@@ -53,12 +58,15 @@ try:
                         if trs[0].td.get_text() == 'No results found':
                             print('No results found')
                             break
+                        
                         execute_js_scripts(driver, data_age)
-                        while len(trs) < quanity:
+                        
+                        while True:
                             try:
                                 soup = BeautifulSoup(driver.page_source, 'html.parser')
                                 table = soup.find(class_='genTbl closedTbl historicalTbl')
                                 trs = table.tbody.find_all('tr')
+                                break
                             except Exception as e:
                                 print_exception(e)
                                 sleep(1)
@@ -69,7 +77,10 @@ try:
                             
                             Type = value['type']
                             short_name = obj[0]
-                            date = datetime.datetime.strptime(data[0], '%b %d, %Y')
+                            if data_age == 'Max':
+                                date = datetime.datetime.strptime(data[0], '%b %y')
+                            else:
+                                date = datetime.datetime.strptime(data[0], '%b %d, %Y')
                             price = validate_price(data[1])
                             price = price[:price.index('.')+2+1]
                             if value['type'] in 'crncybndfnd':
@@ -88,7 +99,7 @@ try:
                                 date=date, 
                                 price=price,
                                 volume=volume).save()
-                            print(f'({key})Stored {x}/{quanity}')
+                        print(f'({key})Stored {data_age}')
                         break
                     except Exception as e:
                         print_exception(e)
@@ -96,4 +107,5 @@ try:
                         pass
 finally:
     driver.quit()
-    print('Driver is closed!')                    
+    print('Driver is closed!')
+    print(f'Executed in {time.time()-start} seconds.')                    
