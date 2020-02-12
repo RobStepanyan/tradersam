@@ -55,6 +55,8 @@ admin.site.register(models.AustraliaFundStaticInfo)
 # Historical
 admin.site.register(models.AllAssetsHistoricalMax) # All Assets Max Date Range (1step=1month)
 admin.site.register(models.AllAssetsHistorical5Y) # All Assets 5 Years Date Range (1step=1week)
+admin.site.register(models.AllAssetsHistorical1Y)
+admin.site.register(models.AllAssetsHistorical6M1M)
 admin.site.register(models.AllAssetsHistorical5D)
 admin.site.register(models.AllAssetsHistorical1D)
 
