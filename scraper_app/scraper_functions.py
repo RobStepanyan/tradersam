@@ -86,8 +86,8 @@ def remove_already_saved(l, c_list):
 def vps_selenium_setup():
     """This function creates virtual display and returns set up chrome driver.
     Execution time: ~ 1.2seconds"""
-    # display = Display(visible=0, size=(1000, 1000))
-    # display.start()
+    display = Display(visible=0, size=(1000, 1000))
+    display.start()
     options = webdriver.ChromeOptions()
     prefs = {
         "profile.managed_default_content_settings.images":2,
@@ -130,11 +130,11 @@ def execute_js_scripts_5y(driver):
 def execute_js_scripts_1y1m(driver, data_age):
     today = datetime.date.today()
     if data_age == '1y':
-        start_date = today - relativedelta(years=+1)
+        start_date = today - relativedelta(years=1)
         start_date = f'{start_date.month}/{start_date.day}/{start_date.year}'
     else:
-        months = data_age[0] # '1m' -> 1
-        start_date = today - relativedelta(months=+months)
+        months = int(data_age[0]) # '1m' -> 1
+        start_date = today - relativedelta(months=months)
         start_date = f'{start_date.month}/{start_date.day}/{start_date.year}'
     print('Executing JS scripts')
     driver.execute_script('$("#data_interval").val("Daily");')
@@ -143,3 +143,13 @@ def execute_js_scripts_1y1m(driver, data_age):
     driver.find_element_by_id('startDate').clear()
     driver.find_element_by_id('startDate').send_keys(start_date, Keys.ENTER)
     print('Executed JS scripts')
+
+def execute_js_scripts(driver, data_age):
+    if data_age in '1M3M6M1Y':
+        execute_js_scripts_1y1m(driver, data_age)
+    elif data_age == '5Y':
+        execute_js_scripts_5y(driver)
+    elif data_age == 'Max':
+        execute_js_scripts_max(driver)
+    else:
+        print('Appropriate JS execution function has not been found.')
