@@ -26,7 +26,14 @@ from .models import (
     # Historical
     AllAssetsHistoricalMax, AllAssetsHistorical5Y, AllAssetsHistorical1Y, AllAssetsHistorical6M1M
 )
+"""
 
+
+Do NOT use this file. It is deprecated!
+Use hist_scraper.py instead.
+
+
+"""
 
 class CollectAllAssetsHistoricalMax:
 # from scraper_app import historical_scraper as h
