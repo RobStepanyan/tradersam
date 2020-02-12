@@ -23,8 +23,8 @@ from .models import (
     # Funds
     FundIssuers, USFundStaticInfo, JapanFundStaticInfo, UKFundStaticInfo, HKFundStaticInfo, 
     ChinaFundStaticInfo, CanadaFundStaticInfo, GermanyFundStaticInfo, AustraliaFundStaticInfo,
-    
-    AllAssetsHistoricalMax, AllAssetsHistorical5Y
+    # Historical
+    AllAssetsHistoricalMax, AllAssetsHistorical5Y, AllAssetsHistorical1Y, AllAssetsHistorical6M1M
 )
 
 
@@ -6381,7 +6381,7 @@ class CollectAllAssetsHistorical1Y1M:
                                         volume = None
                                     change_perc = data[6][:-1] # Removing % symbol #change here
                                 Type = value['type_']  #change here
-                                if Type in 'crptcrncy':
+                                if Type in 'crncycrptcrncy':
                                     country = 'G'
                                 else:
                                     country = value['object_'].objects.filter(link=obj[1]).first().country  #change here
