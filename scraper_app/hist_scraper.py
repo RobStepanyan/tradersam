@@ -41,6 +41,8 @@ try:
 
         for obj in obj_list:
             link = obj[1]
+            if link is None:
+                continue
             if '?cid' in link:
                 cid = link[link.index('?cid'):]
                 link = link[:link.index('?cid')]
@@ -99,7 +101,7 @@ try:
                                 date=date, 
                                 price=price,
                                 volume=volume).save()
-                        print(f'({key})Stored {data_age}')
+                        print(f'({key})Stored {short_name} {data_age}')
                         break
                     except Exception as e:
                         print_exception(e)
