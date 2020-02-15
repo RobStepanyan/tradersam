@@ -57,20 +57,11 @@
 
 })(jQuery); // End of use strict
 
-// $(function() {
-                
-//   var documentEl = $(document),
-//       fadeElem = $('.masthead');
-  
-  
-//   documentEl.on('scroll', function() {
-//       var currScrollPos = documentEl.scrollTop();
-      
-//       fadeElem.each(function() {
-//           var $this = $(this),
-//               elemOffsetTop = $this.offset().top;
-//           if (currScrollPos > elemOffsetTop) $this.css('opacity', 1 - (currScrollPos-elemOffsetTop)/1200);
-//       }); 
-//   });
-  
-// });
+$(document).ready(function(){
+  $('#market-carousel').slick({
+    slidesToShow: 3,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 2000,
+  });
+});
