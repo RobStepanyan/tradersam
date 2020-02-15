@@ -2,7 +2,7 @@ p {
   font-size: 1.1rem;
 }
 
-/* News detail page */
+/* for *_details.html files */
 header.bg-primary {
     margin-bottom: 50px;
     position: relative;
@@ -77,7 +77,7 @@ header.bg-primary {
     header.bg-primary .page-heading,
     header.bg-primary .news-heading,
     header.bg-primary .site-heading {
-      padding: 200px 0;
+      padding: 160px 0;
     }
   }
   
