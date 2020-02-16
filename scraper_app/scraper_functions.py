@@ -35,7 +35,7 @@ def threads_by_chunks(target, c_list, n):
     """This function creates threads for each item, then executes them by n-sized chunks"""
 
     quanity = len(c_list)
-    chunk_list = list(chunks(range(quanity), 3))
+    chunk_list = list(chunks(range(quanity), n))
     threads = []
     for i in range(quanity):
         threads.append(Thread(target=target, args=(c_list[i],)))
@@ -112,8 +112,7 @@ def execute_js_scripts_max(driver):
     driver.find_element_by_id('widgetFieldDateRange').click()
     driver.find_element_by_id('startDate').clear()
     driver.find_element_by_id('startDate').send_keys('01/01/1980', Keys.ENTER)
-    print('Executed JS scripts, sleeping for 5 seconds')
-    sleep(5)
+    print('Executed JS scripts')
 
 def execute_js_scripts_5y(driver):
     startDate = datetime.datetime.now() - datetime.timedelta(days=5*365) # 5 Years ago today
@@ -124,8 +123,7 @@ def execute_js_scripts_5y(driver):
     driver.find_element_by_id('widgetFieldDateRange').click()
     driver.find_element_by_id('startDate').clear()
     driver.find_element_by_id('startDate').send_keys(startDate, Keys.ENTER)
-    print('Executed JS scripts, sleeping for 5 seconds')
-    sleep(5)
+    print('Executed JS scripts')
 
 def execute_js_scripts_1y1m(driver, data_age):
     today = datetime.date.today()

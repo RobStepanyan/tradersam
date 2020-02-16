@@ -881,8 +881,8 @@ class AllAssetsHistoricalMax(models.Model):
         return f'({Types[Types.index(self.Type)+1]}) {self.short_name} in {self.date.year} {self.date.strftime("%B")}'
 
     class Meta:
-        verbose_name = '(Max Years) All Assets'
-        verbose_name_plural = '(Max Years) All Assets'
+        verbose_name = '(Historical Max Years) All Assets'
+        verbose_name_plural = '(Historical Max Years) All Assets'
 
 class AllAssetsHistorical5Y(models.Model):
     Type = models.CharField(choices=TYPES, max_length=9)
@@ -897,8 +897,8 @@ class AllAssetsHistorical5Y(models.Model):
         return f'({Types[Types.index(self.Type)+1]}) {self.short_name} in {self.date.year} {self.date.strftime("%B")}'
 
     class Meta:
-        verbose_name = '(5 Years) All Assets'
-        verbose_name_plural = '(5 Years) All Assets'
+        verbose_name = '(Historical 5 Years) All Assets'
+        verbose_name_plural = '(Historical 5 Years) All Assets'
 
 class AllAssetsHistorical1Y(models.Model):
     Type = models.CharField(choices=TYPES, max_length=9)
@@ -913,8 +913,8 @@ class AllAssetsHistorical1Y(models.Model):
         return f'({Types[Types.index(self.Type)+1]}) {self.short_name} in {self.date.year} {self.date.strftime("%B")}'
 
     class Meta:
-        verbose_name = '(1 Year) All Assets'
-        verbose_name_plural = '(1 Year) All Assets'
+        verbose_name = '(Historical 1 Year) All Assets'
+        verbose_name_plural = '(Historical 1 Year) All Assets'
 
 class AllAssetsHistorical6M1M(models.Model):
     Type = models.CharField(choices=TYPES, max_length=9)
@@ -929,8 +929,8 @@ class AllAssetsHistorical6M1M(models.Model):
         return f'({Types[Types.index(self.Type)+1]}) {self.short_name} in {self.date.year} {self.date.strftime("%B")}'
 
     class Meta:
-        verbose_name = '(6M-1M) All Assets'
-        verbose_name_plural = '(6M-1M) All Assets'
+        verbose_name = '(Historical 6M-1M) All Assets'
+        verbose_name_plural = '(Historical 6M-1M) All Assets'
 
 class AllAssetsHistorical5D(models.Model):
     Type = models.CharField(choices=TYPES, max_length=9)
@@ -945,8 +945,8 @@ class AllAssetsHistorical5D(models.Model):
         return f'({Types[Types.index(self.Type)+1]}) {self.short_name} in {self.date.year} {self.date.strftime("%B")}'
 
     class Meta:
-        verbose_name = '(5 Days) All Assets'
-        verbose_name_plural = '(5 Days) All Assets'
+        verbose_name = '(Historical 5 Days) All Assets'
+        verbose_name_plural = '(Historical 5 Days) All Assets'
 
 class AllAssetsHistorical1D(models.Model):
     Type = models.CharField(choices=TYPES, max_length=9)
@@ -961,8 +961,8 @@ class AllAssetsHistorical1D(models.Model):
         return f'({Types[Types.index(self.Type)+1]}) {self.short_name} in {self.date.year} {self.date.strftime("%B")}'
 
     class Meta:
-        verbose_name = '(1 Day) All Assets'
-        verbose_name_plural = '(1 Day) All Assets'
+        verbose_name = '(Historical 1 Day) All Assets'
+        verbose_name_plural = '(Historical 1 Day) All Assets'
 
 class AllAssetsBeforeLive(models.Model):
     Type = models.CharField(choices=TYPES, max_length=9)
