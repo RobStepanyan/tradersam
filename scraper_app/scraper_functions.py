@@ -35,7 +35,7 @@ def threads_by_chunks(target, c_list, n):
     """This function creates threads for each item, then executes them by n-sized chunks"""
 
     quanity = len(c_list)
-    chunk_list = list(chunks(range(quanity), 3))
+    chunk_list = list(chunks(range(quanity), n))
     threads = []
     for i in range(quanity):
         threads.append(Thread(target=target, args=(c_list[i],)))
