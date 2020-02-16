@@ -16,16 +16,18 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.contrib.auth import views as auth_views
+from django.conf import settings
+from django.conf.urls.static import static
 
 import users_app.views as users_views
 import main_app.views as main_views
 
 urlpatterns = [
     path('donttouchtheadminpage/', admin.site.urls),
-    path('itsdevareabitch/', include('main_app.urls')),
+    path('dev/', include('main_app.urls')),
     path('', main_views.csoon),
     
     path('signup/', users_views.signup, name='signup'),
     path('login/', users_views.login, name='login'),
     path('logout/', users_views.logout, name='logout'),
-]
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

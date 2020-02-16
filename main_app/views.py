@@ -2,6 +2,12 @@ from django.shortcuts import render
 from django.http import HttpResponse
 
 # Create your views here.
+def asset_details(request):
+    return render(request, 'main_app/asset_details.html')
+
+def news_details(request):
+    return render(request, 'main_app/news_details.html')
+
 def csoon(request):
     return render(request, 'main_app/comingsoon.html')
 

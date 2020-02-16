@@ -1,0 +1,190 @@
+p {
+  font-size: 1.1rem;
+}
+
+/* for *_details.html files */
+header.bg-primary {
+    margin-bottom: 50px;
+    position: relative;
+    background-size: cover;
+  }
+  blockquote {
+    font-style: italic;
+    color: #868e96;
+  }
+  
+  .section-heading {
+    font-size: 36px;
+    font-weight: 700;
+    margin-top: 60px;
+  }
+  
+  .caption {
+    font-size: 14px;
+    font-style: italic;
+    display: block;
+    margin: 0;
+    padding: 10px;
+    text-align: center;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+  }
+  
+  ::-moz-selection {
+    color: #fff;
+    background: #0085A1;
+    text-shadow: none;
+  }
+  
+  ::selection {
+    color: #fff;
+    background: #0085A1;
+    text-shadow: none;
+  }
+  
+  img::-moz-selection {
+    color: #fff;
+    background: transparent;
+  }
+  
+  img::selection {
+    color: #fff;
+    background: transparent;
+  }
+  
+  img::-moz-selection {
+    color: #fff;
+    background: transparent;
+  }
+  header.bg-primary .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: #1241c2;
+    opacity: 1;
+  }
+  
+  header.bg-primary .page-heading,
+  header.bg-primary .news-heading,
+  header.bg-primary .site-heading {
+    padding: 200px 0 150px;
+    color: white;
+  }
+  
+  @media only screen and (min-width: 768px) {
+    header.bg-primary .page-heading,
+    header.bg-primary .news-heading,
+    header.bg-primary .site-heading {
+      padding: 160px 0;
+    }
+  }
+  
+  header.bg-primary .page-heading,
+  header.bg-primary .site-heading {
+    text-align: center;
+  }
+  
+  header.bg-primary .page-heading h1,
+  header.bg-primary .site-heading h1 {
+    font-size: 50px;
+    margin-top: 0;
+  }
+  
+  header.bg-primary .page-heading .subheading,
+  header.bg-primary .site-heading .subheading {
+    font-size: 24px;
+    font-weight: 300;
+    line-height: 1.1;
+    display: block;
+    margin: 10px 0 0;
+    font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  }
+  
+  @media only screen and (min-width: 768px) {
+    header.bg-primary .page-heading h1,
+    header.bg-primary .site-heading h1 {
+      font-size: 80px;
+    }
+  }
+  
+  header.bg-primary .news-heading h1 {
+    font-size: 35px;
+  }
+  
+  header.bg-primary .news-heading .meta,
+  header.bg-primary .news-heading .subheading {
+    line-height: 1.1;
+    display: block;
+  }
+  
+  header.bg-primary .news-heading .subheading {
+    font-size: 24px;
+    font-weight: 600;
+    margin: 10px 0 30px;
+    font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  }
+  
+  header.bg-primary .news-heading .meta {
+    font-size: 20px;
+    font-weight: 300;
+    font-style: italic;
+    font-family: 'Lora', 'Times New Roman', serif;
+  }
+  
+  header.bg-primary .news-heading .meta a {
+    color: #fff;
+  }
+  
+  @media only screen and (min-width: 768px) {
+    header.bg-primary .news-heading h1 {
+      font-size: 55px;
+    }
+    header.bg-primary .news-heading .subheading {
+      font-size: 30px;
+    }
+  }
+  
+  .post-preview > a {
+    color: #212529;
+  }
+  
+  .post-preview > a:focus, .post-preview > a:hover {
+    text-decoration: none;
+    color: #0085A1;
+  }
+  
+  .post-preview > a > .post-title {
+    font-size: 30px;
+    margin-top: 30px;
+    margin-bottom: 10px;
+  }
+  
+  .post-preview > a > .post-subtitle {
+    font-weight: 300;
+    margin: 0 0 10px;
+  }
+  
+  .post-preview > .post-meta {
+    font-size: 18px;
+    font-style: italic;
+    margin-top: 0;
+    color: #868e96;
+  }
+  
+  .post-preview > .post-meta > a {
+    text-decoration: none;
+    color: #212529;
+  }
+  
+  .post-preview > .post-meta > a:focus, .post-preview > .post-meta > a:hover {
+    text-decoration: underline;
+    color: #0085A1;
+  }
+  
+  @media only screen and (min-width: 768px) {
+    .post-preview > a > .post-title {
+      font-size: 36px;
+    }
+  }
