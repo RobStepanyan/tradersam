@@ -102,9 +102,6 @@
         </div>
         <div class="col-lg-6 p-0 mb-3" id="pl-1">
           <div class="input-group-btn scrolling-wrapper-flexbox" data-toggle="buttons">
-            <label class="btn btn-primary mr-2">
-              <input type="radio" name="options" id="allcountries" autocomplete="off" checked>All Countries
-            </label>
             <label class="btn btn-primary mr-2 active">
               <input type="radio" name="options" id="USA" autocomplete="off" checked>USA
             </label>
@@ -138,60 +135,253 @@
       <div class="container">
         <div class="row" id="market-carousel">
           
+        <a href=""> 
           <div class="card asset-card card mr-3">
             <div class="row justify-content-around">
               <span class="short-name">S&P500</span>
               <span class="long-name">S&P500 Futures</span>
               <span class="price up">313002.34</span>
-              <span class="change up">203.14%</span>
+              <span class="change up">203.14%</s+pan>
             </div>
           </div>
-  
-          <div class="card asset-card card mr-3">
-            <div class="row justify-content-around">
-              <span class="short-name">S&P500</span>
-              <span class="long-name">S&P500 Futures</span>
-              <span class="price up">313002.34</span>
-              <span class="change up">203.14%</span>
-            </div>
-          </div>
-  
-          <div class="card asset-card card mr-3">
-            <div class="row justify-content-around">
-              <span class="short-name">S&P500</span>
-              <span class="long-name">S&P500 Futures</span>
-              <span class="price up">313002.34</span>
-              <span class="change up">203.14%</span>
-            </div>
-          </div>
-        
-          <div class="card asset-card card mr-3">
-            <div class="row justify-content-around">
-              <span class="short-name">S&P500</span>
-              <span class="long-name">S&P500 Futures</span>
-              <span class="price down">313002.34</span>
-              <span class="change down">203.14%</span>
-            </div>
-          </div>
-  
-          <div class="card asset-card card mr-3">
-            <div class="row justify-content-around">
-              <span class="short-name">S&P500</span>
-              <span class="long-name">S&P500 Futures</span>
-              <span class="price down">313002.34</span>
-              <span class="change down">203.14%</span>
-            </div>
-          </div>
-  
-          <div class="card asset-card card mr-3">
-            <div class="row justify-content-around">
-              <span class="short-name">S&P500</span>
-              <span class="long-name">S&P500 Futures</span>
-              <span class="price down">313002.34</span>
-              <span class="change down">203.14%</span>
-            </div>
-          </div>
+        </a>
 
+        <a href="">
+          <div class="card asset-card card mr-3">
+            <div class="row justify-content-around">
+              <span class="short-name">S&P500</span>
+              <span class="long-name">S&P500 Futures</span>
+              <span class="price up">313002.34</span>
+              <span class="change up">203.14%</s+pan>
+            </div>
+          </div>
+        </a>
+
+        <a href="">
+          <div class="card asset-card card mr-3">
+            <div class="row justify-content-around">
+              <span class="short-name">S&P500</span>
+              <span class="long-name">S&P500 Futures</span>
+              <span class="price up">313002.34</span>
+              <span class="change up">203.14%</s+pan>
+            </div>
+          </div>
+        </a>
+
+        <a href="">
+          <div class="card asset-card card mr-3">
+            <div class="row justify-content-around">
+              <span class="short-name">S&P500</span>
+              <span class="long-name">S&P500 Futures</span>
+              <span class="price down">313002.34</span>
+              <span class="change down">203.14%</s-pan>
+            </div>
+          </div>
+        </a>
+
+        <a href="">
+          <div class="card asset-card card mr-3">
+            <div class="row justify-content-around">
+              <span class="short-name">S&P500</span>
+              <span class="long-name">S&P500 Futures</span>
+              <span class="price down">313002.34</span>
+              <span class="change down">203.14%</s-pan>
+            </div>
+          </div>
+        </a>
+
+        <a href="">
+          <div class="card asset-card card mr-3">
+            <div class="row justify-content-around">
+              <span class="short-name">S&P500</span>
+              <span class="long-name">S&P500 Futures</span>
+              <span class="price down">313002.34</span>
+              <span class="change down">203.14%</s-pan>
+            </div>
+          </div>
+        </a>
+
+        </div>
+      </div>
+    </div>
+    <div class="container mt-3">
+      <div class="row">
+        <!-- Selected Table -->
+        <div class="col-lg-6 p-0" id="pr-1">
+          <h2 class="text-white text-align-center mb-3"> 
+            <img class="country-flag-lg" src="{% static 'main_app/svg/flags/us.svg' %}" alt="US">
+            United States - Stocks
+          </h2>
+          <table class="market-table mb-3 table-striped shadow table-hover">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Ticker</th>
+                <th>Last Price</th>
+                <th>Change</th>
+                <th>Change %</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><img class="country-flag-md" src="{% static 'main_app/svg/flags/us.svg' %}" alt="US"></td>
+                <td>AAPL</td>
+                <td>313.45</td>
+                <td class="text-success">+13.24</td>
+                <td><span class="change up">+2.14%</span></td>
+              </tr>
+              <tr>
+                <td><img class="country-flag-md" src="{% static 'main_app/svg/flags/us.svg' %}" alt="US"></td>
+                <td>AAPL</td>
+                <td>313.45</td>
+                <td class="text-danger">-13.24</td>
+                <td><span class="change">-2.14%</span></td>
+              </tr>
+              <tr>
+                <td><img class="country-flag-md" src="{% static 'main_app/svg/flags/us.svg' %}" alt="US"></td>
+                <td>AAPL</td>
+                <td>313.45</td>
+                <td class="text-success">+13.24</td>
+                <td><span class="change up">+2.14%</span></td>
+              </tr>
+              <tr>
+                <td><img class="country-flag-md" src="{% static 'main_app/svg/flags/us.svg' %}" alt="US"></td>
+                <td>AAPL</td>
+                <td>313.45</td>
+                <td class="text-danger">-13.24</td>
+                <td><span class="change down">-2.14%</span></td>
+              </tr>
+              <tr>
+                <td><img class="country-flag-md" src="{% static 'main_app/svg/flags/us.svg' %}" alt="US"></td>
+                <td>AAPL</td>
+                <td>313.45</td>
+                <td class="text-success">+13.24</td>
+                <td><span class="change up">+2.14%</span></td>
+              </tr>
+              <tr>
+                <td><img class="country-flag-md" src="{% static 'main_app/svg/flags/us.svg' %}" alt="US"></td>
+                <td>AAPL</td>
+                <td>313.45</td>
+                <td class="text-danger">-13.24</td>
+                <td><span class="change down">-2.14%</span></td>
+              </tr>
+              <tr>
+                <td><img class="country-flag-md" src="{% static 'main_app/svg/flags/us.svg' %}" alt="US"></td>
+                <td>AAPL</td>
+                <td>313.45</td>
+                <td class="text-success">+13.24</td>
+                <td><span class="change up">+2.14%</span></td>
+              </tr>
+              <tr>
+                <td><img class="country-flag-md" src="{% static 'main_app/svg/flags/us.svg' %}" alt="US"></td>
+                <td>AAPL</td>
+                <td>313.45</td>
+                <td class="text-danger">-13.24</td>
+                <td><span class="change down">-2.14%</span></td>
+              </tr>
+              <tr>
+                <td><img class="country-flag-md" src="{% static 'main_app/svg/flags/us.svg' %}" alt="US"></td>
+                <td>AAPL</td>
+                <td>313.45</td>
+                <td class="text-success">+13.24</td>
+                <td><span class="change up">+2.14%</span></td>
+              </tr>
+              <tr>
+                <td><img class="country-flag-md" src="{% static 'main_app/svg/flags/us.svg' %}" alt="US"></td>
+                <td>AAPL</td>
+                <td>313435.45</td>
+                <td class="text-success">+1453.24</td>
+                <td><span class="change up">+245.14%</span></td>
+              </tr>
+            </tbody>
+          </table>
+          </div>
+          <div class="col-lg-6 p-0" id="pl-1">
+          <!-- Watchlist Table -->
+          <h2 class="text-white text-align-center mb-3"><i class="fas fa-user"></i> Your Watchlist</h2>
+          <table class="market-table mb-3 table-striped filter-blur shadow">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Ticker</th>
+                <th>Last Price</th>
+                <th>Change</th>
+                <th>Change %</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><i class="fa fa-globe text-dark country-flag-md mb-0"></i></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><i class="fa fa-globe text-dark country-flag-md mb-0"></i></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><i class="fa fa-globe text-dark country-flag-md mb-0"></i></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><i class="fa fa-globe text-dark country-flag-md mb-0"></i></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><i class="fa fa-globe text-dark country-flag-md mb-0"></i></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><i class="fa fa-globe text-dark country-flag-md mb-0"></i></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><i class="fa fa-globe text-dark country-flag-md mb-0"></i></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><i class="fa fa-globe text-dark country-flag-md mb-0"></i></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><i class="fa fa-globe text-dark country-flag-md mb-0"></i></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><i class="fa fa-globe text-dark country-flag-md mb-0"></i></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
