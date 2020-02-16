@@ -114,14 +114,15 @@ if inpt.upper() == 'Y':
                     link += hist_link
                 threads.append(Thread(target=collect_for, args=(obj, x, key, value, link)))
             print(f'({key}) Threads are ready!')
-            thread_chunks = chunks(threads, 3)
+            thread_chunks = list(chunks(threads, 3))
             i = 1
+            chunks_n = len(thread_chunks) 
             for chunk in thread_chunks:
                 for thread in chunk:
                     thread.start()
                 for thread in chunk:
                     thread.join()
-                print(f'({key}) Executed Chunk {i}/{len(thread_chunks)}')           
+                print(f'({key}) Executed Chunk {i}/{chunks_n}')           
                 i+=1
     finally:
         driver.quit()
