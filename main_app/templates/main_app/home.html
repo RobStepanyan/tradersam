@@ -78,31 +78,6 @@
         <div class="col-lg-6 p-0 mb-3" id="pr-1">
           <div class="input-group-btn scrolling-wrapper-flexbox" data-toggle="buttons">
             <label class="btn btn-primary mr-2 active">
-              <input type="radio" name="options" id="all" autocomplete="off" checked>Stocks
-            </label>
-            <label class="btn btn-primary mr-2">
-              <input type="radio" name="options" id="Indices" autocomplete="off">Indices
-            </label>
-            <label class="btn btn-primary mr-2">
-              <input type="radio" name="options" id="Bonds" autocomplete="off">Bonds
-            </label>
-            <label class="btn btn-primary mr-2">
-              <input type="radio" name="options" id="Commodities" autocomplete="off">Commodities
-            </label>
-            <label class="btn btn-primary mr-2">
-              <input type="radio" name="options" id="Currencies" autocomplete="off">Currencies
-            </label>
-            <label class="btn btn-primary mr-2 pr-2">
-              <input type="radio" name="options" id="Cryptocurrency" autocomplete="off">Cryptocurrency
-            </label>
-            <label class="btn btn-primary">
-              <input type="radio" name="options" id="ETFs" autocomplete="off">ETFs
-            </label>
-          </div>
-        </div>
-        <div class="col-lg-6 p-0 mb-3" id="pl-1">
-          <div class="input-group-btn scrolling-wrapper-flexbox" data-toggle="buttons">
-            <label class="btn btn-primary mr-2 active">
               <input type="radio" name="options" id="USA" autocomplete="off" checked>USA
             </label>
             <label class="btn btn-primary mr-2">
@@ -128,78 +103,106 @@
             </label>
           </div>
         </div>
+        <div class="col-lg-6 p-0 mb-3" id="pl-1">
+          <div class="input-group-btn scrolling-wrapper-flexbox" data-toggle="buttons">
+            <label class="btn btn-primary mr-2 active">
+              <input type="radio" name="options" id="all" autocomplete="off" checked>Stocks
+            </label>
+            <label class="btn btn-primary mr-2">
+              <input type="radio" name="options" id="Indices" autocomplete="off">Indices
+            </label>
+            <label class="btn btn-primary mr-2">
+              <input type="radio" name="options" id="Bonds" autocomplete="off">Bonds
+            </label>
+            <label class="btn btn-primary mr-2">
+              <input type="radio" name="options" id="Commodities" autocomplete="off">Commodities
+            </label>
+            <label class="btn btn-primary mr-2">
+              <input type="radio" name="options" id="Currencies" autocomplete="off">Currencies
+            </label>
+            <label class="btn btn-primary mr-2 pr-2">
+              <input type="radio" name="options" id="Cryptocurrency" autocomplete="off">Cryptocurrency
+            </label>
+            <label class="btn btn-primary">
+              <input type="radio" name="options" id="ETFs" autocomplete="off">ETFs
+            </label>
+          </div>
+        </div>
       </div>
     </div>
 
     <div class="bg-dark p-3">
       <div class="container">
+        <h2 class="text-white text-align-center ml-0 mb-3"> 
+          <img class="country-flag-lg" src="{% static 'main_app/svg/flags/us.svg' %}" alt="US">
+          United States
+        </h2>
         <div class="row" id="market-carousel">
-          
-        <a href=""> 
-          <div class="card asset-card card mr-3">
-            <div class="row justify-content-around">
-              <span class="short-name">S&P500</span>
-              <span class="long-name">S&P500 Futures</span>
-              <span class="price up">313002.34</span>
-              <span class="change up">203.14%</s+pan>
+          <a href=""> 
+            <div class="card asset-card card mr-3">
+              <div class="row justify-content-around">
+                <span class="short-name">S&P500</span>
+                <span class="long-name">S&P500 Futures</span>
+                <span class="price up">313002.34</span>
+                <span class="change up">203.14%</s+pan>
+              </div>
             </div>
-          </div>
-        </a>
+          </a>
 
-        <a href="">
-          <div class="card asset-card card mr-3">
-            <div class="row justify-content-around">
-              <span class="short-name">S&P500</span>
-              <span class="long-name">S&P500 Futures</span>
-              <span class="price up">313002.34</span>
-              <span class="change up">203.14%</s+pan>
+          <a href="">
+            <div class="card asset-card card mr-3">
+              <div class="row justify-content-around">
+                <span class="short-name">S&P500</span>
+                <span class="long-name">S&P500 Futures</span>
+                <span class="price up">313002.34</span>
+                <span class="change up">203.14%</s+pan>
+              </div>
             </div>
-          </div>
-        </a>
+          </a>
 
-        <a href="">
-          <div class="card asset-card card mr-3">
-            <div class="row justify-content-around">
-              <span class="short-name">S&P500</span>
-              <span class="long-name">S&P500 Futures</span>
-              <span class="price up">313002.34</span>
-              <span class="change up">203.14%</s+pan>
+          <a href="">
+            <div class="card asset-card card mr-3">
+              <div class="row justify-content-around">
+                <span class="short-name">S&P500</span>
+                <span class="long-name">S&P500 Futures</span>
+                <span class="price up">313002.34</span>
+                <span class="change up">203.14%</s+pan>
+              </div>
             </div>
-          </div>
-        </a>
+          </a>
 
-        <a href="">
-          <div class="card asset-card card mr-3">
-            <div class="row justify-content-around">
-              <span class="short-name">S&P500</span>
-              <span class="long-name">S&P500 Futures</span>
-              <span class="price down">313002.34</span>
-              <span class="change down">203.14%</s-pan>
+          <a href="">
+            <div class="card asset-card card mr-3">
+              <div class="row justify-content-around">
+                <span class="short-name">S&P500</span>
+                <span class="long-name">S&P500 Futures</span>
+                <span class="price down">313002.34</span>
+                <span class="change down">203.14%</s-pan>
+              </div>
             </div>
-          </div>
-        </a>
+          </a>
 
-        <a href="">
-          <div class="card asset-card card mr-3">
-            <div class="row justify-content-around">
-              <span class="short-name">S&P500</span>
-              <span class="long-name">S&P500 Futures</span>
-              <span class="price down">313002.34</span>
-              <span class="change down">203.14%</s-pan>
+          <a href="">
+            <div class="card asset-card card mr-3">
+              <div class="row justify-content-around">
+                <span class="short-name">S&P500</span>
+                <span class="long-name">S&P500 Futures</span>
+                <span class="price down">313002.34</span>
+                <span class="change down">203.14%</s-pan>
+              </div>
             </div>
-          </div>
-        </a>
+          </a>
 
-        <a href="">
-          <div class="card asset-card card mr-3">
-            <div class="row justify-content-around">
-              <span class="short-name">S&P500</span>
-              <span class="long-name">S&P500 Futures</span>
-              <span class="price down">313002.34</span>
-              <span class="change down">203.14%</s-pan>
+          <a href="">
+            <div class="card asset-card card mr-3">
+              <div class="row justify-content-around">
+                <span class="short-name">S&P500</span>
+                <span class="long-name">S&P500 Futures</span>
+                <span class="price down">313002.34</span>
+                <span class="change down">203.14%</s-pan>
+              </div>
             </div>
-          </div>
-        </a>
+          </a>
 
         </div>
       </div>
@@ -208,10 +211,7 @@
       <div class="row">
         <!-- Selected Table -->
         <div class="col-lg-6 p-0" id="pr-1">
-          <h2 class="text-white text-align-center ml-0 mb-3"> 
-            <img class="country-flag-lg" src="{% static 'main_app/svg/flags/us.svg' %}" alt="US">
-            United States - Stocks
-          </h2>
+          <h2 class="text-white text-align-center ml-0 mb-3">Stocks</h2>
           <table class="market-table mb-3 table-striped shadow table-hover">
             <thead>
               <tr>
@@ -305,10 +305,10 @@
           <div class="position-absolute card justify-content-center">
             <h4 class="mb-0 text-center w-100">You need an account for personalized tables and many more features.</h4 class="mb-0 text-center w-100">
             <div class="row pt-3">
-              <div class="col-6 text-center">
+              <div class="col-6 text-right">
                 <a href="" class="btn btn-primary btn-wide">Log In</a>
               </div>
-              <div class="col-6 text-center">
+              <div class="col-6 text-left">
                 <a href="" class="btn btn-primary btn-wide">Sign Up</a>
               </div>
             </div>
