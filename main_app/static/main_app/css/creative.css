@@ -9251,7 +9251,7 @@ tbody {
   z-index: 1;
   width: 70%;
   height: 40%;
-  top: calc(50% - 40% / 2 + 66px / 2); /* 66px - for header on top of the table */
+  top: calc(50% - 40% / 2); /* 66px - for header on top of the table */
   left: calc(50% - 70% / 2 + 8px / 2); /* 8px - left padding of the table */
 }
 .bg-blue1 {
