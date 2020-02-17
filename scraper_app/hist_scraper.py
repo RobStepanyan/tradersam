@@ -78,6 +78,8 @@ def collect_for(obj, x, key, value, link):
                 break
             except Exception as e:
                 print_exception(e)
+                if not soup.find(class_='error404') is None:
+                    return
                 sleep(1)
                 pass
 
