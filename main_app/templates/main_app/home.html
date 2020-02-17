@@ -77,7 +77,7 @@
 
         <div class="col-lg-6 p-0 mb-3" id="pr-1">
           <div class="input-group-btn scrolling-wrapper-flexbox" data-toggle="buttons">
-            <label class="btn btn-primary mr-2">
+            <label class="btn btn-primary mr-2 active">
               <input type="radio" name="options" id="all" autocomplete="off" checked>Stocks
             </label>
             <label class="btn btn-primary mr-2">
@@ -234,6 +234,13 @@
                 <td><img class="country-flag-md" src="{% static 'main_app/svg/flags/us.svg' %}" alt="US"></td>
                 <td>AAPL</td>
                 <td>313.45</td>
+                <td class="text-success">+13.24</td>
+                <td><span class="change up">+2.14%</span></td>
+              </tr>
+              <tr>
+                <td><img class="country-flag-md" src="{% static 'main_app/svg/flags/us.svg' %}" alt="US"></td>
+                <td>AAPL</td>
+                <td>313.45</td>
                 <td class="text-danger">-13.24</td>
                 <td><span class="change">-2.14%</span></td>
               </tr>
@@ -286,19 +293,26 @@
                 <td class="text-success">+13.24</td>
                 <td><span class="change up">+2.14%</span></td>
               </tr>
-              <tr>
-                <td><img class="country-flag-md" src="{% static 'main_app/svg/flags/us.svg' %}" alt="US"></td>
-                <td>AAPL</td>
-                <td>313435.45</td>
-                <td class="text-success">+1453.24</td>
-                <td><span class="change up">+245.14%</span></td>
-              </tr>
             </tbody>
           </table>
+          <div class="text-center">
+            <a href="" class="btn btn-primary-dark btn-wide">More</a>
           </div>
-          <div class="col-lg-6 p-0" id="pl-1">
+        </div>
+        <div class="col-lg-6 p-0" id="pl-1">
           <!-- Watchlist Table -->
           <h2 class="text-white text-align-center mb-3"><i class="fas fa-user"></i> Your Watchlist</h2>
+          <div class="position-absolute card justify-content-center">
+            <h4 class="mb-0 text-center w-100">You need an account for personalized tables and many more features.</h4 class="mb-0 text-center w-100">
+            <div class="row pt-3">
+              <div class="col-lg-6 text-center">
+                <a href="" class="btn btn-primary btn-wide">Log In</a>
+              </div>
+              <div class="col-lg-6 text-center">
+                <a href="" class="btn btn-primary btn-wide">Sign Up</a>
+              </div>
+            </div>
+          </div>
           <table class="market-table mb-3 table-striped filter-blur shadow">
             <thead>
               <tr>
