@@ -9247,7 +9247,7 @@ tbody {
 .filter-blur {
   filter: blur(1px);
 }
-#pr-1>h2, #pl-1>h2 {
+#pr-1>h3, #pl-1>h3 {
   height: 41px;
 }
 .btn-wide {
