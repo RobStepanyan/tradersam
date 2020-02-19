@@ -85,15 +85,26 @@ def collect_for(obj, x, key, value, link):
 
 print('Do you want to delete all historical data?')
 inpt = input('(y/n): ')
+types = []
+for value in STATIC_OBJECTS.values():
+    types.append(value['type'])
+
+# Override types list here if needed
+types = ['etf', 'bnd', 'fnd']
+
 if inpt.upper() == 'Y':
     # Deleting old historical data
     for obj in hist_objects.values():
-        obj.objects.all().delete()
+        for type_ in types:
+            obj.objects.filter(Type=type_).delete()
+            print(f'Deleted historical data of {type_}')
     print('Old data has been removed')
 
     start = time.time()
     try:
         for key, value in STATIC_OBJECTS.items():
+            if not value['type'] in types:
+                continue
             if value['type'] == 'crptcrncy':
                 hist_link = '/historical-data'
             else:
