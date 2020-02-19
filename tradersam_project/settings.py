@@ -24,7 +24,6 @@ SECRET_KEY = "%k=1tb=szfko#s@9z8=#0)u&6*e#m)n7vtppaemk0c80^ds*g*"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
 ALLOWED_HOSTS = ['localhost', '144.76.251.245', '.traders.am']
 
 
