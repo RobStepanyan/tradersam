@@ -57,6 +57,7 @@
 
 })(jQuery); // End of use strict
 
+// home.html carousel in market overview section
 $(document).ready(function(){
   $('#market-carousel').slick({
     slidesToShow: 5,
