@@ -1,0 +1,23 @@
+{
+  "name": "tradersam",
+  "version": "1.0.0",
+  "description": "This is the repository containing all the files that are also located at traders.am and **are alive**.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RobStepanyan/tradersam.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RobStepanyan/tradersam/issues"
+  },
+  "homepage": "https://github.com/RobStepanyan/tradersam#readme",
+  "dependencies": {
+    "lightweight-charts": "^1.2.1"
+  }
+}
