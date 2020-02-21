@@ -11,7 +11,8 @@ def print_exception(e):
     """This function takes e from "Exeption as e" and prints the details"""
     exc_type, exc_obj, exc_tb = sys.exc_info()
     fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-    print(f'{exc_type} {e} in {fname} at {exc_tb.tb_lineno}') # printing exception details
+    # print(f'{exc_type} {e} in {fname} at {exc_tb.tb_lineno}') # printing exception details
+    print(f'{fname} at {exc_tb.tb_lineno}')
 
 def validate_price(x):
     """This function return None if the len of passed argument is greater than specified number in the function"""
