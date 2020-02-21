@@ -1,50 +1,9 @@
-import { createChart } from 'lightweight-charts';
+import * as LightweightCharts from '/static/main_app/js/lightweight-charts.esm.development.js';
 
-var chart = createChart(document.body, {
-	width: 600,
-  height: 300,
-	priceScale: {
-		scaleMargins: {
-			top: 0.3,
-			bottom: 0.25,
-		},
-		borderVisible: false,
-	},
-	layout: {
-		backgroundColor: '#131722',
-		textColor: '#d1d4dc',
-	},
-	grid: {Deb
-		vertLines: {
-			color: 'rgba(42, 46, 57, 0)',
-		},
-		horzLines: {
-			color: 'rgba(42, 46, 57, 0.6)',
-		},
-	},
-});
-
-var areaSeries = chart.addAreaSeries({
-	topColor: 'rgba(38,198,218, 0.56)',
-	bottomColor: 'rgba(38,198,218, 0.04)',
-	lineColor: 'rgba(38,198,218, 1)',
-	lineWidth: 2,
-});
-
-var volumeSeries = chart.addHistogramSeries({
-	color: '#26a69a',
-	lineWidth: 2,
-	priceFormat: {
-		type: 'volume',
-	},
-	overlay: true,
-	scaleMargins: {
-		top: 0.8,
-		bottom: 0,
-	},
-});
-
-areaSeries.setData([
+document.getElementById('chart-1').style.position = 'relative';
+var width = 600;
+var height = 300;
+var priceData = [
 	{ time: '2018-10-19', value: 54.90 },
 	{ time: '2018-10-22', value: 54.98 },
 	{ time: '2018-10-23', value: 57.21 },
@@ -195,9 +154,8 @@ areaSeries.setData([
 	{ time: '2019-05-23', value: 58.87 },
 	{ time: '2019-05-24', value: 59.32 },
 	{ time: '2019-05-28', value: 59.57 },
-]);
-
-volumeSeries.setData([
+];
+var volumeData = [
 	{ time: '2018-10-19', value: 19103293.00, color: 'rgba(0, 150, 136, 0.8)' },
 	{ time: '2018-10-22', value: 21737523.00, color: 'rgba(0, 150, 136, 0.8)' },
 	{ time: '2018-10-23', value: 29328713.00, color: 'rgba(0, 150, 136, 0.8)' },
@@ -348,4 +306,222 @@ volumeSeries.setData([
 	{ time: '2019-05-23', value: 11707083.00, color: 'rgba(255,82,82, 0.8)' },
 	{ time: '2019-05-24', value: 8755506.00, color: 'rgba(0, 150, 136, 0.8)' },
 	{ time: '2019-05-28', value: 3097125.00, color: 'rgba(0, 150, 136, 0.8)' },
-]);
+];
+var topColor = 'rgba(33, 150, 243, 0.56)'
+var bottomColor = 'rgba(33, 150, 243, 0.04)'
+var lineColor = 'rgba(33, 150, 243, 1)'
+var lineWidth = 2
+
+// time frames switcher
+function createSimpleSwitcher(items, activeItem, activeItemChangedCallback) {
+	var switcherElement = document.createElement('div');
+	switcherElement.classList.add('switcher');
+
+	var intervalElements = items.map(function(item) {
+		var itemEl = document.createElement('button');
+		itemEl.innerText = item;
+		itemEl.classList.add('switcher-item');
+		itemEl.classList.toggle('switcher-active-item', item === activeItem);
+		itemEl.addEventListener('click', function() {
+			onItemClicked(item);
+		});
+		switcherElement.appendChild(itemEl);
+		return itemEl;
+	});
+
+	function onItemClicked(item) {
+		if (item === activeItem) {
+			return;
+		}
+
+		intervalElements.forEach(function(element, index) {
+			element.classList.toggle('switcher-active-item', items[index] === item);
+		});
+
+		activeItem = item;
+
+		activeItemChangedCallback(item);
+	}
+
+	return switcherElement;
+}
+
+var intervals = ['1D', '1W', '1M', '1Y'];
+var dayData = priceData;
+var weekData = priceData;
+var monthData = priceData;
+var yearData = priceData;
+var seriesesData = new Map([
+	['1D', dayData ],
+	['1W', weekData ],
+	['1M', monthData ],
+	['1Y', yearData ],
+  ]);
+
+var switcherElement = createSimpleSwitcher(intervals, intervals[0], syncToInterval);
+// end of time frame switcher
+
+// chart
+var chartElement = document.createElement('div');
+var chart_1 = LightweightCharts.createChart(chartElement, {
+	width: width,
+  	height: height,
+	priceScale: {
+		scaleMargins: {
+			top: 0.3,
+			bottom: 0.25,
+		},
+		borderVisible: false,
+	},
+	layout: {
+		backgroundColor: '#131722',
+		textColor: '#d1d4dc',
+	},
+	grid: {
+		vertLines: {
+			color: 'rgba(42, 46, 57, 0)',
+		},
+		horzLines: {
+			color: 'rgba(42, 46, 57, 0.6)',
+		},
+	},
+});
+
+// chart - line
+var areaSeries = chart_1.addAreaSeries({
+	topColor: topColor,
+	bottomColor: bottomColor,
+	lineColor: lineColor,
+	lineWidth: lineWidth,
+});
+areaSeries.setData(priceData);
+// end of chart - line
+// chart volume
+var volumeSeries = chart_1.addHistogramSeries({
+	color: '#26a69a',
+	lineWidth: 2,
+	priceFormat: {
+		type: 'volume',
+	},
+	overlay: true,
+	scaleMargins: {
+		top: 0.8,
+		bottom: 0,
+	},
+});
+volumeSeries.setData(volumeData);
+// end of chart - volume
+
+var container = document.getElementById('chart-1')
+container.appendChild(chartElement)
+// end of chart
+
+// time frames switcher
+container.appendChild(switcherElement)
+
+function syncToInterval(interval) {
+	if (areaSeries) {
+		chart_1.removeSeries(areaSeries);
+		areaSeries = null;
+	}
+	areaSeries = chart_1.addAreaSeries({
+	topColor: topColor,
+	bottomColor: bottomColor,
+	lineColor: lineColor,
+	lineWidth: lineWidth,
+	});
+	areaSeries.setData(seriesesData.get(interval));
+}
+
+syncToInterval(intervals[0]);
+// end of time frames switcher
+
+// Go to real-time button
+var btn_width = 27;
+var btn_height = 27;
+
+var button = document.createElement('div');
+button.className = 'go-to-realtime-button';
+button.style.left = (width - btn_width - 60) + 'px';
+button.style.top = (height - btn_height - 30) + 'px';
+button.style.color = '#4c525e';
+button.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14" width="14" height="14"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M6.5 1.5l5 5.5-5 5.5M3 4l2.5 3L3 10"></path></svg>';
+chartElement.appendChild(button);
+
+var timeScale = chart_1.timeScale();
+chart_1.subscribeVisibleTimeRangeChange(function() {
+	var buttonVisible = timeScale.scrollPosition() < 0;
+	button.style.display = buttonVisible ? 'block' : 'none';
+});
+
+button.addEventListener('click', function() {
+	timeScale.scrollToRealTime();
+});
+
+button.addEventListener('mouseover', function() {
+	button.style.background = 'rgba(250, 250, 250, 1)';
+	button.style.color = '#000';
+});
+
+button.addEventListener('mouseout', function() {
+	button.style.background = 'rgba(250, 250, 250, 0.6)';
+	button.style.color = '#4c525e';
+});
+// End of go to real time button
+
+
+
+
+// document.getElementById('chart-2').style.position = 'relative';
+// var container = document.createElement('div');
+// document.getElementById('chart-2').appendChild(container);
+
+// var width = 600;
+// var height = 300;
+
+// var chart_2 = LightweightCharts.createChart(container, {
+// 	width: 600,
+//     height: 300,
+// 	priceScale: {
+// 		scaleMargins: {
+// 			top: 0.3,
+// 			bottom: 0.25,
+// 		},
+// 		borderVisible: false,
+// 	},
+// 	layout: {
+// 		// backgroundColor: '#131722',
+// 		// textColor: '#d1d4dc',
+// 	},
+// 	grid: {
+// 		vertLines: {
+// 			color: 'rgba(255, 255, 255, 1)',
+// 		},
+// 		horzLines: {
+// 			color: 'rgba(215, 215, 215, 0.6)',
+// 		},
+// 	},
+// });
+
+// var areaSeries = chart_2.addAreaSeries({
+// 	topColor: 'rgba(33, 150, 243, 0.56)',
+// 	bottomColor: 'rgba(33, 150, 243, 0.04)',
+// 	lineColor: 'rgba(33, 150, 243, 1)',
+// 	lineWidth: 2,
+// });
+
+// var volumeSeries = chart_2.addHistogramSeries({
+// 	color: '#26a69a',
+// 	lineWidth: 2,
+// 	priceFormat: {
+// 		type: 'volume',
+// 	},
+// 	overlay: true,
+// 	scaleMargins: {
+// 		top: 0.8,
+// 		bottom: 0,
+// 	},
+// });
+
+// areaSeries.setData(priceData);
+// volumeSeries.setData(volumeData);
