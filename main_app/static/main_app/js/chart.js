@@ -5,15 +5,15 @@ $(function(){
 $('#chart').css('position','relative');
 
 var width = $('#chart').width();
-var height = width / 2;
-$(window).on('resize', _.debounce(function() {
-		width = $('#chart').width();
-		height = width / 2;
-		console.log('changed')
-		
-		$('#chart').empty(); // remove old chart
-		createChart();
-	}, 250));
+var height = width / 2
+
+$(window).on('resize', function() {
+	width = $('#chart').width();
+	height = width / 2
+
+	$('#chart').empty(); // remove old chart
+	createChart();
+});
 
 var priceData = [
 	{ time: '2018-10-19', value: 54.90 },
