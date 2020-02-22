@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/RobStepanyan/tradersam#readme",
   "dependencies": {
-    "lightweight-charts": "^1.2.1"
+    "lightweight-charts": "^1.2.1",
+    "underscore": "^1.9.2"
   }
 }
