@@ -2,16 +2,16 @@ import * as LightweightCharts from '/static/main_app/js/lightweight-charts.esm.d
 
 $(function(){
   
-$('#chart-1').css('position','relative');
+$('#chart').css('position','relative');
 
-var width = $('#chart-1').width();
+var width = $('#chart').width();
 var height = width / 2;
 $(window).on('resize', _.debounce(function() {
-		width = $('#chart-1').width();
+		width = $('#chart').width();
 		height = width / 2;
 		console.log('changed')
 		
-		$('#chart-1').empty(); // remove old chart
+		$('#chart').empty(); // remove old chart
 		createChart();
 	}, 250));
 
@@ -403,7 +403,7 @@ function createChart() {
 	});
 
 	// Find appropriate div
-	var container = $('#chart-1');
+	var container = $('#chart');
 	container.append(chartElement);
 
 	// chart - line
