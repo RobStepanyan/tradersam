@@ -8,9 +8,6 @@ def asset_details(request):
 def news_details(request):
     return render(request, 'main_app/news_details.html')
 
-def chart(request):
-    return render(request, 'main_app/chart.html')
-
 def csoon(request):
     return render(request, 'main_app/comingsoon.html')
 
