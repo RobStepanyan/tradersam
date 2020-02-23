@@ -60,6 +60,9 @@ def collect_for(obj, x, key, value, link):
                     else:
                         date = datetime.datetime.strptime(data[0], '%b %d, %Y')
                     price = validate_price(data[1])
+                    Open = validate_price(data[2])
+                    high = validate_price(data[3])
+                    low = validate_price(data[4])
                     if value['type'] in 'crncybndfnd':
                         volume = None
                     else:
@@ -73,6 +76,9 @@ def collect_for(obj, x, key, value, link):
                         link=link,
                         date=date, 
                         price=price,
+                        Open=Open,
+                        high=high,
+                        low=low,
                         volume=volume).save()
                 print(f'({key}) Stored {short_name} {data_age} {x}/{quanity}')
                 break
@@ -90,7 +96,7 @@ for value in STATIC_OBJECTS.values():
     types.append(value['type'])
 
 # Override types list here if needed
-types = ['etf', 'bnd', 'fnd']
+# types = ['etf', 'bnd', 'fnd']
 
 if inpt.upper() == 'Y':
     # Deleting old historical data
