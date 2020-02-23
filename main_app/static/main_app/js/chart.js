@@ -5,11 +5,20 @@ $(function(){
 $('#chart').css('position','relative');
 
 var width = $('#chart').width();
-var height = width / 2
+if (width < 576) {
+	var height = width * 1.2
+} else {
+	var height = width / 2
+};
+
 
 $(window).on('resize', function() {
 	width = $('#chart').width();
-	height = width / 2
+	if (width < 576) {
+		height = width * 1.2
+	} else {
+		height = width / 2
+	};
 
 	$('#chart').empty(); // remove old chart
 	createChart();
