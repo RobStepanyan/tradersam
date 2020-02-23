@@ -875,6 +875,9 @@ class AllAssetsHistoricalMax(models.Model):
 
     date = models.DateField(default=None, null=True)
     price = models.CharField(max_length=12, default=None, null=True)
+    Open = models.CharField(max_length=12, default=None, null=True)
+    high = models.CharField(max_length=12, default=None, null=True)
+    low = models.CharField(max_length=12, default=None, null=True)
     volume = models.CharField(max_length=12, default=None, null=True)
 
     def __str__(self):
@@ -891,6 +894,9 @@ class AllAssetsHistorical5Y(models.Model):
     
     date = models.DateField(default=None, null=True)
     price = models.CharField(max_length=12, default=None, null=True)
+    Open = models.CharField(max_length=12, default=None, null=True)
+    high = models.CharField(max_length=12, default=None, null=True)
+    low = models.CharField(max_length=12, default=None, null=True)
     volume = models.CharField(max_length=12, default=None, null=True)
     
     def __str__(self):
@@ -907,6 +913,9 @@ class AllAssetsHistorical1Y(models.Model):
     
     date = models.DateField(default=None, null=True)
     price = models.CharField(max_length=12, default=None, null=True)
+    Open = models.CharField(max_length=12, default=None, null=True)
+    high = models.CharField(max_length=12, default=None, null=True)
+    low = models.CharField(max_length=12, default=None, null=True)
     volume = models.CharField(max_length=12, default=None, null=True)
     
     def __str__(self):
@@ -923,6 +932,9 @@ class AllAssetsHistorical6M1M(models.Model):
     
     date = models.DateField(default=None, null=True)
     price = models.CharField(max_length=12, default=None, null=True)
+    Open = models.CharField(max_length=12, default=None, null=True)
+    high = models.CharField(max_length=12, default=None, null=True)
+    low = models.CharField(max_length=12, default=None, null=True)
     volume = models.CharField(max_length=12, default=None, null=True)
     
     def __str__(self):
@@ -939,6 +951,9 @@ class AllAssetsHistorical5D(models.Model):
 
     date = models.DateTimeField(default=None, null=True)
     price = models.CharField(max_length=12, default=None, null=True)
+    Open = models.CharField(max_length=12, default=None, null=True)
+    high = models.CharField(max_length=12, default=None, null=True)
+    low = models.CharField(max_length=12, default=None, null=True)
     volume = models.CharField(max_length=12, default=None, null=True)
 
     def __str__(self):
@@ -955,6 +970,9 @@ class AllAssetsHistorical1D(models.Model):
 
     date = models.DateTimeField(default=None, null=True)
     price = models.CharField(max_length=12, default=None, null=True)
+    Open = models.CharField(max_length=12, default=None, null=True)
+    high = models.CharField(max_length=12, default=None, null=True)
+    low = models.CharField(max_length=12, default=None, null=True)
     volume = models.CharField(max_length=12, default=None, null=True)
 
     def __str__(self):
