@@ -45,8 +45,8 @@ def collect_for(obj, x, key, value, link):
                         table = soup.find(class_='genTbl closedTbl historicalTbl')
                         trs = table.tbody.find_all('tr')
                         break
-                    except Exception as e:
-                        print_exception(e)
+                    except:
+                        print('Waiting...')
                         sleep(1)
                 
                 for row in trs:
@@ -139,6 +139,7 @@ if inpt.upper() == 'Y':
             for chunk in thread_chunks:
                 for thread in chunk:
                     thread.start()
+                    sleep(1) # to avoid selenium session id error
                 for thread in chunk:
                     thread.join()
                 print(f'({key}) Executed Chunk {i}/{chunks_n}')           
