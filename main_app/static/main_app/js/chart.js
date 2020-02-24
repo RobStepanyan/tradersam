@@ -1,27 +1,31 @@
 import * as LightweightCharts from '/static/main_app/js/lightweight-charts.esm.development.js';
 
 $(function(){
-  
-$('#chart').css('position','relative');
+var container = $('#chart');
+container.css('position','relative');
 
 var width = $('#chart').width();
 if (width < 576) {
 	var height = width * 1.2
 } else {
-	var height = width / 2
+	var height = $(window).height() - $('#asset-header').height() - 48
 };
-
 
 $(window).on('resize', function() {
 	width = $('#chart').width();
 	if (width < 576) {
 		height = width * 1.2
 	} else {
-		height = width / 2
+		height = $(window).height() - $('#asset-header').height() - 48
 	};
 
 	$('#chart').empty(); // remove old chart
-	createChart();
+	if ($('#switch').is(':checked')) {
+		createChart();
+	} else {
+		createChart('light');
+	};
+	
 });
 
 var priceData = [
@@ -328,15 +332,38 @@ var volumeData = [
 	{ time: '2019-05-24', value: 8755506.00, color: 'rgba(0, 150, 136, 0.8)' },
 	{ time: '2019-05-28', value: 3097125.00, color: 'rgba(0, 150, 136, 0.8)' },
 ];
-var topColor = 'rgba(33, 150, 243, 0.56)'
-var bottomColor = 'rgba(33, 150, 243, 0.04)'
-var lineColor = 'rgba(33, 150, 243, 1)'
-var lineWidth = 2
 
-createChart();
-function createChart() {
-	// chart - dark mode, line chart, volume bars, go to live btn, time frames switcher
 
+var currentTheme = localStorage.getItem('theme') ? localStorage.getItem('theme') : null;
+if (currentTheme) {
+	createChart(currentTheme);
+} else {
+	createChart();
+};
+if (currentTheme == 'dark') {
+	$('#switch').prop("checked", true);
+};
+
+function createChart(color='dark') {
+	// chart - line chart, volume bars, go to live btn, time frames switcher
+	var lineWidth = 2
+	if (color == 'dark') {
+		var backgroundColor = '#131722';
+		var textColor = '#d1d4dc';
+		var vertColor = 'rgba(42, 46, 57, 0.2)';
+		var horzColor = 'rgba(42, 46, 57, 0.6)';
+		var topColor = 'rgba(38,198,218, 0.56)';
+		var bottomColor = 'rgba(38,198,218, 0.04)';
+		var lineColor = 'rgba(38,198,218, 1)';
+	} else {
+		var vertColor = 'rgba(255, 255, 255, 0.2)';
+		var horzColor = 'rgba(215, 215, 215, 0.6)';
+		var topColor ='rgba(33, 150, 243, 0.56)';
+		var bottomColor ='rgba(33, 150, 243, 0.04)';
+		var lineColor ='rgba(33, 150, 243, 1)';
+	};
+		
+	
 	// time frames switcher
 	function createSimpleSwitcher(items, activeItem, activeItemChangedCallback) {
 		var switcherElement = document.createElement('div');
@@ -385,34 +412,57 @@ function createChart() {
 
 	var switcherElement = createSimpleSwitcher(intervals, intervals[0], syncToInterval);
 	// end of time frame switcher
-
+	
 	var chartElement = document.createElement('div');
-	var chart = LightweightCharts.createChart(chartElement, {
-		width: width,
-		height:  height,
-		priceScale: {
-			scaleMargins: {
-				top: 0.3,
-				bottom: 0.25,
+	if (color == 'dark') {
+		var chart = LightweightCharts.createChart(chartElement, {
+			width: width,
+			height:  height,
+			priceScale: {
+				scaleMargins: {
+					top: 0.3,
+					bottom: 0.25,
+				},
+				borderVisible: false,
 			},
-			borderVisible: false,
-		},
-		layout: {
-			backgroundColor: '#131722',
-			textColor: '#d1d4dc',
-		},
-		grid: {
-			vertLines: {
-				color: 'rgba(42, 46, 57, 0)',
+			layout: {
+				backgroundColor: backgroundColor,
+				textColor: textColor,
 			},
-			horzLines: {
-				color: 'rgba(42, 46, 57, 0.6)',
+			grid: {
+				vertLines: {
+					color: vertColor,
+				},
+				horzLines: {
+					color: horzColor,
+				},
 			},
-		},
-	});
-
-	// Find appropriate div
-	var container = $('#chart');
+		});
+	} else {
+		var chart = LightweightCharts.createChart(chartElement, {
+			width: width,
+			height: height,
+			priceScale: {
+				scaleMargins: {
+					top: 0.3,
+					bottom: 0.25,
+				},
+				borderVisible: false,
+			},
+			layout: {
+				backgroundColor: backgroundColor,
+				textColor: textColor,
+			},
+			grid: {
+				vertLines: {
+					color: vertColor,
+				},
+				horzLines: {
+					color: horzColor,
+				},
+			},
+		});	
+	};
 	container.append(chartElement);
 
 	// chart - line
@@ -493,62 +543,20 @@ function createChart() {
 		button.style.color = '#4c525e';
 	});
 	// End of go to real time button
-}; // Create chart
+}; // End of create chart
+
+function switchTheme() {
+	if ($('#switch').is(':checked')) {
+		$('#chart').empty();
+		createChart();
+		localStorage.setItem('theme', 'dark');
+	}
+    else {
+		$('#chart').empty();
+		createChart('light');
+		localStorage.setItem('theme', 'light');
+    }    
+}
+$('#switch').on('click', switchTheme);
 }); // jQuery
 
-
-
-
-// document.getElementById('chart-2').style.position = 'relative';
-// var container = document.createElement('div');
-// document.getElementById('chart-2').appendChild(container);
-
-// var width = 600;
-// var height = 300;
-
-// var chart_2 = LightweightCharts.createChart(container, {
-// 	width: 600,
-//     height: 300,
-// 	priceScale: {
-// 		scaleMargins: {
-// 			top: 0.3,
-// 			bottom: 0.25,
-// 		},
-// 		borderVisible: false,
-// 	},
-// 	layout: {
-// 		// backgroundColor: '#131722',
-// 		// textColor: '#d1d4dc',
-// 	},
-// 	grid: {
-// 		vertLines: {
-// 			color: 'rgba(255, 255, 255, 1)',
-// 		},
-// 		horzLines: {
-// 			color: 'rgba(215, 215, 215, 0.6)',
-// 		},
-// 	},
-// });
-
-// var areaSeries = chart_2.addAreaSeries({
-// 	topColor: 'rgba(33, 150, 243, 0.56)',
-// 	bottomColor: 'rgba(33, 150, 243, 0.04)',
-// 	lineColor: 'rgba(33, 150, 243, 1)',
-// 	lineWidth: 2,
-// });
-
-// var volumeSeries = chart_2.addHistogramSeries({
-// 	color: '#26a69a',
-// 	lineWidth: 2,
-// 	priceFormat: {
-// 		type: 'volume',
-// 	},
-// 	overlay: true,
-// 	scaleMargins: {
-// 		top: 0.8,
-// 		bottom: 0,
-// 	},
-// });
-
-// areaSeries.setData(priceData);
-// volumeSeries.setData(volumeData);
