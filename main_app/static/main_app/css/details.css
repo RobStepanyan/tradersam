@@ -51,6 +51,26 @@
 	padding-top: calc(72px + 50px);
 	padding-bottom: 50px;
 }
+#asset-header .text-success,
+#asset-header .text-danger {
+	font-size: 1.75rem;
+}
+#asset-header i.text-gray-5 {
+	font-size: 0.9rem;
+}
+@media (max-width: 576px) {
+	#asset-header .btn-wide {
+		margin-top: 16px;
+	}
+}
+#chart {
+	padding: 16px;
+	background: var(--gray1);
+	border: 1px solid var(--gray2);
+	border-radius: 0.5rem;
+	-webkit-box-shadow: 0 .5rem 0.5rem rgba(0, 0, 0, .3);
+	box-shadow:  0 .5rem 0.5rem rgba(0, 0, 0, .3);
+}
 .text-gray-5 {
 	color: var(--gray5);
 }
