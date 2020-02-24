@@ -9299,3 +9299,6 @@ tbody {
   -webkit-box-shadow: none;
   box-shadow: none;
 } 
+.text-gray-5 {
+	color: var(--gray5);
+}

@@ -26,6 +26,7 @@ hist_objects = {
 
 def collect_for(obj, x, key, value, link):
     driver.get(link)
+    attempt = 1
     for data_age in data_ages:
         while True:
             try: 
@@ -92,6 +93,11 @@ def collect_for(obj, x, key, value, link):
                     driver.get(driver.current_url + hist_link)
                 if not soup.find(class_='error404') is None:
                     return
+                    if attempt > 10:
+                        driver.get(link)
+                        attempt = 1
+                    else:
+                        attempt += 1
                 sleep(1)
                 pass
 

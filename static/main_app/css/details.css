@@ -3,36 +3,32 @@
 	align-items: center;
 	height: 30px;
 	margin-top: 8px;
-	color: #2196F3;
+	color: #FFF;
 }
-
 .switcher-item {
 	cursor: pointer;
 	text-decoration: none;
 	display: inline-block;
 	padding: 6px 8px;
 	font-size: 14px;
-	color: #262b3e;
+	color: #FFF;
 	background-color: transparent;
 	margin-right: 8px;
 	border: none;
 	border-radius: 4px;
 	outline: none;
 }
-
 .switcher-item:hover {
-	background-color: #f2f3f5;
+	background-color: #FFF;
+	color: #000;
 }
-
 .switcher-active-item {
 	text-decoration: none;
 	cursor: default;
-	color: #262b3e;
+	color: #000;
 }
-
-.switcher-active-item,
-.switcher-active-item:hover {
-	background-color: #e1eff9;
+.switcher-active-item {
+	background-color: var(--gray5);
 }
 
 .go-to-realtime-button {
@@ -52,6 +48,7 @@
 }
 
 #asset-header .container {
-	padding-top: calc(72px + 100px);
+	padding-top: calc(72px + 50px);
 	padding-bottom: 50px;
 }
+
