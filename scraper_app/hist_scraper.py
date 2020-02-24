@@ -100,9 +100,12 @@ inpt = input('(y/n): ')
 types = []
 for value in STATIC_OBJECTS.values():
     types.append(value['type'])
+types = list(set(types))
 
+# Complete list to delete and collect historical data for
 # Override types list here if needed
-# types = ['etf', 'bnd', 'fnd']
+# ['cmdty', 'crncy', 'crptcrncy', 'stck', 'indx', 'etf', 'bnd', 'fnd']
+types = ['crptcrncy', 'stck', 'indx', 'etf', 'bnd', 'fnd']
 
 if inpt.upper() == 'Y':
     # Deleting old historical data
