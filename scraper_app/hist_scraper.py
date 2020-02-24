@@ -84,6 +84,12 @@ def collect_for(obj, x, key, value, link):
                 break
             except Exception as e:
                 print_exception(e)
+                if not 'historical-data' in driver.current_url:
+                    if value['type'] == 'crptcrncy':
+                        hist_link = '/historical-data'
+                    else:
+                        hist_link = '-historical-data'
+                    driver.get(driver.current_url + hist_link)
                 if not soup.find(class_='error404') is None:
                     return
                 sleep(1)
@@ -103,7 +109,7 @@ if inpt.upper() == 'Y':
     for obj in hist_objects.values():
         for type_ in types:
             obj.objects.filter(Type=type_).delete()
-            print(f'Deleted historical data of {type_}')
+            print(f'Deleted historical data of {type_} in {obj}')
     print('Old data has been removed')
 
     start = time.time()
@@ -133,7 +139,7 @@ if inpt.upper() == 'Y':
                     link += hist_link
                 threads.append(Thread(target=collect_for, args=(obj, x, key, value, link)))
             print(f'({key}) Threads are ready!')
-            thread_chunks = list(chunks(threads, 3))
+            thread_chunks = list(chunks(threads, 2))
             i = 1
             chunks_n = len(thread_chunks) 
             for chunk in thread_chunks:
