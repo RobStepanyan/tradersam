@@ -9150,15 +9150,10 @@ tbody {
 .text-primary-dark {
   color: var(--blue1)!important;
 }
-
-@media (max-width:992px){
-  #sec-det-header {
-    margin-top: 24px!important;
-  }
-}
 .asset-card {
   /* Also use .card */
-  width: 200px;
+  min-width: 150px;
+  max-width: 210px;
   padding: 8px;
   font-weight: bold;
 }
