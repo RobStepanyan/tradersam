@@ -945,7 +945,6 @@ class AllAssetsHistorical6M1M(models.Model):
 
 class AllAssetsHistorical5D(models.Model):
     Type = models.CharField(choices=TYPES, max_length=9)
-    short_name = models.CharField(max_length=16) 
     link = models.URLField(null=True)
 
     date = models.DateTimeField(default=None, null=True)
