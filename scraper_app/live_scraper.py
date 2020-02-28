@@ -1,4 +1,4 @@
-import requests, datetime, pytz, time
+import requests, datetime, pytz, time, weakref
 from django.utils.timezone import make_aware
 from bs4 import BeautifulSoup
 from time import sleep
@@ -7,137 +7,96 @@ from .scraper_data import STATIC_OBJECTS, TABLE_LINKS
 from . import models
 
 
-def init_selenium_tabs(driver, selenium_dct):
-    # Opening a new driver
-    def load_tab(driver, title, object_, type_, link, table_class):
-        print(f'{title}: Visiting the Table')
-        print(f'{title}: Waiting the page to load')
-        driver.get(link) # visit the link
-        if 'Stock' in title:
+class CollectLive:
+    instances = []
+
+    def get_tabs(self):
+        global driver
+        tabs = driver.window_handles[::-1]
+        return tabs
+
+    def __init__(self, key, value):
+        self.__class__.instances.append(weakref.proxy(self))
+        self.title = key
+        self.object_ = value['object']
+        self.type_ = value['type']
+        self.link = value['link']
+        self.table_class = value['table class']
+        self.before_fields = value['before live fields']
+        self.live_fields = value['live fields']
+        self.after_fields = value['after live fields']
+        self.no = list(STATIC_OBJECTS.keys()).index(self.title)
+        tabs = CollectLive.get_tabs(self)
+        self.tab = tabs[self.no]
+        CollectLive.init_tab(self)
+
+    def init_tab(self):
+        driver.switch_to.window(self.tab)
+        print(f'{self.title}: Initializating the Table')
+        print(f'{self.title}: Waiting the page to load')
+        driver.get(self.link) # visit the link
+        if 'Stock' in self.title:
             print('Executing JS scripts')
             driver.execute_script('$("#stocksFilter").val("#all");')
             driver.execute_script("doStocksFilter('select',this)")
             print('Executed JS scripts')
+        if 'Crypto' in self.title:
+            desired_quanity = BeautifulSoup(driver.page_source, 'html.parser')
+            desired_quanity = desired_quanity.find('span', text='Number of Currencies')
+            desired_quanity = int(desired_quanity.find_next_sibling().get_text().replace(',', ''))
+        else:
+            desired_quanity = self.object_.objects.count()
         while True:
             try:
                 page_source = driver.page_source
                 soup = BeautifulSoup(page_source, 'html.parser')
-                table = soup.find('table', class_=table_class)
-                if len(table.find_all('tr')) < object_.objects.count():
+                table = soup.find('table', class_=self.table_class)
+                if len(table.find_all('tr')) < desired_quanity:
+                    print(f'{self.title}: Waiting more...')
+                    sleep(1)
                     continue
                 break
-            except Exception as e: 
-                print_exception(e)
+            except AttributeError:
                 sleep(1)
 
-    start = time.time()
-    for _ in range(len(selenium_dct)-1):
-        driver.execute_script("window.open('', '_blank')")
-    for key, value in selenium_dct.items():
-        i = list(selenium_dct.keys()).index(key)
-        driver.switch_to.window(driver.window_handles[i])
-        load_tab(driver, key, value['object'], value['type'], value['link'], value['table class'])
+        print(f'{self.title}: Tab is initializated!')
     
-    print('Selenium Tabs are ready!')
-    print(f'Init Selenium Tabs: {time.time() - start}')
 
-def loop_selenium_tabs(driver):
-    start = time.time()
-    for tab in driver.window_handles:
-        driver.switch_to.window(tab)
-        print(driver.current_url)
-        title = [key for key, value in TABLE_LINKS.items() if value == driver.current_url][0]
-        table_class = STATIC_OBJECTS[title]['table class']
-        while True:
-            try:
-                soup = BeautifulSoup(driver.page_source, 'html.parser')
-                table = soup.find('table', class_=table_class)
-                print(len(table.find_all('tr')))
-                break
-            except Exception as e: 
-                print_exception(e)
-                sleep(1)
-    print(f'Loop Selnium Tabs: {time.time()-start}')
-
+        
 # from scraper_app import live_scraper
 # Logic of current module
-# init selenium tabs
-# loop and collect live data
+# 1. init selenium tabs
+# 2. loop and collect live data
+# 3. Check condition
+# 4. Call appropriate function
+# 5. Repeat
 
-# 1. Visit the link
-# 2. Check condition
-# 3. Call appropriate function
-# 4. Repeat
+#  Create driver and tabs
 driver = vps_selenium_setup()
 print('Driver is ready!')
+for _ in range(len(STATIC_OBJECTS)-1): # -1 because 1 is creted automatically
+    driver.execute_script("window.open('', '_blank')")
+print(f'x{len(STATIC_OBJECTS)} blank tabs are ready!')
+
+# Main program
 try:
-    results = []
-    start = time.time()
-    
-    init_selenium_tabs(driver, STATIC_OBJECTS)
-    results.append(time.time() - start)
-    
-    for _ in range(3):
-        start = time.time()
-        loop_selenium_tabs(driver)
-        results.append(time.time()-start)
-    print(results)
+    for key, value in STATIC_OBJECTS.items():
+        CollectLive(key=key, value=value)
 finally:
+    # for instance in CollectLive.instances:
+    #     del instance
+    # print('Instances are removed!')
     driver.quit()
     print('Driver is closed!')
 
 
-    
-     
-# short_names = object_.objects.values_list('short_name') # [(,), (.)]
-# short_names = [item[0] for item in short_names] # [, , ,]
-# while True:
-#     try:
-#         soup = BeautifulSoup(driver.page_source, 'html.parser')
-#         table = soup.find_all('table', class_=table_class)
-#         print(f'{title}: {table.find_all('tr')[-1]}')
-#         for tr in table.find_all('tr')[0]:
-#             for td in tr.find_all('td'):
-#                 td.get_text()
-#                 print(td)
-#             tds = []
-#             for td in tr.find_all('td')[1:-1]:
-#                 tds.append(td.get_text())
-#             if not tds[0] in short_names:
-#                 print(f'SKIPED ROW: {tds[0]}')
-#                 continue # skip row 
-#             link = 'https://www.investing.com' + tr.find_all('td')[1].a['href']
-#             time_icon = tr.find_all('td')[-1].span['class'][0]
-#             now = make_aware(datetime.datetime.now())
-#             time_icons.append(time_icon)
-#         print(f'{title}: table is updated ({datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")})')
-#         break
-#     except Exception as e:
-#         print_exception(e)
-#         print(f'{title}: Waiting more')
-#         sleep(1)
 
 
 
-# def commodities():
-#     """  
-#     If the market is closed (redClockIcon) then collect "after live"
-    
-#     If the market is open (greenClockIcon) then collect "live data" and every 1 minutes pass 
-#     it to "historical 1D", every 5m to "historical 5D",  then check whether "before live data" for
-#     the last "live data" day is collected
-#     """
-#     #----------------- ---VPS------------------
-#     driver = vps_selenium_setup()
-#     #-----------------------------------------
-#     print('Commodities: driver is ready')
-#     url = 'link': TABLE_LINKS['Commodities']
-#     driver.get(url)
-#     print('Commodities: table\'s link is visited')
-#     c_list = models.CommodityStaticInfo.objects.values_list('short_name') # [(,), (.)]
-#     c_list = [item[0] for item in c_list] # [, , ,]
-#     try:
-#         while True:
+
+
+
+
 #             print('Commodities: waiting...')
 #             soup = BeautifulSoup(driver.page_source, 'html.parser')
 #             table = soup.find('table', class_='genTbl closedTbl crossRatesTbl').tbody
