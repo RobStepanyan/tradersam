@@ -3,7 +3,7 @@ from django.utils.timezone import make_aware
 from bs4 import BeautifulSoup
 from time import sleep
 from .scraper_functions import *
-from .scraper_data import STATIC_OBJECTS
+from .scraper_data import STATIC_OBJECTS, TABLE_LINKS
 from . import models
 
 
