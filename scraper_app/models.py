@@ -64,7 +64,7 @@ Types = [i for j in TYPES for i in j]
 
 class CommodityStaticInfo(models.Model):
     fields_to_scrape = (
-        'Contract Size', 'Tick Size', 'Tick Value', 'Base Symbol', 'Point Value', 'Months')
+        'Contract Size', 'Tick Size', 'Tick Value', 'Base Symbol', 'Point Value')
     
     Type = models.CharField(choices=TYPES, max_length=9, default='cmdty')
     short_name = models.CharField(max_length=16)
@@ -77,7 +77,6 @@ class CommodityStaticInfo(models.Model):
     settlement_type = models.CharField(default='Physical', max_length=30)
     tick_size = models.CharField(max_length=30)
     tick_value = models.CharField(max_length=30)
-    months = models.CharField(max_length=30)
     point_value = models.CharField(max_length=20)
     unit = models.CharField(max_length=15, null=True)
     link = models.URLField()
@@ -1003,17 +1002,20 @@ class AllAssetsLive(models.Model):
     short_name = models.CharField(max_length=16) 
     link = models.URLField(null=True)
     
-    month = models.DateField(default=None, null=True)
     last_price = models.CharField(max_length=15, null=True)
     last_price_time = models.CharField(max_length=10, null=True)
+    month = models.DateField(default=None, null=True)
+    Open = models.CharField(default=None, null=True, max_length=15)
     high = models.CharField(max_length=15, null=True)
     low = models.CharField(max_length=15, null=True)
     change = models.CharField(max_length=15, null=True)
+    change_7d = models.CharField(default=None, null=True, max_length=15)
     change_perc = models.CharField(max_length=12, null=True)
     volume = models.CharField(max_length=12, default=None, null=True)
-    @property
-    def day_range(self):
-        return f'{self.low}-{self.high}'
+    market_cap = models.CharField(default=None, null=True, max_length=15) # for crypto
+    Yield = models.CharField(default=None, null=True, max_length=15)
+    total_vol = models.CharField(default=None, null=True, max_length=15)
+    total_assets = models.CharField(default=None, null=True, max_length=15)
 
     def __str__(self):
         return f'({Types[Types.index(self.Type)+1]}) {self.short_name} in {self.date.year} {self.date.strftime("%B")}'
@@ -1028,11 +1030,42 @@ class AllAssetsAfterLive(models.Model):
     link = models.URLField(null=True)
     
     date = models.DateField(default=None, null=True)
-    one_year_rng = models.CharField(max_length=30)
-    one_year_chg = models.CharField(max_length=12)
-    months = models.CharField(max_length=15)
-    settlement_day = models.DateField(default=None, null=True)
+    
+    pe_ratio = models.CharField(default=None, null=True, max_length=15)
+    coupon = models.CharField(default=None, null=True, max_length=15)
+    div_yield = models.CharField(default=None, null=True, max_length=15)
+    shrs_outstndng = models.CharField(default=None, null=True, max_length=15)
+    avg_vol_3m = models.CharField(default=None, null=True, max_length=15)
+    beta = models.CharField(default=None, null=True, max_length=15)
+    next_earn_date = models.DateField(default=None, null=True)
+    max_supply = models.CharField(default=None, null=True, max_length=15)
+    volume = models.CharField(default=None, null=True, max_length=15)
+    div_ttm = models.CharField(default=None, null=True, max_length=15)
+    price_rng = models.CharField(default=None, null=True, max_length=30) # for bonds
+    roe = models.CharField(default=None, null=True, max_length=15)
+    market_cap = models.CharField(default=None, null=True, max_length=15)
+    rating = models.CharField(default=None, null=True, max_length=5)
+    maturity_date = models.DateField(default=None, null=True)
+    total_assets = models.CharField(default=None, null=True, max_length=15)
+    ttm_yield = models.CharField(default=None, null=True, max_length=15)
+    rng_52_wk = models.CharField(default=None, null=True, max_length=15)
+    revenue = models.CharField(default=None, null=True, max_length=15)
+    div_and_yield = models.CharField(default=None, null=True, max_length=15)
+    one_year_chg = models.CharField(default=None, null=True, max_length=15)
+    price_opn = models.CharField(default=None, null=True, max_length=15) #bonds
+    roa = models.CharField(default=None, null=True, max_length=15)
+    price = models.CharField(default=None, null=True, max_length=15) # bonds
+    turnover = models.CharField(default=None, null=True, max_length=15)
+    days_rng = models.CharField(default=None, null=True, max_length=30)
+    expenses = models.CharField(default=None, null=True, max_length=15)
+    roi_ttm = models.CharField(default=None, null=True, max_length=15)
+    circ_supply = models.CharField(default=None, null=True, max_length=15)
+    risk_rating = models.CharField(default=None, null=True, max_length=5)
     last_roll_day = models.DateField(default=None, null=True)
+    months = models.CharField(default=None, null=True, max_length=15)
+    settlement_day = models.DateField(default=None, null=True)
+    asset_class = models.CharField(default=None, null=True, max_length=15)
+    eps = models.CharField(default=None, null=True, max_length=15)
 
     def __str__(self):
         return f'({Types[Types.index(self.Type)+1]}) {self.short_name} in {self.date.year} {self.date.strftime("%B")}'
