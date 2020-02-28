@@ -9,7 +9,7 @@ from . import models
 
 def init_selenium_tabs(driver, selenium_dct):
     # Opening a new driver
-    def work(driver, title, object_, type_, link, table_class):
+    def load_tab(driver, title, object_, type_, link, table_class):
         print(f'{title}: Visiting the Table')
         print(f'{title}: Waiting the page to load')
         driver.get(link) # visit the link
@@ -17,7 +17,7 @@ def init_selenium_tabs(driver, selenium_dct):
             print('Executing JS scripts')
             driver.execute_script('$("#stocksFilter").val("#all");')
             driver.execute_script("doStocksFilter('select',this)")
-            print('Executed JS scripts, sleeping for 15 seconds')
+            print('Executed JS scripts')
         while True:
             try:
                 page_source = driver.page_source
@@ -29,7 +29,6 @@ def init_selenium_tabs(driver, selenium_dct):
             except Exception as e: 
                 print_exception(e)
                 sleep(1)
-        return driver
 
     start = time.time()
     for _ in range(len(selenium_dct)-1):
@@ -37,7 +36,7 @@ def init_selenium_tabs(driver, selenium_dct):
     for key, value in selenium_dct.items():
         i = list(selenium_dct.keys()).index(key)
         driver.switch_to.window(driver.window_handles[i])
-        work(driver, key, value['object'], value['type'], value['link'], value['table class'])
+        load_tab(driver, key, value['object'], value['type'], value['link'], value['table class'])
     
     print('Selenium Tabs are ready!')
     print(f'Init Selenium Tabs: {time.time() - start}')
@@ -53,7 +52,6 @@ def loop_selenium_tabs(driver):
             try:
                 soup = BeautifulSoup(driver.page_source, 'html.parser')
                 table = soup.find('table', class_=table_class)
-                # print('The page have been loaded!')
                 print(len(table.find_all('tr')))
                 break
             except Exception as e: 
@@ -61,47 +59,10 @@ def loop_selenium_tabs(driver):
                 sleep(1)
     print(f'Loop Selnium Tabs: {time.time()-start}')
 
-header  ={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) CArome/51.0.2704.106 Safari/537.36 OPR/38.0.2220.41'}
-def non_selenium_requests(non_selenium_dct):
-    # Send a request
-    def work(title, object_, type_, link, table_class):
-        print(f'{title}: Visiting the Table')
-        req = requests.get(link, headers=header)
-        print(f'{title}: Waiting the page to load')
-        soup = BeautifulSoup(req.text, 'html.parser')
-        table = soup.find('table', class_=table_class)
-        len_table = len(table.find_all('tr'))
-        print(f'{len_table}/{object_.objects.count()}')
-
-    dct_chnks = dct_chunks(non_selenium_dct, 3)
-    start = time.time()
-    for chunk in dct_chnks:
-        threads = []
-        for pair in chunk:
-            key, value = pair[0], pair[1]
-            threads.append(
-                Thread(target=work, args=(key, value['object'], value['type'], value['link'], value['table class'])))
-        for thread in threads:
-            thread.start()
-        for thread in threads:
-            thread.join()
-    print(f'Non-Selenium Requests: {time.time()-start}')
-
-def seperate_dct(dct):
-    selenium_dct, non_selenium_dct = {}, {}
-    for key, value in dct.items():
-        if 'Stock' in key:
-            selenium_dct[key] = value
-        else:
-            non_selenium_dct[key] = value
-    return selenium_dct, non_selenium_dct
-
-
-# from scraper_app import live_scraper as l
+# from scraper_app import live_scraper
 # Logic of current module
-# init
-# open stocks' tabs with selenium and execute js scripts
-# others are visited with request.get
+# init selenium tabs
+# loop and collect live data
 
 # 1. Visit the link
 # 2. Check condition
@@ -113,9 +74,6 @@ try:
     results = []
     start = time.time()
     
-    # selenium_dct, non_selenium_dct = seperate_dct(STATIC_OBJECTS)
-    # init_selenium_tabs(driver, selenium_dct)
-    # non_selenium_requests(non_selenium_dct)
     init_selenium_tabs(driver, STATIC_OBJECTS)
     results.append(time.time() - start)
     
@@ -124,7 +82,6 @@ try:
         loop_selenium_tabs(driver)
         results.append(time.time()-start)
     print(results)
-    # non_selenium_requests(non_selenium_dct)
 finally:
     driver.quit()
     print('Driver is closed!')
