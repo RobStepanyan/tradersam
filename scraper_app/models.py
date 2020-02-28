@@ -981,27 +981,13 @@ class AllAssetsHistorical1D(models.Model):
         verbose_name = '(Historical 1 Day) All Assets'
         verbose_name_plural = '(Historical 1 Day) All Assets'
 
-class AllAssetsBeforeLive(models.Model):
-    Type = models.CharField(choices=TYPES, max_length=9)
-    short_name = models.CharField(max_length=16) 
-    link = models.URLField(null=True)
-    
-    date = models.DateField(default=None, null=True)
-    prev_close = models.CharField(max_length=15, null=True)
-    Open = models.CharField(max_length=15, null=True)
-
-    def __str__(self):
-        return f'({Types[Types.index(self.Type)+1]}) {self.short_name} in {self.date.year} {self.date.strftime("%B")}'
-    
-    class Meta:
-        verbose_name = '(Before Live) All Assets'
-        verbose_name_plural = '(Before Live) All Assets'
-
 class AllAssetsLive(models.Model):
     Type = models.CharField(choices=TYPES, max_length=9)
     short_name = models.CharField(max_length=16) 
     link = models.URLField(null=True)
     
+    prev_close = models.CharField(max_length=15, null=True)
+
     last_price = models.CharField(max_length=15, null=True)
     last_price_time = models.CharField(max_length=10, null=True)
     month = models.DateField(default=None, null=True)

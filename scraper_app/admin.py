@@ -61,6 +61,5 @@ admin.site.register(models.AllAssetsHistorical5D)
 admin.site.register(models.AllAssetsHistorical1D)
 
 # Live
-admin.site.register(models.AllAssetsBeforeLive)
 admin.site.register(models.AllAssetsAfterLive)
 admin.site.register(models.AllAssetsLive)

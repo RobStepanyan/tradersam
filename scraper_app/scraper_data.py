@@ -80,7 +80,7 @@ table_class2 = 'genTbl closedTbl crossRatesTbl elpTbl elp30'
 table_class3 = 'genTbl closedTbl crossRatesTbl elpTbl elp40' 
 
 # Live fields to be collected
-before_live_fields = ['Prev. Close', 'Open']
+before_live_fields = ['Prev. Close']
 # live is different for everyone, check STATIC_OBJECTS
 
 #  All unique items of live_fields
