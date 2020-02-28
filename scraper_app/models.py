@@ -964,7 +964,6 @@ class AllAssetsHistorical5D(models.Model):
 
 class AllAssetsHistorical1D(models.Model):
     Type = models.CharField(choices=TYPES, max_length=9)
-    short_name = models.CharField(max_length=16) 
     link = models.URLField(null=True)
 
     date = models.DateTimeField(default=None, null=True)
@@ -983,7 +982,6 @@ class AllAssetsHistorical1D(models.Model):
 
 class AllAssetsLive(models.Model):
     Type = models.CharField(choices=TYPES, max_length=9)
-    short_name = models.CharField(max_length=16) 
     link = models.URLField(null=True)
     
     prev_close = models.CharField(max_length=15, null=True)
@@ -1002,6 +1000,7 @@ class AllAssetsLive(models.Model):
     Yield = models.CharField(default=None, null=True, max_length=15)
     total_vol = models.CharField(default=None, null=True, max_length=15)
     total_assets = models.CharField(default=None, null=True, max_length=15)
+    time = models.DateTimeField(default=None, null=True)
 
     def __str__(self):
         return f'({Types[Types.index(self.Type)+1]}) {self.short_name} in {self.date.year} {self.date.strftime("%B")}'
@@ -1012,7 +1011,6 @@ class AllAssetsLive(models.Model):
 
 class AllAssetsAfterLive(models.Model):
     Type = models.CharField(choices=TYPES, max_length=9)
-    short_name = models.CharField(max_length=16) 
     link = models.URLField(null=True)
     
     date = models.DateField(default=None, null=True)
