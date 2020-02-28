@@ -135,135 +135,135 @@ after_live_fields = {
 STATIC_OBJECTS = {
     'Commodities': {
         'object': CommodityStaticInfo, 'type': 'cmdty', 'link': TABLE_LINKS['Commodities'], 'table class': table_class,
-        'before live fields': before_live_fields, 'live fields': live_fields['Commodities']},
+        'before live fields': before_live_fields, 'live fields': live_fields['Commodities'], 'after live fields': after_live_fields['Commodities']},
     'Currencies': {
         'object': CurrencyStaticInfo, 'type': 'crncy', 'link': TABLE_LINKS['Currencies'], 'table class': table_class,
-        'before live fields': before_live_fields, 'live fields': live_fields['Currencies']},
+        'before live fields': before_live_fields, 'live fields': live_fields['Currencies'], 'after live fields': after_live_fields['Currencies']},
     'Cryptocurrencies': {
         'object': CryptocurrencyStaticInfo, 'type': 'crptcrncy', 'link': TABLE_LINKS['Cryptocurrencies'], 'table class': 'genTbl openTbl js-all-crypto-table mostActiveStockTbl crossRatesTbl allCryptoTlb wideTbl elpTbl elp15',
-        'before live fields': before_live_fields, 'live fields': live_fields['Cryptocurrencies']},
+        'before live fields': before_live_fields, 'live fields': live_fields['Cryptocurrencies'], 'after live fields': after_live_fields['Cryptocurrencies']},
     'US Stocks': {
         'object': USStockStaticInfo, 'type': 'stck', 'link': TABLE_LINKS['US Stocks'], 'table class': table_class1,
-        'before live fields': before_live_fields, 'live fields': live_fields['Stocks']},
+        'before live fields': before_live_fields, 'live fields': live_fields['Stocks'], 'after live fields': after_live_fields['Stocks']},
     'Japan Stocks': {
         'object': JapanStockStaticInfo, 'type': 'stck', 'link': TABLE_LINKS['Japan Stocks'], 'table class': table_class1,
-        'before live fields': before_live_fields, 'live fields': live_fields['Stocks']},
+        'before live fields': before_live_fields, 'live fields': live_fields['Stocks'], 'after live fields': after_live_fields['Stocks']},
     'UK Stocks': {
         'object': UKStockStaticInfo, 'type': 'stck', 'link': TABLE_LINKS['UK Stocks'], 'table class': table_class1,
-        'before live fields': before_live_fields, 'live fields': live_fields['Stocks']},
+        'before live fields': before_live_fields, 'live fields': live_fields['Stocks'], 'after live fields': after_live_fields['Stocks']},
     'HK Stocks': {
         'object': HKStockStaticInfo, 'type': 'stck', 'link': TABLE_LINKS['HK Stocks'], 'table class': table_class1,
-        'before live fields': before_live_fields, 'live fields': live_fields['Stocks']},
+        'before live fields': before_live_fields, 'live fields': live_fields['Stocks'], 'after live fields': after_live_fields['Stocks']},
     'China Stocks': {
         'object': ChinaStockStaticInfo, 'type': 'stck', 'link': TABLE_LINKS['China Stocks'], 'table class': table_class1,
-        'before live fields': before_live_fields, 'live fields': live_fields['Stocks']},
+        'before live fields': before_live_fields, 'live fields': live_fields['Stocks'], 'after live fields': after_live_fields['Stocks']},
     'Canada Stocks': {
         'object': CanadaStockStaticInfo, 'type': 'stck', 'link': TABLE_LINKS['Canada Stocks'], 'table class': table_class1,
-        'before live fields': before_live_fields, 'live fields': live_fields['Stocks']},
+        'before live fields': before_live_fields, 'live fields': live_fields['Stocks'], 'after live fields': after_live_fields['Stocks']},
     'Germany Stocks': {
         'object': GermanyStockStaticInfo, 'type': 'stck', 'link': TABLE_LINKS['Germany Stocks'], 'table class': table_class1,
-        'before live fields': before_live_fields, 'live fields': live_fields['Stocks']},
+        'before live fields': before_live_fields, 'live fields': live_fields['Stocks'], 'after live fields': after_live_fields['Stocks']},
     'Australia Stocks': {
         'object': AustraliaStockStaticInfo, 'type': 'stck', 'link': TABLE_LINKS['Australia Stocks'], 'table class': table_class1,
-        'before live fields': before_live_fields, 'live fields': live_fields['Stocks']},
+        'before live fields': before_live_fields, 'live fields': live_fields['Stocks'], 'after live fields': after_live_fields['Stocks']},
     
     'US Indices': {
         'object': USIndexStaticInfo, 'type': 'indx', 'link': TABLE_LINKS['US Indices'], 'table class': table_class2,
-        'before live fields': before_live_fields, 'live fields': live_fields['Indices']},
+        'before live fields': before_live_fields, 'live fields': live_fields['Indices'], 'after live fields': after_live_fields['Indices']},
     'Japan Indices': {
         'object': JapanIndexStaticInfo, 'type': 'indx', 'link': TABLE_LINKS['Japan Indices'], 'table class': table_class2,
-        'before live fields': before_live_fields, 'live fields': live_fields['Indices']},
+        'before live fields': before_live_fields, 'live fields': live_fields['Indices'], 'after live fields': after_live_fields['Indices']},
     'UK Indices': {
         'object': UKIndexStaticInfo, 'type': 'indx', 'link': TABLE_LINKS['UK Indices'], 'table class': table_class2,
-        'before live fields': before_live_fields, 'live fields': live_fields['Indices']},
+        'before live fields': before_live_fields, 'live fields': live_fields['Indices'], 'after live fields': after_live_fields['Indices']},
     'HK Indices': {
         'object': HKIndexStaticInfo, 'type': 'indx', 'link': TABLE_LINKS['HK Indices'], 'table class': table_class2,
-        'before live fields': before_live_fields, 'live fields': live_fields['Indices']},
+        'before live fields': before_live_fields, 'live fields': live_fields['Indices'], 'after live fields': after_live_fields['Indices']},
     'China Indices': {
         'object': ChinaIndexStaticInfo, 'type': 'indx', 'link': TABLE_LINKS['China Indices'], 'table class': table_class2,
-        'before live fields': before_live_fields, 'live fields': live_fields['Indices']},
+        'before live fields': before_live_fields, 'live fields': live_fields['Indices'], 'after live fields': after_live_fields['Indices']},
     'Canada Indices': {
         'object': CanadaIndexStaticInfo, 'type': 'indx', 'link': TABLE_LINKS['Canada Indices'], 'table class': table_class2,
-        'before live fields': before_live_fields, 'live fields': live_fields['Indices']},
+        'before live fields': before_live_fields, 'live fields': live_fields['Indices'], 'after live fields': after_live_fields['Indices']},
     'Germany Indices': {
         'object': GermanyIndexStaticInfo, 'type': 'indx', 'link': TABLE_LINKS['Germany Indices'], 'table class': table_class2,
-        'before live fields': before_live_fields, 'live fields': live_fields['Indices']},
+        'before live fields': before_live_fields, 'live fields': live_fields['Indices'], 'after live fields': after_live_fields['Indices']},
     'Australia Indices': {
         'object': AustraliaIndexStaticInfo, 'type': 'indx', 'link': TABLE_LINKS['Australia Indices'], 'table class': table_class2,
-        'before live fields': before_live_fields, 'live fields': live_fields['Indices']},
+        'before live fields': before_live_fields, 'live fields': live_fields['Indices'], 'after live fields': after_live_fields['Indices']},
     
     'US ETFs': {
         'object': USETFStaticInfo, 'type': 'etf', 'link': TABLE_LINKS['US ETFs'], 'table class': table_class3,
-        'before live fields': before_live_fields, 'live fields': live_fields['ETFs']},
+        'before live fields': before_live_fields, 'live fields': live_fields['ETFs'], 'after live fields': after_live_fields['ETFs']},
     'Japan ETFs': {
         'object': JapanETFStaticInfo, 'type': 'etf', 'link': TABLE_LINKS['Japan ETFs'], 'table class': table_class3,
-        'before live fields': before_live_fields, 'live fields': live_fields['ETFs']},
+        'before live fields': before_live_fields, 'live fields': live_fields['ETFs'], 'after live fields': after_live_fields['ETFs']},
     'UK ETFs': {
         'object': UKETFStaticInfo, 'type': 'etf', 'link': TABLE_LINKS['UK ETFs'], 'table class': table_class3,
-        'before live fields': before_live_fields, 'live fields': live_fields['ETFs']},
+        'before live fields': before_live_fields, 'live fields': live_fields['ETFs'], 'after live fields': after_live_fields['ETFs']},
     'HK ETFs': {
         'object': HKETFStaticInfo, 'type': 'etf', 'link': TABLE_LINKS['HK ETFs'], 'table class': table_class3,
-        'before live fields': before_live_fields, 'live fields': live_fields['ETFs']},
+        'before live fields': before_live_fields, 'live fields': live_fields['ETFs'], 'after live fields': after_live_fields['ETFs']},
     'China ETFs': {
         'object': ChinaETFStaticInfo, 'type': 'etf', 'link': TABLE_LINKS['China ETFs'], 'table class': table_class3,
-        'before live fields': before_live_fields, 'live fields': live_fields['ETFs']},
+        'before live fields': before_live_fields, 'live fields': live_fields['ETFs'], 'after live fields': after_live_fields['ETFs']},
     'Canada ETFs': {
         'object': CanadaETFStaticInfo, 'type': 'etf', 'link': TABLE_LINKS['Canada ETFs'], 'table class': table_class3,
-        'before live fields': before_live_fields, 'live fields': live_fields['ETFs']},
+        'before live fields': before_live_fields, 'live fields': live_fields['ETFs'], 'after live fields': after_live_fields['ETFs']},
     'Germany ETFs': {
         'object': GermanyETFStaticInfo, 'type': 'etf', 'link': TABLE_LINKS['Germany ETFs'], 'table class': table_class3,
-        'before live fields': before_live_fields, 'live fields': live_fields['ETFs']},
+        'before live fields': before_live_fields, 'live fields': live_fields['ETFs'], 'after live fields': after_live_fields['ETFs']},
     'Australia ETFs': {
         'object': AustraliaETFStaticInfo, 'type': 'etf', 'link': TABLE_LINKS['Australia ETFs'], 'table class': table_class3,
-        'before live fields': before_live_fields, 'live fields': live_fields['ETFs']},
+        'before live fields': before_live_fields, 'live fields': live_fields['ETFs'], 'after live fields': after_live_fields['ETFs']},
     
     'US Bonds': {
         'object': USBondStaticInfo, 'type': 'bnd', 'link': TABLE_LINKS['US Bonds'], 'table class': table_class,
-        'before live fields': ['Prev. Close'], 'live fields': live_fields['Bonds']},
+        'before live fields': ['Prev. Close'], 'live fields': live_fields['Bonds'], 'after live fields': after_live_fields['Bonds']},
     'Japan Bonds': {
         'object': JapanBondStaticInfo, 'type': 'bnd', 'link': TABLE_LINKS['Japan Bonds'], 'table class': table_class,
-        'before live fields': ['Prev. Close'], 'live fields': live_fields['Bonds']},
+        'before live fields': ['Prev. Close'], 'live fields': live_fields['Bonds'], 'after live fields': after_live_fields['Bonds']},
     'UK Bonds': {
         'object': UKBondStaticInfo, 'type': 'bnd', 'link': TABLE_LINKS['UK Bonds'], 'table class': table_class,
-        'before live fields': ['Prev. Close'], 'live fields': live_fields['Bonds']},
+        'before live fields': ['Prev. Close'], 'live fields': live_fields['Bonds'], 'after live fields': after_live_fields['Bonds']},
     'HK Bonds': {
         'object': HKBondStaticInfo, 'type': 'bnd', 'link': TABLE_LINKS['HK Bonds'], 'table class': table_class,
-        'before live fields': ['Prev. Close'], 'live fields': live_fields['Bonds']},
+        'before live fields': ['Prev. Close'], 'live fields': live_fields['Bonds'], 'after live fields': after_live_fields['Bonds']},
     'China Bonds': {
         'object': ChinaBondStaticInfo, 'type': 'bnd', 'link': TABLE_LINKS['China Bonds'], 'table class': table_class,
-        'before live fields': ['Prev. Close'], 'live fields': live_fields['Bonds']},
+        'before live fields': ['Prev. Close'], 'live fields': live_fields['Bonds'], 'after live fields': after_live_fields['Bonds']},
     'Canada Bonds': {
         'object': CanadaBondStaticInfo, 'type': 'bnd', 'link': TABLE_LINKS['Canada Bonds'], 'table class': table_class,
-        'before live fields': ['Prev. Close'], 'live fields': live_fields['Bonds']},
+        'before live fields': ['Prev. Close'], 'live fields': live_fields['Bonds'], 'after live fields': after_live_fields['Bonds']},
     'Germany Bonds': {
         'object': GermanyBondStaticInfo, 'type': 'bnd', 'link': TABLE_LINKS['Germany Bonds'], 'table class': table_class,
-        'before live fields': ['Prev. Close'], 'live fields': live_fields['Bonds']},
+        'before live fields': ['Prev. Close'], 'live fields': live_fields['Bonds'], 'after live fields': after_live_fields['Bonds']},
     'Australia Bonds': {
         'object': AustraliaBondStaticInfo, 'type': 'bnd', 'link': TABLE_LINKS['Australia Bonds'], 'table class': table_class,
-        'before live fields': ['Prev. Close'], 'live fields': live_fields['Bonds']},
+        'before live fields': ['Prev. Close'], 'live fields': live_fields['Bonds'], 'after live fields': after_live_fields['Bonds']},
     
     'US Funds': {
         'object': USFundStaticInfo, 'type': 'fnd', 'link': TABLE_LINKS['US Funds'], 'table class': table_class3,
-        'before live fields': ['Prev. Close'], 'live fields': live_fields['Funds']},
+        'before live fields': ['Prev. Close'], 'live fields': live_fields['Funds'], 'after live fields': after_live_fields['Funds']},
     'Japan Funds': {
         'object': JapanFundStaticInfo, 'type': 'fnd', 'link': TABLE_LINKS['Japan Funds'], 'table class': table_class3,
-        'before live fields': ['Prev. Close'], 'live fields': live_fields['Funds']},
+        'before live fields': ['Prev. Close'], 'live fields': live_fields['Funds'], 'after live fields': after_live_fields['Funds']},
     'UK Funds': {
         'object': UKFundStaticInfo, 'type': 'fnd', 'link': TABLE_LINKS['UK Funds'], 'table class': table_class3,
-        'before live fields': ['Prev. Close'], 'live fields': live_fields['Funds']},
+        'before live fields': ['Prev. Close'], 'live fields': live_fields['Funds'], 'after live fields': after_live_fields['Funds']},
     'HK Funds': {
         'object': HKFundStaticInfo, 'type': 'fnd', 'link': TABLE_LINKS['HK Funds'], 'table class': table_class3,
-        'before live fields': ['Prev. Close'], 'live fields': live_fields['Funds']},
+        'before live fields': ['Prev. Close'], 'live fields': live_fields['Funds'], 'after live fields': after_live_fields['Funds']},
     'China Funds': {
         'object': ChinaFundStaticInfo, 'type': 'fnd', 'link': TABLE_LINKS['China Funds'], 'table class': table_class3,
-        'before live fields': ['Prev. Close'], 'live fields': live_fields['Funds']},
+        'before live fields': ['Prev. Close'], 'live fields': live_fields['Funds'], 'after live fields': after_live_fields['Funds']},
     'Canada Funds': {
         'object': CanadaFundStaticInfo, 'type': 'fnd', 'link': TABLE_LINKS['Canada Funds'], 'table class': table_class3,
-        'before live fields': ['Prev. Close'], 'live fields': live_fields['Funds']},
+        'before live fields': ['Prev. Close'], 'live fields': live_fields['Funds'], 'after live fields': after_live_fields['Funds']},
     'Germany Funds': {
         'object': GermanyFundStaticInfo, 'type': 'fnd', 'link': TABLE_LINKS['Germany Funds'], 'table class': table_class3,
-        'before live fields': ['Prev. Close'], 'live fields': live_fields['Funds']},
+        'before live fields': ['Prev. Close'], 'live fields': live_fields['Funds'], 'after live fields': after_live_fields['Funds']},
     'Australia Funds': {
         'object': AustraliaFundStaticInfo, 'type': 'fnd', 'link': TABLE_LINKS['Australia Funds'], 'table class': table_class3,
-        'before live fields': ['Prev. Close'], 'live fields': live_fields['Funds']},
+        'before live fields': ['Prev. Close'], 'live fields': live_fields['Funds'], 'after live fields': after_live_fields['Funds']},
 }
