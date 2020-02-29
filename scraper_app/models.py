@@ -986,7 +986,6 @@ class AllAssetsLive(models.Model):
     prev_close = models.CharField(max_length=15, null=True)
 
     last_price = models.CharField(max_length=15, null=True)
-    last_price_time = models.CharField(max_length=10, null=True)
     month = models.DateField(default=None, null=True)
     Open = models.CharField(default=None, null=True, max_length=15)
     high = models.CharField(max_length=15, null=True)
@@ -1002,7 +1001,7 @@ class AllAssetsLive(models.Model):
     time = models.DateTimeField(default=None, null=True)
 
     def __str__(self):
-        return f'({Types[Types.index(self.Type)+1]}) {self.short_name} in {self.date.year} {self.date.strftime("%B")}'
+        return f'({Types[Types.index(self.Type)+1]}) {self.time}'
     
     class Meta:
         verbose_name = '(Live All) Assets'
