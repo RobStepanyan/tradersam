@@ -184,7 +184,7 @@ class CollectLive:
 
                         prev_close=validate_price(live_data['Prev. Close']),
 
-                        Yield=validate_price(live_data['Yield'])
+                        Yield=validate_price(live_data['Yield']),
                         high=validate_price(live_data['High']),
                         low=validate_price(live_data['Low']),
                         change=validate_price(live_data['Chg.']),
@@ -201,7 +201,7 @@ class CollectLive:
 
                         last=validate_price(live_data['Last']),
                         change_perc=validate_price(live_data['Chg. %']),
-                        total_assets=validate_price(live_data['Total Assets'])
+                        total_assets=validate_price(live_data['Total Assets']),
                         time=datetime.datetime.strptime(
                             datetime.datetime.today().strftime('%Y:%m:%d:')+str(live_data['Time']), '%Y:%m:%d:%H:%M:%S')
                     ).save()

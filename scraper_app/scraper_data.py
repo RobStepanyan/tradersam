@@ -20,7 +20,7 @@ from .models import (
     # Historical
     AllAssetsHistoricalMax, AllAssetsHistorical5Y, AllAssetsHistorical5D, AllAssetsHistorical1D,
     # Live
-    AllAssetsBeforeLive, AllAssetsLive, AllAssetsAfterLive
+    AllAssetsLive, AllAssetsAfterLive
 )
 
 TABLE_LINKS = {
