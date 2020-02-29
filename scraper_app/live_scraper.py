@@ -207,18 +207,18 @@ class CollectLive:
                             datetime.datetime.today().strftime('%Y:%m:%d:')+str(live_data['Time']), '%Y:%m:%d:%H:%M:%S')
                     ).save()
 
-                last_obj_1d_count = AllAssetsHistorical1D.objects.filter(link=link).count()
+                last_obj_1d_count = models.AllAssetsHistorical1D.objects.filter(link=link).count()
                 if last_obj_1d_count > 0:
-                    last_obj_1d = AllAssetsHistorical1D.objects.filter(link=link).order_by('-id')[0]
+                    last_obj_1d = models.AllAssetsHistorical1D.objects.filter(link=link).order_by('-id')[0]
                 
-                last_obj_5d_count = AllAssetsHistorical5D.objects.filter(link=link).count()
+                last_obj_5d_count = models.AllAssetsHistorical5D.objects.filter(link=link).count()
                 if last_obj_5d_count > 0:
-                    last_obj_5d = AllAssetsHistorical5D.objects.filter(link=link).order_by('-id')[0]
+                    last_obj_5d = models.AllAssetsHistorical5D.objects.filter(link=link).order_by('-id')[0]
                 
                 if last_obj_1d_count == 0 or last_obj_1d.date.minute<now.minute:
                     # if there's no data at all or latest data is already outdated
                     # send (Save) data
-                    AllAssetsHistorical1D(
+                    models.AllAssetsHistorical1D(
                         link=link,
                         date=now,
                         price=live_data['Last'],
@@ -233,12 +233,12 @@ class CollectLive:
                         days, seconds = diff.days, diff.seconds
                         hours = days * 24 + seconds // 3600
                         if hours > 24:
-                            AllAssetsHistorical1D.objects.filter(link=link).order_by('id')[0].delete()
+                            models.AllAssetsHistorical1D.objects.filter(link=link).order_by('id')[0].delete()
                 
                 if (last_obj_5d_count == 0 or now.minute - last_obj_5d.date.minute>=5) and now.minute % 5 == 0:
                     # if there's no data at all or latest data is already outdated also divisible by 5
                     # send (Save) data
-                    AllAssetsHistorical5D(
+                    models.AllAssetsHistorical5D(
                         link=link,
                         date=now,
                         price=live_data['Last'],
@@ -253,12 +253,12 @@ class CollectLive:
                         days, seconds = diff.days, diff.seconds
                         hours = days * 24 + seconds // 3600
                         if hours > 24*5:
-                            AllAssetsHistorical5D.objects.filter(link=link).order_by('id')[0].delete()
+                            models.AllAssetsHistorical5D.objects.filter(link=link).order_by('id')[0].delete()
             # elif 'redClockIcon' in tr[-1].span['class']:
             #     # check whether "after live data" for today is available
-            #     last_obj_after_count = AllAssetsAfterLive.objects.filter(link=link).count()
+            #     last_obj_after_count = models.AllAssetsAfterLive.objects.filter(link=link).count()
             #     if last_obj_after_count > 0:
-            #         last_obj_after = AllAssetsAfterLive.objects.filter(link=link).order_by('-id')[0]
+            #         last_obj_after = models.AllAssetsAfterLive.objects.filter(link=link).order_by('-id')[0]
 
             #     def collectAfterLive():
             #         header={'User-Agent':'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2227.0 Safari/537.36'}
@@ -285,7 +285,7 @@ class CollectLive:
             #                 print_exception(e)
             #                 sleep(3)
 
-            #         AllAssetsAfterLive(
+            #         models.AllAssetsAfterLive(
             #             short_name=tds[0], link=link,
             #             date=now.date(),
             #             one_year_rng=one_year_rng, one_year_chg=one_year_chg.strip(),
