@@ -48,8 +48,9 @@ class CollectLive:
             try:
                 soup = BeautifulSoup(driver.page_source, 'html.parser')
                 table = soup.find('table', class_=self.table_class)
-                if len(table.find_all('tr')) < desired_quanity:
-                    print(f'{self.title}: Waiting more...')
+                len_table = len(table.find_all('tr'))*1.1
+                if len_table < desired_quanity:
+                    print(f'{self.title}: Waiting more... {len_table}/{desired_quanity}')
                     sleep(1)
                     continue
                 break
