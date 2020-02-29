@@ -92,7 +92,6 @@ def collect_for(obj, x, key, value, link):
                         hist_link = '-historical-data'
                     driver.get(driver.current_url + hist_link)
                 if not soup.find(class_='error404') is None:
-                    return
                     if attempt > 10:
                         driver.get(link)
                         attempt = 1
