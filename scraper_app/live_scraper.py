@@ -30,14 +30,14 @@ class CollectLive:
 
     def init_tab(self):
         driver.switch_to.window(self.tab)
-        print(f'{self.title}: Initializating the Table')
+        # print(f'{self.title}: Initializating the Table')
         print(f'{self.title}: Waiting the page to load')
         driver.get(self.link) # visit the link
         if 'Stock' in self.title:
-            print('Executing JS scripts')
+            # print('Executing JS scripts')
             driver.execute_script('$("#stocksFilter").val("#all");')
             driver.execute_script("doStocksFilter('select',this)")
-            print('Executed JS scripts')
+            # print('Executed JS scripts')
         if 'Crypto' in self.title:
             desired_quanity = BeautifulSoup(driver.page_source, 'html.parser')
             desired_quanity = desired_quanity.find('span', text='Number of Currencies')
@@ -48,7 +48,7 @@ class CollectLive:
             try:
                 soup = BeautifulSoup(driver.page_source, 'html.parser')
                 table = soup.find('table', class_=self.table_class)
-                len_table = len(table.find_all('tr'))*1.1
+                len_table = int(len(table.find_all('tr'))*1.1)
                 if len_table < desired_quanity:
                     print(f'{self.title}: Waiting more... {len_table}/{desired_quanity}')
                     sleep(1)
@@ -63,25 +63,64 @@ class CollectLive:
         driver.switch_to.window(self.tab)
         soup = BeautifulSoup(driver.page_source, 'html.parser')
         table = soup.find('table', class_=self.table_class)
-        link_list = self.object_.values_list('link')
-        link = 'https://www.investing.com/' + tr[1].a['link']
-        for tr in table.find_all('tr'):
+        
+        if 'Crypto' in self.title:
+            desired_quanity = BeautifulSoup(driver.page_source, 'html.parser')
+            desired_quanity = desired_quanity.find('span', text='Number of Currencies')
+            desired_quanity = int(desired_quanity.find_next_sibling().get_text().replace(',', ''))
+        else:
+            desired_quanity = self.object_.objects.count()
+        while True:
+            try:
+                soup = BeautifulSoup(driver.page_source, 'html.parser')
+                table = soup.find('table', class_=self.table_class)
+                len_table = int(len(table.find_all('tr'))*1.1)
+                if len_table < desired_quanity:
+                    print(f'{self.title}: Waiting more... {len_table}/{desired_quanity}')
+                    sleep(1)
+                    continue
+                break
+            except AttributeError:
+                sleep(1)
+        
+        link_list = [i[0] for i in self.object_.objects.values_list('link')]
+        for tr in table.find_all('tr')[1:]:
+            link = 'https://www.investing.com' + tr.find('a')['href']
             if not link in link_list:
                 continue
             tds = []
-            for td in tr[2:-1]:
-                tds.append(td.get_text().strip())
+            
+            if self.type_ == 'crncy:':
+                for td in tr.find_all('td')[2:]:
+                    tds.append(td.get_text().strip())
+                print(tds)
+            else:
+                for td in tr.find_all('td')[2:-1]:
+                    tds.append(td.get_text().strip())
 
             now = make_aware(datetime.datetime.now())
-            if 'greenClockIcon' in tr[-1].span['class']:
+            is_closed = 0
+            if self.type_ == 'crncy' and len(tr.find_all('td')[-1].get_text()) <=5:
+                is_closed = True
+            elif 'redClockIcon' in tr.find_all('td')[-1].span['class']:
+                is_closed = True
+            else:
+                is_closed = False
+
+            if is_closed:
                 # if the market is open collect the live data
                 live_data = {}
-                for key, value in self.live_fields, tds:
+                for key, value in zip(self.live_fields, tds):
                     live_data[key] = value
                 if self.type_ != 'bnd':
-                    live_data['Prev. Close'] = live_data['Last'] + live_data['Chg. %'] / 100
-                
+                    live_data['Prev. Close'] = float(live_data['Last'].replace(',','')) + float(live_data['Chg. %'][:-1]) / 100
+                print(live_data)
                 models.AllAssetsLive.objects.filter(link=link).delete()
+                if len(live_data['Time']) <=5:
+                    time = datetime.datetime.strptime(str(now.year)+str(live_data['Time']), '%Y%d/%m')
+                else:
+                    time = datetime.datetime.strptime(
+                            datetime.datetime.today().strftime('%Y:%m:%d:')+str(live_data['Time']), '%Y:%m:%d:%H:%M:%S')
                 if self.type_ == 'cmdty':
                     if live_data['Month'] in '  ':
                         live_data['Month'] = None
@@ -94,15 +133,15 @@ class CollectLive:
                         prev_close=validate_price(live_data['Prev. Close']),
 
                         month=validate_price(live_data['Month']),
-                        last=validate_price(live_data['Last']),
+                        last_price=validate_price(live_data['Last']),
                         high=validate_price(live_data['High']),
                         low=validate_price(live_data['Low']),
                         change=validate_price(live_data['Chg.']),
                         change_perc=validate_price(live_data['Chg. %']),
-                        time=datetime.datetime.strptime(
-                            datetime.datetime.today().strftime('%Y:%m:%d:')+str(live_data['Time']), '%Y:%m:%d:%H:%M:%S')
+                    
+                        time=time
                     ).save()
-                
+                    print(f'{self.title}: Live is updated')
                 elif self.type_ == 'crncy':
                     models.AllAssetsLive(
                         Type=self.type_,
@@ -110,14 +149,13 @@ class CollectLive:
 
                         prev_close=validate_price(live_data['Prev. Close']),
 
-                        last=validate_price(live_data['Last']),
+                        last_price=validate_price(live_data['Last']),
                         Open=validate_price(live_data['Open']),
                         high=validate_price(live_data['High']),
                         low=validate_price(live_data['Low']),
                         change=validate_price(live_data['Chg.']),
                         change_perc=validate_price(live_data['Chg. %']),
-                        time=datetime.datetime.strptime(
-                            datetime.datetime.today().strftime('%Y:%m:%d:')+str(live_data['Time']), '%Y:%m:%d:%H:%M:%S')
+                        time=time
                     ).save()
 
                 elif self.type_ == 'crptcrncy':
@@ -127,7 +165,7 @@ class CollectLive:
 
                         prev_close=validate_price(live_data['Prev. Close']),
 
-                        last=validate_price(live_data['Last']),
+                        last_price=validate_price(live_data['Last']),
                         market_cap=validate_price(live_data['Market Cap']),
                         volume=validate_price(live_data['Vol.']),
                         total_vol=validate_price(live_data['Total Vol.']),
@@ -141,14 +179,13 @@ class CollectLive:
 
                         prev_close=validate_price(live_data['Prev. Close']),
 
-                        last=validate_price(live_data['Last']),
+                        last_price=validate_price(live_data['Last']),
                         high=validate_price(live_data['High']),
                         low=validate_price(live_data['Low']),
                         change=validate_price(live_data['Chg.']),
                         change_perc=validate_price(live_data['Chg. %']),
                         volume=validate_price(live_data['Vol.']),
-                        time=datetime.datetime.strptime(
-                            datetime.datetime.today().strftime('%Y:%m:%d:')+str(live_data['Time']), '%Y:%m:%d:%H:%M:%S')
+                        time=time
                     ).save()
                 elif self.type_ == 'indx':
                     models.AllAssetsLive(
@@ -157,13 +194,12 @@ class CollectLive:
 
                         prev_close=validate_price(live_data['Prev. Close']),
 
-                        last=validate_price(live_data['Last']),
+                        last_price=validate_price(live_data['Last']),
                         high=validate_price(live_data['High']),
                         low=validate_price(live_data['Low']),
                         change=validate_price(live_data['Chg.']),
                         change_perc=validate_price(live_data['Chg. %']),
-                        time=datetime.datetime.strptime(
-                            datetime.datetime.today().strftime('%Y:%m:%d:')+str(live_data['Time']), '%Y:%m:%d:%H:%M:%S')
+                        time=time
                     ).save()
                 elif self.type_ == 'etf':
                     models.AllAssetsLive(
@@ -172,11 +208,10 @@ class CollectLive:
 
                         prev_close=validate_price(live_data['Prev. Close']),
 
-                        last=validate_price(live_data['Last']),
+                        last_price=validate_price(live_data['Last']),
                         change_perc=validate_price(live_data['Chg. %']),
                         volume=validate_price(live_data['Vol.']),
-                        time=datetime.datetime.strptime(
-                            datetime.datetime.today().strftime('%Y:%m:%d:')+str(live_data['Time']), '%Y:%m:%d:%H:%M:%S')
+                        time=time
                     ).save()
                 elif self.type_ == 'bnd':
                     models.AllAssetsLive(
@@ -190,8 +225,7 @@ class CollectLive:
                         low=validate_price(live_data['Low']),
                         change=validate_price(live_data['Chg.']),
                         change_perc=validate_price(live_data['Chg. %']),
-                        time=datetime.datetime.strptime(
-                            datetime.datetime.today().strftime('%Y:%m:%d:')+str(live_data['Time']), '%Y:%m:%d:%H:%M:%S')
+                        time=time
                     ).save()
                 elif self.type_ == 'crptcrncy':
                     models.AllAssetsLive(
@@ -200,11 +234,10 @@ class CollectLive:
 
                         prev_close=validate_price(live_data['Prev. Close']),
 
-                        last=validate_price(live_data['Last']),
+                        last_price=validate_price(live_data['Last']),
                         change_perc=validate_price(live_data['Chg. %']),
                         total_assets=validate_price(live_data['Total Assets']),
-                        time=datetime.datetime.strptime(
-                            datetime.datetime.today().strftime('%Y:%m:%d:')+str(live_data['Time']), '%Y:%m:%d:%H:%M:%S')
+                        time=time
                     ).save()
 
                 last_obj_1d_count = models.AllAssetsHistorical1D.objects.filter(link=link).count()
@@ -321,23 +354,27 @@ class CollectLive:
 # 4. Call appropriate function
 # 5. Repeat
 
-#  Create driver and tabs
-driver = vps_selenium_setup()
-print('Driver is ready!')
-for _ in range(len(STATIC_OBJECTS)-1): # -1 because 1 is creted automatically
-    driver.execute_script("window.open('', '_blank')")
-print(f'x{len(STATIC_OBJECTS)} blank tabs are ready!')
-
-# Main program
 try:
+    #  Create driver and tabs
+    driver = vps_selenium_setup()
+    print('Driver is ready!')
+    for _ in range(len(STATIC_OBJECTS)-1): # -1 because 1 is creted automatically
+        driver.execute_script("window.open('', '_blank')")
+    print(f'x{len(STATIC_OBJECTS)} blank tabs are ready!')
+
     # init
+    start = time.time()
     instances = []
     for key, value in STATIC_OBJECTS.items():
         instances.append(CollectLive(key=key, value=value))
+    print(f'Init took {time.time()-start} seconds')
 
     # launch live
-    for instance in instances:
-        instance.live_on()
+    while True:    
+        start = time.time()
+        for instance in instances:
+            instance.live_on()
+        print(f'Loop took {time.time()-start} seconds')
 
 finally:
     driver.quit()
