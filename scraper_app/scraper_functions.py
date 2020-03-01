@@ -16,7 +16,7 @@ def print_exception(e):
 
 def validate_price(x):
     """This function return None if the len of passed argument is greater than specified number in the function"""
-    if len(x)>=12:
+    if len(str(x))>=12:
         return None
     return x
 
