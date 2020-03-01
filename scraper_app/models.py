@@ -955,7 +955,7 @@ class AllAssetsHistorical5D(models.Model):
     volume = models.CharField(max_length=12, default=None, null=True)
 
     def __str__(self):
-        return f'({Types[Types.index(self.Type)+1]}) {self.short_name} in {self.date.year} {self.date.strftime("%B")}'
+        return f'({Types[Types.index(self.Type)+1]}) in {self.date.year} {self.date.strftime("%B")}'
 
     class Meta:
         verbose_name = '(Historical 5 Days) All Assets'
@@ -973,7 +973,7 @@ class AllAssetsHistorical1D(models.Model):
     volume = models.CharField(max_length=12, default=None, null=True)
 
     def __str__(self):
-        return f'({Types[Types.index(self.Type)+1]}) {self.short_name} in {self.date.year} {self.date.strftime("%B")}'
+        return f'({Types[Types.index(self.Type)+1]}) in {self.date.year} {self.date.strftime("%B")}'
 
     class Meta:
         verbose_name = '(Historical 1 Day) All Assets'
@@ -1050,7 +1050,7 @@ class AllAssetsAfterLive(models.Model):
     eps = models.CharField(default=None, null=True, max_length=15)
 
     def __str__(self):
-        return f'({Types[Types.index(self.Type)+1]}) {self.short_name} in {self.date.year} {self.date.strftime("%B")}'
+        return f'({Types[Types.index(self.Type)+1]}) in {self.date.year} {self.date.strftime("%B")}'
     
     class Meta:
         verbose_name = '(After Live) All Assets'
