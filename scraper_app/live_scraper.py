@@ -1,5 +1,5 @@
 import requests, datetime, pytz, time
-from django.utils.timezone import make_aware
+from django.utils import timezone
 from bs4 import BeautifulSoup
 from time import sleep
 from .scraper_functions import *
@@ -85,38 +85,47 @@ class CollectLive:
         
         link_list = [i[0] for i in self.object_.objects.values_list('link')]
         for tr in table.find_all('tr')[1:]:
+            if tr.find('a') is None:
+                continue
             link = 'https://www.investing.com' + tr.find('a')['href']
             if not link in link_list:
                 continue
             tds = []
             
-            if self.type_ == 'crncy:':
+            if self.type_ == 'crncy':
                 for td in tr.find_all('td')[2:]:
                     tds.append(td.get_text().strip())
-                print(tds)
+            elif self.type_ == 'crptcrncy':
+                for td in tr.find_all('td')[4:]:
+                    tds.append(td.get_text().strip())
             else:
                 for td in tr.find_all('td')[2:-1]:
                     tds.append(td.get_text().strip())
-
-            now = make_aware(datetime.datetime.now())
+            
+            now = timezone.now()
             is_closed = 0
             if self.type_ == 'crncy' and len(tr.find_all('td')[-1].get_text()) <=5:
+                is_closed = True
+            elif self.type_ == 'crptcrncy':
                 is_closed = True
             elif 'redClockIcon' in tr.find_all('td')[-1].span['class']:
                 is_closed = True
             else:
                 is_closed = False
 
-            if is_closed:
+            if not is_closed:
                 # if the market is open collect the live data
                 live_data = {}
                 for key, value in zip(self.live_fields, tds):
                     live_data[key] = value
+                
                 if self.type_ != 'bnd':
                     live_data['Prev. Close'] = float(live_data['Last'].replace(',','')) + float(live_data['Chg. %'][:-1]) / 100
-                print(live_data)
+                
                 models.AllAssetsLive.objects.filter(link=link).delete()
-                if len(live_data['Time']) <=5:
+                if self.type_ == 'crptcrncy':
+                    time = now
+                elif len(live_data['Time']) <=5:
                     time = datetime.datetime.strptime(str(now.year)+str(live_data['Time']), '%Y%d/%m')
                 else:
                     time = datetime.datetime.strptime(
@@ -287,7 +296,7 @@ class CollectLive:
                         hours = days * 24 + seconds // 3600
                         if hours > 24*5:
                             models.AllAssetsHistorical5D.objects.filter(link=link).order_by('id')[0].delete()
-            # elif 'redClockIcon' in tr[-1].span['class']:
+            # elif is_closed:
             #     # check whether "after live data" for today is available
             #     last_obj_after_count = models.AllAssetsAfterLive.objects.filter(link=link).count()
             #     if last_obj_after_count > 0:
