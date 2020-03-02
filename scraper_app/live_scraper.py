@@ -11,6 +11,7 @@ class CollectLive:
 
     def get_tabs(self):
         global driver
+        global driver2
         tabs = driver.window_handles[::-1]
         return tabs
 
@@ -104,8 +105,11 @@ class CollectLive:
             
             now = timezone.now()
             is_closed = 0
+            
             if self.type_ == 'crncy' and len(tr.find_all('td')[-1].get_text()) <=5:
                 is_closed = True
+            elif self.type_ == 'crncy':
+                is_closed = False
             elif self.type_ == 'crptcrncy':
                 is_closed = True
             elif 'redClockIcon' in tr.find_all('td')[-1].span['class']:
@@ -113,7 +117,7 @@ class CollectLive:
             else:
                 is_closed = False
 
-            if not is_closed:
+            if is_closed:
                 # if the market is open collect the live data
                 live_data = {}
                 l = []
@@ -126,7 +130,10 @@ class CollectLive:
 
                 # Overiding neccessary fields
                 for key, value in zip(self.live_fields, tds):
-                    live_data[key] = value
+                    if value in '  -N/A':
+                        live_data[key] = None
+                    else:
+                        live_data[key] = value
                 
                 if self.type_ != 'bnd':
                     live_data['Prev. Close'] = float(live_data['Last'].replace(',','')) + float(live_data['Chg. %'][:-1]) / 100
@@ -200,7 +207,7 @@ class CollectLive:
                         if hours > 24:
                             models.AllAssetsHistorical1D.objects.filter(link=link).order_by('id')[0].delete()
                 
-                if (last_obj_5d_count == 0 or now.minute - last_obj_5d.date.minute>=5) and now.minute % 5 == 0:
+                if (last_obj_5d_count == 0 or now.minute - last_obj_5d.date.minute>=5):
                     # if there's no data at all or latest data is already outdated also divisible by 5
                     # send (Save) data
                     models.AllAssetsHistorical5D(
@@ -224,52 +231,95 @@ class CollectLive:
                         hours = days * 24 + seconds // 3600
                         if hours > 24*5:
                             models.AllAssetsHistorical5D.objects.filter(link=link).order_by('id')[0].delete()
-            # elif is_closed:
-            #     # check whether "after live data" for today is available
-            #     last_obj_after_count = models.AllAssetsAfterLive.objects.filter(link=link).count()
-            #     if last_obj_after_count > 0:
-            #         last_obj_after = models.AllAssetsAfterLive.objects.filter(link=link).order_by('-id')[0]
+            elif not is_closed:
+                # check whether "after live data" for today is available
+                last_obj_after_count = models.AllAssetsAfterLive.objects.filter(link=link).count()
+                if last_obj_after_count > 0:
+                    last_obj_after = models.AllAssetsAfterLive.objects.filter(link=link).order_by('-id')[0]
 
-            #     def collectAfterLive():
-            #         header={'User-Agent':'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2227.0 Safari/537.36'}
-            #         request = requests.get(link, headers=header)
-            #         print(f'Visited: {link}')
-            #         while True:
-            #             try:
-            #                 soup = BeautifulSoup(request.text, 'html.parser')
-            #                 one_year_rng = soup.find('span', text='52 wk Range').find_next_sibling('span').get_text()
-            #                 one_year_chg = soup.find('span', text='1-Year Change').find_next_sibling('span').get_text()
-            #                 months = soup.find('span', text='Months').find_next_sibling('span').get_text()
-            #                 settlement_day = soup.find('span', text='Settlement Day').find_next_sibling('span').get_text()
-            #                 try:
-            #                     settlement_day = datetime.datetime.strptime(settlement_day, '%m/%d/%Y')
-            #                 except:
-            #                     settlement_day = None
-            #                 last_roll_day = soup.find('span', text='Last Rollover Day').find_next_sibling('span').get_text()
-            #                 try:
-            #                     last_roll_day = datetime.datetime.strptime(last_roll_day, '%m/%d/%Y')
-            #                 except:
-            #                     last_roll_day = None
-            #                 break
-            #             except Exception as e:
-            #                 print_exception(e)
-            #                 sleep(3)
+                after_values = []
+                driver2.get(link)
+                soup = BeautifulSoup(driver2.page_source, 'html.parser')
+                
+                if self.type_ == 'crptcrncy':
+                    panel = soup.find('div', class_='cryptoGlobalData')
+                    panel_values = []
+                    for d in panel.find_all('div', class_='dataItem'):
+                        panel_values.append(d.find_all('span')[-1].get_text())
 
-            #         models.AllAssetsAfterLive(
-            #             short_name=tds[0], link=link,
-            #             date=now.date(),
-            #             one_year_rng=one_year_rng, one_year_chg=one_year_chg.strip(),
-            #             months=months, 
-            #             settlement_day=settlement_day, last_roll_day=last_roll_day,
-            #             Type='cmdty'
-            #         ).save()
-            #         print(f'Commodities: saved AFTERLIVE for {tds[0]}')
+                    after_values += panel_values[1:3] + panel_values[4]
+                else:
+                    after_table = soup.find('div', class_='overviewDataTable')
+                    raw_after_values = {}
+                    for d in after_table.find_all('div', class_='inlineblock'):
+                        raw_after_values[d.find('span').get_text()] = d.find_all('span')[-1].get_text()
 
-            #     if last_obj_after_count == 0:
-            #         collectAfterLive()
-            #     elif (now.date() - last_obj_after.date).days >= 1:
-            #         # if last after live data is outdated
-            #         collectAfterLive()
+                    for key, value in raw_after_values.items():
+                        if key in self.after_fields:
+                            after_values.append(value)
+
+                after_live_data = {}
+                l = []
+                for value in after_live_fields.values():
+                    l += value
+                all_live_fields = list(set(l))
+
+                for field in all_live_fields:
+                    after_live_data[field] = None
+
+                # Overiding neccessary fields
+                for key, value in zip(self.after_fields, after_values):
+                    if value in ' -N/A':
+                        after_live_data[key] = None
+                    else:
+                        after_live_data[key] = value
+                
+                if last_obj_after_count == 0 or ((now.date() - last_obj_after.date).days >= 1):
+                    models.AllAssetsAfterLive(
+                        Type=self.type_,
+                        link=link,
+
+                        date=now,
+
+                        pe_ratio=validate_price(after_live_data['P/E Ratio']),
+                        coupon=validate_price(after_live_data['Coupon']),
+                        div_yield=validate_price(after_live_data['Dividend Yield']),
+                        shrs_outstndng=validate_price(after_live_data['Shares Outstanding']),
+                        avg_vol_3m=validate_price(after_live_data['Average Vol. (3m)']),
+                        beta=validate_price(after_live_data['Beta']),
+                        next_earn_date=validate_price(after_live_data['Next Earnings Date']),
+                        max_supply=validate_price(after_live_data['Max Supply']),
+                        volume=validate_price(after_live_data['Volume']),
+                        div_ttm=validate_price(after_live_data['Dividends (TTM)']),
+                        price_rng=validate_price(after_live_data['Price Range']),
+                        roe=validate_price(after_live_data['ROE']),
+                        market_cap=validate_price(after_live_data['Market Cap']),
+                        rating=validate_price(after_live_data['Rating']),
+                        maturity_date=validate_price(after_live_data['Maturity Date']),
+                        total_assets=validate_price(after_live_data['Total Assets']),
+                        ttm_yield=validate_price(after_live_data['TTM Yield']),
+                        rng_52_wk=validate_price(after_live_data['52 wk Range']),
+                        revenue=validate_price(after_live_data['Revenue']),
+                        div_and_yield=validate_price(after_live_data['Dividend (Yield)']),
+                        one_year_chg=validate_price(after_live_data['1-Year Change']),
+                        price_opn=validate_price(after_live_data['Price Open']),
+                        roa=validate_price(after_live_data['ROA']),
+                        price=validate_price(after_live_data['Price']),
+                        turnover=validate_price(after_live_data['Turnover']),
+                        days_rng=validate_price(after_live_data['Day\'s Range']),
+                        expenses=validate_price(after_live_data['Expenses']),
+                        roi_ttm=validate_price(after_live_data['ROI (TTM)']),
+                        circ_supply=validate_price(after_live_data['Circulating Supply']),
+                        risk_rating=validate_price(after_live_data['Rating']),
+                        last_roll_day=validate_price(after_live_data['Last Rollover Day']),
+                        months=validate_price(after_live_data['Months']),
+                        settlement_day=validate_price(after_live_data['Settlement Day']),
+                        asset_class=validate_price(after_live_data['Asset Class']),
+                        eps=validate_price(after_live_data['EPS']),
+                    ).save()
+                    print(f'Commodities: saved AFTERLIVE for {tds[0]}')
+
+                
             else:
                 print('Time Icon is not found/recognized')
 
@@ -294,6 +344,7 @@ class CollectLive:
 try:
     #  Create driver and tabs
     driver = vps_selenium_setup()
+    driver2 = vps_selenium_setup()
     print('Driver is ready!')
     for _ in range(len(STATIC_OBJECTS)-1): # -1 because 1 is creted automatically
         driver.execute_script("window.open('', '_blank')")
@@ -315,6 +366,7 @@ try:
 
 finally:
     driver.quit()
+    driver2.quit()
     print('Driver is closed!')
         
 

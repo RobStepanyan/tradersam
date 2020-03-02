@@ -128,7 +128,7 @@ after_live_fields = {
     'Bonds': ['Day\'s Range', '52 wk Range', 'Price', 'Price Open', 'Price Range',
     'Coupon', 'Maturity Date', '1-Year Change'],
 
-    'Funds': ['Rating', 'Risk Rating', '1-Year Change', 'TTM Yield', 'Turnover',
+    'Funds': ['Rating', 'Rating', '1-Year Change', 'TTM Yield', 'Turnover',
     'Total Assets', 'Market Cap', 'ROE', 'ROA', 'Expenses']
 }
 
