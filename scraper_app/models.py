@@ -998,6 +998,7 @@ class AllAssetsLive(models.Model):
     Yield = models.CharField(default=None, null=True, max_length=15)
     total_vol = models.CharField(default=None, null=True, max_length=15)
     total_assets = models.CharField(default=None, null=True, max_length=15)
+    
     time = models.DateTimeField(default=None, null=True)
 
     def __str__(self):

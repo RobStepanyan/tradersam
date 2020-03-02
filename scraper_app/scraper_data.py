@@ -90,7 +90,7 @@ before_live_fields = ['Prev. Close']
 live_fields = {
     'Commodities': ['Month', 'Last', 'High', 'Low', 'Chg.', 'Chg. %', 'Time'],
     'Currencies': ['Last', 'Open', 'High', 'Low', 'Chg.', 'Chg. %', 'Time'], 
-    'Cryptocurrencies': ['Last', 'Market Cap', 'Vol.', 'Total Vol.', 'Chg. %', 'Chg (7D)'], 
+    'Cryptocurrencies': ['Last', 'Market Cap', 'Vol.', 'Total Vol.', 'Chg. %', 'Chg. (7D)'], 
     'Stocks': ['Last', 'High', 'Low', 'Chg.', 'Chg. %', 'Vol.', 'Time'],
     'Indices': ['Last', 'High', 'Low', 'Chg.', 'Chg. %', 'Time'],
     'ETFs': ['Last', 'Chg. %', 'Vol.', 'Time'],

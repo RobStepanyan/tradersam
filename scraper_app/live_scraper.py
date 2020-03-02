@@ -3,7 +3,7 @@ from django.utils import timezone
 from bs4 import BeautifulSoup
 from time import sleep
 from .scraper_functions import *
-from .scraper_data import STATIC_OBJECTS, TABLE_LINKS
+from .scraper_data import STATIC_OBJECTS, TABLE_LINKS, live_fields, after_live_fields
 from . import models
 
 
@@ -116,6 +116,15 @@ class CollectLive:
             if not is_closed:
                 # if the market is open collect the live data
                 live_data = {}
+                l = []
+                for key, value in live_fields.items():
+                    l += value
+                all_live_fields = list(set(l))
+
+                for field in all_live_fields:
+                    live_data[field] = None
+
+                # Overiding neccessary fields
                 for key, value in zip(self.live_fields, tds):
                     live_data[key] = value
                 
@@ -135,119 +144,28 @@ class CollectLive:
                         live_data['Month'] = None
                     else:
                         live_data['Month'] = datetime.datetime.strptime(live_data['Month'], '%b %y')
-                    models.AllAssetsLive(
-                        Type=self.type_,
-                        link=link,
+                models.AllAssetsLive(
+                    Type=self.type_,
+                    link=link,
 
-                        prev_close=validate_price(live_data['Prev. Close']),
+                    prev_close=validate_price(live_data['Prev. Close']),
 
-                        month=validate_price(live_data['Month']),
-                        last_price=validate_price(live_data['Last']),
-                        high=validate_price(live_data['High']),
-                        low=validate_price(live_data['Low']),
-                        change=validate_price(live_data['Chg.']),
-                        change_perc=validate_price(live_data['Chg. %']),
-                    
-                        time=time
-                    ).save()
-                    print(f'{self.title}: Live is updated')
-                elif self.type_ == 'crncy':
-                    models.AllAssetsLive(
-                        Type=self.type_,
-                        link=link,
-
-                        prev_close=validate_price(live_data['Prev. Close']),
-
-                        last_price=validate_price(live_data['Last']),
-                        Open=validate_price(live_data['Open']),
-                        high=validate_price(live_data['High']),
-                        low=validate_price(live_data['Low']),
-                        change=validate_price(live_data['Chg.']),
-                        change_perc=validate_price(live_data['Chg. %']),
-                        time=time
-                    ).save()
-
-                elif self.type_ == 'crptcrncy':
-                    models.AllAssetsLive(
-                        Type=self.type_,
-                        link=link,
-
-                        prev_close=validate_price(live_data['Prev. Close']),
-
-                        last_price=validate_price(live_data['Last']),
-                        market_cap=validate_price(live_data['Market Cap']),
-                        volume=validate_price(live_data['Vol.']),
-                        total_vol=validate_price(live_data['Total Vol.']),
-                        change_perc=validate_price(live_data['Chg. %']),
-                        change_7d=validate_price(live_data['Chg (7D)'])
-                    ).save()
-                elif self.type_ == 'stck':
-                    models.AllAssetsLive(
-                        Type=self.type_,
-                        link=link,
-
-                        prev_close=validate_price(live_data['Prev. Close']),
-
-                        last_price=validate_price(live_data['Last']),
-                        high=validate_price(live_data['High']),
-                        low=validate_price(live_data['Low']),
-                        change=validate_price(live_data['Chg.']),
-                        change_perc=validate_price(live_data['Chg. %']),
-                        volume=validate_price(live_data['Vol.']),
-                        time=time
-                    ).save()
-                elif self.type_ == 'indx':
-                    models.AllAssetsLive(
-                        Type=self.type_,
-                        link=link,
-
-                        prev_close=validate_price(live_data['Prev. Close']),
-
-                        last_price=validate_price(live_data['Last']),
-                        high=validate_price(live_data['High']),
-                        low=validate_price(live_data['Low']),
-                        change=validate_price(live_data['Chg.']),
-                        change_perc=validate_price(live_data['Chg. %']),
-                        time=time
-                    ).save()
-                elif self.type_ == 'etf':
-                    models.AllAssetsLive(
-                        Type=self.type_,
-                        link=link,
-
-                        prev_close=validate_price(live_data['Prev. Close']),
-
-                        last_price=validate_price(live_data['Last']),
-                        change_perc=validate_price(live_data['Chg. %']),
-                        volume=validate_price(live_data['Vol.']),
-                        time=time
-                    ).save()
-                elif self.type_ == 'bnd':
-                    models.AllAssetsLive(
-                        Type=self.type_,
-                        link=link,
-
-                        prev_close=validate_price(live_data['Prev. Close']),
-
-                        Yield=validate_price(live_data['Yield']),
-                        high=validate_price(live_data['High']),
-                        low=validate_price(live_data['Low']),
-                        change=validate_price(live_data['Chg.']),
-                        change_perc=validate_price(live_data['Chg. %']),
-                        time=time
-                    ).save()
-                elif self.type_ == 'crptcrncy':
-                    models.AllAssetsLive(
-                        Type=self.type_,
-                        link=link,
-
-                        prev_close=validate_price(live_data['Prev. Close']),
-
-                        last_price=validate_price(live_data['Last']),
-                        change_perc=validate_price(live_data['Chg. %']),
-                        total_assets=validate_price(live_data['Total Assets']),
-                        time=time
-                    ).save()
+                    last_price=validate_price(live_data['Last']),
+                    month=validate_price(live_data['Month']),
+                    Open=validate_price(live_data['Open']),
+                    high=validate_price(live_data['High']),
+                    low=validate_price(live_data['Low']),
+                    change=validate_price(live_data['Chg.']),
+                    change_7d=validate_price(live_data['Chg. (7D)']),
+                    change_perc=validate_price(live_data['Chg. %']),
+                    volume=validate_price(live_data['Vol.']),
+                    market_cap=validate_price(live_data['Market Cap']),
+                    Yield=validate_price(live_data['Yield']),
+                    total_vol=validate_price(live_data['Total Vol.']),
+                    total_assets=validate_price(live_data['Total Assets']),
+                
+                    time=time
+                ).save()
 
                 last_obj_1d_count = models.AllAssetsHistorical1D.objects.filter(link=link).count()
                 if last_obj_1d_count > 0:
@@ -261,10 +179,15 @@ class CollectLive:
                     # if there's no data at all or latest data is already outdated
                     # send (Save) data
                     models.AllAssetsHistorical1D(
+                        Type=self.type_,
                         link=link,
+
                         date=now,
-                        price=live_data['Last'],
-                        Type=self.type_
+                        price=validate_price(live_data['Last']),
+                        Open=validate_price(live_data['Open']),
+                        high=validate_price(live_data['High']),
+                        low=validate_price(live_data['Low']),
+                        volume=validate_price(live_data['Vol.']),
                     ).save()
                     print(f'{self.title}: saved HISTORICAL1D')
 
@@ -281,10 +204,15 @@ class CollectLive:
                     # if there's no data at all or latest data is already outdated also divisible by 5
                     # send (Save) data
                     models.AllAssetsHistorical5D(
+                        Type=self.type_,
                         link=link,
+
                         date=now,
-                        price=live_data['Last'],
-                        Type=self.type_
+                        price=validate_price(live_data['Last']),
+                        Open=validate_price(live_data['Open']),
+                        high=validate_price(live_data['High']),
+                        low=validate_price(live_data['Low']),
+                        volume=validate_price(live_data['Vol.']),
                     ).save()
                     print(f'{self.title}: saved HISTORICAL5D')
                     
