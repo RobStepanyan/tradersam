@@ -292,6 +292,26 @@ class CollectLive:
                     else:
                         after_live_data[key] = value
                 
+                if validate_price(after_live_data['Next Earnings Date']) is None:
+                    next_earn_date = None
+                else:
+                    next_earn_date = datetime.datetime.strptime(validate_price(after_live_data['Next Earnings Date']), '%b %d, %Y')
+
+                if validate_price(after_live_data['Maturity Date']) is None:
+                    maturity_date = None
+                else:
+                    maturity_date = datetime.datetime.strptime(validate_price(after_live_data['Maturity Date']), '%d %b %Y')
+
+                if validate_price(after_live_data['Last Rollover Day']) is None:
+                    last_roll_day = None
+                else:
+                    last_roll_day = datetime.datetime.strptime(validate_price(after_live_data['Last Rollover Day']), '%m/%d/%Y')
+
+                if validate_price(after_live_data['Settlement Day']) is None:
+                    settlement_day = None
+                else:
+                    settlement_day = datetime.datetime.strptime(validate_price(after_live_data['Settlement Day']), '%m/%d/%Y')
+
                 if last_obj_after_count == 0 or ((now.date() - last_obj_after.date).days >= 1):
                     models.AllAssetsAfterLive(
                         Type=self.type_,
@@ -305,7 +325,7 @@ class CollectLive:
                         shrs_outstndng=validate_price(after_live_data['Shares Outstanding']),
                         avg_vol_3m=validate_price(after_live_data['Average Vol. (3m)']),
                         beta=validate_price(after_live_data['Beta']),
-                        next_earn_date=validate_price(after_live_data['Next Earnings Date']),
+                        next_earn_date=next_earn_date,
                         max_supply=validate_price(after_live_data['Max Supply']),
                         volume=validate_price(after_live_data['Volume']),
                         div_ttm=validate_price(after_live_data['Dividends (TTM)']),
@@ -313,7 +333,7 @@ class CollectLive:
                         roe=validate_price(after_live_data['ROE']),
                         market_cap=validate_price(after_live_data['Market Cap']),
                         rating=validate_price(after_live_data['Rating']),
-                        maturity_date=validate_price(after_live_data['Maturity Date']),
+                        maturity_date=maturity_date,
                         total_assets=validate_price(after_live_data['Total Assets']),
                         ttm_yield=validate_price(after_live_data['TTM Yield']),
                         rng_52_wk=validate_price(after_live_data['52 wk Range']),
@@ -329,9 +349,9 @@ class CollectLive:
                         roi_ttm=validate_price(after_live_data['ROI (TTM)']),
                         circ_supply=validate_price(after_live_data['Circulating Supply']),
                         risk_rating=validate_price(after_live_data['Rating']),
-                        last_roll_day=validate_price(after_live_data['Last Rollover Day']),
+                        last_roll_day=last_roll_day,
                         months=validate_price(after_live_data['Months']),
-                        settlement_day=validate_price(after_live_data['Settlement Day']),
+                        settlement_day=settlement_day,
                         asset_class=validate_price(after_live_data['Asset Class']),
                         eps=validate_price(after_live_data['EPS']),
                     ).save()
