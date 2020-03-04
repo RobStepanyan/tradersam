@@ -65,9 +65,11 @@ class CollectLive:
             'earAdv left js-floaty-flyer',
             'genPopup signupPromotionPopup js-promotion-popup displayNone'
         ]
+        
+        driver.execute_script(f"$('header').empty()")
         for cl in classes_to_remove:
             driver.execute_script(f"$('.{cl}').empty()")
-        driver.execute_script(f"$('header').empty()")
+        
         for el in soup.find('div', class_='wrapper').findChildren(recursive=False):
             if el.name != 'section':
                 if el.has_attr('class') and len(el['class']) > 0:
@@ -135,7 +137,7 @@ class CollectLive:
             else:
                 is_closed = False
 
-            if is_closed:
+            if not is_closed:
                 # if the market is open collect the live data
                 live_data = {}
                 l = []
@@ -163,9 +165,12 @@ class CollectLive:
                     time = datetime.datetime.strptime(str(now.year)+str(live_data['Time']), '%Y%d/%m')
                 else:
                     time = datetime.datetime.strptime(
-                            datetime.datetime.today().strftime('%Y:%m:%d:')+str(live_data['Time']), '%Y:%m:%d:%H:%M:%S')
+                            timezone.now().date().strftime('%Y:%m:%d:')+str(live_data['Time']), '%Y:%m:%d:%H:%M:%S')
+                    time = timezone.make_aware(time)
                 if self.type_ == 'cmdty':
-                    if live_data['Month'] in '  ':
+                    if live_data['Month'] is None:
+                        pass
+                    elif live_data['Month'] in '  ':
                         live_data['Month'] = None
                     else:
                         live_data['Month'] = datetime.datetime.strptime(live_data['Month'], '%b %y')
@@ -249,13 +254,13 @@ class CollectLive:
                         hours = days * 24 + seconds // 3600
                         if hours > 24*5:
                             models.AllAssetsHistorical5D.objects.filter(link=link).order_by('id')[0].delete()
-            elif not is_closed:
+            elif is_closed:
                 # check whether "after live data" for today is available
                 last_obj_after_count = models.AllAssetsAfterLive.objects.filter(link=link).count()
                 if last_obj_after_count > 0:
                     last_obj_after = models.AllAssetsAfterLive.objects.filter(link=link).order_by('-id')[0]
 
-                after_values = []
+                after_values = {}
                 driver2.get(link)
                 soup = BeautifulSoup(driver2.page_source, 'html.parser')
                 
@@ -265,7 +270,9 @@ class CollectLive:
                     for d in panel.find_all('div', class_='dataItem'):
                         panel_values.append(d.find_all('span')[-1].get_text())
 
-                    after_values += panel_values[1:3] + panel_values[4]
+                    after_values['Circulating Supply'] = panel_values[1]
+                    after_values['Max Supply'] = panel_values[2]
+                    after_values['Day\'s Range'] = panel_values[4]
                 else:
                     after_table = soup.find('div', class_='overviewDataTable')
                     raw_after_values = {}
@@ -274,7 +281,7 @@ class CollectLive:
 
                     for key, value in raw_after_values.items():
                         if key in self.after_fields:
-                            after_values.append(value)
+                            after_values[key] = value
 
                 after_live_data = {}
                 l = []
@@ -286,7 +293,7 @@ class CollectLive:
                     after_live_data[field] = None
 
                 # Overiding neccessary fields
-                for key, value in zip(self.after_fields, after_values):
+                for key, value in after_values.items():
                     if value in ' -N/A':
                         after_live_data[key] = None
                     else:
@@ -355,7 +362,7 @@ class CollectLive:
                         asset_class=validate_price(after_live_data['Asset Class']),
                         eps=validate_price(after_live_data['EPS']),
                     ).save()
-                    print(f'Commodities: saved AFTERLIVE for {tds[0]}')
+                    print(f'Commodities: saved AFTERLIVE for {tr.find_all('td')[0]}')
 
                 
             else:
@@ -389,23 +396,28 @@ try:
     print(f'x{len(STATIC_OBJECTS)} blank tabs are ready!')
 
     # init
+    results = []
     start = time.time()
     instances = []
     for key, value in STATIC_OBJECTS.items():
         instances.append(CollectLive(key=key, value=value))
-    print(f'Init took {time.time()-start} seconds')
+    results.append(round(time.time()-start, 2))
 
     # # launch live
-    # while True:    
-    #     start = time.time()
-    #     for instance in instances:
-    #         instance.live_on()
-    #     print(f'Loop took {time.time()-start} seconds')
+    while True:    
+        start = time.time()
+        for instance in instances:
+            instance.live_on()
+        results.append(round(time.time()-start, 2))
 
 finally:
     driver.quit()
     driver2.quit()
     print('Driver is closed!')
-        
+    print(f'Init took: {results[0]} seconds')
+    if len(results[1:]) == 1:
+        print(f'Average loop took: {results[1:]} seconds') 
+    else:
+        print(f'Average loop took: {sum(results[1:])/len(results[1:])} seconds')        
 
             
