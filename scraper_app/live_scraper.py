@@ -57,12 +57,30 @@ class CollectLive:
                 break
             except AttributeError:
                 sleep(1)
+        
+        # removing unnecessary elements
+        classes_to_remove = [
+            'sideNotificationZone', 'breakingNews', 'floatingAlertWrapper',
+            'generalOverlay js-general-overlay displayNone',
+            'earAdv left js-floaty-flyer',
+            'genPopup signupPromotionPopup js-promotion-popup displayNone'
+        ]
+        for cl in classes_to_remove:
+            driver.execute_script(f"$('.{cl}').empty()")
+        driver.execute_script(f"$('header').empty()")
+        for el in soup.find('div', class_='wrapper').findChildren(recursive=False):
+            if el.name != 'section':
+                if el.has_attr('class') and len(el['class']) > 0:
+                    driver.execute_script(f"$('.{el['class'][0]}').empty()")
+                elif el.has_attr('id'):
+                    driver.execute_script(f"$('#{el['id']}').empty()")
 
         print(f'{self.title}: Tab is initializated!')
 
     def live_on(self):
         driver.switch_to.window(self.tab)
         soup = BeautifulSoup(driver.page_source, 'html.parser')
+
         table = soup.find('table', class_=self.table_class)
         
         if 'Crypto' in self.title:
@@ -357,12 +375,12 @@ try:
         instances.append(CollectLive(key=key, value=value))
     print(f'Init took {time.time()-start} seconds')
 
-    # launch live
-    while True:    
-        start = time.time()
-        for instance in instances:
-            instance.live_on()
-        print(f'Loop took {time.time()-start} seconds')
+    # # launch live
+    # while True:    
+    #     start = time.time()
+    #     for instance in instances:
+    #         instance.live_on()
+    #     print(f'Loop took {time.time()-start} seconds')
 
 finally:
     driver.quit()
