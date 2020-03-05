@@ -8,10 +8,11 @@ from . import models
 
 
 class CollectLive:
-
+    # this function is also used to fetch global variables to the class
     def get_tabs(self):
         global driver
         global driver2
+        global after_live_threads
         tabs = driver.window_handles[::-1]
         return tabs
 
@@ -131,14 +132,14 @@ class CollectLive:
             elif self.type_ == 'crncy':
                 is_closed = False
             elif self.type_ == 'crptcrncy':
-                is_closed = True
+                is_closed = False
             elif 'redClockIcon' in tr.find_all('td')[-1].span['class']:
                 is_closed = True
             else:
                 is_closed = False
-
             if not is_closed:
                 # if the market is open collect the live data
+                print('Market is open')
                 live_data = {}
                 l = []
                 for key, value in live_fields.items():
@@ -196,6 +197,7 @@ class CollectLive:
                 
                     time=time
                 ).save()
+                print(f'{self.title}: saved Live')
 
                 last_obj_1d_count = models.AllAssetsHistorical1D.objects.filter(link=link).count()
                 if last_obj_1d_count > 0:
@@ -255,108 +257,16 @@ class CollectLive:
                         if hours > 24*5:
                             models.AllAssetsHistorical5D.objects.filter(link=link).order_by('id')[0].delete()
             elif is_closed:
+                print('Market is closed')
                 # check whether "after live data" for today is available
                 last_obj_after_count = models.AllAssetsAfterLive.objects.filter(link=link).count()
                 if last_obj_after_count > 0:
                     last_obj_after = models.AllAssetsAfterLive.objects.filter(link=link).order_by('-id')[0]
 
-                after_values = {}
-                driver2.get(link)
-                soup = BeautifulSoup(driver2.page_source, 'html.parser')
-                
-                if self.type_ == 'crptcrncy':
-                    panel = soup.find('div', class_='cryptoGlobalData')
-                    panel_values = []
-                    for d in panel.find_all('div', class_='dataItem'):
-                        panel_values.append(d.find_all('span')[-1].get_text())
-
-                    after_values['Circulating Supply'] = panel_values[1]
-                    after_values['Max Supply'] = panel_values[2]
-                    after_values['Day\'s Range'] = panel_values[4]
-                else:
-                    after_table = soup.find('div', class_='overviewDataTable')
-                    raw_after_values = {}
-                    for d in after_table.find_all('div', class_='inlineblock'):
-                        raw_after_values[d.find('span').get_text()] = d.find_all('span')[-1].get_text()
-
-                    for key, value in raw_after_values.items():
-                        if key in self.after_fields:
-                            after_values[key] = value
-
-                after_live_data = {}
-                l = []
-                for value in after_live_fields.values():
-                    l += value
-                all_live_fields = list(set(l))
-
-                for field in all_live_fields:
-                    after_live_data[field] = None
-
-                # Overiding neccessary fields
-                for key, value in after_values.items():
-                    if value in ' -N/A':
-                        after_live_data[key] = None
-                    else:
-                        after_live_data[key] = value
-                
-                if after_live_data['Next Earnings Date']: # if not None
-                    next_earn_date = datetime.datetime.strptime(after_live_data['Next Earnings Date'], '%b %d, %Y')
-
-                if after_live_data['Maturity Date']: # if not None
-                    maturity_date = datetime.datetime.strptime(after_live_data['Maturity Date'], '%d %b %Y')
-
-                if after_live_data['Last Rollover Day']: # if not None
-                    last_roll_day = datetime.datetime.strptime(after_live_data['Last Rollover Day'], '%m/%d/%Y')
-
-                if after_live_data['Settlement Day']: # if not None
-                    settlement_day = datetime.datetime.strptime(after_live_data['Settlement Day'], '%m/%d/%Y')
-
                 if last_obj_after_count == 0 or ((now.date() - last_obj_after.date).days >= 1):
-                    models.AllAssetsAfterLive(
-                        Type=self.type_,
-                        link=link,
-
-                        date=now,
-
-                        pe_ratio=validate_price(after_live_data['P/E Ratio']),
-                        coupon=validate_price(after_live_data['Coupon']),
-                        div_yield=validate_price(after_live_data['Dividend Yield']),
-                        shrs_outstndng=validate_price(after_live_data['Shares Outstanding']),
-                        avg_vol_3m=validate_price(after_live_data['Average Vol. (3m)']),
-                        beta=validate_price(after_live_data['Beta']),
-                        next_earn_date=next_earn_date,
-                        max_supply=validate_price(after_live_data['Max Supply']),
-                        volume=validate_price(after_live_data['Volume']),
-                        div_ttm=validate_price(after_live_data['Dividends (TTM)']),
-                        price_rng=validate_price(after_live_data['Price Range']),
-                        roe=validate_price(after_live_data['ROE']),
-                        market_cap=validate_price(after_live_data['Market Cap']),
-                        rating=validate_price(after_live_data['Rating']),
-                        maturity_date=maturity_date,
-                        total_assets=validate_price(after_live_data['Total Assets']),
-                        ttm_yield=validate_price(after_live_data['TTM Yield']),
-                        rng_52_wk=validate_price(after_live_data['52 wk Range']),
-                        revenue=validate_price(after_live_data['Revenue']),
-                        div_and_yield=validate_price(after_live_data['Dividend (Yield)']),
-                        one_year_chg=validate_price(after_live_data['1-Year Change']),
-                        price_opn=validate_price(after_live_data['Price Open']),
-                        roa=validate_price(after_live_data['ROA']),
-                        price=validate_price(after_live_data['Price']),
-                        turnover=validate_price(after_live_data['Turnover']),
-                        days_rng=validate_price(after_live_data['Day\'s Range']),
-                        expenses=validate_price(after_live_data['Expenses']),
-                        roi_ttm=validate_price(after_live_data['ROI (TTM)']),
-                        circ_supply=validate_price(after_live_data['Circulating Supply']),
-                        risk_rating=validate_price(after_live_data['Rating']),
-                        last_roll_day=last_roll_day,
-                        months=validate_price(after_live_data['Months']),
-                        settlement_day=settlement_day,
-                        asset_class=validate_price(after_live_data['Asset Class']),
-                        eps=validate_price(after_live_data['EPS']),
-                    ).save()
-                    print(f'{self.type_}: saved AFTERLIVE for {tr.find_all('td')[0]}')
-
-                
+                    after_live_threads.append(
+                        {'link': link, 'type': self.type_, 'after fields': self.after_fields,'title': self.title}
+                        )
             else:
                 print('Time Icon is not found/recognized')
 
@@ -366,7 +276,114 @@ class CollectLive:
     def __str__(self):
         return self.title
 
+def run_after_live(link, type_, after_fields, title):
+    after_values = {}
+    driver2.get(link)
+    now = timezone.now()
+    soup = BeautifulSoup(driver2.page_source, 'html.parser')
     
+    if type_ == 'crptcrncy':
+        panel = soup.find('div', class_='cryptoGlobalData')
+        panel_values = []
+        for d in panel.find_all('div', class_='dataItem'):
+            panel_values.append(d.find_all('span')[-1].get_text())
+
+        after_values['Circulating Supply'] = panel_values[1]
+        after_values['Max Supply'] = panel_values[2]
+        after_values['Day\'s Range'] = panel_values[4]
+    else:
+        after_table = soup.find('div', class_='overviewDataTable')
+        raw_after_values = {}
+        for d in after_table.find_all('div', class_='inlineblock'):
+            raw_after_values[d.find('span').get_text()] = d.find_all('span')[-1].get_text()
+
+        for key, value in raw_after_values.items():
+            if key in after_fields:
+                after_values[key] = value
+
+    after_live_data = {}
+    l = []
+    for value in after_live_fields.values():
+        l += value
+    all_live_fields = list(set(l))
+
+    for field in all_live_fields:
+        after_live_data[field] = None
+
+    # Overiding neccessary fields
+    for key, value in after_values.items():
+        if value in ' -N/A':
+            after_live_data[key] = None
+        else:
+            after_live_data[key] = value
+    
+    if after_live_data['Next Earnings Date']: # if not None
+        next_earn_date = datetime.datetime.strptime(after_live_data['Next Earnings Date'], '%b %d, %Y')
+    else:
+        next_earn_date = None
+
+    if after_live_data['Maturity Date']: # if not None
+        maturity_date = datetime.datetime.strptime(after_live_data['Maturity Date'], '%d %b %Y')
+    else:
+        maturity_date = None
+
+    if after_live_data['Last Rollover Day']: # if not None
+        last_roll_day = datetime.datetime.strptime(after_live_data['Last Rollover Day'], '%m/%d/%Y')
+    else:
+        last_roll_day = None
+
+    if after_live_data['Settlement Day']: # if not None
+        settlement_day = datetime.datetime.strptime(after_live_data['Settlement Day'], '%m/%d/%Y')
+    else:
+        settlement_day = None
+
+    
+    models.AllAssetsAfterLive(
+        Type=type_,
+        link=link,
+
+        date=now,
+
+        pe_ratio=validate_price(after_live_data['P/E Ratio']),
+        coupon=validate_price(after_live_data['Coupon']),
+        div_yield=validate_price(after_live_data['Dividend Yield']),
+        shrs_outstndng=validate_price(after_live_data['Shares Outstanding']),
+        avg_vol_3m=validate_price(after_live_data['Average Vol. (3m)']),
+        beta=validate_price(after_live_data['Beta']),
+        next_earn_date=next_earn_date,
+        max_supply=validate_price(after_live_data['Max Supply']),
+        volume=validate_price(after_live_data['Volume']),
+        div_ttm=validate_price(after_live_data['Dividends (TTM)']),
+        price_rng=validate_price(after_live_data['Price Range']),
+        roe=validate_price(after_live_data['ROE']),
+        market_cap=validate_price(after_live_data['Market Cap']),
+        rating=validate_price(after_live_data['Rating']),
+        maturity_date=maturity_date,
+        total_assets=validate_price(after_live_data['Total Assets']),
+        ttm_yield=validate_price(after_live_data['TTM Yield']),
+        rng_52_wk=validate_price(after_live_data['52 wk Range']),
+        revenue=validate_price(after_live_data['Revenue']),
+        div_and_yield=validate_price(after_live_data['Dividend (Yield)']),
+        one_year_chg=validate_price(after_live_data['1-Year Change']),
+        price_opn=validate_price(after_live_data['Price Open']),
+        roa=validate_price(after_live_data['ROA']),
+        price=validate_price(after_live_data['Price']),
+        turnover=validate_price(after_live_data['Turnover']),
+        days_rng=validate_price(after_live_data['Day\'s Range']),
+        expenses=validate_price(after_live_data['Expenses']),
+        roi_ttm=validate_price(after_live_data['ROI (TTM)']),
+        circ_supply=validate_price(after_live_data['Circulating Supply']),
+        risk_rating=validate_price(after_live_data['Rating']),
+        last_roll_day=last_roll_day,
+        months=validate_price(after_live_data['Months']),
+        settlement_day=settlement_day,
+        asset_class=validate_price(after_live_data['Asset Class']),
+        eps=validate_price(after_live_data['EPS']),
+    ).save()
+    
+    print(f'{title}: saved AFTERLIVE')
+    global after_live_thread_alive
+    after_live_thread_alive = False
     
 
         
@@ -377,8 +394,18 @@ class CollectLive:
 # 3. Check condition
 # 4. Call appropriate function
 # 5. Repeat
+def run_after_live_thread():
+    global after_live_thread_alive, after_live_threads
+
+    if not after_live_thread_alive and after_live_threads:
+        after_live_thread_alive = True
+        args = after_live_threads.pop()
+        Thread(target=run_after_live, 
+        args=(args['link'], args['type'], args['after fields'], args['title'])).start()
 
 try:
+    after_live_threads = []
+    after_live_thread_alive = False
     #  Create driver and tabs
     driver = vps_selenium_setup()
     driver2 = vps_selenium_setup()
@@ -394,7 +421,9 @@ try:
     for key, value in STATIC_OBJECTS.items():
         instances.append(CollectLive(key=key, value=value))
     results.append(round(time.time()-start, 2))
+    print('Init finished')
 
+    Thread(target=run_after_live_thread).start()
     # # launch live
     while True:    
         start = time.time()
@@ -407,8 +436,8 @@ finally:
     driver2.quit()
     print('Driver is closed!')
     print(f'Init took: {results[0]} seconds')
-    if len(results[1:]) <= 1:
-        print(f'Average loop took: {results[1:]} seconds') 
+    if len(results[1:]) == 0:
+        print(f'Average loop took: {results[1]} seconds') 
     else:
         print(f'Average loop took: {sum(results[1:])/len(results[1:])} seconds')        
 
