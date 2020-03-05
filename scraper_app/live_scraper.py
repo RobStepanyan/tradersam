@@ -362,7 +362,7 @@ class CollectLive:
                         asset_class=validate_price(after_live_data['Asset Class']),
                         eps=validate_price(after_live_data['EPS']),
                     ).save()
-                    print(f'Commodities: saved AFTERLIVE for {tr.find_all('td')[0]}')
+                    print(f'{self.type_}: saved AFTERLIVE for {tr.find_all('td')[0]}')
 
                 
             else:
@@ -415,7 +415,7 @@ finally:
     driver2.quit()
     print('Driver is closed!')
     print(f'Init took: {results[0]} seconds')
-    if len(results[1:]) == 1:
+    if len(results[1:]) <= 1:
         print(f'Average loop took: {results[1:]} seconds') 
     else:
         print(f'Average loop took: {sum(results[1:])/len(results[1:])} seconds')        
