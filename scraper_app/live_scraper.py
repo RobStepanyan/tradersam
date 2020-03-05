@@ -292,25 +292,17 @@ class CollectLive:
                     else:
                         after_live_data[key] = value
                 
-                if validate_price(after_live_data['Next Earnings Date']) is None:
-                    next_earn_date = None
-                else:
-                    next_earn_date = datetime.datetime.strptime(validate_price(after_live_data['Next Earnings Date']), '%b %d, %Y')
+                if after_live_data['Next Earnings Date']: # if not None
+                    next_earn_date = datetime.datetime.strptime(after_live_data['Next Earnings Date'], '%b %d, %Y')
 
-                if validate_price(after_live_data['Maturity Date']) is None:
-                    maturity_date = None
-                else:
-                    maturity_date = datetime.datetime.strptime(validate_price(after_live_data['Maturity Date']), '%d %b %Y')
+                if after_live_data['Maturity Date']: # if not None
+                    maturity_date = datetime.datetime.strptime(after_live_data['Maturity Date'], '%d %b %Y')
 
-                if validate_price(after_live_data['Last Rollover Day']) is None:
-                    last_roll_day = None
-                else:
-                    last_roll_day = datetime.datetime.strptime(validate_price(after_live_data['Last Rollover Day']), '%m/%d/%Y')
+                if after_live_data['Last Rollover Day']: # if not None
+                    last_roll_day = datetime.datetime.strptime(after_live_data['Last Rollover Day'], '%m/%d/%Y')
 
-                if validate_price(after_live_data['Settlement Day']) is None:
-                    settlement_day = None
-                else:
-                    settlement_day = datetime.datetime.strptime(validate_price(after_live_data['Settlement Day']), '%m/%d/%Y')
+                if after_live_data['Settlement Day']: # if not None
+                    settlement_day = datetime.datetime.strptime(after_live_data['Settlement Day'], '%m/%d/%Y')
 
                 if last_obj_after_count == 0 or ((now.date() - last_obj_after.date).days >= 1):
                     models.AllAssetsAfterLive(
