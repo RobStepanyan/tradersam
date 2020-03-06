@@ -4315,6 +4315,7 @@ a.badge-dark.focus, a.badge-dark:focus {
   margin-bottom: 1rem;
   border: 1px solid transparent;
   border-radius: .25rem;
+  font-weight: bold;
 }
 .alert-heading {
   color: inherit;
@@ -4377,26 +4378,29 @@ a.badge-dark.focus, a.badge-dark:focus {
   color: #062c33;
 }
 .alert-warning {
-  color: #856404;
-  background-color: var(--white)3cd;
-  border-color: #ffeeba;
+  color: var(--yellow);
+  background-color: var(--white);
+  border-color: var(--yellow);
 }
 .alert-warning hr {
   border-top-color: #ffe8a1;
 }
 .alert-warning .alert-link {
-  color: #533f03;
+  color: var(--yellow);
 }
+.alert-error,
 .alert-danger {
-  color: #721c24;
-  background-color: #f8d7da;
-  border-color: #f5c6cb;
+  color: var(--danger);
+  background-color: var(--white);
+  border-color: var(--danger);
 }
+.alert-error,
 .alert-danger hr {
   border-top-color: #f1b0b7;
 }
+.alert-error .alert-link,
 .alert-danger .alert-link {
-  color: #491217;
+  color: var(--danger);
 }
 .alert-light {
   color: #818182;
