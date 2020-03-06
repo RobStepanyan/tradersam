@@ -8,6 +8,13 @@ def asset_details(request):
 def news_details(request):
     return render(request, 'main_app/news_details.html')
 
+def all_assets(request, cntry, type_):
+    context = {
+        'country': cntry,
+        'type': type_
+    }
+    return render(request, 'main_app/all_assets.html', context)
+
 def csoon(request):
     return render(request, 'main_app/comingsoon.html')
 

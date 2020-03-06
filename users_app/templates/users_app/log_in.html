@@ -1,63 +1,49 @@
 {% extends "users_app/users_base.html" %}
 {% block content %}
-
-<body class="d-flex flex-column">
-  <div id="page-content">
-    <div class="container">
-      <div class="row">
-        <div class="col-sm-9 col-md-7 col-lg-5 mx-auto p-0">
-            {% if messages %}
-            {% for message in messages %}
-            <div class="alert alert-{{ message.tags }}">
-              {{ message }}
-            </div>
+      <h3 class="text-center mb-4">Log In</h3>
+      <form class="form-signin" method="POST">
+        {% csrf_token %}
+        <div class="form-label-group">
+          {{ form.username }}
+          <label for="{{ form.username.id_for_label }}">Username</label>
+          {% if form.username.errors %}
+            <ul class="pl-4">
+            {% for error in form.username.errors %}
+            <li class="text-danger">{{ error|escape }}</li>
             {% endfor %}
-            {% endif %}
-          <h2 class="text-center text-white font-weight-bold my-4">Traders.am</h2>
-          <div class="card card-signin mb-2">
-            <div class="card-body">
-              <h3 class="text-center mb-4">Log In</h3>
-              <form class="form-signin" method="POST">
-                {% csrf_token %}
-                <div class="form-label-group">
-                  {{ form.username }}
-                  <label for="{{ form.username.id_for_label }}">Username</label>
-                  {% if form.username.errors %}
-                    <ul class="pl-4">
-                    {% for error in form.username.errors %}
-                    <li class="text-danger">{{ error|escape }}</li>
-                    {% endfor %}
-                    </ul>
-                  {% endif %}
-                </div>
-
-                <div class="form-label-group">
-                  {{ form.password }}
-                  <label for="{{ form.password.id_for_label }}">Password</label>
-                  {% if form.password.errors %}
-                    <ul class="pl-4">
-                    {% for error in form.password.errors %}
-                    <li class="text-danger">{{ error|escape }}</li>
-                    {% endfor %}
-                    </ul>
-                  {% endif %}
-                </div>
-
-                <div class="custom-control custom-checkbox mb-3">
-                  <input type="checkbox" class="custom-control-input" id="customCheck1">
-                  <label class="custom-control-label" for="customCheck1">Remember password</label>
-                </div>
-                <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Log In</button>
-                <hr class="my-4">
-                <button class="btn btn-lg btn-google btn-block text-uppercase" type="submit">Log In with Google</button>
-                <button class="btn btn-lg btn-facebook btn-block text-uppercase" type="submit">Log In with Facebook</button>
-              </form>
-            </div>
-          </div>
-          <p class="text-white text-center">Don't have an account yet? <a href="#" class="text-white"><u>Sign Up</u></a>
-          </p>
+            </ul>
+          {% endif %}
         </div>
-      </div>
+
+        <div class="form-label-group">
+          {{ form.password }}
+          <label for="{{ form.password.id_for_label }}">Password</label>
+          {% if form.password.errors %}
+            <ul class="pl-4">
+            {% for error in form.password.errors %}
+            <li class="text-danger">{{ error|escape }}</li>
+            {% endfor %}
+            </ul>
+          {% endif %}
+        </div>
+
+        <div class="custom-control custom-checkbox mb-3">
+          <input type="checkbox" class="custom-control-input border-0" id="customCheck1">
+          <label class="custom-control-label" for="customCheck1">Remember password</label>
+        </div>
+        <a href="" class="btn btn-primary btn-xl btn-block" type="submit">Log In</a>
+        <h6 class="no-span text-center my-3">Continue with</h6>
+        <div class="continue-container">
+          <a class="continue-btn text-white" type="submit">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28" width="32" height="32"><path fill="#4285F4" d="M23.6 14.23c0-.71-.06-1.4-.18-2.05H14v3.87h5.38a4.6 4.6 0 01-2 3.02v2.5h3.24c1.89-1.73 2.98-4.3 2.98-7.34z"></path><path fill="#34A853" d="M14 24c2.7 0 4.96-.9 6.62-2.42l-3.23-2.51c-.9.6-2.04.95-3.39.95-2.6 0-4.8-1.76-5.6-4.12H5.06v2.6A10 10 0 0014 24z"></path><path fill="#FBBC05" d="M8.4 15.9a6.01 6.01 0 010-3.8V9.5H5.06a10 10 0 000 9l3.34-2.6z"></path><path fill="#EA4335" d="M14 7.98c1.47 0 2.79.5 3.82 1.5L20.7 6.6A10 10 0 005.06 9.5l3.34 2.6c.8-2.36 3-4.12 5.6-4.12z"></path></svg>
+          </a>
+          <a class="continue-btn text-white" type="submit">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28" width="32" height="32"><path fill="#1877F2" d="M14 4a10 10 0 011.56 19.88v-6.99h2.33l.45-2.89h-2.78v-1.88c0-.79.39-1.56 1.63-1.56h1.26V8.1s-1.14-.2-2.24-.2c-2.28 0-3.77 1.4-3.77 3.9V14H9.9v2.9h2.54v6.98A10.01 10.01 0 0114 4z"></path></svg>
+          </a>
+        </div>
+      </form>
     </div>
   </div>
-  {% endblock content %}
+  <p class="text-white text-center">Don't have an account yet? <a href="{% url 'signup' %}" class="text-white"><u>Sign Up</u></a>
+  </p>
+{% endblock content %}

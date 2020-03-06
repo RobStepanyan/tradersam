@@ -21,18 +21,13 @@ body {
   background-color: #fff;
 
   /* Background gradient */
-  background: #0a2161;
-  /* background: rgb(22,81,242);
-  background: -moz-radial-gradient(circle, rgba(22,81,242,1) 0%, rgba(11,34,66,1) 100%);
-  background: -webkit-radial-gradient(circle, rgba(22,81,242,1) 0%, rgba(11,34,66,1) 100%);
-  background: radial-gradient(circle, rgba(22,81,242,1) 0%, rgba(11,34,66,1) 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#1651f2",endColorstr="#0b2242",GradientType=1); */
+  background: var(--blue1);
 }
 
 .h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
   margin-bottom: .5rem;
   font-family: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  font-weight: 400;
+  font-weight: bold;
   line-height: 1.2;
 }
 .h1, h1 {
@@ -75,7 +70,7 @@ body {
 }
 
 .form-signin .btn {
-  font-size: 80%;
+  font-size: 100%;
   border-radius: 5rem;
   letter-spacing: .1rem;
   font-weight: bold;
@@ -180,17 +175,44 @@ body {
   }
 }
 
-/* Sticky Footer Classes */
-
-html,
-body {
-  height: 100%;
+h6.no-span {
+  display: table;
+  white-space: nowrap;
 }
-
-#page-content {
-  flex: 1 0 auto;
+h6.no-span:before, h6.no-span:after {
+  border-top: 1px solid var(--gray4);
+  content: '';
+  display: table-cell;
+  position: relative;
+  top: 0.5em;
+  width: 45%;
 }
+h6.no-span:before { right: 1.5%; }
+h6.no-span:after { left: 1.5%; }
 
-#sticky-footer {
-  flex-shrink: none;
+
+.continue-container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: nowrap;
+  background: var(--blue1);
+  border-radius: .5rem;
+  padding: 4px;
+}
+.continue-btn {
+  margin-right: 8px;
+  display: flex;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  width: 55px;
+  border-radius: .5rem;
+  height: 55px;
+  transition: background-color .15s cubic-bezier(0.92, 0.95, 1, 1),color .15s ease;
+}
+.continue-btn:hover {
+  background: var(--white);
+  -webkit-box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .1);
+  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .1);
 }

@@ -1,390 +1,239 @@
-{% extends "main_app/base.html" %}
+{% extends "main_app/details_base.html" %}
 {% load static %}
 {% block content %}
 
-<!-- Masthead -->
-<header class="masthead">
-  <div class="container h-100">
-    <div class="row h-100 align-items-center justify-content-center text-center">
-      {% if messages %}
-      <div class="col-lg-8 align-self-start">
-        {% for message in messages %}
-        <div class="alert alert-{{ message.tags }} mb-0">
-          {{ message }}
-        </div>
-        {% endfor %}
-      </div>
-      {% endif %}
-      <div class="col-lg-10 align-self-end">
-        <h1 class="text-uppercase text-white font-weight-bold">Your Favorite Source of Market Information</h1>
-        <hr class="divider my-4">
-      </div>
-      <div class="col-lg-8 align-self-baseline">
-        <p class="text-white-75 font-weight-light mb-5">This non-profit website has been created only for entertainment
-          and illustration of web development skills. The data in this website is not necessarily real-time nor
-          accurate. Therefore Traders.am doesn`t bear any responsibility for any trading losses you might incur as a
-          result of using this data.</p>
-        <a class="btn btn-primary btn-xl js-scroll-trigger" href="#marketoverview">
-          <h5 class="my-1 font-weight-bold">Get Started!</h3>
-        </a> <br>
-        <a class="btn btn-dark-gray text-white js-scroll-trigger mt-3 border-0" href="#feed">Jump to feed</a>
-      </div>
-    </div>
-  </div>
-</header>
-
-<!-- Market Overview  Section -->
-<section class="page-section bg-primary" id="marketoverview">
+<!-- Page Header -->
+<section class="bg-primary" id="asset-header">
   <div class="container">
-    <h2 class="text-white ml-0 mb-3"><i class="fas fa-1x fa-university text-white"></i> Market Overview</h2>
-    <div class="row">
-
-      <div class="col-lg-6 p-0 mb-3" id="pr-1">
-        <div class="input-group-btn scrolling-wrapper-flexbox" data-toggle="buttons">
-          <label class="btn btn-primary mr-2 active">
-            <input type="radio" name="options" id="USA" autocomplete="off" checked>USA
-          </label>
-          <label class="btn btn-primary mr-2">
-            <input type="radio" name="options" id="Japan" autocomplete="off">Japan
-          </label>
-          <label class="btn btn-primary mr-2">
-            <input type="radio" name="options" id="UK" autocomplete="off">UK
-          </label>
-          <label class="btn btn-primary mr-2">
-            <input type="radio" name="options" id="Honk Kong" autocomplete="off">Honk Kong
-          </label>
-          <label class="btn btn-primary mr-2">
-            <input type="radio" name="options" id="China" autocomplete="off">China
-          </label>
-          <label class="btn btn-primary mr-2">
-            <input type="radio" name="options" id="Canada" autocomplete="off">Canada
-          </label>
-          <label class="btn btn-primary mr-2">
-            <input type="radio" name="options" id="Germany" autocomplete="off">Germany
-          </label>
-          <label class="btn btn-primary mr-2">
-            <input type="radio" name="options" id="Australia" autocomplete="off">Australia
-          </label>
-        </div>
+    <div class="row justify-content-between m-0 p-0">
+      <div>
+        <h3 class="text-gray-5 m-0">United States</h3>
+        <h2 class="text-white m-0"><img class="country-flag-lg" src="{% static 'main_app/svg/flags/us.svg' %}" alt="US"> Stocks</h2>
+        <i class="text-gray-5">As of 1:53PM CT.</i>
       </div>
-      <div class="col-lg-6 p-0 mb-3" id="pl-1">
-        <div class="input-group-btn scrolling-wrapper-flexbox" data-toggle="buttons">
-          <label class="btn btn-primary mr-2 active">
-            <input type="radio" name="options" id="all" autocomplete="off" checked>Stocks
-          </label>
-          <label class="btn btn-primary mr-2">
-            <input type="radio" name="options" id="Indices" autocomplete="off">Indices
-          </label>
-          <label class="btn btn-primary mr-2">
-            <input type="radio" name="options" id="Bonds" autocomplete="off">Bonds
-          </label>
-          <label class="btn btn-primary mr-2">
-            <input type="radio" name="options" id="Commodities" autocomplete="off">Commodities
-          </label>
-          <label class="btn btn-primary mr-2">
-            <input type="radio" name="options" id="Currencies" autocomplete="off">Currencies
-          </label>
-          <label class="btn btn-primary mr-2 pr-2">
-            <input type="radio" name="options" id="Cryptocurrency" autocomplete="off">Cryptocurrency
-          </label>
-          <label class="btn btn-primary">
-            <input type="radio" name="options" id="ETFs" autocomplete="off">ETFs
-          </label>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="bg-dark p-3">
-    <div class="container">
-      <h3 class="text-white text-align-center ml-0 mb-3">
-        United States
-      </h3>
-      <div class="row" id="market-carousel">
-        <a href="">
-          <div class="card asset-card card mr-3">
-            <div class="row justify-content-around">
-              <span class="short-name">S&P500</span>
-              <span class="long-name">S&P500 Futures</span>
-            </div>
-            <div class="row justify-content-around">
-              <span class="price up">313002.34</span>
-              <span class="change up">203.14%</span>
-            </div>
-          </div>
-        </a>
-
-        <a href="">
-          <div class="card asset-card card mr-3">
-            <div class="row justify-content-around">
-              <span class="short-name">S&P500</span>
-              <span class="long-name">S&P500 Futures</span>
-            </div>
-            <div class="row justify-content-around">
-              <span class="price up">313002.34</span>
-              <span class="change up">203.14%</span>
-            </div>
-          </div>
-        </a>
-
-        <a href="">
-          <div class="card asset-card card mr-3">
-            <div class="row justify-content-around">
-              <span class="short-name">S&P500</span>
-              <span class="long-name">S&P500 Futures</span>
-            </div>
-            <div class="row justify-content-around">
-              <span class="price up">313002.34</span>
-              <span class="change up">203.14%</span>
-            </div>
-          </div>
-        </a>
-
-        <a href="">
-          <div class="card asset-card card mr-3">
-            <div class="row justify-content-around">
-              <span class="short-name">S&P500</span>
-              <span class="long-name">S&P500 Futures</span>
-            </div>
-            <div class="row justify-content-around">
-              <span class="price up">313002.34</span>
-              <span class="change up">203.14%</span>
-            </div>
-          </div>
-        </a>
-
-        <a href="">
-          <div class="card asset-card card mr-3">
-            <div class="row justify-content-around">
-              <span class="short-name">S&P500</span>
-              <span class="long-name">S&P500 Futures</span>
-            </div>
-            <div class="row justify-content-around">
-              <span class="price up">313002.34</span>
-              <span class="change up">203.14%</span>
-            </div>
-          </div>
-        </a>
-
-        <a href="">
-          <div class="card asset-card card mr-3">
-            <div class="row justify-content-around">
-              <span class="short-name">S&P500</span>
-              <span class="long-name">S&P500 Futures</span>
-            </div>
-            <div class="row justify-content-around">
-              <span class="price up">313002.34</span>
-              <span class="change up">203.14%</span>
-            </div>
-          </div>
-        </a>
-
-      </div>
-    </div>
-  </div>
-  <div class="container mt-3">
-    <div class="row">
-      <!-- Selected Table -->
-      <div class="col-lg-6 p-0" id="pr-1">
-        <h3 class="text-white text-align-center ml-0 mb-3">
-          <img class="country-flag-lg" src="{% static 'main_app/svg/flags/us.svg' %}" alt="US">
-          Stocks
-        </h3>
-        <table class="market-table mb-3 table-striped shadow table-hover">
-          <thead>
-            <tr>
-              <th></th>
-              <th>Ticker</th>
-              <th>Last Price</th>
-              <th>Change</th>
-              <th>Change %</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><img class="country-flag-md" src="{% static 'main_app/svg/flags/us.svg' %}" alt="US"></td>
-              <td>AAPL</td>
-              <td>313.45</td>
-              <td class="text-success">+13.24</td>
-              <td><span class="change up">+2.14%</span></td>
-            </tr>
-            <tr>
-              <td><img class="country-flag-md" src="{% static 'main_app/svg/flags/us.svg' %}" alt="US"></td>
-              <td>AAPL</td>
-              <td>313.45</td>
-              <td class="text-success">+13.24</td>
-              <td><span class="change up">+200.14%</span></td>
-            </tr>
-            <tr>
-              <td><img class="country-flag-md" src="{% static 'main_app/svg/flags/us.svg' %}" alt="US"></td>
-              <td>AAPL</td>
-              <td>313.45</td>
-              <td class="">0.00</td>
-              <td><span class="change">0.00%</span></td>
-            </tr>
-            <tr>
-              <td><img class="country-flag-md" src="{% static 'main_app/svg/flags/us.svg' %}" alt="US"></td>
-              <td>AAPL</td>
-              <td>313.45</td>
-              <td class="text-success">+13.24</td>
-              <td><span class="change up">+2.14%</span></td>
-            </tr>
-            <tr>
-              <td><img class="country-flag-md" src="{% static 'main_app/svg/flags/us.svg' %}" alt="US"></td>
-              <td>AAPL</td>
-              <td>313.45</td>
-              <td class="text-danger">-13.24</td>
-              <td><span class="change down">-2.14%</span></td>
-            </tr>
-            <tr>
-              <td><img class="country-flag-md" src="{% static 'main_app/svg/flags/us.svg' %}" alt="US"></td>
-              <td>AAPL</td>
-              <td>313.45</td>
-              <td class="text-success">+13.24</td>
-              <td><span class="change up">+2.14%</span></td>
-            </tr>
-            <tr>
-              <td><img class="country-flag-md" src="{% static 'main_app/svg/flags/us.svg' %}" alt="US"></td>
-              <td>AAPL</td>
-              <td>313.45</td>
-              <td class="text-danger">-13.24</td>
-              <td><span class="change down">-2.14%</span></td>
-            </tr>
-            <tr>
-              <td><img class="country-flag-md" src="{% static 'main_app/svg/flags/us.svg' %}" alt="US"></td>
-              <td>AAPL</td>
-              <td>313.45</td>
-              <td class="text-success">+13.24</td>
-              <td><span class="change up">+2.14%</span></td>
-            </tr>
-            <tr>
-              <td><img class="country-flag-md" src="{% static 'main_app/svg/flags/us.svg' %}" alt="US"></td>
-              <td>AAPL</td>
-              <td>313.45</td>
-              <td class="text-danger">-13.24</td>
-              <td><span class="change down">-2.14%</span></td>
-            </tr>
-            <tr>
-              <td><img class="country-flag-md" src="{% static 'main_app/svg/flags/us.svg' %}" alt="US"></td>
-              <td>AAPL</td>
-              <td>313.45</td>
-              <td class="text-success">+13.24</td>
-              <td><span class="change up">+2.14%</span></td>
-            </tr>
-          </tbody>
-        </table>
-        <div class="text-center mb-3">
-          <a href="" class="btn btn-primary-dark btn-wide">More</a>
-        </div>
-      </div>
-      <div class="col-lg-6 p-0" id="pl-1">
-        <!-- Watchlist Table -->
-        <h3 class="text-white text-align-center ml-0 mb-3"><i class="fas fa-user"></i> Your Watchlist</h3>
-        <div class="position-absolute card justify-content-center">
-          <h4 class="mb-0 text-center w-100 px-3">You need an account for personalized tables and many more features.
-          </h4 class="mb-0 text-center w-100">
-          <div class="row pt-3">
-            <div class="col-6 text-right px-2">
-              <a href="{% url 'login' %}" class="btn btn-primary btn-wide">Log In</a>
-            </div>
-            <div class="col-6 text-left px-2">
-              <a href="{% url 'signup' %}" class="btn btn-primary btn-wide">Sign Up</a>
-            </div>
+      <div class="h-100 align-self-center">
+        <div class="dropdown show">
+          <a class="btn btn-primary-dark btn-wide dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Country
+          </a>
+        
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            <a class="dropdown-item" href="#">All</a>
+            <a class="dropdown-item" href="#">United States</a>
+            <a class="dropdown-item" href="#">Japan</a>
+            <a class="dropdown-item" href="#">United Kingdom</a>
+            <a class="dropdown-item" href="#">Hong Kong</a>
+            <a class="dropdown-item" href="#">China</a>
+            <a class="dropdown-item" href="#">Canada</a>
+            <a class="dropdown-item" href="#">Germany</a>
+            <a class="dropdown-item" href="#">Australia</a>
           </div>
         </div>
-        <table class="market-table mb-3 table-striped filter-blur shadow">
-          <thead>
-            <tr>
-              <th></th>
-              <th>Ticker</th>
-              <th>Last Price</th>
-              <th>Change</th>
-              <th>Change %</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><i class="fa fa-globe text-dark country-flag-md mb-0"></i></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td><i class="fa fa-globe text-dark country-flag-md mb-0"></i></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td><i class="fa fa-globe text-dark country-flag-md mb-0"></i></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td><i class="fa fa-globe text-dark country-flag-md mb-0"></i></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td><i class="fa fa-globe text-dark country-flag-md mb-0"></i></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td><i class="fa fa-globe text-dark country-flag-md mb-0"></i></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td><i class="fa fa-globe text-dark country-flag-md mb-0"></i></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td><i class="fa fa-globe text-dark country-flag-md mb-0"></i></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td><i class="fa fa-globe text-dark country-flag-md mb-0"></i></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td><i class="fa fa-globe text-dark country-flag-md mb-0"></i></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="dropdown show mt-2">
+          <a class="btn btn-primary-dark btn-wide dropdown-toggle m-0 w-100" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Type
+          </a>
+        
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            <a class="dropdown-item" href="#">Commodities</a>
+            <a class="dropdown-item" href="#">Currencies</a>
+            <a class="dropdown-item" href="#">Cryptocurrencies</a>
+            <a class="dropdown-item" href="#">Stocks</a>
+            <a class="dropdown-item" href="#">Indices</a>
+            <a class="dropdown-item" href="#">ETFs</a>
+            <a class="dropdown-item" href="#">Bonds</a>
+            <a class="dropdown-item" href="#">Funds</a>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
+<section class="bg-dark m-0 p-0">
+  <div class="container py-4">
+    <table class="market-table mb-3 table-striped shadow table-hover">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Ticker</th>
+          <th>Last Price</th>
+          <th>Change</th>
+          <th>Change %</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><img class="country-flag-md" src="{% static 'main_app/svg/flags/us.svg' %}" alt="US"></td>
+          <td>AAPL</td>
+          <td>313.45</td>
+          <td class="text-success">+13.24</td>
+          <td><span class="change up">+2.14%</span></td>
+        </tr>
+        <tr>
+          <td><img class="country-flag-md" src="{% static 'main_app/svg/flags/us.svg' %}" alt="US"></td>
+          <td>AAPL</td>
+          <td>313.45</td>
+          <td class="text-success">+13.24</td>
+          <td><span class="change up">+200.14%</span></td>
+        </tr>
+        <tr>
+          <td><img class="country-flag-md" src="{% static 'main_app/svg/flags/us.svg' %}" alt="US"></td>
+          <td>AAPL</td>
+          <td>313.45</td>
+          <td class="">0.00</td>
+          <td><span class="change">0.00%</span></td>
+        </tr>
+        <tr>
+          <td><img class="country-flag-md" src="{% static 'main_app/svg/flags/us.svg' %}" alt="US"></td>
+          <td>AAPL</td>
+          <td>313.45</td>
+          <td class="text-success">+13.24</td>
+          <td><span class="change up">+2.14%</span></td>
+        </tr>
+        <tr>
+          <td><img class="country-flag-md" src="{% static 'main_app/svg/flags/us.svg' %}" alt="US"></td>
+          <td>AAPL</td>
+          <td>313.45</td>
+          <td class="text-danger">-13.24</td>
+          <td><span class="change down">-2.14%</span></td>
+        </tr>
+        <tr>
+          <td><img class="country-flag-md" src="{% static 'main_app/svg/flags/us.svg' %}" alt="US"></td>
+          <td>AAPL</td>
+          <td>313.45</td>
+          <td class="text-success">+13.24</td>
+          <td><span class="change up">+2.14%</span></td>
+        </tr>
+        <tr>
+          <td><img class="country-flag-md" src="{% static 'main_app/svg/flags/us.svg' %}" alt="US"></td>
+          <td>AAPL</td>
+          <td>313.45</td>
+          <td class="text-danger">-13.24</td>
+          <td><span class="change down">-2.14%</span></td>
+        </tr>
+        <tr>
+          <td><img class="country-flag-md" src="{% static 'main_app/svg/flags/us.svg' %}" alt="US"></td>
+          <td>AAPL</td>
+          <td>313.45</td>
+          <td class="text-success">+13.24</td>
+          <td><span class="change up">+2.14%</span></td>
+        </tr>
+        <tr>
+          <td><img class="country-flag-md" src="{% static 'main_app/svg/flags/us.svg' %}" alt="US"></td>
+          <td>AAPL</td>
+          <td>313.45</td>
+          <td class="text-danger">-13.24</td>
+          <td><span class="change down">-2.14%</span></td>
+        </tr>
+        <tr>
+          <td><img class="country-flag-md" src="{% static 'main_app/svg/flags/us.svg' %}" alt="US"></td>
+          <td>AAPL</td>
+          <td>313.45</td>
+          <td class="text-success">+13.24</td>
+          <td><span class="change up">+2.14%</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="text-center">
+      <a href="" class="btn btn-primary-dark btn-wide">Expand</a>
+    </div>
+  </div>
+</section>
+
+
+<!-- Similar carousel -->
+<section class="page-section mt-1 m-0 p-0 bg-dark">
+  <div class="p-3">
+    <div class="container">
+      <h3 class="text-white text-align-center ml-0 mb-3"><i class="fas fa-fire-alt"></i> Trending</h3>
+      <div class="row" id="market-carousel">
+        <a href="">
+          <div class="card asset-card card mr-3">
+            <div class="row justify-content-around">
+              <span class="short-name">AAPL</span>
+              <span class="long-name">Apple Inc.</span>
+            </div>
+            <div class="row justify-content-around">
+              <span class="price up">313.24</span>
+              <span class="change up">2.14%</span>
+            </div>
+          </div>
+        </a>
+
+        <a href="">
+          <div class="card asset-card card mr-3">
+            <div class="row justify-content-around">
+              <span class="short-name">AAPL</span>
+              <span class="long-name">Apple Inc.</span>
+            </div>
+            <div class="row justify-content-around">
+              <span class="price up">313.24</span>
+              <span class="change up">2.14%</span>
+            </div>
+          </div>
+        </a>
+
+        <a href="">
+          <div class="card asset-card card mr-3">
+            <div class="row justify-content-around">
+              <span class="short-name">AAPL</span>
+              <span class="long-name">Apple Inc.</span>
+            </div>
+            <div class="row justify-content-around">
+              <span class="price up">313.24</span>
+              <span class="change up">2.14%</span>
+            </div>
+          </div>
+        </a>
+
+        <a href="">
+          <div class="card asset-card card mr-3">
+            <div class="row justify-content-around">
+              <span class="short-name">AAPL</span>
+              <span class="long-name">Apple Inc.</span>
+            </div>
+            <div class="row justify-content-around">
+              <span class="price up">313.24</span>
+              <span class="change up">2.14%</span>
+            </div>
+          </div>
+        </a>
+
+        <a href="">
+          <div class="card asset-card card mr-3">
+            <div class="row justify-content-around">
+              <span class="short-name">AAPL</span>
+              <span class="long-name">Apple Inc.</span>
+            </div>
+            <div class="row justify-content-around">
+              <span class="price up">313.24</span>
+              <span class="change up">2.14%</span>
+            </div>
+          </div>
+        </a>
+
+        <a href="">
+          <div class="card asset-card card mr-3">
+            <div class="row justify-content-around">
+              <span class="short-name">AAPL</span>
+              <span class="long-name">Apple Inc.</span>
+            </div>
+            <div class="row justify-content-around">
+              <span class="price up">313.24</span>
+              <span class="change up">2.14%</span>
+            </div>
+          </div>
+        </a>
+
+      </div>
+    </div>
+  </div>
+</section>
 <!-- Feed Section -->
 <section class="page-section" id="feed">
   <div class="container h-100">
-    <h2 class="mt-0"><i class="fa fa-1x fa-globe text-primary-dark"></i> Popular Today!</h2>
-    <!-- <p class="text-muted-75">U.S only</p> -->
+    <h2 class="mt-0"><i class="fa fa-1x fa-globe text-primary-dark"></i> Related News</h2>
     <div class="row align-items-center justify-content-between news-card p-0 mt-4">
       <!-- Title -->
       <div class="col-lg-9 news-title">
@@ -652,7 +501,6 @@
     </nav>
   </div>
 </section>
-
 <!-- Footer -->
 <footer class="bg-dark py-4">
   <div class="container">
@@ -675,7 +523,7 @@
       <div class="col-lg-6">
         <ul class="ml-auto my-2 my-lg-0 list-inline text-right">
           <li class="list-inline-item">
-            <a href="mailto:robert1stepanyan@gmail.com" rel="noopener" target="_blank"><i class="far fa-envelope fa-lg text-muted"></i></a>
+            <a href="#" rel="noopener" target="_blank"><i class="far fa-envelope fa-lg text-muted"></i></a>
           </li>
           <li class="list-inline-item">
             <a href="https://www.instagram.com/realtradersam/" rel="noopener" target="_blank"><i
@@ -689,4 +537,4 @@
     </div>
   </div>
 </footer>
-{% endblock %}
+{% endblock content %}

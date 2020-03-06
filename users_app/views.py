@@ -30,7 +30,7 @@ def login(request):
                 Login(request, user)
                 return redirect('home')
             else:
-                messages.warning(request, f'Wrong Username/Email or Password')
+                messages.error(request, f'Wrong Username/Email or Password')
     else:
         form = UserLogInForm()
     
