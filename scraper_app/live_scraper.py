@@ -69,7 +69,11 @@ class CollectLive:
         
         driver.execute_script(f"$('header').empty()")
         for cl in classes_to_remove:
-            driver.execute_script(f"$('.{cl}').empty()")
+            # for skipping TimeoutException: Message: script timeout
+            try:
+                driver.execute_script(f"$('.{cl}').empty()")
+            except:
+                pass
         
         for el in soup.find('div', class_='wrapper').findChildren(recursive=False):
             if el.name != 'section':
@@ -139,7 +143,6 @@ class CollectLive:
                 is_closed = False
             if not is_closed:
                 # if the market is open collect the live data
-                print('Market is open')
                 live_data = {}
                 l = []
                 for key, value in live_fields.items():
@@ -257,7 +260,6 @@ class CollectLive:
                         if hours > 24*5:
                             models.AllAssetsHistorical5D.objects.filter(link=link).order_by('id')[0].delete()
             elif is_closed:
-                print('Market is closed')
                 # check whether "after live data" for today is available
                 last_obj_after_count = models.AllAssetsAfterLive.objects.filter(link=link).count()
                 if last_obj_after_count > 0:
@@ -436,9 +438,7 @@ finally:
     driver2.quit()
     print('Driver is closed!')
     print(f'Init took: {results[0]} seconds')
-    if len(results[1:]) == 0:
-        print(f'Average loop took: {results[1]} seconds') 
-    else:
+    if len(results[1:]) != 0:
         print(f'Average loop took: {sum(results[1:])/len(results[1:])} seconds')        
 
             
