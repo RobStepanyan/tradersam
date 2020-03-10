@@ -124,6 +124,9 @@ class CollectLive:
             elif self.type_ == 'crptcrncy':
                 for td in tr.find_all('td')[4:]:
                     tds.append(td.get_text().strip())
+            elif self.type_ == 'etf' or self.type_ == 'fnd':
+                for td in tr.find_all('td')[3:-1]:
+                    tds.append(td.get_text().strip())
             else:
                 for td in tr.find_all('td')[2:-1]:
                     tds.append(td.get_text().strip())
