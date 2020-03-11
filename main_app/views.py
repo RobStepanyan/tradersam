@@ -7,6 +7,10 @@ from scraper_app.scraper_data import STATIC_OBJECTS
 def ajax_search(request):
     search = request.GET['search']
     results = []
+    
+    # First finding elements which are equal to search
+    # for examle when you type T resut should be T - AT&T
+    # insetead of random results starting with T
     for value in STATIC_OBJECTS.values():
         if value['type'] == 'crptcrncy':
             for sn, t in value['object'].objects.values_list('short_name', 'Type'):
