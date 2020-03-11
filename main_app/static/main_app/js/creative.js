@@ -8,7 +8,7 @@
       target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
       if (target.length) {
         $('html, body').animate({
-          scrollTop: (target.offset().top - 84)
+          scrollTop: (target.offset().top - 72)
         }, 1000, "easeInOutExpo");
         return false;
       }
@@ -106,4 +106,7 @@ $('.searchButton').click(function(){
 });
 $('.searchTerm').click(function(){
   $('#search-collapse').collapse('toggle')
+});
+$(document).click(function(){
+  $('#search-collapse').collapse('hide')
 });
