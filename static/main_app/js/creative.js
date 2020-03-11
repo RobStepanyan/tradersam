@@ -38,23 +38,6 @@
   navbarCollapse();
   // Collapse the navbar when page is scrolled
   $(window).scroll(navbarCollapse);
-
-  // Magnific popup calls
-  $('#portfolio').magnificPopup({
-    delegate: 'a',
-    type: 'image',
-    tLoading: 'Loading image #%curr%...',
-    mainClass: 'mfp-img-mobile',
-    gallery: {
-      enabled: true,
-      navigateByImgClick: true,
-      preload: [0, 1]
-    },
-    image: {
-      tError: '<a href="%url%">The image #%curr%</a> could not be loaded.'
-    }
-  });
-
 })(jQuery); // End of use strict
 
 // home.html carousel in market overview section
@@ -67,3 +50,64 @@ $(document).ready(function(){
     autoplaySpeed: 2000,
   });
 });
+
+// Nav bar search
+function search() {
+  if ($('.searchTerm').val().length != 0) {
+    $.ajax({
+      url: 'ajax/search/',
+      data: {
+        'search': $('.searchTerm').val()
+      },
+      success: function(data) {
+        $('#search-collapse').empty();
+        $('#search-collapse').collapse('show');
+        var container = $('.search-results');
+        if (_.isEmpty(data)){
+          $('<div class="text-center py-1">' 
+             + 'No Results' + '</div>').appendTo(container);
+        }else{
+          for (var i in data.results) {
+            var long_name = data.results[i]['long_name'];
+            if (long_name.length > 40) {
+              long_name = long_name.slice(0, 38) + '..'
+            };
+            var type = data.results[i]['type']
+            var country = data.results[i]['country']
+            if (type == 'Currency') {
+              country = 'crncy'
+            }else if (type == 'Cryptocurrency') {
+              country = 'crptcrncy'
+            };
+
+            $(
+              '<div class="search-item">' 
+            + '<div class="d-flex">'
+            + data.results[i]['short_name'] + ' | '
+            + '<div class="search-long">' + long_name + '</div>'
+            + '</div>'
+            + '<div class="search-type">'
+            + '<img class="country-flag-sm" src="/static/main_app/svg/flags/' + country + '.svg">'
+            + ' ' + type + '</div>'
+            + '</div>'
+            ).appendTo(container);
+          };
+        }
+      },
+    });
+  };
+}
+
+$('.searchTerm').keypress(_.debounce(search,250));
+$('.searchButton').click(function(){
+  search();
+  $('#search-collapse').collapse('show');
+  $('.searchTerm').focus();
+});
+$('.searchTerm').click(function(){
+  $('#search-collapse').collapse('show')
+});
+$(document).click(function(){
+  $('#search-collapse').collapse('hide')
+});
+
