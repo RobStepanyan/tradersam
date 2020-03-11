@@ -79,9 +79,9 @@ function search() {
             }else if (type == 'Cryptocurrency') {
               country = 'crptcrncy'
             };
-
+            
             $(
-              '<a class="text-inherit" href="/dev/asset/' + type + '/' + data.results[i]['pk'] +'">'
+              '<a class="text-inherit" href="/dev/asset/' + type.toLowerCase() + '/' + data.results[i]['pk'] +'">'
             + '<div class="search-item">' 
             + '<div class="d-flex">'
             + data.results[i]['short_name'] + ' | '
