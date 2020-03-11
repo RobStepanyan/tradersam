@@ -81,7 +81,8 @@ function search() {
             };
 
             $(
-              '<div class="search-item">' 
+              '<a class="text-inherit" href="/dev/asset/' + type + '/' + data.results[i]['pk'] +'">'
+            + '<div class="search-item">' 
             + '<div class="d-flex">'
             + data.results[i]['short_name'] + ' | '
             + '<div class="search-long">' + long_name + '</div>'
@@ -89,16 +90,18 @@ function search() {
             + '<div class="search-type">'
             + '<img class="country-flag-sm" src="/static/main_app/svg/flags/' + country + '.svg">'
             + ' ' + type + '</div>'
-            + '</div>'
+            + '</div></a>'
             ).appendTo(container);
           };
         }
       },
     });
+  }else{
+    $('#search-collapse').empty();
   };
 }
 
-$('.searchTerm').keypress(_.debounce(search,250));
+$('.searchTerm').keyup(_.debounce(search,250));
 $('.searchButton').click(function(){
   search();
   $('#search-collapse').collapse('show');

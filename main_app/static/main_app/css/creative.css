@@ -9435,3 +9435,6 @@ tbody {
 .search-item:hover {
   background: var(--gray2);
 }
+.text-inherit {
+  color: inherit!important;
+}
