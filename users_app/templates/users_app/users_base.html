@@ -55,10 +55,7 @@
   <!-- Plugin JavaScript -->
   <script src="{% static 'main_app/vendor/jquery-easing/jquery.easing.min.js' %}"></script>
   <script src="{% static 'main_app/vendor/magnific-popup/jquery.magnific-popup.min.js' %}"></script>
-
-  <!-- Custom scripts for this template -->
-  <script src="{% static 'main_app/js/creative.js' %}"></script>
-
+  {% block javascript %}{% endblock %}
 </body>
 
 </html>
