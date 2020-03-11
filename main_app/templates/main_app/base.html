@@ -45,11 +45,18 @@
         aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="collapse navbar-collapse" id="navbarResponsive">
-        <form class="form-inline navbar-nav nav-item">
-          <input class="form-control ml-lg-4" type="search" placeholder="Search" aria-label="Search">
-          <button class="btn my-2 border-0" type="submit" id="nav-search-btn"><i class="fa fa-search"></i></button>
-        </form>
+      <div class="collapse navbar-collapse w-100" id="navbarResponsive">
+        <div class="search-block">
+          <div class="search">
+            <input type="text" class="searchTerm" placeholder="Search">
+            <div class="searchButton">
+              <i class="fa fa-search"></i>
+            </div>
+          </div>
+          <div class="collapse search-results" id="search-collapse">
+          </div>
+        </div>
+        
         <ul class="navbar-nav ml-auto my-2 my-lg-0">
           <li class="nav-item">
             <a class="nav-link js-scroll-trigger" href="#marketoverview">Market Overview</a>
@@ -77,6 +84,7 @@
   <script src="{% static 'main_app/vendor/jquery-easing/jquery.easing.min.js' %}"></script>
   <script src="{% static 'main_app/vendor/magnific-popup/jquery.magnific-popup.min.js' %}"></script>
   <script src="{% static 'main_app/vendor/slick/slick.js' %}"></script>
+  <script src="{% static 'main_app/js/underscore-min.js' %}"></script>
 
   <!-- Custom scripts for this template -->
   <script src="{% static 'main_app/js/creative.js' %}"></script>
