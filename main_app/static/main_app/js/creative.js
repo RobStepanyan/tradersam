@@ -69,8 +69,8 @@ function search() {
         }else{
           for (var i in data.results) {
             var long_name = data.results[i]['long_name'];
-            if (long_name.length > 40) {
-              long_name = long_name.slice(0, 38) + '..'
+            if (long_name.length > 23) {
+              long_name = long_name.slice(0, 21) + '..'
             };
             var type = data.results[i]['type']
             var country = data.results[i]['country']
@@ -105,9 +105,5 @@ $('.searchButton').click(function(){
   $('.searchTerm').focus();
 });
 $('.searchTerm').click(function(){
-  $('#search-collapse').collapse('show')
+  $('#search-collapse').collapse('toggle')
 });
-$(document).click(function(){
-  $('#search-collapse').collapse('hide')
-});
-

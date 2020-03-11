@@ -9400,20 +9400,22 @@ tbody {
   border-top: none;
   z-index: 0; /* z-index of search bar (.search) is set to 1 */
 }
-.search-results::-webkit-scrollbar {
-  width: 15px;
-}
-.search-results::-webkit-scrollbar-track {
-  margin-top: 0.5rem;
-  border-radius: .5rem;
-  background-color: var(--gray4);
-}
-.search-results::-webkit-scrollbar-thumb {
-  border-radius: .5rem;
-  background: var(--gray2);
-}
-.search-results::-webkit-scrollbar-thumb:hover {
-  background: var(--gray3);
+@media (min-width: 992px) {
+  .search-results::-webkit-scrollbar {
+    width: 15px;
+  }
+  .search-results::-webkit-scrollbar-track {
+    margin-top: 0.5rem;
+    border-radius: .5rem;
+    background-color: var(--gray4);
+  }
+  .search-results::-webkit-scrollbar-thumb {
+    border-radius: .5rem;
+    background: var(--gray2);
+  }
+  .search-results::-webkit-scrollbar-thumb:hover {
+    background: var(--gray3);
+  }
 }
 .search-item {
   font-weight: 400;
