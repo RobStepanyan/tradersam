@@ -93,6 +93,7 @@ class CurrencyStaticInfo(models.Model):
     Type = models.CharField(choices=TYPES, max_length=9, default='crncy')
     short_name = models.CharField(max_length=10)
     long_name = models.CharField(max_length=50)
+    country = models.CharField(choices=COUNTRIES, default='G', max_length=2)
     link = models.URLField()
 
     def __str__(self):
@@ -106,6 +107,7 @@ class CryptocurrencyStaticInfo(models.Model):
     Type = models.CharField(choices=TYPES, max_length=9, default='crptcrncy')
     short_name = models.CharField(max_length=10)
     long_name = models.CharField(max_length=50)
+    country = models.CharField(choices=COUNTRIES, default='G', max_length=2)
     link = models.URLField(null=True)
 
     def __str__(self):
