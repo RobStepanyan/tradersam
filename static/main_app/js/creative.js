@@ -8,7 +8,7 @@
       target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
       if (target.length) {
         $('html, body').animate({
-          scrollTop: (target.offset().top - 84)
+          scrollTop: (target.offset().top - 72)
         }, 1000, "easeInOutExpo");
         return false;
       }
@@ -79,9 +79,10 @@ function search() {
             }else if (type == 'Cryptocurrency') {
               country = 'crptcrncy'
             };
-
+            
             $(
-              '<div class="search-item">' 
+              '<a class="text-inherit" href="/dev/asset/' + type.toLowerCase() + '/' + data.results[i]['pk'] +'">'
+            + '<div class="search-item">' 
             + '<div class="d-flex">'
             + data.results[i]['short_name'] + ' | '
             + '<div class="search-long">' + long_name + '</div>'
@@ -89,16 +90,18 @@ function search() {
             + '<div class="search-type">'
             + '<img class="country-flag-sm" src="/static/main_app/svg/flags/' + country + '.svg">'
             + ' ' + type + '</div>'
-            + '</div>'
+            + '</div></a>'
             ).appendTo(container);
           };
         }
       },
     });
+  }else{
+    $('#search-collapse').empty();
   };
 }
 
-$('.searchTerm').keypress(_.debounce(search,250));
+$('.searchTerm').keyup(_.debounce(search,250));
 $('.searchButton').click(function(){
   search();
   $('#search-collapse').collapse('show');
@@ -106,4 +109,7 @@ $('.searchButton').click(function(){
 });
 $('.searchTerm').click(function(){
   $('#search-collapse').collapse('toggle')
+});
+$(document).click(function(){
+  $('#search-collapse').collapse('hide')
 });
