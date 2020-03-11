@@ -4,6 +4,8 @@ from .forms import UserSignUpForm, UserLogInForm
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as Login
 from django.contrib.auth import logout as Logout
+from django.contrib.auth.models import User
+from django.http import JsonResponse
 
 # Create your views here.
 def signup(request):
@@ -26,11 +28,11 @@ def login(request):
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
             user = authenticate(request, username=username, password=password)
-            if user is not None:
+            if user:
                 Login(request, user)
                 return redirect('home')
             else:
-                messages.error(request, f'Wrong Username/Email or Password')
+                messages.error(request, 'Wrong Username/Email or Password')
     else:
         form = UserLogInForm()
     
