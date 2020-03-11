@@ -124,6 +124,9 @@ class CollectLive:
             elif self.type_ == 'crptcrncy':
                 for td in tr.find_all('td')[4:]:
                     tds.append(td.get_text().strip())
+            elif self.type_ == 'etf' or self.type_ == 'fnd':
+                for td in tr.find_all('td')[3:-1]:
+                    tds.append(td.get_text().strip())
             else:
                 for td in tr.find_all('td')[2:-1]:
                     tds.append(td.get_text().strip())
@@ -160,24 +163,32 @@ class CollectLive:
                         live_data[key] = value
                 
                 if self.type_ != 'bnd':
-                    live_data['Prev. Close'] = float(live_data['Last'].replace(',','')) + float(live_data['Chg. %'][:-1]) / 100
-                
-                models.AllAssetsLive.objects.filter(link=link).delete()
-                if self.type_ == 'crptcrncy':
-                    time = now
-                elif len(live_data['Time']) <=5:
-                    time = datetime.datetime.strptime(str(now.year)+str(live_data['Time']), '%Y%d/%m')
-                else:
-                    time = datetime.datetime.strptime(
-                            timezone.now().date().strftime('%Y:%m:%d:')+str(live_data['Time']), '%Y:%m:%d:%H:%M:%S')
-                    time = timezone.make_aware(time)
-                if self.type_ == 'cmdty':
-                    if live_data['Month'] is None:
+                    try:
+                        live_data['Prev. Close'] = float(live_data['Last'].replace(',','')) + float(live_data['Chg. %'][:-1]) / 100
+                    except:
                         pass
-                    elif live_data['Month'] in '  ':
-                        live_data['Month'] = None
+                models.AllAssetsLive.objects.filter(link=link).delete()
+                try:
+                    if self.type_ == 'crptcrncy':
+                        time = now
+                    elif len(live_data['Time']) <=5:
+                        time = datetime.datetime.strptime(str(now.year)+str(live_data['Time']), '%Y%d/%m')
                     else:
-                        live_data['Month'] = datetime.datetime.strptime(live_data['Month'], '%b %y')
+                        time = datetime.datetime.strptime(
+                                timezone.now().date().strftime('%Y:%m:%d:')+str(live_data['Time']), '%Y:%m:%d:%H:%M:%S')
+                        time = timezone.make_aware(time)
+                except:
+                    time = None
+                try:
+                    if self.type_ == 'cmdty':
+                        if live_data['Month'] is None:
+                            pass
+                        elif live_data['Month'] in '  ':
+                            live_data['Month'] = None
+                        else:
+                            live_data['Month'] = datetime.datetime.strptime(live_data['Month'], '%b %y')
+                except:
+                    live_data['Month'] = None
                 models.AllAssetsLive(
                     Type=self.type_,
                     link=link,
