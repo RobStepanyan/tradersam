@@ -10,23 +10,41 @@ def ajax_search(request):
     for value in STATIC_OBJECTS.values():
         if value['type'] == 'crptcrncy':
             for sn, t in value['object'].objects.values_list('short_name', 'Type'):
-                if sn.upper().find(search.upper()) == 0:
+                if sn.upper() == search.upper():
                     results.append([value['object'], sn, t])
+        elif value['type'] == 'cmdty':
+            for sn, l, t in value['object'].objects.values_list('short_name', 'link', 'Type'):
+                print(sn, search)
+                if sn.upper() == search.upper():
+                    results.append([value['object'], l, t])
+        else:
+            for sn, l, t in value['object'].objects.values_list('short_name', 'link', 'Type'):
+                print(sn, search)
+                if sn.upper() == search.upper():
+                    results.append([value['object'], l, t])
+    
+    for value in STATIC_OBJECTS.values():
+        if value['type'] == 'crptcrncy':
+            for sn, t in value['object'].objects.values_list('short_name', 'Type'):
+                if sn.upper().find(search.upper()) == 0:
+                    if not [value['object'], sn, t] in results:
+                        results.append([value['object'], sn, t])
                 if len(results)>=50:
                     break 
         elif value['type'] == 'cmdty':
             for sn, l, t in value['object'].objects.values_list('short_name', 'link', 'Type'):
                 if sn.upper().find(search.upper()) == 0:
-                    results.append([value['object'], l, t])
+                    if not [value['object'], l, t] in results:
+                        results.append([value['object'], l, t])
                 if len(results)>=50:
                     break 
         else:
             for sn, ln, l, t in value['object'].objects.values_list('short_name', 'long_name', 'link', 'Type'):
                 if sn.upper().find(search.upper()) == 0 or any([True if word.upper().find(search.upper()) == 0 else False for word in ln.split(' ')]):
-                    results.append([value['object'], l, t])
+                    if not [value['object'], l, t] in results:
+                        results.append([value['object'], l, t])
                 if len(results)>=50:
                     break 
-
     
     if not results:
         return JsonResponse({})
