@@ -32,14 +32,11 @@ class CollectLive:
 
     def init_tab(self):
         driver.switch_to.window(self.tab)
-        # print(f'{self.title}: Initializating the Table')
         print(f'{self.title}: Waiting the page to load')
         driver.get(self.link) # visit the link
         if 'Stock' in self.title:
-            # print('Executing JS scripts')
             driver.execute_script('$("#stocksFilter").val("#all");')
             driver.execute_script("doStocksFilter('select',this)")
-            # print('Executed JS scripts')
         if 'Crypto' in self.title:
             desired_quanity = BeautifulSoup(driver.page_source, 'html.parser')
             desired_quanity = desired_quanity.find('span', text='Number of Currencies')
