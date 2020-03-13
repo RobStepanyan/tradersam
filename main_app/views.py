@@ -14,23 +14,25 @@ def ajax_search(request):
     # insetead of random results starting with T
     for value in STATIC_OBJECTS.values():
         if value['type'] == 'crptcrncy':
-            for sn, t, pk in value['object'].objects.values_list('short_name', 'Type', 'pk'):
+            for sn, l, t, pk in value['object'].objects.values_list('short_name', 'link', 'Type', 'pk'):
+                if not l:
+                    continue
                 if sn.upper() == search.upper():
                     results.append([value['object'], sn, t, pk])
         elif value['type'] == 'cmdty':
             for sn, l, t, pk in value['object'].objects.values_list('short_name', 'link', 'Type', 'pk'):
-                print(sn, search)
                 if sn.upper() == search.upper():
                     results.append([value['object'], l, t, pk])
         else:
             for sn, l, t, pk in value['object'].objects.values_list('short_name', 'link', 'Type', 'pk'):
-                print(sn, search)
                 if sn.upper() == search.upper():
                     results.append([value['object'], l, t, pk])
     
     for value in STATIC_OBJECTS.values():
         if value['type'] == 'crptcrncy':
-            for sn, t, pk in value['object'].objects.values_list('short_name', 'Type', 'pk'):
+            for sn, l, t, pk in value['object'].objects.values_list('short_name', 'link', 'Type', 'pk'):
+                if not l:
+                    continue
                 if sn.upper().find(search.upper()) == 0:
                     if not [value['object'], sn, t, pk] in results:
                         results.append([value['object'], sn, t, pk])
@@ -87,31 +89,58 @@ def asset_details(request, type_, pk):
             break
     asset = obj.objects.get(pk=pk)
     data = {}
-    if type_ == 'crptcrncy':
-        for model in AllAssetsLive.objects.filter(type_='crptcrncy', short_name=asset.short_name):
-            dct = model_to_dict(model)
-            for key, value in dct.items():
-                if key != 'id' and value:
-                    data[key] = value
-        for model in AllAssetsAfterLive.objects.filter(type_='crptcrncy', short_name=asset.short_name):
-            dct = model_to_dict(model)
-            for key, value in dct.items():
-                if key != 'id' and value:
-                    data[key] = value
-    else:
-        for model in AllAssetsLive.objects.filter(link=asset.link):
-            dct = model_to_dict(model)
-            for key, value in dct.items():
-                if key != 'id' and value:
-                    data[key] = value
-        for model in AllAssetsAfterLive.objects.filter(link=asset.link):
-            dct = model_to_dict(model)
-            for key, value in dct.items():
-                if key != 'id' and value:
-                    data[key] = value
+    for model in AllAssetsLive.objects.filter(link=asset.link):
+        if type_ == 'crptcrncy' and not asset.link:
+            continue
+        dct = model_to_dict(model)
+        for key, value in dct.items():
+            if key != 'id' and value:
+                data[key] = value
+    for model in AllAssetsAfterLive.objects.filter(link=asset.link):
+        if type_ == 'crptcrncy' and not asset.link:
+            continue
+        dct = model_to_dict(model)
+        for key, value in dct.items():
+            if key != 'id' and value:
+                data[key] = value
+    
+    live_data = {}
+    for key, value in data.items():
+        if not key in 'Typelinktimedate':
+            live_data[key] = value
+    
+    data_pairs = list(live_data.items())
+    data_pairs_new = []
+    for i1, i2 in data_pairs:
+        if '_' in i1:
+            i1 = i1.replace('_', ' ')
+        i1 = i1.capitalize()
+        # Circ supply: BTC18.25M -> Circ supply: 18.25M
+        if 'supply' in i1:
+            i = 0
+            for char in i2:
+                if char in '123456789':
+                    break
+                i += 1
+            i2 = i2[i:]
 
-    return JsonResponse(data)
-    # return render(request, 'main_app/asset_details.html')
+        data_pairs_new.append([i1, i2])
+    data_pairs = data_pairs_new
+    data_pairs1, data_pairs2 = [], []
+    for i in range(0, len(data_pairs), 2):
+        data_pairs1.append(data_pairs[i])
+        if i < len(data_pairs)-1:
+            data_pairs2.append(data_pairs[i+1])
+    
+    if len(data_pairs2) < len(data_pairs1):
+        data_pairs2.append(['',''])
+
+    context = {
+        'data': data,
+        'asset': asset,
+        'data_pairs': zip(data_pairs1, data_pairs2)
+    }
+    return render(request, 'main_app/asset_details.html', context)
 
 def news_details(request):
     return render(request, 'main_app/news_details.html')
