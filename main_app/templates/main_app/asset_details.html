@@ -7,11 +7,20 @@
   <div class="container">
     <div class="row justify-content-between m-0 p-0">
       <div>
-        <h3 class="text-gray-5 m-0">McDonald's Corporation</h3>
-        <h2 class="text-white m-0">MCD</h2>
-        <h2 class="text-white m-0">1982.04 <span class="text-danger"><i class="fas fa-arrow-down"></i>2.7 (0.5)</span>
+        <h3 class="text-gray-5 m-0">{{ asset.long_name }}</h3>
+        <h2 class="text-white m-0">{{ asset.short_name }}</h2>
+        <h2 class="text-white m-0">{{ data.last_price }} 
+          {% if '-' in data.change %}
+            <span class="text-danger"><i class="fas fa-arrow-down"></i>
+          {% elif data.change == 0 %}
+            <span class="text-white">
+          {% else %}
+            <span class="text-success"><i class="fas fa-arrow-up"></i>
+          {% endif %}
+            {{ data.change }} ({{ data.change_perc }})
+            </span>
         </h2>
-        <i class="text-gray-5">As of 1:53PM CT.</i>
+        <i class="text-gray-5">As of {{ data.time }} CT.</i>
       </div>
       <div class="h-100 align-self-center">
         <a class="btn btn-primary-dark btn-wide js-scroll-trigger" href="#details">
@@ -22,7 +31,8 @@
   </div>
 </section>
 
-<div class="bg-dark py-3">
+<!-- Chart -->
+<div class="bg-dark py-3 mt-1">
   <div class="container p-0">
     <div class="row pb-2 justify-content-around">
       <div class="switch switch-xs switch-label-onoff pl-0 d-flex fl">
@@ -42,34 +52,12 @@
     <h3 class="text-white px-3">Details</h3>
     <table class="mb-3">
       <tbody>
-        <tr>
-          <td>Prev. close: <span class="font-weight-normal">198.40</span></td>
-          <td>1Y range: <span class="font-weight-normal">199.46</span></td>
-        </tr>
-        <tr>
-          <td>Open: <span class="font-weight-normal">198.40</span></td>
-          <td>1Y change: <span class="font-weight-normal">199.46</span></td>
-        </tr>
-        <tr>
-          <td>Volume: <span class="font-weight-normal">198.40</span></td>
-          <td>Open: <span class="font-weight-normal">199.46</span></td>
-        </tr>
-        <tr>
-          <td>High: <span class="font-weight-normal">198.40</span></td>
-          <td>Open: <span class="font-weight-normal">199.46</span></td>
-        </tr>
-        <tr>
-          <td>Low: <span class="font-weight-normal">198.40</span></td>
-          <td>Open: <span class="font-weight-normal">199.46</span></td>
-        </tr>
-        <tr>
-          <td>Last close: <span class="font-weight-normal">198.40</span></td>
-          <td>Open: <span class="font-weight-normal">199.46</span></td>
-        </tr>
-        <tr>
-          <td>Last close: <span class="font-weight-normal">198.40</span></td>
-          <td>Open: <span class="font-weight-normal">199.46</span></td>
-        </tr>
+        {% for pair in data_pairs %}
+          <tr>
+            <td>{{ pair.0.0 }}<span class="pl-2 text-gray-5">{{ pair.0.1 }}</span></td>
+            <td>{{ pair.1.0 }}<span class="pl-2 text-gray-5">{{ pair.1.1 }}</span></td>
+          </tr>
+        {% endfor %}
       </tbody>
     </table>
   </div>
@@ -84,7 +72,7 @@
         <a href="">
           <div class="card asset-card card mr-3">
             <div class="row justify-content-around">
-              <span class="short-name">AAPL</span>
+              <span class="short-name">AAPaAAL</span>
               <span class="long-name">Apple Inc.</span>
             </div>
             <div class="row justify-content-around">
