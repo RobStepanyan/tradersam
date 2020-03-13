@@ -46,23 +46,30 @@
         aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="collapse navbar-collapse" id="navbarResponsive">
-        <form class="form-inline navbar-nav nav-item">
-          <input class="form-control ml-lg-4" type="search" placeholder="Search" aria-label="Search">
-          <button class="btn my-2 border-0" type="submit" id="nav-search-btn"><i class="fa fa-search"></i></button>
-        </form>
+      <div class="collapse navbar-collapse w-100" id="navbarResponsive">
+        <div class="search-block">
+          <div class="search">
+            <input type="text" class="searchTerm" placeholder="Search">
+            <div class="searchButton">
+              <i class="fa fa-search"></i>
+            </div>
+          </div>
+          <div class="collapse search-results" id="search-collapse">
+          </div>
+        </div>
+        
         <ul class="navbar-nav ml-auto my-2 my-lg-0">
           <li class="nav-item">
-            <a class="nav-link js-scroll-trigger" href="#marketoverview">Market Overview</a>
+            <a class="nav-link js-scroll-trigger" href="#details">Explore</a>
           </li>
           <li class="nav-item">
             <a class="nav-link js-scroll-trigger" href="#feed">Feed</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link js-scroll-trigger" href="#login">Log In</a>
+            <a class="nav-link js-scroll-trigger" href="{% url 'login' %}">Log In</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link js-scroll-trigger" href="#signup">Sign Up</a>
+            <a class="nav-link js-scroll-trigger" href="{% url 'signup' %}">Sign Up</a>
           </li>
         </ul>
       </div>
