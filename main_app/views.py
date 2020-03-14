@@ -1,7 +1,10 @@
 from django.shortcuts import render
+from django.utils import timezone
+from dateutil.relativedelta import relativedelta
 from django.forms.models import model_to_dict
 from scraper_app.models import Types, AllAssetsLive, AllAssetsAfterLive
-from django.http import HttpResponse, JsonResponse
+from scraper_app import models
+from django.http import HttpResponse, JsonResponse, Http404
 from scraper_app.scraper_data import STATIC_OBJECTS
 
 # Create your views here.
@@ -81,12 +84,98 @@ def ajax_search(request):
         data['results'].append(result)
     return JsonResponse(data)
 
-def asset_details(request, type_, pk):
+def ajax_hist(request):
+    time_frame = request.GET['time_frame']
+    chart_type = request.GET['chart_type']
+
+    # finding type and primary key(pk)
+    link = request.GET['link'][::-1]
+    pk = link[1:link[1:].index('/')+1][::-1]
+    link = link[::-1]
+    type_ = link[:link.index(pk)][::-1]
+    type_ = type_[1:type_[1:].index('/')+1][::-1].capitalize()
+
     type_ = Types[Types.index(type_.capitalize())-1]
     for value in STATIC_OBJECTS.values():
         if value['type'] == type_:
             obj = value['object']
             break
+    asset = obj.objects.get(pk=pk)
+
+    hist_objects = {
+    '1D': models.AllAssetsHistorical1D, '5D': models.AllAssetsHistorical5D,
+    '1M': models.AllAssetsHistorical6M1M, '3M': models.AllAssetsHistorical6M1M, '6M': models.AllAssetsHistorical6M1M, 
+    '1Y': models.AllAssetsHistorical1Y, '5Y': models.AllAssetsHistorical5Y, 'Max': models.AllAssetsHistoricalMax}
+
+    # finding timeframe
+    hist_data = []
+    for model in hist_objects[time_frame].objects.filter(link=asset.link):
+        if time_frame[-1] == 'M':
+            months = int(time_frame[0])
+            today = timezone.now()
+            last_date = today - relativedelta(months=months)
+            dct = model_to_dict(model)
+            for v in dct.values():
+                # for example if 1M is selected than any
+                # data older is removed
+                if v['date'] > last_date:
+                    del dct[time_frame]
+        else:
+            dct = model_to_dict(model)
+            hist_data.append(dct)
+    
+    # { time: '2018-10-25', value: 56.43 } - example of line chart price data
+    # { time: '2018-10-19', open: 54.62, high: 55.50, low: 54.52, close: 54.90 } - line, candles
+    # { time: '2018-10-19', value: 19103293.00, color: 'rgba(0, 150, 136, 0.8)' } - volume
+    # preparing data
+    hist_data_new = []
+    volume_data = []
+    last_volume = None
+    for data in hist_data:
+        data['time'] = data['date'].strftime('%Y-%m-%d')
+        volume = data['volume']
+        if 'M' in volume:
+            volume = int(volume[:-1].replace('.', ''))* 10000
+        elif 'K' in volume:
+            volume = int(volume[:-1].replace('.', ''))* 10
+        elif ',' in volume:
+            volume = volume.replace(',', '')
+
+        if not last_volume or data['volume'] > volume:
+            color = 'rgba(0, 150, 136, 0.8)'
+        else:
+            color = 'rgba(255,82,82, 0.8)'
+
+        volume_data.append({'time': data['time'], 'value': volume, 'color': color})
+        last_volume = volume
+        del data['date']
+        if chart_type == 'line':
+            data['value'] = data['price']
+            for key in data.keys():
+                if not key in 'timevalue':
+                    del data[key]
+        hist_data_new.append(data)
+
+    data = {
+        'hist_data': hist_data_new,
+        'vol_data': volume_data
+    }    
+    
+    return JsonResponse(data)
+
+def asset_details(request, type_, pk):
+    if not type_.title() in Types:
+        raise Http404("Type not found")
+        
+    type_ = Types[Types.index(type_.capitalize())-1]
+    for value in STATIC_OBJECTS.values():
+        if value['type'] == type_:
+            obj = value['object']
+            break
+    
+    if not str(pk) in [str(x[0]) for x in obj.objects.values_list('pk')]:
+        raise Http404('PK not found')
+
     asset = obj.objects.get(pk=pk)
     data = {}
     for model in AllAssetsLive.objects.filter(link=asset.link):
@@ -114,7 +203,11 @@ def asset_details(request, type_, pk):
     for i1, i2 in data_pairs:
         if '_' in i1:
             i1 = i1.replace('_', ' ')
-        i1 = i1.capitalize()
+        i1 = i1.title()
+        if 'Perc' in str(i1):
+            i1 = i1.replace('Perc', '%')
+        if i1[-1] in 'dh':
+            i1 = i1[:-1] + i1[-1].upper()
         # Circ supply: BTC18.25M -> Circ supply: 18.25M
         if 'supply' in i1:
             i = 0
@@ -125,12 +218,9 @@ def asset_details(request, type_, pk):
             i2 = i2[i:]
 
         data_pairs_new.append([i1, i2])
+
     data_pairs = data_pairs_new
-    data_pairs1, data_pairs2 = [], []
-    for i in range(0, len(data_pairs), 2):
-        data_pairs1.append(data_pairs[i])
-        if i < len(data_pairs)-1:
-            data_pairs2.append(data_pairs[i+1])
+    data_pairs1, data_pairs2 = data_pairs[:len(data_pairs)//2+1], data_pairs[len(data_pairs)//2+1:]
     
     if len(data_pairs2) < len(data_pairs1):
         data_pairs2.append(['',''])
@@ -138,7 +228,7 @@ def asset_details(request, type_, pk):
     context = {
         'data': data,
         'asset': asset,
-        'data_pairs': zip(data_pairs1, data_pairs2)
+        'data_pairs': zip(data_pairs1, data_pairs2),
     }
     return render(request, 'main_app/asset_details.html', context)
 
