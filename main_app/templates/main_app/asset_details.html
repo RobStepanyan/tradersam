@@ -8,7 +8,19 @@
     <div class="row justify-content-between m-0 p-0">
       <div>
         <h3 class="text-gray-5 m-0">{{ asset.long_name }}</h3>
-        <h2 class="text-white m-0">{{ asset.short_name }}</h2>
+        <h2 class="text-white m-0">
+          {% if asset.country != 'G' %}
+            {% with 'main_app/svg/flags/'|add:asset.country|lower|add:'.svg' as flag_static %}
+              <img class="country-flag-lg" src="{% static flag_static %}">
+            {% endwith %}
+          {% else %}
+            {% with 'main_app/svg/flags/'|add:asset.Type|lower|add:'.svg' as flag_static %}
+              <img class="country-flag-lg" src="{% static flag_static %}">
+            {% endwith %}
+          {% endif %}
+          
+          {{ asset.short_name }}
+        </h2>
         <h2 class="text-white m-0">{{ data.last_price }} 
           {% if '-' in data.change %}
             <span class="text-danger"><i class="fas fa-arrow-down"></i>
@@ -35,10 +47,31 @@
 <div class="bg-dark py-3 mt-1">
   <div class="container p-0">
     <div class="row pb-2 justify-content-around">
-      <div class="switch switch-xs switch-label-onoff pl-0 d-flex fl">
-        <h5 class="text-white m-0 mr-2">Dark mode: </h5>
-        <input class="switch-input" id="switch" type="checkbox" :checked>
-        <label class="switch-btn" for="switch"></label>
+      <div class="dropdown show mr-2">
+        <a class="btn btn-secondary dropdown-toggle m-0 w-100" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Chart type
+        </a>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink" data-toggle="buttons">
+          <label class="btn dropdown-item active">
+            <input type="radio" id="ohlc" autocomplete="off" checked>
+            <img class="country-flag-md mr-2" src="{% static 'main_app/svg/charts/ohlc.svg' %}">OHLC Chart
+          </label>
+          <label class="btn dropdown-item">
+            <input type="radio" id="candle" autocomplete="off">
+            <img class="country-flag-md mr-2" src="{% static 'main_app/svg/charts/candlestick.svg' %}">Candlesticks
+          </label>
+          <label class="btn dropdown-item">
+            <input type="radio" id="line" autocomplete="off">
+            <img class="country-flag-md mr-2" src="{% static 'main_app/svg/charts/line.svg' %}">Line Chart</a>
+          </label>
+        </div>
+      </div>
+      <div class="switch switch-xs switch-label-onoff pl-0 mr-2 d-flex fl justify-content-center">
+        <h6 class="text-white m-0 mr-1 py-2 mt-1">Dark mode </h6>
+        <div class="py-2">
+          <input class="switch-input" id="switch" type="checkbox" :checked>
+          <label class="switch-btn" for="switch"></label>
+        </div>
       </div>
     </div>
     <div id="chart">
