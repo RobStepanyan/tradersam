@@ -203,11 +203,10 @@ def asset_details(request, type_, pk):
     for i1, i2 in data_pairs:
         if '_' in i1:
             i1 = i1.replace('_', ' ')
+        print(i1)
         i1 = i1.title()
         if 'Perc' in str(i1):
             i1 = i1.replace('Perc', '%')
-        if i1[-1] in 'dh':
-            i1 = i1[:-1] + i1[-1].upper()
         # Circ supply: BTC18.25M -> Circ supply: 18.25M
         if 'supply' in i1:
             i = 0
@@ -216,6 +215,26 @@ def asset_details(request, type_, pk):
                     break
                 i += 1
             i2 = i2[i:]
+        if i1 == 'Rng 52 Wk':
+            i1 = '52-wk Range'
+        if i1 == 'Div And YielD':
+            i1 = 'Div (Yield)'
+        if i1 == 'One Year Chg':
+            i1 = '1-Year Change'
+        if i1 in 'Epsroeroa':
+            i1 = i1.upper()
+        if i1 == 'Pe Ratio':
+            i1 = 'P/E Ratio'
+        if 'Rng' in i1:
+            i1 = i1.replace('Rng', 'Range')
+        if i1 == 'Shrs Outstndng':
+            i1 = 'Shares Outstanding'
+        if 'Avg' in i1:
+            i1 = i1.replace('Avg', 'Average')
+        if ' Vol ' in i1:
+            i1 = i1.replace('Vol', 'Volume')
+        if 'Ttm' in i1:
+            i1 = i1.replace('Ttm', '(TTM)')
 
         data_pairs_new.append([i1, i2])
 

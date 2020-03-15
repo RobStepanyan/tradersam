@@ -28,14 +28,18 @@ function dataAjax(timeFrame, chartType) {
 		success: function(data){
 			var currentTheme = localStorage.getItem('theme') ? localStorage.getItem('theme') : null;
 			container.empty()
-			if (currentTheme) {
-				createChart(currentTheme, data['hist_data'], data['vol_data'], chartType);
+			if (data['hist_data'].length == 0) {
+				$('<h5 class="text-white text-center py-3">No chart data found</h5>').appendTo(container);
 			} else {
-				createChart('light', data['hist_data'], data['vol_data'], chartType);
-			};
-			if (currentTheme == 'dark') {
-				$('#switch').prop("checked", true);
-			};
+				if (currentTheme) {
+					createChart(currentTheme, data['hist_data'], data['vol_data'], chartType);
+				} else {
+					createChart('light', data['hist_data'], data['vol_data'], chartType);
+				};
+				if (currentTheme == 'dark') {
+					$('#switch').prop("checked", true);
+				};
+			}
 		}
 	});
 };
@@ -68,6 +72,7 @@ $('.btn.dropdown-item').click(_.debounce(function(){
 
 
 function createChart(color='dark', priceData, volumeData, chartType) {
+	$('#chart-header').removeClass('d-none');
 	// chart - line chart, volume bars, go to live btn, time frames switcher
 	var lineWidth = 2
 	if (color == 'dark') {

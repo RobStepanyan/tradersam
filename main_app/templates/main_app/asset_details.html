@@ -46,7 +46,7 @@
 <!-- Chart -->
 <div class="bg-dark py-3 mt-1">
   <div class="container p-0">
-    <div class="row pb-2 justify-content-around">
+    <div class="row pb-2 justify-content-around d-none" id="chart-header">
       <div class="dropdown show mr-2">
         <a class="btn btn-secondary dropdown-toggle m-0 w-100" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Chart type
@@ -86,9 +86,23 @@
     <table class="mb-3">
       <tbody>
         {% for pair in data_pairs %}
-          <tr>
-            <td>{{ pair.0.0 }}<span class="pl-2 text-gray-5">{{ pair.0.1 }}</span></td>
-            <td>{{ pair.1.0 }}<span class="pl-2 text-gray-5">{{ pair.1.1 }}</span></td>
+          <tr class="row">
+            <td class="row col-lg-6">
+              <div class="col-lg-6 p-0">
+                {{ pair.0.0 }}
+              </div>
+              <div class="col-lg-6 p-0">
+                <span class="pl-2 text-gray-5">{{ pair.0.1 }}</span>
+              </div>
+            </td>
+            <td class="row col-lg-6">
+              <div class="col-lg-6 p-0">
+                {{ pair.1.0 }}
+              </div>
+              <div class="col-lg-6 p-0">
+                <span class="pl-2 text-gray-5">{{ pair.1.1 }}</span>
+              </div>
+            </td>
           </tr>
         {% endfor %}
       </tbody>
