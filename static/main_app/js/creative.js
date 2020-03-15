@@ -54,15 +54,17 @@ $(document).ready(function(){
 // Nav bar search
 function search() {
   if ($('.searchTerm').val().length != 0) {
+    var container = $('.search-results');
+    container.empty()
+    $('<div class="lds-dual-ring-sm"></div>').appendTo(container);
     $.ajax({
-      url: 'ajax/search/',
+      url: '/dev/ajax/search/',
       data: {
         'search': $('.searchTerm').val()
       },
       success: function(data) {
         $('#search-collapse').empty();
         $('#search-collapse').collapse('show');
-        var container = $('.search-results');
         if (_.isEmpty(data)){
           $('<div class="text-center py-1">' 
              + 'No Results' + '</div>').appendTo(container);
