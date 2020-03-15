@@ -134,24 +134,26 @@ def ajax_hist(request):
     for data in hist_data:
         data['time'] = data['date'].strftime('%Y-%m-%d')
         volume = data['volume']
-        if 'M' in volume:
-            volume = int(volume[:-1].replace('.', ''))* 10000
-        elif 'K' in volume:
-            volume = int(volume[:-1].replace('.', ''))* 10
-        elif ',' in volume:
-            volume = volume.replace(',', '')
+        if volume:
+            if 'M' in volume:
+                volume = int(volume[:-1].replace('.', ''))* 10000
+            elif 'K' in volume:
+                volume = int(volume[:-1].replace('.', ''))* 10
+            elif ',' in volume:
+                volume = volume.replace(',', '')
 
-        if not last_volume or data['volume'] > volume:
-            color = 'rgba(0, 150, 136, 0.8)'
-        else:
-            color = 'rgba(255,82,82, 0.8)'
+            if not last_volume or data['volume'] > volume:
+                color = 'rgba(0, 150, 136, 0.8)'
+            else:
+                color = 'rgba(255,82,82, 0.8)'
+            volume_data.append({'time': data['time'], 'value': volume, 'color': color})
+            last_volume = volume
 
-        volume_data.append({'time': data['time'], 'value': volume, 'color': color})
-        last_volume = volume
         del data['date']
         if chart_type == 'line':
             data['value'] = data['price']
-            for key in data.keys():
+            data_copy = dict(data)
+            for key in data_copy.keys():
                 if not key in 'timevalue':
                     del data[key]
         hist_data_new.append(data)

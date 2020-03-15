@@ -13,7 +13,7 @@ if (width < 576) {
 
 $('<div class="h-100 lds-dual-ring-md"></div>').appendTo(container);
 var link = window.location.href
-var timeFrame = '1M'
+var timeFrame = '1D'
 var chartType = 'line'
 var priceData, volumeData
 
