@@ -130,14 +130,13 @@ class CollectLive:
             
             now = timezone.now()
             is_closed = 0
-            
             if self.type_ == 'crncy' and len(tr.find_all('td')[-1].get_text()) <=5:
                 is_closed = True
             elif self.type_ == 'crncy':
                 is_closed = False
             elif self.type_ == 'crptcrncy':
                 is_closed = False
-            elif 'redClockIcon' in tr.find_all('td')[-1].span['class']:
+            elif 'redClockIcon' in tr.find_all('td')[-1].span['class'][0]:
                 is_closed = True
             else:
                 is_closed = False
