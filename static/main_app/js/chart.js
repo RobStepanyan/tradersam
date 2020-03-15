@@ -15,9 +15,8 @@ $('<div class="h-100 lds-dual-ring-md"></div>').appendTo(container);
 var link = window.location.href
 var timeFrame = '1M'
 var chartType = 'line'
-var priceData, volumeData
 
-function dataAjax(timeFrame, chartType) {
+function dataAjax(timeFrame, chartType, theme) {
 	$.ajax({
 		url: '/dev/ajax/hist/',
 		data: {
@@ -26,20 +25,30 @@ function dataAjax(timeFrame, chartType) {
 		'chart_type': chartType
 		},
 		success: function(data){
+			container.empty()
 			var currentTheme = localStorage.getItem('theme') ? localStorage.getItem('theme') : null;
 			container.empty()
 			if (currentTheme) {
 				createChart(currentTheme, data['hist_data'], data['vol_data'], chartType);
 			} else {
+			if (!theme) {
 				createChart('light', data['hist_data'], data['vol_data'], chartType);
+			} else {
+				createChart(theme, data['hist_data'], data['vol_data'], chartType);
 			};
+		}
 			if (currentTheme == 'dark') {
 				$('#switch').prop("checked", true);
 			};
 		}
 	});
 };
+<<<<<<< HEAD
 dataAjax(timeFrame, chartType);
+=======
+var currentTheme = localStorage.getItem('theme') ? localStorage.getItem('theme') : null;
+dataAjax(timeFrame, chartType, currentTheme);
+>>>>>>> 5af91ea66f4f0c619789ba83a110dfdbf1510dfc
 $(window).on('resize', function() {
 	width = $('#chart').width();
 	if (width < 576) {
@@ -50,9 +59,9 @@ $(window).on('resize', function() {
 
 	$('#chart').empty(); // remove old chart
 	if ($('#switch').is(':checked')) {
-		createChart();
+		dataAjax(timeFrame, chartType, 'dark');
 	} else {
-		createChart('light');
+		dataAjax(timeFrame, chartType, 'light');
 	};
 });
 $('.switcher-item').click(_.debounce(function(){
@@ -296,12 +305,12 @@ function createChart(color='dark', priceData, volumeData, chartType) {
 function switchTheme() {
 	if ($('#switch').is(':checked')) {
 		$('#chart').empty();
-		createChart();
+		dataAjax(timeFrame, chartType, 'dark');
 		localStorage.setItem('theme', 'dark');
 	}
     else {
 		$('#chart').empty();
-		createChart('light');
+		dataAjax(timeFrame, chartType, 'light');
 		localStorage.setItem('theme', 'light');
     }    
 }

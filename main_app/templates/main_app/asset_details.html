@@ -22,9 +22,9 @@
           {{ asset.short_name }}
         </h2>
         <h2 class="text-white m-0">{{ data.last_price }} 
-          {% if '-' in data.change %}
+          {% if '-' == data.change_perc.0 %}
             <span class="text-danger"><i class="fas fa-arrow-down"></i>
-          {% elif data.change == 0 %}
+          {% elif data.change_perc.0 == 0 %}
             <span class="text-white">
           {% else %}
             <span class="text-success"><i class="fas fa-arrow-up"></i>
