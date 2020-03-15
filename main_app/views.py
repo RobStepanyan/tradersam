@@ -85,8 +85,8 @@ def ajax_search(request):
     return JsonResponse(data)
 
 def ajax_hist(request):
-    time_frame = request.GET['time_frame']
-    chart_type = request.GET['chart_type']
+    time_frame = request.GET.get('time_frame', '1D')
+    chart_type = request.GET.get('chart_type', False)
 
     # finding type and primary key(pk)
     link = request.GET['link'][::-1]
@@ -150,19 +150,27 @@ def ajax_hist(request):
             last_volume = volume
 
         del data['date']
+        
         if chart_type == 'line':
             data['value'] = data['price']
-            data_copy = dict(data)
-            for key in data_copy.keys():
-                if not key in 'timevalue':
-                    del data[key]
+        else:
+            data['close'] = data['price']
+
+        data['open'] = data['Open']
+        data_copy = dict(data)
+        for key in data_copy.keys():
+            if chart_type == 'line' and not key in 'timevalue':
+                del data[key]
+            elif not key in 'openhighlowclosetime':
+                del data[key]
         hist_data_new.append(data)
 
     data = {
         'hist_data': hist_data_new,
         'vol_data': volume_data
     }    
-    
+    print(chart_type, hist_data_new)
+    print(volume_data)
     return JsonResponse(data)
 
 def asset_details(request, type_, pk):
@@ -205,7 +213,6 @@ def asset_details(request, type_, pk):
     for i1, i2 in data_pairs:
         if '_' in i1:
             i1 = i1.replace('_', ' ')
-        print(i1)
         i1 = i1.title()
         if 'Perc' in str(i1):
             i1 = i1.replace('Perc', '%')

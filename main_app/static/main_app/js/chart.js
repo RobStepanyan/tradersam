@@ -10,13 +10,13 @@ if (width < 576) {
 } else {
 	var height = $(window).height() - $('#asset-header').height() - 48
 };
-
 $('<div class="h-100 lds-dual-ring-md"></div>').appendTo(container);
 var link = window.location.href
 var timeFrame = '1D'
 var chartType = 'line'
 
 function dataAjax(timeFrame, chartType, theme) {
+	console.log('Sent ajax')
 	$.ajax({
 		url: '/dev/ajax/hist/',
 		data: {
@@ -25,23 +25,20 @@ function dataAjax(timeFrame, chartType, theme) {
 		'chart_type': chartType
 		},
 		success: function(data){
+			console.log('Received ajax')
 			container.empty()
 			if (data['hist_data'].length == 0) {
 				$('<h5 class="text-white text-center py-3">No chart data found</h5>').appendTo(container);
 			} else {
-			if (!theme) {
-				createChart('light', data['hist_data'], data['vol_data'], chartType);
-			} else {
 				createChart(theme, data['hist_data'], data['vol_data'], chartType);
-			};
-			if (currentTheme == 'dark') {
-				$('#switch').prop("checked", true);
-			};
 		}
 		}
 	});
 };
 var currentTheme = localStorage.getItem('theme') ? localStorage.getItem('theme') : null;
+if (currentTheme == 'dark') {
+	$('#switch').click()
+}
 dataAjax(timeFrame, chartType, currentTheme);
 $(window).on('resize', function() {
 	width = $('#chart').width();
@@ -51,6 +48,8 @@ $(window).on('resize', function() {
 		height = $(window).height() - $('#asset-header').height() - 48
 	};
 
+	timeFrame = $('.switcher-active-item').text();
+	chartType = $('.btn.dropdown-item.active>input').attr('id');
 	$('#chart').empty(); // remove old chart
 	if ($('#switch').is(':checked')) {
 		dataAjax(timeFrame, chartType, 'dark');
@@ -59,15 +58,16 @@ $(window).on('resize', function() {
 	};
 });
 $('.switcher-item').click(_.debounce(function(){
-	timeFrame = $('.switcher-active-item').val();
-	chartType = $('.btn.dropdown-item.active').attr('id');
-	dataAjax(timeFrame, chartType);
-},250));
+	timeFrame = $('.switcher-active-item').text();
+	chartType = $('.btn.dropdown-item.active>input').attr('id');
+	dataAjax(timeFrame, chartType, currentTheme);
+},150));
 $('.btn.dropdown-item').click(_.debounce(function(){
-	timeFrame = $('.switcher-active-item').val();
-	chartType = $('.btn.dropdown-item.active').attr('id');
-	dataAjax(timeFrame, chartType);
-},250));
+	timeFrame = $('.switcher-active-item').text();
+	chartType = $('.btn.dropdown-item.active>input').attr('id');
+	console.log(chartType)
+	dataAjax(timeFrame, chartType, currentTheme);
+},150));
 
 
 function createChart(color='dark', priceData, volumeData, chartType) {
@@ -309,6 +309,6 @@ function switchTheme() {
 		localStorage.setItem('theme', 'light');
     }    
 }
-$('#switch').on('click', switchTheme);
+$('#switch').on('click', _.debounce(switchTheme, 250));
 }); // jQuery
 
