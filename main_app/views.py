@@ -132,14 +132,19 @@ def ajax_hist(request):
     volume_data = []
     last_volume = None
     for data in hist_data:
-        data['time'] = data['date'].strftime('%Y-%m-%d')
+        # data['time'] = data['date'].strftime('%Y-%m-%d')
+        data['time'] = int(data['date'].timestamp())
         volume = data['volume']
         if volume:
-            if 'M' in volume:
+            if '$' in volume:
+                volume = volume.replace('$', '')
+            if 'B' in volume:
+                volume = int(volume[:-1].replace('.', ''))* 10000000
+            elif 'M' in volume:
                 volume = int(volume[:-1].replace('.', ''))* 10000
             elif 'K' in volume:
                 volume = int(volume[:-1].replace('.', ''))* 10
-            elif ',' in volume:
+            if ',' in volume:
                 volume = volume.replace(',', '')
 
             if not last_volume or data['volume'] > volume:
@@ -153,16 +158,19 @@ def ajax_hist(request):
         
         if chart_type == 'line':
             data['value'] = data['price']
-        else:
+            data_copy = dict(data)
+            for key in data_copy.keys():
+                if not key in ['time', 'value']:
+                    del data[key]
+        
+        elif chart_type == 'candle':
             data['close'] = data['price']
-
-        data['open'] = data['Open']
-        data_copy = dict(data)
-        for key in data_copy.keys():
-            if chart_type == 'line' and not key in 'timevalue':
-                del data[key]
-            elif not key in 'openhighlowclosetime':
-                del data[key]
+            data['open'] = data['Open']
+            data_copy = dict(data)
+            for key in data_copy.keys():
+                if not key in ['open','high','low','close','time']:
+                    del data[key]
+        
         hist_data_new.append(data)
 
     data = {

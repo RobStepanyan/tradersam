@@ -10,13 +10,13 @@ if (width < 576) {
 } else {
 	var height = $(window).height() - $('#asset-header').height() - 48
 };
-
 $('<div class="h-100 lds-dual-ring-md"></div>').appendTo(container);
 var link = window.location.href
-var timeFrame = '1M'
+var timeFrame = '1D'
 var chartType = 'line'
 
 function dataAjax(timeFrame, chartType, theme) {
+	console.log('Sent ajax for ' + timeFrame)
 	$.ajax({
 		url: '/dev/ajax/hist/',
 		data: {
@@ -25,38 +25,32 @@ function dataAjax(timeFrame, chartType, theme) {
 		'chart_type': chartType
 		},
 		success: function(data){
-			container.empty()
-			var currentTheme = localStorage.getItem('theme') ? localStorage.getItem('theme') : null;
-			container.empty()
-			if (currentTheme) {
-				createChart(currentTheme, data['hist_data'], data['vol_data'], chartType);
+			console.log('Got ajax for ' + timeFrame)
+			
+			if (data['hist_data'].length == 0) {
+				$('<h5 class="text-white text-center py-3">No chart data found</h5>').appendTo(container);
 			} else {
-			if (!theme) {
-				createChart('light', data['hist_data'], data['vol_data'], chartType);
-			} else {
+				$(container).empty()
 				createChart(theme, data['hist_data'], data['vol_data'], chartType);
-			};
 		}
-			if (currentTheme == 'dark') {
-				$('#switch').prop("checked", true);
-			};
 		}
 	});
 };
-<<<<<<< HEAD
-dataAjax(timeFrame, chartType);
-=======
 var currentTheme = localStorage.getItem('theme') ? localStorage.getItem('theme') : null;
+if (currentTheme == 'dark') {
+	$('#switch').click()
+}
 dataAjax(timeFrame, chartType, currentTheme);
->>>>>>> 5af91ea66f4f0c619789ba83a110dfdbf1510dfc
 $(window).on('resize', function() {
 	width = $('#chart').width();
 	if (width < 576) {
 		height = width * 1.2
-	} else {
+	} else{
 		height = $(window).height() - $('#asset-header').height() - 48
 	};
 
+	timeFrame = $('.switcher-active-item').text();
+	chartType = $('.btn.dropdown-item.active>input').attr('id');
 	$('#chart').empty(); // remove old chart
 	if ($('#switch').is(':checked')) {
 		dataAjax(timeFrame, chartType, 'dark');
@@ -65,18 +59,20 @@ $(window).on('resize', function() {
 	};
 });
 $('.switcher-item').click(_.debounce(function(){
-	timeFrame = $('.switcher-active-item').val();
-	chartType = $('.btn.dropdown-item.active').attr('id');
-	dataAjax(timeFrame, chartType);
-},250));
+	console.log('clicked')
+	timeFrame = $('.switcher-active-item').text();
+	chartType = $('.btn.dropdown-item.active>input').attr('id');
+	dataAjax(timeFrame, chartType, currentTheme);
+},150));
 $('.btn.dropdown-item').click(_.debounce(function(){
-	timeFrame = $('.switcher-active-item').val();
-	chartType = $('.btn.dropdown-item.active').attr('id');
-	dataAjax(timeFrame, chartType);
-},250));
+	timeFrame = $('.switcher-active-item').text();
+	chartType = $('.btn.dropdown-item.active>input').attr('id');
+	dataAjax(timeFrame, chartType, currentTheme);
+},150));
 
 
 function createChart(color='dark', priceData, volumeData, chartType) {
+	$('#chart-header').removeClass('d-none');
 	// chart - line chart, volume bars, go to live btn, time frames switcher
 	var lineWidth = 2
 	if (color == 'dark') {
@@ -154,57 +150,34 @@ function createChart(color='dark', priceData, volumeData, chartType) {
 	// end of time frame switcher
 	
 	var chartElement = document.createElement('div');
-	if (color == 'dark') {
-		var chart = LightweightCharts.createChart(chartElement, {
-			width: width,
-			height:  height,
-			priceScale: {
-				scaleMargins: {
-					top: 0.3,
-					bottom: 0.25,
-				},
-				borderVisible: false,
+	var chart = LightweightCharts.createChart(chartElement, {
+		width: width,
+		height:  height,
+		priceScale: {
+			scaleMargins: {
+				top: 0.3,
+				bottom: 0.25,
 			},
-			layout: {
-				backgroundColor: backgroundColor,
-				textColor: textColor,
+			borderVisible: false,
+		},
+		layout: {
+			backgroundColor: backgroundColor,
+			textColor: textColor,
+		},
+		grid: {
+			vertLines: {
+				color: vertColor,
 			},
-			grid: {
-				vertLines: {
-					color: vertColor,
-				},
-				horzLines: {
-					color: horzColor,
-				},
+			horzLines: {
+				color: horzColor,
 			},
-		});
-	} else {
-		var chart = LightweightCharts.createChart(chartElement, {
-			width: width,
-			height: height,
-			priceScale: {
-				scaleMargins: {
-					top: 0.3,
-					bottom: 0.25,
-				},
-				borderVisible: false,
-			},
-			layout: {
-				backgroundColor: backgroundColor,
-				textColor: textColor,
-			},
-			grid: {
-				vertLines: {
-					color: vertColor,
-				},
-				horzLines: {
-					color: horzColor,
-				},
-			},
-		});	
-	};
+		},
+		timeScale: {
+			timeVisible: true,
+		secondsVisible: false,
+		},
+	});
 	container.append(chartElement);
-
 	if (chartType=='line') { 
 		// chart - line
 		var areaSeries = chart.addAreaSeries({
@@ -215,19 +188,9 @@ function createChart(color='dark', priceData, volumeData, chartType) {
 		});
 		areaSeries.setData(priceData);
 		// end of chart - line
-	} else if (chartType='ohlc') {
-		// chart ohlc (bar chart)
-		var barSeries = chart.addBarSeries({
-			thinBars: false,
-			downColor: 'rgba(255,82,82, 0.8)',
-			upColor: 'rgba(0, 150, 136, 0.8)',
-		});
-		barSeries.setData(priceData);
-		// end of ohlc (bar chart)
-	} else if (chartType='candle') {
+	} else {
 		// chart candlesticks
-		var candleSeries = chart.addCandlestickSeries({
-		  });
+		var candleSeries = chart.addCandlestickSeries({});
 		candleSeries.setData(priceData);
 		// end of candlesticks
 	};
@@ -314,6 +277,6 @@ function switchTheme() {
 		localStorage.setItem('theme', 'light');
     }    
 }
-$('#switch').on('click', switchTheme);
+$('#switch').on('click', _.debounce(switchTheme, 250));
 }); // jQuery
 
