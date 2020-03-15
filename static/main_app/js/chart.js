@@ -10,13 +10,25 @@ if (width < 576) {
 } else {
 	var height = $(window).height() - $('#asset-header').height() - 48
 };
-$('<div class="h-100 lds-dual-ring-md"></div>').appendTo(container);
 var link = window.location.href
-var timeFrame = '1D'
-var chartType = 'line'
+var timeFrame = $('.switcher-item.active>input').attr('id')
+var chartType = $('.btn.dropdown-item.active>input').attr('id')
+
+$('.switcher-item').click(_.debounce(function(){
+	timeFrame = $('.switcher-item.active>input').attr('id');
+	chartType = $('.btn.dropdown-item.active>input').attr('id');
+	dataAjax(timeFrame, chartType, currentTheme);
+},150));
+
+$('.btn.dropdown-item').click(_.debounce(function(){
+	timeFrame = $('.switcher-item.active>input').attr('id');
+	chartType = $('.btn.dropdown-item.active>input').attr('id');
+	dataAjax(timeFrame, chartType, currentTheme);
+},150));
 
 function dataAjax(timeFrame, chartType, theme) {
-	console.log('Sent ajax for ' + timeFrame)
+	$(container).empty()
+	$('<div class="h-100 lds-dual-ring-md"></div>').appendTo(container)
 	$.ajax({
 		url: '/dev/ajax/hist/',
 		data: {
@@ -25,12 +37,10 @@ function dataAjax(timeFrame, chartType, theme) {
 		'chart_type': chartType
 		},
 		success: function(data){
-			console.log('Got ajax for ' + timeFrame)
-			
+			$(container).empty()
 			if (data['hist_data'].length == 0) {
-				$('<h5 class="text-white text-center py-3">No chart data found</h5>').appendTo(container);
+				$('<h5 class="text-white position-absolute text-center py-3">No chart data found</h5>').appendTo(container);
 			} else {
-				$(container).empty()
 				createChart(theme, data['hist_data'], data['vol_data'], chartType);
 		}
 		}
@@ -49,7 +59,7 @@ $(window).on('resize', function() {
 		height = $(window).height() - $('#asset-header').height() - 48
 	};
 
-	timeFrame = $('.switcher-active-item').text();
+	timeFrame = $('.switcher-item.active>input').attr('id');
 	chartType = $('.btn.dropdown-item.active>input').attr('id');
 	$('#chart').empty(); // remove old chart
 	if ($('#switch').is(':checked')) {
@@ -58,18 +68,6 @@ $(window).on('resize', function() {
 		dataAjax(timeFrame, chartType, 'light');
 	};
 });
-$('.switcher-item').click(_.debounce(function(){
-	console.log('clicked')
-	timeFrame = $('.switcher-active-item').text();
-	chartType = $('.btn.dropdown-item.active>input').attr('id');
-	dataAjax(timeFrame, chartType, currentTheme);
-},150));
-$('.btn.dropdown-item').click(_.debounce(function(){
-	timeFrame = $('.switcher-active-item').text();
-	chartType = $('.btn.dropdown-item.active>input').attr('id');
-	dataAjax(timeFrame, chartType, currentTheme);
-},150));
-
 
 function createChart(color='dark', priceData, volumeData, chartType) {
 	$('#chart-header').removeClass('d-none');
@@ -91,64 +89,6 @@ function createChart(color='dark', priceData, volumeData, chartType) {
 		var lineColor ='rgba(33, 150, 243, 1)';
 	};
 		
-	
-	// time frames switcher
-	function createSimpleSwitcher(items, activeItem, activeItemChangedCallback) {
-		var switcherElement = document.createElement('div');
-		switcherElement.classList.add('switcher');
-
-		var intervalElements = items.map(function(item) {
-			var itemEl = document.createElement('button');
-			itemEl.innerText = item;
-			itemEl.classList.add('switcher-item');
-			itemEl.classList.toggle('switcher-active-item', item === activeItem);
-			itemEl.addEventListener('click', function() {
-				onItemClicked(item);
-			});
-			switcherElement.appendChild(itemEl);
-			return itemEl;
-		});
-
-		function onItemClicked(item) {
-			if (item === activeItem) {
-				return;
-			}
-
-			intervalElements.forEach(function(element, index) {
-				element.classList.toggle('switcher-active-item', items[index] === item);
-			});
-
-			activeItem = item;
-
-			activeItemChangedCallback(item);
-		}
-
-		return switcherElement;
-	}
-
-	var intervals = ['1D', '5D', '1M', '3M', '6M', '1Y', '5Y', 'Max'];
-	var dayData = priceData;
-	var weekData = priceData;
-	var monthData = priceData;
-	var months3Data = priceData;
-	var months6Data = priceData;
-	var yearData = priceData;
-	var years5Data = priceData;
-	var maxData = priceData;
-	var seriesesData = new Map([
-		['1D', dayData ],
-		['5D', weekData ],
-		['1M', monthData ],
-		['3M', months3Data ],
-		['6M', months6Data ],
-		['1Y', yearData ],
-		['5Y', years5Data ],
-		['Max', maxData ],
-	]);
-
-	var switcherElement = createSimpleSwitcher(intervals, intervals[0], syncToInterval);
-	// end of time frame switcher
-	
 	var chartElement = document.createElement('div');
 	var chart = LightweightCharts.createChart(chartElement, {
 		width: width,
@@ -212,7 +152,6 @@ function createChart(color='dark', priceData, volumeData, chartType) {
 	// end of chart
 
 	// time frames switcher
-	container.append(switcherElement)
 
 	function syncToInterval(interval) {
 		if (areaSeries) {
@@ -228,7 +167,6 @@ function createChart(color='dark', priceData, volumeData, chartType) {
 		areaSeries.setData(seriesesData.get(interval));
 	}
 
-	syncToInterval(intervals[0]);
 	// end of time frames switcher
 
 	// Go to real-time button

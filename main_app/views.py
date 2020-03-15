@@ -173,12 +173,21 @@ def ajax_hist(request):
         
         hist_data_new.append(data)
 
+    hist_data = []
+    for dct in hist_data_new:
+        if all(dct.values()):
+            hist_data.append(dct)
+    vol_data = []
+    for dct in volume_data:
+        if all(dct.values()):
+            vol_data.append(dct)
+    
     data = {
-        'hist_data': hist_data_new,
-        'vol_data': volume_data
+        'hist_data': hist_data,
+        'vol_data': vol_data
     }    
-    print(chart_type, hist_data_new)
-    print(volume_data)
+    print(chart_type, hist_data)
+    print(vol_data)
     return JsonResponse(data)
 
 def asset_details(request, type_, pk):
