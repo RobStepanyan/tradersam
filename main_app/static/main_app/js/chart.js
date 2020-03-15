@@ -26,7 +26,9 @@ function dataAjax(timeFrame, chartType, theme) {
 		},
 		success: function(data){
 			container.empty()
-			console.log(data)
+			if (data['hist_data'].length == 0) {
+				$('<h5 class="text-white text-center py-3">No chart data found</h5>').appendTo(container);
+			} else {
 			if (!theme) {
 				createChart('light', data['hist_data'], data['vol_data'], chartType);
 			} else {
@@ -35,6 +37,7 @@ function dataAjax(timeFrame, chartType, theme) {
 			if (currentTheme == 'dark') {
 				$('#switch').prop("checked", true);
 			};
+		}
 		}
 	});
 };
@@ -68,6 +71,7 @@ $('.btn.dropdown-item').click(_.debounce(function(){
 
 
 function createChart(color='dark', priceData, volumeData, chartType) {
+	$('#chart-header').removeClass('d-none');
 	// chart - line chart, volume bars, go to live btn, time frames switcher
 	var lineWidth = 2
 	if (color == 'dark') {

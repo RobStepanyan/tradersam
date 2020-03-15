@@ -26,20 +26,29 @@ function dataAjax(timeFrame, chartType, theme) {
 		},
 		success: function(data){
 			container.empty()
-			console.log(data)
+			var currentTheme = localStorage.getItem('theme') ? localStorage.getItem('theme') : null;
+			container.empty()
+			if (currentTheme) {
+				createChart(currentTheme, data['hist_data'], data['vol_data'], chartType);
+			} else {
 			if (!theme) {
 				createChart('light', data['hist_data'], data['vol_data'], chartType);
 			} else {
 				createChart(theme, data['hist_data'], data['vol_data'], chartType);
 			};
+		}
 			if (currentTheme == 'dark') {
 				$('#switch').prop("checked", true);
 			};
 		}
 	});
 };
+<<<<<<< HEAD
+dataAjax(timeFrame, chartType);
+=======
 var currentTheme = localStorage.getItem('theme') ? localStorage.getItem('theme') : null;
 dataAjax(timeFrame, chartType, currentTheme);
+>>>>>>> 5af91ea66f4f0c619789ba83a110dfdbf1510dfc
 $(window).on('resize', function() {
 	width = $('#chart').width();
 	if (width < 576) {
