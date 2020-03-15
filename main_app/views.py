@@ -85,9 +85,10 @@ def ajax_search(request):
     return JsonResponse(data)
 
 def ajax_hist(request):
-    time_frame = request.GET.get('time_frame', '1D')
-    chart_type = request.GET.get('chart_type', False)
-
+    time_frame = request.GET.get('time_frame')
+    chart_type = request.GET.get('chart_type')
+    print('Chart Type', chart_type)
+    print('Time Frame', time_frame)
     # finding type and primary key(pk)
     link = request.GET['link'][::-1]
     pk = link[1:link[1:].index('/')+1][::-1]
@@ -101,28 +102,33 @@ def ajax_hist(request):
             obj = value['object']
             break
     asset = obj.objects.get(pk=pk)
-
     hist_objects = {
     '1D': models.AllAssetsHistorical1D, '5D': models.AllAssetsHistorical5D,
     '1M': models.AllAssetsHistorical6M1M, '3M': models.AllAssetsHistorical6M1M, '6M': models.AllAssetsHistorical6M1M, 
     '1Y': models.AllAssetsHistorical1Y, '5Y': models.AllAssetsHistorical5Y, 'Max': models.AllAssetsHistoricalMax}
-
+    
     # finding timeframe
     hist_data = []
-    for model in hist_objects[time_frame].objects.filter(link=asset.link):
+    if time_frame[-1] == 'D':
+        filter_ = hist_objects[time_frame].objects.filter(link=asset.link)
+    else:
+        filter_ = hist_objects[time_frame].objects.filter(Type=asset.Type, short_name=asset.short_name)
+    
+    for model in filter_:
+        if not asset.link in model.link:
+            continue
         if time_frame[-1] == 'M':
             months = int(time_frame[0])
             today = timezone.now()
             last_date = today - relativedelta(months=months)
             dct = model_to_dict(model)
-            for v in dct.values():
-                # for example if 1M is selected than any
-                # data older is removed
-                if v['date'] > last_date:
-                    del dct[time_frame]
+            # for example if 1M is selected than any
+            # data older is removed
+            if dct['date'] > last_date.date() or dct['date'] is None:
+                continue
         else:
             dct = model_to_dict(model)
-            hist_data.append(dct)
+        hist_data.append(dct)
     
     # { time: '2018-10-25', value: 56.43 } - example of line chart price data
     # { time: '2018-10-19', open: 54.62, high: 55.50, low: 54.52, close: 54.90 } - line, candles
@@ -132,37 +138,38 @@ def ajax_hist(request):
     volume_data = []
     last_volume = None
     for data in hist_data:
-        # data['time'] = data['date'].strftime('%Y-%m-%d')
-        data['time'] = int(data['date'].timestamp())
+        if time_frame[-1] == 'D':
+            data['time'] = int(data['date'].timestamp())
+        else:
+            data['time'] = data['date'].strftime('%Y-%m-%d')
+        
         volume = data['volume']
         if volume:
+            # volume example - 457.67K
             if '$' in volume:
                 volume = volume.replace('$', '')
+            if ',' in volume:
+                volume = volume.replace(',', '')
             if 'B' in volume:
                 volume = int(volume[:-1].replace('.', ''))* 10000000
             elif 'M' in volume:
                 volume = int(volume[:-1].replace('.', ''))* 10000
             elif 'K' in volume:
                 volume = int(volume[:-1].replace('.', ''))* 10
-            if ',' in volume:
-                volume = volume.replace(',', '')
-
-            if not last_volume or data['volume'] > volume:
+                
+            if not last_volume or volume > last_volume:
                 color = 'rgba(0, 150, 136, 0.8)'
             else:
                 color = 'rgba(255,82,82, 0.8)'
             volume_data.append({'time': data['time'], 'value': volume, 'color': color})
             last_volume = volume
-
         del data['date']
-        
         if chart_type == 'line':
             data['value'] = data['price']
             data_copy = dict(data)
             for key in data_copy.keys():
                 if not key in ['time', 'value']:
                     del data[key]
-        
         elif chart_type == 'candle':
             data['close'] = data['price']
             data['open'] = data['Open']
@@ -170,9 +177,7 @@ def ajax_hist(request):
             for key in data_copy.keys():
                 if not key in ['open','high','low','close','time']:
                     del data[key]
-        
         hist_data_new.append(data)
-
     hist_data = []
     for dct in hist_data_new:
         if all(dct.values()):
@@ -186,8 +191,6 @@ def ajax_hist(request):
         'hist_data': hist_data,
         'vol_data': vol_data
     }    
-    print(chart_type, hist_data)
-    print(vol_data)
     return JsonResponse(data)
 
 def asset_details(request, type_, pk):

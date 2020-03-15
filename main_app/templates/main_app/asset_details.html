@@ -46,13 +46,13 @@
 <!-- Chart -->
 <div class="bg-dark py-3 mt-1">
   <div class="container p-0">
-    <div class="row pb-2 justify-content-around d-none" id="chart-header">
+    <div class="row pb-2 justify-content-around" id="chart-header">
       <div class="dropdown show mr-2">
         <a class="btn btn-secondary dropdown-toggle m-0 w-100" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Chart type
         </a>
         <div class="dropdown-menu" aria-labelledby="dropdownMenuLink" data-toggle="buttons">
-          <label class="btn dropdown-item">
+          <label class="btn dropdown-item d-none" id='cndle'>
             <input type="radio" id="candle" autocomplete="off">
             <img class="country-flag-md mr-2" src="{% static 'main_app/svg/charts/candlestick.svg' %}">Candlesticks
           </label>

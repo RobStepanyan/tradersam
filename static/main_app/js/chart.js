@@ -39,7 +39,7 @@ function dataAjax(timeFrame, chartType, theme) {
 		success: function(data){
 			$(container).empty()
 			if (data['hist_data'].length == 0) {
-				$('<h5 class="text-white position-absolute text-center py-3">No chart data found</h5>').appendTo(container);
+				$('<h5 class="text-white text-center py-3 mb-0">No chart data found</h5>').appendTo(container);
 			} else {
 				createChart(theme, data['hist_data'], data['vol_data'], chartType);
 		}
@@ -70,7 +70,6 @@ $(window).on('resize', function() {
 });
 
 function createChart(color='dark', priceData, volumeData, chartType) {
-	$('#chart-header').removeClass('d-none');
 	// chart - line chart, volume bars, go to live btn, time frames switcher
 	var lineWidth = 2
 	if (color == 'dark') {
