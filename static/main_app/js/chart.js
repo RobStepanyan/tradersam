@@ -15,16 +15,24 @@ var timeFrame = $('.switcher-item.active>input').attr('id')
 var chartType = $('.btn.dropdown-item.active>input').attr('id')
 
 $('.switcher-item').click(_.debounce(function(){
+	var currentTheme = localStorage.getItem('theme') ? localStorage.getItem('theme') : null;
 	timeFrame = $('.switcher-item.active>input').attr('id');
 	chartType = $('.btn.dropdown-item.active>input').attr('id');
 	dataAjax(timeFrame, chartType, currentTheme);
 },150));
 
 $('.btn.dropdown-item').click(_.debounce(function(){
+	var currentTheme = localStorage.getItem('theme') ? localStorage.getItem('theme') : null;
 	timeFrame = $('.switcher-item.active>input').attr('id');
 	chartType = $('.btn.dropdown-item.active>input').attr('id');
 	dataAjax(timeFrame, chartType, currentTheme);
 },150));
+var areaSeries, chart, l
+function updateChart(theme, priceData, volumeData, chartType) {
+	l = createChart(theme, priceData, volumeData, chartType);
+	chart = l[0]
+	areaSeries = l[1]
+}
 
 function dataAjax(timeFrame, chartType, theme) {
 	$(container).empty()
@@ -41,7 +49,7 @@ function dataAjax(timeFrame, chartType, theme) {
 			if (data['hist_data'].length == 0) {
 				$('<h5 class="text-white text-center py-3 mb-0">No chart data found</h5>').appendTo(container);
 			} else {
-				createChart(theme, data['hist_data'], data['vol_data'], chartType);
+				updateChart(theme, data['hist_data'], data['vol_data'], chartType);
 		}
 		}
 	});
@@ -49,7 +57,7 @@ function dataAjax(timeFrame, chartType, theme) {
 var currentTheme = localStorage.getItem('theme') ? localStorage.getItem('theme') : null;
 if (currentTheme == 'dark') {
 	$('#switch').click()
-}
+};
 dataAjax(timeFrame, chartType, currentTheme);
 $(window).on('resize', function() {
 	width = $('#chart').width();
@@ -59,15 +67,83 @@ $(window).on('resize', function() {
 		height = $(window).height() - $('#asset-header').height() - 48
 	};
 
-	timeFrame = $('.switcher-item.active>input').attr('id');
-	chartType = $('.btn.dropdown-item.active>input').attr('id');
-	$('#chart').empty(); // remove old chart
 	if ($('#switch').is(':checked')) {
-		dataAjax(timeFrame, chartType, 'dark');
+		chart.applyOptions({ width: width, height: height });
 	} else {
-		dataAjax(timeFrame, chartType, 'light');
+		chart.applyOptions({ width: width, height: height });
 	};
 });
+
+var lightTheme = {
+	chart: {
+		layout: {
+			backgroundColor: '#FFFFFF',
+			lineColor: '#2B2B43',
+			textColor: '#191919',
+		},
+		watermark: {
+			color: 'rgba(0, 0, 0, 0)',
+		},
+		grid: {
+			vertLines: {
+				visible: false,
+			},
+			horzLines: {
+				color: '#f0f3fa',
+			},
+		},
+	},
+	series: {
+			topColor: 'rgba(33, 150, 243, 0.56)',
+			bottomColor: 'rgba(33, 150, 243, 0.04)',
+			lineColor: 'rgba(33, 150, 243, 1)',
+	},
+};
+  
+var darkTheme = {
+	chart: {
+		layout: {
+			backgroundColor: '#131722',
+			lineColor: 'rgba(38,198,218, 1)',
+			textColor: '#d1d4dc',
+		},
+		grid: {
+			vertLines: {
+				color:'rgba(42, 46, 57, 0.2)',
+			},
+			horzLines: {
+				color: 'rgba(42, 46, 57, 0.6)',
+			},
+		},
+	},
+	series: {
+			topColor: 'rgba(38,198,218, 0.56)',
+			bottomColor: 'rgba(38,198,218, 0.04)',
+			lineColor: 'rgba(38,198,218, 1)',
+	},
+};
+
+var themesData = {
+	dark: darkTheme,
+	light: lightTheme,
+};
+
+function syncToTheme(theme) {
+	chart.applyOptions(themesData[theme].chart);
+	areaSeries.applyOptions(themesData[theme].series);
+}
+
+function switchTheme() {
+	if ($('#switch').is(':checked')) {
+		syncToTheme('dark');
+		localStorage.setItem('theme', 'dark');
+	}
+    else {
+		syncToTheme('light');
+		localStorage.setItem('theme', 'light');
+    }    
+}
+$('#switch').click(_.debounce(switchTheme, 250));
 
 function createChart(color='dark', priceData, volumeData, chartType) {
 	// chart - line chart, volume bars, go to live btn, time frames switcher
@@ -129,7 +205,9 @@ function createChart(color='dark', priceData, volumeData, chartType) {
 		// end of chart - line
 	} else {
 		// chart candlesticks
-		var candleSeries = chart.addCandlestickSeries({});
+		var candleSeries = chart.addCandlestickSeries({
+
+		});
 		candleSeries.setData(priceData);
 		// end of candlesticks
 	};
@@ -149,24 +227,6 @@ function createChart(color='dark', priceData, volumeData, chartType) {
 	volumeSeries.setData(volumeData);
 	// end of chart - volume
 	// end of chart
-
-	// time frames switcher
-
-	function syncToInterval(interval) {
-		if (areaSeries) {
-			chart.removeSeries(areaSeries);
-			areaSeries = null;
-		}
-		areaSeries = chart.addAreaSeries({
-		topColor: topColor,
-		bottomColor: bottomColor,
-		lineColor: lineColor,
-		lineWidth: lineWidth,
-		});
-		areaSeries.setData(seriesesData.get(interval));
-	}
-
-	// end of time frames switcher
 
 	// Go to real-time button
 	var btn_width = 27;
@@ -200,20 +260,12 @@ function createChart(color='dark', priceData, volumeData, chartType) {
 		button.style.color = '#4c525e';
 	});
 	// End of go to real time button
+	if (areaSeries) {
+		return [chart, areaSeries]
+	}else {
+		return [chart, candleSeries]
+	};
+	
 }; // End of create chart
-
-function switchTheme() {
-	if ($('#switch').is(':checked')) {
-		$('#chart').empty();
-		dataAjax(timeFrame, chartType, 'dark');
-		localStorage.setItem('theme', 'dark');
-	}
-    else {
-		$('#chart').empty();
-		dataAjax(timeFrame, chartType, 'light');
-		localStorage.setItem('theme', 'light');
-    }    
-}
-$('#switch').on('click', _.debounce(switchTheme, 250));
 }); // jQuery
 

@@ -52,7 +52,7 @@
           Chart type
         </a>
         <div class="dropdown-menu" aria-labelledby="dropdownMenuLink" data-toggle="buttons">
-          <label class="btn dropdown-item d-none" id='cndle'>
+          <label class="btn dropdown-item">
             <input type="radio" id="candle" autocomplete="off">
             <img class="country-flag-md mr-2" src="{% static 'main_app/svg/charts/candlestick.svg' %}">Candlesticks
           </label>
@@ -63,7 +63,7 @@
         </div>
       </div>
       <div class="switch switch-xs switch-label-onoff pl-0 mr-2 d-flex fl justify-content-center">
-        <h6 class="text-white m-0 mr-1 py-2 mt-1">Dark mode </h6>
+        <h6 class="text-white m-0 mr-2 py-2 mt-1">Dark mode </h6>
         <div class="py-2">
           <input class="switch-input" id="switch" type="checkbox" :checked>
           <label class="switch-btn" for="switch"></label>
@@ -73,7 +73,7 @@
     <div id="chart">
       <!-- JS Chart goes here -->
     </div>
-    <div class="switcher px-2 overflow-x-hidden" data-toggle="buttons">
+    <div class="switcher" data-toggle="buttons">
       <label class="btn switcher-item active">
         <input type="radio" id="1D" autocomplete="off" checked>1D
       </label>
