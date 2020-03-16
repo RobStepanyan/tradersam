@@ -77,20 +77,22 @@ function search() {
             var type = data.results[i]['type']
             var country = data.results[i]['country']
             if (type == 'Currency') {
-              country = 'crncy'
+              c = 'crncy'
             }else if (type == 'Cryptocurrency') {
-              country = 'crptcrncy'
+              c = 'crptcrncy'
+            }else {
+              c = country
             };
             
             $(
-              '<a class="text-inherit" href="/dev/asset/' + type.toLowerCase() + '/' + data.results[i]['pk'] +'">'
+              '<a class="text-inherit" href="/dev/asset/' + country + '/' + type.toLowerCase() + '/' + data.results[i]['pk'] +'">'
             + '<div class="search-item">' 
             + '<div class="d-flex">'
             + data.results[i]['short_name'] + ' | '
             + '<div class="search-long">' + long_name + '</div>'
             + '</div>'
             + '<div class="search-type">'
-            + '<img class="country-flag-sm" src="/static/main_app/svg/flags/' + country + '.svg">'
+            + '<img class="country-flag-sm" src="/static/main_app/svg/flags/' + c + '.svg">'
             + ' ' + type + '</div>'
             + '</div></a>'
             ).appendTo(container);

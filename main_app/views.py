@@ -2,14 +2,14 @@ from django.shortcuts import render
 from django.utils import timezone
 from dateutil.relativedelta import relativedelta
 from django.forms.models import model_to_dict
-from scraper_app.models import Types, AllAssetsLive, AllAssetsAfterLive
+from scraper_app.models import Types, Countries, AllAssetsLive, AllAssetsAfterLive
 from scraper_app import models
 from django.http import HttpResponse, JsonResponse, Http404
 from scraper_app.scraper_data import STATIC_OBJECTS
 
 # Create your views here.
 def ajax_search(request):
-    search = request.GET['search']
+    search = request.GET['search'].strip()
     results = []
     
     # First finding elements which are equal to search
@@ -87,20 +87,31 @@ def ajax_search(request):
 def ajax_hist(request):
     time_frame = request.GET.get('time_frame')
     chart_type = request.GET.get('chart_type')
-    print('Chart Type', chart_type)
-    print('Time Frame', time_frame)
+    
     # finding type and primary key(pk)
     link = request.GET['link'][::-1]
     pk = link[1:link[1:].index('/')+1][::-1]
     link = link[::-1]
     type_ = link[:link.index(pk)][::-1]
     type_ = type_[1:type_[1:].index('/')+1][::-1].capitalize()
+    cntry = link[:link.index(type_.lower())][::-1]
+    cntry = cntry[1:cntry[1:].index('/')+1][::-1]
+    
+    cntry = cntry.upper()
+    cntry1 = Countries[Countries.index(cntry)+1]
+    country = (cntry, cntry1)
+    type_ = Types[Types.index(type_)-1]
 
-    type_ = Types[Types.index(type_.capitalize())-1]
-    for value in STATIC_OBJECTS.values():
-        if value['type'] == type_:
-            obj = value['object']
-            break
+    for key, value in STATIC_OBJECTS.items():
+        if country[0] == 'G':
+            if value['type'] == type_:
+                obj = value['object']
+                break
+        else:    
+            if value['type'] == type_ and (country[0] in key or country[1] in key):
+                obj = value['object']
+                break
+
     asset = obj.objects.get(pk=pk)
     hist_objects = {
     '1D': models.AllAssetsHistorical1D, '5D': models.AllAssetsHistorical5D,
@@ -193,15 +204,24 @@ def ajax_hist(request):
     }    
     return JsonResponse(data)
 
-def asset_details(request, type_, pk):
+def asset_details(request, cntry, type_, pk):
     if not type_.title() in Types:
         raise Http404("Type not found")
-        
+    
+    cntry = cntry.upper()
     type_ = Types[Types.index(type_.capitalize())-1]
-    for value in STATIC_OBJECTS.values():
-        if value['type'] == type_:
-            obj = value['object']
-            break
+    cntry1 = Countries[Countries.index(cntry)+1]
+    country = (cntry, cntry1)
+    
+    for key, value in STATIC_OBJECTS.items():
+        if country[0] == 'G':
+            if value['type'] == type_:
+                obj = value['object']
+                break
+        else:    
+            if value['type'] == type_ and (country[0] in key or country[1] in key):
+                obj = value['object']
+                break
     
     if not str(pk) in [str(x[0]) for x in obj.objects.values_list('pk')]:
         raise Http404('PK not found')
@@ -237,7 +257,7 @@ def asset_details(request, type_, pk):
         if 'Perc' in str(i1):
             i1 = i1.replace('Perc', '%')
         # Circ supply: BTC18.25M -> Circ supply: 18.25M
-        if 'supply' in i1:
+        if 'Supply' in i1:
             i = 0
             for char in i2:
                 if char in '123456789':

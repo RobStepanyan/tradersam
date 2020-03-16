@@ -61,6 +61,7 @@ TYPES = (
     ('stck', 'Stock'), ('indx', 'Index'), ('etf', 'ETF'), ('bnd', 'Bond'), ('fnd', ('Fund'))
 )
 Types = [i for j in TYPES for i in j]
+Countries = [i for j in COUNTRIES for i in j]
 
 class CommodityStaticInfo(models.Model):
     fields_to_scrape = (
