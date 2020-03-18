@@ -202,6 +202,7 @@ function createChart(color='dark', priceData, volumeData, chartType) {
 			lineWidth: lineWidth,
 		});
 		areaSeries.setData(priceData);
+		console.log(priceData.length)
 		// end of chart - line
 	} else {
 		// chart candlesticks
