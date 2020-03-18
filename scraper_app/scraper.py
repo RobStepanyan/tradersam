@@ -85,7 +85,7 @@ class CollectStaticInfo:
                 short_name=static_info['Short Name'], base_symbol=static_info['Base Symbol'],
                 contract_size=static_info['Contract Size'], country=static_info['Country'], 
                 tick_size=static_info['Tick Size'], tick_value=static_info['Tick Value'],
-                months=static_info['Months'], point_value=static_info['Point Value'],
+                point_value=static_info['Point Value'],
                 link=static_info['Link'], unit=static_info['Unit']).save()
         print('Data has been successfuly stored!')
         return ''
