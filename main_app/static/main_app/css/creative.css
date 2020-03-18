@@ -9171,6 +9171,7 @@ tbody {
   line-height: 125%;
   text-align: center;
   align-self: center;
+  display: inline-table;
 }
 .price.up {
   color: var(--green)!important;

@@ -293,9 +293,43 @@ def asset_details(request, cntry, type_, pk):
     if len(data_pairs2) < len(data_pairs1):
         data_pairs2.append(['',''])
 
+
+    # finding similar assets to display in carousel
+    similars = []
+    if type_ == 'crncy':
+        for item in obj.objects.all():
+            similars.append(item)
+            if len(similars) >= 15:
+                break
+    else:
+        similars = obj.objects.filter(short_name__startswith=asset.short_name[0])[:15]
+    
+    similars_dct = {}
+    similars_lst = []
+    for item in similars:
+        for model in AllAssetsLive.objects.filter(link=item.link):
+            if type_ == 'crptcrncy' and not item.link:
+                continue
+            dct = model_to_dict(model)
+            for key, value in dct.items():
+                if key != 'id' and value:
+                    data[key] = value
+        
+        live_data = {}
+        for key, value in data.items():
+            if key in ['change', 'change_perc']:
+                live_data[key] = value
+
+        similars_dct['live'] = live_data
+        similars_dct['static'] = item
+        if len(similars_dct['static'].long_name.split()) > 2:
+            similars_dct['static'].long_name = similars_dct['static'].long_name.split()[0] + ' ' + similars_dct['static'].long_name.split()[1] + '..'
+        similars_lst.append(similars_dct)
+
     context = {
         'data': data,
         'asset': asset,
+        'similars': similars_lst,
         'data_pairs': zip(data_pairs1, data_pairs2),
     }
     return render(request, 'main_app/asset_details.html', context)
