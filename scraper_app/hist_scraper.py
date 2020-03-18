@@ -50,6 +50,16 @@ def collect_for(obj, x, key, value, link):
                         print('Waiting...')
                         sleep(1)
                 
+                # check if table is fully loaded
+                while True:
+                    try:
+                        soup = BeautifulSoup(driver.page_source, 'html.parser')
+                        disc = soup.find('div', id_='theDisclaimer')
+                        break
+                    except:
+                        print('Waiting...')
+                        sleep(1)
+                
                 for row in trs:
                     data = row.find_all('td')
                     data = [d.get_text() for d in data]
