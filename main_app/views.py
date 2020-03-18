@@ -103,7 +103,10 @@ def ajax_hist(request):
     type_ = Types[Types.index(type_)-1]
 
     for key, value in STATIC_OBJECTS.items():
-        if country[0] == 'G':
+        if type_ == 'cmdty':
+            obj = STATIC_OBJECTS['Commodities']['object']
+            break
+        elif cntry == 'G':
             if value['type'] == type_:
                 obj = value['object']
                 break
@@ -135,7 +138,7 @@ def ajax_hist(request):
             dct = model_to_dict(model)
             # for example if 1M is selected than any
             # data older is removed
-            if dct['date'] > last_date.date() or dct['date'] is None:
+            if dct['date'] < last_date.date() or dct['date'] is None:
                 continue
         else:
             dct = model_to_dict(model)
@@ -214,7 +217,10 @@ def asset_details(request, cntry, type_, pk):
     country = (cntry, cntry1)
     
     for key, value in STATIC_OBJECTS.items():
-        if cntry == 'G':
+        if type_ == 'cmdty':
+            obj = STATIC_OBJECTS['Commodities']['object']
+            break
+        elif cntry == 'G':
             if value['type'] == type_:
                 obj = value['object']
                 break
