@@ -209,63 +209,72 @@ class CollectLive:
                 ).save()
                 print(f'{self.title}: saved Live')
 
-                last_obj_1d_count = models.AllAssetsHistorical1D.objects.filter(link=link).count()
-                if last_obj_1d_count > 0:
-                    last_obj_1d = models.AllAssetsHistorical1D.objects.filter(link=link).order_by('-id')[0]
-                
-                last_obj_5d_count = models.AllAssetsHistorical5D.objects.filter(link=link).count()
-                if last_obj_5d_count > 0:
-                    last_obj_5d = models.AllAssetsHistorical5D.objects.filter(link=link).order_by('-id')[0]
-                
-                if last_obj_1d_count == 0 or last_obj_1d.date.minute<now.minute:
-                    # if there's no data at all or latest data is already outdated
-                    # send (Save) data
-                    models.AllAssetsHistorical1D(
-                        Type=self.type_,
-                        link=link,
+                last_obj_count = {}
+                last_obj = {}
+                hist_objects = {
+                '1D': models.AllAssetsHistorical1D, '5D': models.AllAssetsHistorical5D, '6M1M': models.AllAssetsHistorical6M1M, 
+                '1Y': models.AllAssetsHistorical1Y, '5Y': models.AllAssetsHistorical5Y, 'Max': models.AllAssetsHistoricalMax
+                }
+                hours_ = {
+                    '1D': 24, '5D': 24*5, '6M1M': 24*30, 
+                    '1Y': 24*365, '5Y': 24*365*5
+                }
+                minutes_ = {
+                    '1D': 1, '5D': 5, '6M1M': 1, 
+                    '1Y': 1, '5Y': 5, 'Max':30 # minutes of every element except 1D 5D are used as hours
+                }
+                for k, v in hist_objects.items():
+                    last_obj_count[k] = v.objects.filter(link=link).count()
+                    if last_obj_count[k] > 0:
+                        last_obj[k] = v.objects.filter(link=link).order_by('-id')[0]
 
-                        date=now,
-                        price=validate_price(live_data['Last']),
-                        Open=validate_price(live_data['Open']),
-                        high=validate_price(live_data['High']),
-                        low=validate_price(live_data['Low']),
-                        volume=validate_price(live_data['Vol.']),
-                    ).save()
-                    print(f'{self.title}: saved HISTORICAL1D')
+                for time_frame, hist_model in hist_objects.items():
+                    if time_frame[-1] == 'D':
+                        if last_obj_count[time_frame] == 0 or now.minute - last_obj[time_frame].date.minute >= minutes_[time_frame]:
+                            # if there's no data at all or latest data is already outdated
+                            # send (Save) data
+                            hist_model(
+                            Type=self.type_,
+                                link=link,
 
-                    if last_obj_1d_count:
-                        data1 = last_obj_1d.date
-                        data2 = now
-                        diff = data2 - data1
-                        days, seconds = diff.days, diff.seconds
-                        hours = days * 24 + seconds // 3600
-                        if hours > 24:
-                            models.AllAssetsHistorical1D.objects.filter(link=link).order_by('id')[0].delete()
-                
-                if (last_obj_5d_count == 0 or now.minute - last_obj_5d.date.minute>=5):
-                    # if there's no data at all or latest data is already outdated also divisible by 5
-                    # send (Save) data
-                    models.AllAssetsHistorical5D(
-                        Type=self.type_,
-                        link=link,
+                                date=now,
+                                price=validate_price(live_data['Last']),
+                                Open=validate_price(live_data['Open']),
+                                high=validate_price(live_data['High']),
+                                low=validate_price(live_data['Low']),
+                                volume=validate_price(live_data['Vol.']),
+                            ).save() 
+                            print(f'{self.title}: saved HISTORICAL{k}')
+                    else:
+                        if last_obj_count[time_frame] == 0 or now.day - last_obj[time_frame].date.day >= minutes_[time_frame]:
+                            # if there's no data at all or latest data is already outdated
+                            # send (Save) data
+                            hist_model(
+                            Type=self.type_,
+                                link=link,
 
-                        date=now,
-                        price=validate_price(live_data['Last']),
-                        Open=validate_price(live_data['Open']),
-                        high=validate_price(live_data['High']),
-                        low=validate_price(live_data['Low']),
-                        volume=validate_price(live_data['Vol.']),
-                    ).save()
-                    print(f'{self.title}: saved HISTORICAL5D')
-                    
-                    if last_obj_5d_count:
-                        data1 = last_obj_5d.date
-                        data2 = now
-                        diff = data2 - data1
-                        days, seconds = diff.days, diff.seconds
-                        hours = days * 24 + seconds // 3600
-                        if hours > 24*5:
-                            models.AllAssetsHistorical5D.objects.filter(link=link).order_by('id')[0].delete()
+                                date=now,
+                                price=validate_price(live_data['Last']),
+                                Open=validate_price(live_data['Open']),
+                                high=validate_price(live_data['High']),
+                                low=validate_price(live_data['Low']),
+                                volume=validate_price(live_data['Vol.']),
+                            ).save() 
+                            print(f'{self.title}: saved HISTORICAL{k}')
+
+                    if time_frame != 'Max':
+                        if last_obj_count[time_frame]:
+                            data1 = last_obj[time_frame].date
+                            if time_frame[-1] == 'D': 
+                                data2 = now
+                            else:
+                                data2 = now.date()
+                            diff = data2 - data1
+                            days, seconds = diff.days, diff.seconds
+                            hours = days * 24 + seconds // 3600
+                            if hours > hours_[time_frame]:
+                                hist_model.objects.filter(link=link).order_by('id')[0].delete()
+
             elif is_closed:
                 # check whether "after live data" for today is available
                 last_obj_after_count = models.AllAssetsAfterLive.objects.filter(link=link).count()
