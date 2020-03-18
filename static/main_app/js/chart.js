@@ -259,6 +259,19 @@ function createChart(color='dark', priceData, volumeData, chartType) {
 		button.style.background = 'rgba(250, 250, 250, 0.6)';
 		button.style.color = '#4c525e';
 	});
+	chart.timeScale().fitContent();
+	chart.applyOptions({
+		timeScale: {
+			rightOffset: 12,
+			barSpacing: 3,
+			fixLeftEdge: true,
+			lockVisibleTimeRangeOnResize: true,
+			rightBarStaysOnScroll: true,
+			visible: true,
+			timeVisible: true,
+			secondsVisible: false,
+		},
+	});
 	// End of go to real time button
 	if (areaSeries) {
 		return [chart, areaSeries]
