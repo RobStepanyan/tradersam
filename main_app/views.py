@@ -214,7 +214,7 @@ def asset_details(request, cntry, type_, pk):
     country = (cntry, cntry1)
     
     for key, value in STATIC_OBJECTS.items():
-        if country[0] == 'G':
+        if cntry == 'G':
             if value['type'] == type_:
                 obj = value['object']
                 break
@@ -320,10 +320,16 @@ def asset_details(request, cntry, type_, pk):
             if key in ['change', 'change_perc']:
                 live_data[key] = value
 
+        item = model_to_dict(item)
+        if item['Type'] == 'cmdty':
+            item['long_name'] = item['short_name'] + ' Futures Contract'
+
         similars_dct['live'] = live_data
         similars_dct['static'] = item
-        if len(similars_dct['static'].long_name.split()) > 2:
-            similars_dct['static'].long_name = similars_dct['static'].long_name.split()[0] + ' ' + similars_dct['static'].long_name.split()[1] + '..'
+        
+        if len(similars_dct['static']['long_name'].split()) > 2:
+            long = similars_dct['static']['long_name']
+            similars_dct['static']['long_name'] = long.split()[0] + ' ' + long.split()[1] + '..'
         similars_lst.append(similars_dct)
 
     context = {
