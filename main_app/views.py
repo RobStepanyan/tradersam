@@ -194,6 +194,12 @@ def ajax_hist(request):
             for key in data_copy.keys():
                 if not key in ['open','high','low','close','time']:
                     del data[key]
+            for k, v in data.items():
+                if k != 'time':
+                    if ',' in v:
+                        v = v.replace(',','')
+                    data[k] = float(v)
+
         hist_data_new.append(data)
     hist_data = []
     for dct in hist_data_new:

@@ -44,6 +44,9 @@ function dataAjax(timeFrame, chartType, theme) {
 		'time_frame': timeFrame,
 		'chart_type': chartType
 		},
+		// error: function(xhr, status, error) {
+		// 	console.log(xhr.responseText);
+		//   },
 		success: function(data){
 			$(container).empty()
 			if (data['hist_data'].length == 0) {
