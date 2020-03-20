@@ -186,7 +186,9 @@
               <span class="long-name text-left">{{ dct.static.long_name }}</span>
             </div>
             <div class="row justify-content-around">
+              {% if dct.live.change %}
               <span class="price up">{{ dct.live.change }}</span>
+              {% endif %}
               <span class="change up">{{ dct.live.change_perc }}</span>
             </div>
           </div>
