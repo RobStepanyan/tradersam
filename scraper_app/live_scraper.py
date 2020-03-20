@@ -244,7 +244,7 @@ class CollectLive:
                                 low=validate_price(live_data['Low']),
                                 volume=validate_price(live_data['Vol.']),
                             ).save() 
-                            print(f'{self.title}: saved HISTORICAL{k}')
+                            print(f'{self.title}: saved HISTORICAL{time_frame}')
                     else:
                         if last_obj_count[time_frame] == 0 or now.day - last_obj[time_frame].date.day >= minutes_[time_frame]:
                             # if there's no data at all or latest data is already outdated
@@ -260,7 +260,7 @@ class CollectLive:
                                 low=validate_price(live_data['Low']),
                                 volume=validate_price(live_data['Vol.']),
                             ).save() 
-                            print(f'{self.title}: saved HISTORICAL{k}')
+                            print(f'{self.title}: saved HISTORICAL{time_frame}')
 
                     if time_frame != 'Max':
                         if last_obj_count[time_frame]:
