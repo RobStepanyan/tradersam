@@ -158,9 +158,9 @@ class CollectLive:
                     else:
                         live_data[key] = value
                 
-                if self.type_ != 'bnd':
+                if not self.type_ in ['bnd', 'crptcrncy']:
                     try:
-                        live_data['Prev. Close'] = float(live_data['Last'].replace(',','')) + float(live_data['Chg. %'][:-1]) / 100
+                        live_data['Prev. Close'] = round(float(live_data['Last'].replace(',','')) + float(live_data['Chg.']), 2)
                     except:
                         pass
                 models.AllAssetsLive.objects.filter(link=link).delete()
