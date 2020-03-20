@@ -236,28 +236,28 @@ def asset_details(request, cntry, type_, pk):
         raise Http404('PK not found')
 
     asset = obj.objects.get(pk=pk)
-    data = {}
+    data_ = {}
     for model in AllAssetsLive.objects.filter(link=asset.link):
         if type_ == 'crptcrncy' and not asset.link:
             continue
         dct = model_to_dict(model)
         for key, value in dct.items():
             if key != 'id' and value:
-                data[key] = value
+                data_[key] = value
     for model in AllAssetsAfterLive.objects.filter(link=asset.link):
         if type_ == 'crptcrncy' and not asset.link:
             continue
         dct = model_to_dict(model)
         for key, value in dct.items():
             if key != 'id' and value:
-                data[key] = value
+                data_[key] = value
     
-    live_data = {}
-    for key, value in data.items():
+    live_data_ = {}
+    for key, value in data_.items():
         if not key in 'Typelinktimedate':
-            live_data[key] = value
+            live_data_[key] = value
     
-    data_pairs = list(live_data.items())
+    data_pairs = list(live_data_.items())
     data_pairs_new = []
     for i1, i2 in data_pairs:
         if '_' in i1:
@@ -315,6 +315,7 @@ def asset_details(request, cntry, type_, pk):
     
     
     similars_lst = []
+    data = {}
     for item in similars:
         similars_dct = {}
         for model in AllAssetsLive.objects.filter(link=item.link):
@@ -349,7 +350,7 @@ def asset_details(request, cntry, type_, pk):
         similars_lst.append(similars_dct)
 
     context = {
-        'data': data,
+        'data': data_,
         'asset': asset,
         'similars': similars_lst,
         'data_pairs': zip(data_pairs1, data_pairs2),
