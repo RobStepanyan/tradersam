@@ -310,9 +310,10 @@ def asset_details(request, cntry, type_, pk):
     else:
         similars = obj.objects.filter(short_name__startswith=asset.short_name[0])[:15]
     
-    similars_dct = {}
+    
     similars_lst = []
     for item in similars:
+        similars_dct = {}
         for model in AllAssetsLive.objects.filter(link=item.link):
             if type_ == 'crptcrncy' and not item.link:
                 continue
@@ -335,7 +336,13 @@ def asset_details(request, cntry, type_, pk):
         
         if len(similars_dct['static']['long_name'].split()) > 2:
             long = similars_dct['static']['long_name']
-            similars_dct['static']['long_name'] = long.split()[0] + ' ' + long.split()[1] + '..'
+            if len(long.split()[1]) >=15:
+                long_split1 = long.split()[1][:12] + '..'
+            else:
+                long_split1 = long.split()[1] + '..'
+
+            print(long, '***')
+            similars_dct['static']['long_name'] = long.split()[0] + ' ' + long_split1
         similars_lst.append(similars_dct)
 
     context = {
