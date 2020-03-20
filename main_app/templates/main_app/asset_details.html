@@ -51,7 +51,7 @@
             {% with 'main_app/svg/flags/'|add:asset.country|lower|add:'.svg' as flag_static %}
               <img class="country-flag-lg" src="{% static flag_static %}">
             {% endwith %}
-          {% elif asset.country == 'G' %}
+          {% elif asset.country == 'G' and asset.Type == 'cmdty' %}
             <img class="country-flag-lg" src="{% static 'main_app/svg/flags/g.svg' %}">
           {% else %}
             {% with 'main_app/svg/flags/'|add:asset.Type|lower|add:'.svg' as flag_static %}
@@ -149,20 +149,20 @@
       <tbody>
         {% for pair in data_pairs %}
           <tr class="row">
-            <td class="row col-lg-6">
-              <div class="col-lg-6 p-0">
+            <td class="row col-sm-6">
+              <div class="col-sm-6 p-0">
                 {{ pair.0.0 }}
               </div>
-              <div class="col-lg-6 p-0">
-                <span class="pl-2 text-gray-5">{{ pair.0.1 }}</span>
+              <div class="col-sm-6 p-0">
+                <span class="text-gray-5">{{ pair.0.1 }}</span>
               </div>
             </td>
-            <td class="row col-lg-6">
-              <div class="col-lg-6 p-0">
+            <td class="row col-sm-6">
+              <div class="col-sm-6 p-0">
                 {{ pair.1.0 }}
               </div>
-              <div class="col-lg-6 p-0">
-                <span class="pl-2 text-gray-5">{{ pair.1.1 }}</span>
+              <div class="col-sm-6 p-0">
+                <span class="text-gray-5">{{ pair.1.1 }}</span>
               </div>
             </td>
           </tr>
