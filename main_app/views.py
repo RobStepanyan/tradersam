@@ -179,7 +179,10 @@ def ajax_hist(request):
             last_volume = volume
         del data['date']
         if chart_type == 'line':
-            data['value'] = data['price']
+            if ',' in data['price']:
+                data['price'] = data['price'].replace(',', '')
+            
+            data['value'] = float(data['price'])
             data_copy = dict(data)
             for key in data_copy.keys():
                 if not key in ['time', 'value']:
