@@ -9136,9 +9136,9 @@ tbody {
 }
 .asset-card {
   /* Also use .card */
-  min-width: 150px;
-  max-width: 210px;
-  height: 71px;
+  /* min-width: 150px;
+  max-width: 210px; */
+  /* height: 71px; */
   padding: 8px;
   font-weight: bold;
 }
@@ -9151,12 +9151,10 @@ tbody {
 .asset-card .long-name{
   font-size: 0.75rem!important;
   color: var(--gray2)!important;
-  line-height: 125%;
-  max-width: 33%;
+  max-width: 150px;
+  height: 18px;
+  overflow: hidden;
   text-align: center;
-  align-self: center;
-  height: 30px;
-  overflow-y: hidden;
 }
 .price {
   font-size: 1.25rem!important;
@@ -9168,6 +9166,7 @@ tbody {
   font-size: 1rem!important;
   background-color: var(--gray1)!important;
   padding: 2px 4px;
+  margin-left: 8px;
   border-radius: 0.5rem;
   color: var(--white)!important;
   max-width: 45%;

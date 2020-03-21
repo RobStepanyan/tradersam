@@ -347,15 +347,9 @@ def asset_details(request, cntry, type_, pk):
         similars_dct['live'] = live_data
         similars_dct['static'] = item
         
-        if len(similars_dct['static']['long_name'].split()) > 2:
-            long = similars_dct['static']['long_name']
-            if len(long.split()[1]) >=15:
-                long_split1 = long.split()[1][:12] + '..'
-            else:
-                long_split1 = long.split()[1] + '..'
+        if len(similars_dct['static']['long_name']) > 22:
+            similars_dct['static']['long_name'] = similars_dct['static']['long_name'][:20] + '..'
 
-            print(long, '***')
-            similars_dct['static']['long_name'] = long.split()[0] + ' ' + long_split1
         similars_lst.append(similars_dct)
 
     context = {

@@ -182,31 +182,24 @@
         <a href="">
           <div class="card asset-card card mr-3">
             <div class="row">
-              <span class="short-name">{{ dct.static.short_name }}</span>
-              <span class="pl-1 long-name text-left">{{ dct.static.long_name }}</span>
+              <span class="long-name text-left">{{ dct.static.long_name }}</span>
             </div>
-            {% if dct.live.change_perc.0 == '+' %}
-              <div class="row justify-content-around">
-                {% if dct.live.change %}
-                <span class="price up">{{ dct.live.change }}</span>
-                {% endif %}
-                <span class="change up">{{ dct.live.change_perc }}</span>
-              </div>
-            {% elif dct.live.change_perc.0 == '0' %}
-              <div class="row justify-content-around">
-                {% if dct.live.change %}
-                <span class="price text-white">{{ dct.live.change }}</span>
-                {% endif %}
-                <span class="change text-white">{{ dct.live.change_perc }}</span>
-              </div>
-            {% else %}
-              <div class="row justify-content-around">
-                {% if dct.live.change %}
-                <span class="price down">{{ dct.live.change }}</span>
-                {% endif %}
-                <span class="change down">{{ dct.live.change_perc }}</span>
-              </div>
-            {% endif %}
+            <div class="row justify-content-between">
+              <span class="short-name">{{ dct.static.short_name }}</span>
+              {% if dct.live.change_perc.0 == '+' %}
+                <div class="row">
+                  <span class="change up">{{ dct.live.change_perc }}</span>
+                </div>
+              {% elif dct.live.change_perc.0 == '0' %}
+                <div class="row">
+                  <span class="change text-white">{{ dct.live.change_perc }}</span>
+                </div>
+              {% else %}
+                <div class="row">
+                  <span class="change down">{{ dct.live.change_perc }}</span>
+                </div>
+              {% endif %}
+            </div>
           </div>
         </a>
       {% endfor %}
