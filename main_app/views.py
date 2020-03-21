@@ -100,7 +100,8 @@ def ajax_hist(request):
     cntry = cntry.upper()
     cntry1 = Countries[Countries.index(cntry)+1]
     country = (cntry, cntry1)
-    type_ = Types[Types.index(type_)-1]
+    if type_ != 'etf':
+        type_ = Types[Types.index(type_.capitalize())-1]
 
     for key, value in STATIC_OBJECTS.items():
         if type_ == 'cmdty':
@@ -221,7 +222,8 @@ def asset_details(request, cntry, type_, pk):
         raise Http404("Type not found")
     
     cntry = cntry.upper()
-    type_ = Types[Types.index(type_.capitalize())-1]
+    if type_ != 'etf':
+        type_ = Types[Types.index(type_.capitalize())-1]
     cntry1 = Countries[Countries.index(cntry)+1]
     country = (cntry, cntry1)
     
