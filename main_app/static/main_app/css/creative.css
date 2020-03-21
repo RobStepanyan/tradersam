@@ -9152,9 +9152,8 @@ tbody {
   font-size: 0.75rem!important;
   color: var(--gray2)!important;
   max-width: 150px;
-  height: 18px;
+  height: 13px;
   overflow: hidden;
-  text-align: center;
 }
 .price {
   font-size: 1.25rem!important;
