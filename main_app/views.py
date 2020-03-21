@@ -218,8 +218,9 @@ def ajax_hist(request):
     return JsonResponse(data)
 
 def asset_details(request, cntry, type_, pk):
-    if not type_.title() in Types:
-        raise Http404("Type not found")
+    if type_ != 'etf':
+        if not type_.title() in Types:
+            raise Http404("Type not found")
     
     cntry = cntry.upper()
     if type_ != 'etf':
