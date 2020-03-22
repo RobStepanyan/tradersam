@@ -1,5 +1,6 @@
 import * as LightweightCharts from '/static/main_app/js/lightweight-charts.esm.development.js';
 
+if (window.location.href.includes('asset')) {
 $(function(){
 var container = $('#chart');
 container.css('position','relative');
@@ -284,4 +285,4 @@ function createChart(color='dark', priceData, volumeData, chartType) {
 	
 }; // End of create chart
 }); // jQuery
-
+}
