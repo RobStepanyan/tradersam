@@ -103,7 +103,7 @@ def collect_for(obj, x, key, value, link):
                     driver.get(driver.current_url + hist_link)
                 if soup.find('div', class_='error404'):
                     return
-                    
+
                 sleep(1)
                 pass
 
@@ -152,20 +152,20 @@ if inpt.upper() == 'Y':
                     link += hist_link + cid
                 else:
                     link += hist_link
-                collect_for(obj, x, key, value, link)
-            #     threads.append(Thread(target=collect_for, args=(obj, x, key, value, link)))
-            # print(f'({key}) Threads are ready!')
-            # thread_chunks = list(chunks(threads, 2))
-            # i = 1
-            # chunks_n = len(thread_chunks) 
-            # for chunk in thread_chunks:
-            #     for thread in chunk:
-            #         thread.start()
-            #         sleep(1) # to avoid selenium session id error
-            #     for thread in chunk:
-            #         thread.join()
-            #     print(f'({key}) Executed Chunk {i}/{chunks_n}')           
-            #     i+=1
+                # collect_for(obj, x, key, value, link)
+                threads.append(Thread(target=collect_for, args=(obj, x, key, value, link)))
+            print(f'({key}) Threads are ready!')
+            thread_chunks = list(chunks(threads, 2))
+            i = 1
+            chunks_n = len(thread_chunks) 
+            for chunk in thread_chunks:
+                for thread in chunk:
+                    thread.start()
+                    sleep(1) # to avoid selenium session id error
+                for thread in chunk:
+                    thread.join()
+                print(f'({key}) Executed Chunk {i}/{chunks_n}')           
+                i+=1
     finally:
         driver.quit()
         print('Driver is closed!')
