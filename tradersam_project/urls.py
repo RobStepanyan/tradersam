@@ -24,7 +24,7 @@ import main_app.views as main_views
 
 urlpatterns = [
     path('donttouchtheadminpage/', admin.site.urls),
-    path('dev/', include('main_app.urls')), # base.html, chart.js, creative.js, asset_details
+    path('dev/', include('main_app.urls')), # base.html, chart.js, creative.js, table.js, asset_details
     path('', main_views.csoon),
     
     path('signup/', users_views.signup, name='signup'),
