@@ -101,12 +101,9 @@ def collect_for(obj, x, key, value, link):
                     else:
                         hist_link = '-historical-data'
                     driver.get(driver.current_url + hist_link)
-                if not soup.find(class_='error404') is None:
-                    if attempt > 10:
-                        driver.get(link)
-                        attempt = 1
-                    else:
-                        attempt += 1
+                if soup.find('div', class_='error404'):
+                    return
+                    
                 sleep(1)
                 pass
 
@@ -120,7 +117,7 @@ types = list(set(types))
 # Complete list to delete and collect historical data for
 # Override types list here if needed
 # ['cmdty', 'crncy', 'crptcrncy', 'stck', 'indx', 'etf', 'bnd', 'fnd']
-# types = ['stck', 'indx', 'etf', 'bnd', 'fnd']
+types = ['stck', 'indx', 'etf', 'bnd', 'fnd']
 
 if inpt.upper() == 'Y':
     # Deleting old historical data
