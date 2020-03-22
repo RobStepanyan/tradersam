@@ -3,7 +3,7 @@ import datetime
 
 # Create your models here.
 COUNTRIES = (
-    ('G', 'Global'), ('US', 'United States of America'), ('UK', 'United Kingdom'),
+    ('G', 'Global'), ('US', 'United States'), ('UK', 'United Kingdom'),
     ('JP', 'Japan'), ('HK', 'Hong Kong'), ('CH', 'China'), ('CA', 'Canada'),
     ('GE', 'Germany'), ('AU', 'Australia')
 )
@@ -58,9 +58,14 @@ MARKETS_AU = (
 
 TYPES = (
     ('cmdty', 'Commodity'), ('crncy', 'Currency'), ('crptcrncy', 'Cryptocurrency'),
-    ('stck', 'Stock'), ('indx', 'Index'), ('etf', 'ETF'), ('bnd', 'Bond'), ('fnd', ('Fund'))
+    ('stck', 'Stock'), ('indx', 'Index'), ('etf', 'ETF'), ('bnd', 'Bond'), ('fnd', 'Fund')
+)
+TYPES_PLURAL = (
+    ('cmdty', 'Commodities'), ('crncy', 'Currencies'), ('crptcrncy', 'Cryptocurrencies'),
+    ('stck', 'Stocks'), ('indx', 'Indices'), ('etf', 'ETFs'), ('bnd', 'Bonds'), ('fnd', 'Funds')
 )
 Types = [i for j in TYPES for i in j]
+Types_plural = [i for j in TYPES_PLURAL for i in j]
 Countries = [i for j in COUNTRIES for i in j]
 
 class CommodityStaticInfo(models.Model):
