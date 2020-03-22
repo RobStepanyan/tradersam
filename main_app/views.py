@@ -1,8 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, reverse
 from django.utils import timezone
 from dateutil.relativedelta import relativedelta
 from django.forms.models import model_to_dict
-from scraper_app.models import Types, Countries, AllAssetsLive, AllAssetsAfterLive
+from scraper_app.models import Types, Types_plural, Countries, AllAssetsLive, AllAssetsAfterLive
 from scraper_app import models
 from django.http import HttpResponse, JsonResponse, Http404
 from scraper_app.scraper_data import STATIC_OBJECTS
@@ -364,9 +364,17 @@ def news_details(request):
     return render(request, 'main_app/news_details.html')
 
 def all_assets(request, cntry, type_):
+    country = (Countries[Countries.index(cntry.upper())], Countries[Countries.index(cntry.upper())+1]) # ('US', 'United States')
+    plural_i = [i.upper() for i in Types_plural].index(type_.upper())
+    type_ = (Types_plural[plural_i-1], Types_plural[plural_i]) # ('cmdty', 'Commodities)
+    time = timezone.now()
+
+    if type_[0] in ['cmdty', 'crncy', 'crptcrncy'] and country[0] != 'G':
+        return redirect(reverse('all-assets', args=('us', 'stocks')))
     context = {
-        'country': cntry,
-        'type': type_
+        'country': country,
+        'type': type_,
+        'time': time
     }
     return render(request, 'main_app/all_assets.html', context)
 
