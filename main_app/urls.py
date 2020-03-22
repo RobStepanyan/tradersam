@@ -5,6 +5,7 @@ urlpatterns = [
     path('', views.home, name='home'),
     path('ajax/search/', views.ajax_search, name='ajax-search'),
     path('ajax/hist/', views.ajax_hist, name='ajax-hist'),
+    path('ajax/all/', views.ajax_all, name='ajax-all'),
     path('asset/<str:cntry>/<str:type_>/<str:pk>/', views.asset_details, name='asset-details'),
     path('news/', views.news_details, name='news-details'),
     path('all/<str:cntry>/<str:type_>/', views.all_assets, name='all-assets'),

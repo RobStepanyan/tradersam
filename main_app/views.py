@@ -1,3 +1,4 @@
+import datetime
 from django.shortcuts import render, redirect, reverse
 from django.utils import timezone
 from dateutil.relativedelta import relativedelta
@@ -217,6 +218,92 @@ def ajax_hist(request):
     }    
     return JsonResponse(data)
 
+def ajax_all(request):
+    expanded = True if request.GET['expanded'] == 'true' else False
+    link = request.GET['link']
+
+    # finding country and type
+    link = link[::-1]
+    type_ = link[1:link[1:].index('/')+1][::-1]
+    link = link[::-1]
+    country = link[:link.index(type_)][::-1]
+    country = country[1:country[1:].index('/')+1][::-1]
+
+    if not type_.title() in Types_plural:
+        raise Http404('Type is not found')
+
+    if not country.upper() in Countries:
+        raise Http404('Country is not found')
+
+    plural_i = [i.upper() for i in Types_plural].index(type_.upper())
+    type_ = Types_plural[plural_i-1]
+
+    for key, value in STATIC_OBJECTS.items():
+        if type_ == 'cmdty':
+            obj = STATIC_OBJECTS['Commodities']['object']
+            fields = STATIC_OBJECTS['Commodities']['live fields']
+            break
+        elif country == 'G':
+            if value['type'] == type_:
+                obj = value['object']
+                fields = value['live fields']
+                break
+        else:    
+            if value['type'] == type_ and (country[0] in key or country[1] in key):
+                obj = value['object']
+                fields = value['live fields']
+                break
+    
+    if expanded:
+        objects = obj.objects.all()
+    else:
+        objects = obj.objects.all()[:12]
+    
+    data_list = []
+    data = {}
+    for item in objects:
+        objects_dct = {}
+        for model in AllAssetsLive.objects.filter(link=item.link):
+            if type_ == 'crptcrncy' and not item.link:
+                continue
+            dct = model_to_dict(model)
+            for key, value in dct.items():
+                if '_' in key:
+                    key = key.replace('_', ' ')
+                key = key.title()
+                
+                if 'Perc' in key:
+                    key = key.replace('Perc', '%')
+                if 'Prev' in key:
+                    key = key.replace('Prev', 'Prev.')
+                if 'Volume' in key:
+                    key = key.replace('Volume', 'Vol.')
+                if 'Change' in key:
+                    key = key.replace('Change', 'Chg.')
+                if 'Last Price' in key:
+                    key = 'Last'
+
+                if key == 'Time':
+                    value = value.strftime('%b %d, %I:%M:%S') + 'CT'
+                if key.upper() in [field.upper() for field in fields]:
+                    data[key] = value
+                data['Symbol'] = item.short_name
+
+        item = model_to_dict(item)
+        if item['Type'] == 'cmdty':
+            item['long_name'] = item['short_name'] + ' Futures Contract'
+
+        objects_dct['live'] = list(data.values())
+        objects_dct['static'] = item
+
+        data_list.append(objects_dct)
+
+    context = {
+        'data_list': data_list,
+        'fields': ['Symbol'] + fields
+    }
+    return JsonResponse(context)
+
 def asset_details(request, cntry, type_, pk):
     if type_ != 'etf':
         if not type_.title() in Types:
@@ -300,6 +387,11 @@ def asset_details(request, cntry, type_, pk):
             i1 = i1.replace('Avg', 'Average')
         if ' Vol ' in i1:
             i1 = i1.replace('Vol', 'Volume')
+            new_i2 = ''
+            i2 = i2[::-1]
+            for i in range(0, len(i2), 3):
+                new_i2 += i2[i:i+3] + ','
+            i2 = new_i2[::-1][1:]
         if 'Ttm' in i1:
             i1 = i1.replace('Ttm', '(TTM)')
 
