@@ -226,7 +226,7 @@ class CollectLive:
                 for k, v in hist_objects.items():
                     last_obj_count[k] = v.objects.filter(link=link).count()
                     if last_obj_count[k] > 0:
-                        last_obj[k] = v.objects.filter(link=link).order_by('-id')[0]
+                        last_obj[k] = v.objects.filter(link=link).order_by('-id').first()
 
                 for time_frame, hist_model in hist_objects.items():
                     if time_frame[-1] == 'D':
