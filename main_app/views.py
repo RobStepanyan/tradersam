@@ -366,7 +366,7 @@ def asset_details(request, cntry, type_, pk):
         if 'Supply' in i1:
             i = 0
             for char in i2:
-                if char in '123456789':
+                if char in '1234567890':
                     break
                 i += 1
             i2 = i2[i:]
@@ -388,11 +388,6 @@ def asset_details(request, cntry, type_, pk):
             i1 = i1.replace('Avg', 'Average')
         if ' Vol ' in i1:
             i1 = i1.replace('Vol', 'Volume')
-            new_i2 = ''
-            i2 = i2[::-1]
-            for i in range(0, len(i2), 3):
-                new_i2 += i2[i:i+3] + ','
-            i2 = new_i2[::-1][1:]
         if 'Ttm' in i1:
             i1 = i1.replace('Ttm', '(TTM)')
 
