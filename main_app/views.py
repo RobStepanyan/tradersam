@@ -433,6 +433,7 @@ def asset_details(request, cntry, type_, pk):
         if item['Type'] == 'cmdty':
             item['long_name'] = item['short_name'] + ' Futures Contract'
 
+        item['Type'] = Types[Types.index(item['Type'])+1].lower()
         similars_dct['live'] = live_data
         similars_dct['static'] = item
         

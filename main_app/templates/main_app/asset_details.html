@@ -179,7 +179,7 @@
       <h3 class="text-white text-align-center ml-0 mb-3"><i class="fas fa-glasses"></i> Explore more</h3>
       <div class="row" id="market-carousel">
       {% for dct in similars %}
-        <a href="">
+        <a href="{% url 'asset-details' dct.static.country|lower dct.static.Type dct.static.id %}">
           <div class="card asset-card card mr-3">
             <div class="row mb-1">
               <span class="long-name">{{ dct.static.long_name }}</span>
