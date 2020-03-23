@@ -162,16 +162,17 @@ def ajax_hist(request):
         volume = data['volume']
         if volume:
             # volume example - 457.67K
-            if '$' in volume:
-                volume = volume.replace('$', '')
-            if ',' in volume:
-                volume = volume.replace(',', '')
-            if 'B' in volume:
-                volume = int(volume[:-1].replace('.', ''))* 10000000
-            elif 'M' in volume:
-                volume = int(volume[:-1].replace('.', ''))* 10000
-            elif 'K' in volume:
-                volume = int(volume[:-1].replace('.', ''))* 10
+            volume_int = volume
+            if '$' in volume_int:
+                volume_int = volume_int.replace('$', '')
+            if ',' in volume_int:
+                volume_int = volume_int.replace(',', '')
+            if 'B' in volume_int:
+                volume_int = int(volume_int[:-1].replace('.', ''))* 10000000
+            elif 'M' in volume_int:
+                volume_int = int(volume_int[:-1].replace('.', ''))* 10000
+            elif 'K' in volume_int:
+                volume_int = int(volume_int[:-1].replace('.', ''))* 10
                 
             if not last_volume or volume > last_volume:
                 color = 'rgba(0, 150, 136, 0.8)'
@@ -284,7 +285,7 @@ def ajax_all(request):
                     key = 'Last'
 
                 if key == 'Time':
-                    value = value.strftime('%b %d, %I:%M:%S') + 'CT'
+                    value = value.strftime('%I:%M:%S')
                 if key.upper() in [field.upper() for field in fields]:
                     data[key] = value
                 data['Symbol'] = item.short_name
