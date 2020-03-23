@@ -47,15 +47,15 @@ $(function(){
                         console.log(v)
                         if (v.includes('+')) {
                             if (v.includes('%')) {
-                                s += '<td><span class="change up">'+ v + '</span></td>'
+                                s += '<td><span class="ml-0 d-initial change up">'+ v + '</span></td>'
                             } else {
-                                s += '<td><span class="text-success">'+ v + '</span></td>'
+                                s += '<td><span class="ml-0 d-initial text-success">'+ v + '</span></td>'
                             }
                         } else if (v.includes('-')) {
                             if (v.includes('%')) {
-                                s += '<td><span class="change down">'+ v + '</span></td>'
+                                s += '<td><span class="ml-0 d-initial change down">'+ v + '</span></td>'
                             } else {
-                                s += '<td><span class="text-danger">'+ v + '</span></td>'
+                                s += '<td><span class="ml-0 d-initial text-danger">'+ v + '</span></td>'
                             }
                         } else {
                             s += '<td>'+ v + '</td>'

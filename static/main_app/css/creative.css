@@ -9173,6 +9173,7 @@ tbody {
   line-height: 125%;
   text-align: center;
   align-self: center;
+  display: inline-table;
 }
 .price.up {
   color: var(--green)!important;
@@ -9228,9 +9229,9 @@ tbody {
   height: 40px;
   border-top: 0!important;
 }
-.market-table tr>td {
+/* .market-table tr>td {
   padding-left:8px;
-}
+} */
 .filter-blur {
   filter: blur(1px);
 }
@@ -9503,4 +9504,7 @@ tbody {
 #chart .position-absolute {
   top: 50%;
   text-align: center;
+}
+.d-initial {
+  display: initial!important;
 }
