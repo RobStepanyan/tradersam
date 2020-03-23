@@ -9228,10 +9228,12 @@ tbody {
 .market-table td{
   height: 40px;
   border-top: 0!important;
+}.market-table a {
+  color: white;
 }
-/* .market-table tr>td {
-  padding-left:8px;
-} */
+.market-table a:hover {
+  text-decoration: underline;
+}
 .filter-blur {
   filter: blur(1px);
 }

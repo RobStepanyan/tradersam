@@ -295,10 +295,11 @@ def ajax_all(request):
             item['long_name'] = item['short_name'] + ' Futures Contract'
 
         objects_dct['live'] = list(data.values())
+        item['Type'] = Types[Types.index(item['Type'])+1].lower()
         objects_dct['static'] = item
 
         data_list.append(objects_dct)
-
+    data_list = sorted(data_list, key = lambda x: x['live'][0]) # sorted by short_name
     context = {
         'data_list': data_list,
         'fields': ['Symbol'] + fields

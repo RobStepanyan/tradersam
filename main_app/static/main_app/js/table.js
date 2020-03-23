@@ -42,9 +42,9 @@ $(function(){
                 container.append('<tbody></tbody>')
                 data['data_list'].forEach(e => {
                     s = ''
-                    
-                    Object.values(e['live']).forEach(v => {
-                        console.log(v)
+                    var hrf = '/dev/asset/' + e['static']['country'].toLowerCase() + '/' + e['static']['Type'] + '/' + e['static']['id'] + '/'
+                    s += '<td><a href="' + hrf + '">'+ Object.values(e['live'])[0] + '</a></td>'
+                    Object.values(e['live']).slice(1).forEach(v => {
                         if (v.includes('+')) {
                             if (v.includes('%')) {
                                 s += '<td><span class="ml-0 d-initial change up">'+ v + '</span></td>'
