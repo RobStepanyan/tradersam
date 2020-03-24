@@ -335,7 +335,7 @@ def ajax_home(request):
                 fields = value['live fields']
                 break
     
-    objects = obj.objects.all()[:12]
+    objects = obj.objects.all()[:10]
     
     data_list = []
     data = {}
@@ -349,8 +349,16 @@ def ajax_home(request):
                 if '_' in key:
                     key = key.replace('_', ' ')
                 key = key.title()
+                if 'Volume' in key:
+                    key = key.replace('Volume', 'Vol.')
+                if 'Change' in key:
+                    key = key.replace('Change', 'Chg.')
+                if 'Perc' in key:
+                    key = key.replace('Perc', '%')
+                if 'Last Price' in key:
+                    key = 'Last'
                 
-                if key.lower() in ['short name', 'last', 'chg.', 'chg. %', 'vol']:
+                if key.lower() in ['short name', 'last', 'chg.', 'chg. %', 'vol.'] and key.upper() in [field.upper() for field in fields]:
                     data[key] = value
                 data['Symbol'] = item.short_name
 
@@ -366,7 +374,7 @@ def ajax_home(request):
     data_list = sorted(data_list, key = lambda x: x['live'][0]) # sorted by short_name
     context = {
         'data_list': data_list,
-        'fields': ['Symbol'] + fields
+        'fields': list(data.keys())
     }
     return JsonResponse(context)
 

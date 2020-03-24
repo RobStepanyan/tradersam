@@ -39,20 +39,24 @@ $(function(){
                     var hrf = '/dev/asset/' + e['static']['country'].toLowerCase() + '/' + e['static']['Type'] + '/' + e['static']['id'] + '/'
                     s += '<td><a href="' + hrf + '">'+ Object.values(e['live'])[0] + '</a></td>'
                     Object.values(e['live']).slice(1).forEach(v => {
-                        if (v.includes('+')) {
-                            if (v.includes('%')) {
-                                s += '<td><span class="ml-0 d-initial change up">'+ v + '</span></td>'
+                        if (v) {
+                            if (v.includes('+')) {
+                                if (v.includes('%')) {
+                                    s += '<td><span class="ml-0 d-initial change up">'+ v + '</span></td>'
+                                } else {
+                                    s += '<td><span class="ml-0 d-initial text-success">'+ v + '</span></td>'
+                                }
+                            } else if (v.includes('-')) {
+                                if (v.includes('%')) {
+                                    s += '<td><span class="ml-0 d-initial change down">'+ v + '</span></td>'
+                                } else {
+                                    s += '<td><span class="ml-0 d-initial text-danger">'+ v + '</span></td>'
+                                }
                             } else {
-                                s += '<td><span class="ml-0 d-initial text-success">'+ v + '</span></td>'
-                            }
-                        } else if (v.includes('-')) {
-                            if (v.includes('%')) {
-                                s += '<td><span class="ml-0 d-initial change down">'+ v + '</span></td>'
-                            } else {
-                                s += '<td><span class="ml-0 d-initial text-danger">'+ v + '</span></td>'
-                            }
+                                s += '<td>'+ v + '</td>'
+                            };
                         } else {
-                            s += '<td>'+ v + '</td>'
+                            s += '<td>N/A</td>'
                         };
                     });
                     $('#main-table tbody').append('<tr>' + s + '</tr>')
