@@ -3,13 +3,16 @@ $(function(){
     var country = $('#pr-1 .btn-primary.active input').attr('id')
     var type_ = $('#pl-1 .btn-primary.active input').attr('id')
     var container = $('#main-table')
+    $('#main-table-more').attr('href', '/dev/all/'+country.toLowerCase()+'/'+type_.toLowerCase()+'/')
     sendAjax()
     $('#pr-1 .btn-primary').click(_.debounce(function(){
         country = $('#pr-1 .btn-primary.active input').attr('id')
+        $('#main-table-more').attr('href', '/dev/all/'+country.toLowerCase()+'/'+type_.toLowerCase()+'/')
         sendAjax()
     },150));
     $('#pl-1 .btn-primary').click(_.debounce(function(){
         type_ = $('#pl-1 .btn-primary.active input').attr('id')
+        $('#main-table-more').attr('href', '/dev/'+country.toLowerCase()+'/'+type_.toLowerCase()+'/')
         sendAjax()
     },150));
 
@@ -28,40 +31,44 @@ $(function(){
             //   },
             success: function(data){
                 container.empty()
-                
-                container.append('<thead><tr></tr></thead>')
-                data['fields'].forEach(e => {
-                    $('#main-table tr').append('<th>'+e+'</th>')
-                });
-                container.append('<tbody></tbody>')
-                data['data_list'].forEach(e => {
-                    s = ''
-                    var hrf = '/dev/asset/' + e['static']['country'].toLowerCase() + '/' + e['static']['Type'] + '/' + e['static']['id'] + '/'
-                    s += '<td><a href="' + hrf + '">'+ Object.values(e['live'])[0] + '</a></td>'
-                    Object.values(e['live']).slice(1).forEach(v => {
-                        if (v) {
-                            if (v.includes('+')) {
-                                if (v.includes('%')) {
-                                    s += '<td><span class="ml-0 d-initial change up">'+ v + '</span></td>'
-                                } else {
-                                    s += '<td><span class="ml-0 d-initial text-success">'+ v + '</span></td>'
-                                }
-                            } else if (v.includes('-')) {
-                                if (v.includes('%')) {
-                                    s += '<td><span class="ml-0 d-initial change down">'+ v + '</span></td>'
-                                } else {
-                                    s += '<td><span class="ml-0 d-initial text-danger">'+ v + '</span></td>'
-                                }
-                            } else {
-                                s += '<td>'+ v + '</td>'
-                            };
-                        } else {
-                            s += '<td>N/A</td>'
-                        };
+                console.log(data)
+                if (data['data_list'].length != 0){
+                    container.append('<thead><tr></tr></thead>')
+                    data['fields'].forEach(e => {
+                        $('#main-table tr').append('<th>'+e+'</th>')
                     });
-                    $('#main-table tbody').append('<tr>' + s + '</tr>')
-                
-                });
+                    container.append('<tbody></tbody>')
+                    data['data_list'].forEach(e => {
+                        s = ''
+                        var hrf = '/dev/asset/' + e['static']['country'].toLowerCase() + '/' + e['static']['Type'] + '/' + e['static']['id'] + '/'
+                        s += '<td><a href="' + hrf + '">'+ Object.values(e['live'])[0] + '</a></td>'
+                        Object.values(e['live']).slice(1).forEach(v => {
+                            if (v) {
+                                if (v.includes('+')) {
+                                    if (v.includes('%')) {
+                                        s += '<td><span class="ml-0 d-initial change up">'+ v + '</span></td>'
+                                    } else {
+                                        s += '<td><span class="ml-0 d-initial text-success">'+ v + '</span></td>'
+                                    }
+                                } else if (v.includes('-')) {
+                                    if (v.includes('%')) {
+                                        s += '<td><span class="ml-0 d-initial change down">'+ v + '</span></td>'
+                                    } else {
+                                        s += '<td><span class="ml-0 d-initial text-danger">'+ v + '</span></td>'
+                                    }
+                                } else {
+                                    s += '<td>'+ v + '</td>'
+                                };
+                            } else {
+                                s += '<td>N/A</td>'
+                            };
+                        });
+                        $('#main-table tbody').append('<tr>' + s + '</tr>')
+                    
+                    });
+                } else {
+                    $('<h5 class="text-white text-center py-3 mb-0">No data found</h5>').appendTo(container);
+                };
             }
         })
     };
