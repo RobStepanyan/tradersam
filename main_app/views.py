@@ -306,6 +306,70 @@ def ajax_all(request):
     }
     return JsonResponse(context)
 
+def ajax_home(request):
+    country = request.GET.get('country', 'US')
+    type_ = request.GET.get('type_', 'Indices')
+
+    if not type_.title() in Types_plural:
+        raise Http404('Type is not found')
+
+    if not country.upper() in Countries:
+        raise Http404('Country is not found')
+
+    plural_i = [i.upper() for i in Types_plural].index(type_.upper())
+    type_ = Types_plural[plural_i-1]
+
+    for key, value in STATIC_OBJECTS.items():
+        if type_ == 'cmdty':
+            obj = STATIC_OBJECTS['Commodities']['object']
+            fields = STATIC_OBJECTS['Commodities']['live fields']
+            break
+        elif country == 'G':
+            if value['type'] == type_:
+                obj = value['object']
+                fields = value['live fields']
+                break
+        else:    
+            if value['type'] == type_ and (country[0] in key or country[1] in key):
+                obj = value['object']
+                fields = value['live fields']
+                break
+    
+    objects = obj.objects.all()[:12]
+    
+    data_list = []
+    data = {}
+    for item in objects:
+        objects_dct = {}
+        for model in AllAssetsLive.objects.filter(link=item.link):
+            if type_ == 'crptcrncy' and not item.link:
+                continue
+            dct = model_to_dict(model)
+            for key, value in dct.items():
+                if '_' in key:
+                    key = key.replace('_', ' ')
+                key = key.title()
+                
+                if key.lower() in ['short name', 'last', 'chg.', 'chg. %', 'vol']:
+                    data[key] = value
+                data['Symbol'] = item.short_name
+
+        item = model_to_dict(item)
+        if item['Type'] == 'cmdty':
+            item['long_name'] = item['short_name'] + ' Futures Contract'
+
+        objects_dct['live'] = list(data.values())
+        item['Type'] = Types[Types.index(item['Type'])+1].lower()
+        objects_dct['static'] = item
+
+        data_list.append(objects_dct)
+    data_list = sorted(data_list, key = lambda x: x['live'][0]) # sorted by short_name
+    context = {
+        'data_list': data_list,
+        'fields': ['Symbol'] + fields
+    }
+    return JsonResponse(context)
+
 def asset_details(request, cntry, type_, pk):
     if type_ != 'etf':
         if not type_.title() in Types:
@@ -459,8 +523,8 @@ def all_assets(request, cntry, type_):
     type_ = (Types_plural[plural_i-1], Types_plural[plural_i]) # ('cmdty', 'Commodities)
     time = timezone.now()
 
-    if type_[0] in ['cmdty', 'crncy', 'crptcrncy'] and country[0] != 'G':
-        return redirect(reverse('all-assets', args=('us', 'stocks')))
+    if (type_[0] in ['cmdty', 'crncy', 'crptcrncy'] and country[0] != 'G') or (not type_[0] in ['cmdty', 'crncy', 'crptcrncy'] and country[0] == 'G'):
+        return redirect(reverse('all-assets', args=('us', type_[1].lower())))
     context = {
         'country': country,
         'type': type_,

@@ -1,34 +1,27 @@
-if (window.location.href.includes('all/')) {
-    // || window.location.href.endsWith('dev/')
+if (window.location.pathname == '/dev/' ){
 $(function(){
-    var container = $('.market-table')
-    $('<div class="h-100 lds-dual-ring-md"></div>').appendTo(container)
+    var country = $('#pr-1 .btn-primary.active input').attr('id')
+    var type_ = $('#pl-1 .btn-primary.active input').attr('id')
+    var container = $('#main-table')
     sendAjax()
-
-    $('#expand').click(_.debounce(function(){
-        if ($('#expand').text() == 'Expand') {
-            $('#expand').text('Collapse')
-            sendAjax()
-        } else {
-            $('#expand').text('Expand')
-            sendAjax()
-        };
+    $('#pr-1 .btn-primary').click(_.debounce(function(){
+        country = $('#pr-1 .btn-primary.active input').attr('id')
+        sendAjax()
+    },150));
+    $('#pl-1 .btn-primary').click(_.debounce(function(){
+        type_ = $('#pl-1 .btn-primary.active input').attr('id')
+        sendAjax()
     },150));
 
-    function sendAjax() {
-        if ($('#expand').text() == 'Expand') {
-            var expanded = false
-        } else {
-            var expanded = true
-        };
-        
-        $(container).empty()
+    function sendAjax(){
+        container.empty()
         $('<div class="h-100 lds-dual-ring-md"></div>').appendTo(container)
+
         $.ajax({
-            url: '/dev/ajax/all/',
+            url: '/dev/ajax/home',
             data: {
-            'link': window.location.href,
-            'expanded': expanded,
+                'country': country,
+                'type_': type_
             },
             // error: function(xhr, status, error) {
             // 	console.log(xhr.responseText);
@@ -38,7 +31,7 @@ $(function(){
                 
                 container.append('<thead><tr></tr></thead>')
                 data['fields'].forEach(e => {
-                    $('.market-table tr').append('<th>'+e+'</th>')
+                    $('#main-table tr').append('<th>'+e+'</th>')
                 });
                 container.append('<tbody></tbody>')
                 data['data_list'].forEach(e => {
@@ -62,11 +55,11 @@ $(function(){
                             s += '<td>'+ v + '</td>'
                         };
                     });
-                    $('.market-table tbody').append('<tr>' + s + '</tr>')
+                    $('#main-table tbody').append('<tr>' + s + '</tr>')
                 
                 });
             }
-        });
+        })
     };
 });
-}
+};

@@ -42,37 +42,37 @@
       <div class="col-lg-6 p-0 mb-3" id="pr-1">
         <div class="input-group-btn scrolling-wrapper-flexbox" data-toggle="buttons">
           <label class="btn btn-primary mr-2 active">
-            <input type="radio" id="USA" autocomplete="off" checked>USA
+            <input type="radio" id="US" autocomplete="off" checked>USA
           </label>
           <label class="btn btn-primary mr-2">
-            <input type="radio" id="Japan" autocomplete="off">Japan
+            <input type="radio" id="JP" autocomplete="off">Japan
           </label>
           <label class="btn btn-primary mr-2">
             <input type="radio" id="UK" autocomplete="off">UK
           </label>
           <label class="btn btn-primary mr-2">
-            <input type="radio" id="Honk Kong" autocomplete="off">Honk Kong
+            <input type="radio" id="HK" autocomplete="off">Honk Kong
           </label>
           <label class="btn btn-primary mr-2">
-            <input type="radio" id="China" autocomplete="off">China
+            <input type="radio" id="CH" autocomplete="off">China
           </label>
           <label class="btn btn-primary mr-2">
-            <input type="radio" id="Canada" autocomplete="off">Canada
+            <input type="radio" id="CA" autocomplete="off">Canada
           </label>
           <label class="btn btn-primary mr-2">
-            <input type="radio" id="Germany" autocomplete="off">Germany
+            <input type="radio" id="GE" autocomplete="off">Germany
           </label>
           <label class="btn btn-primary mr-2">
-            <input type="radio" id="Australia" autocomplete="off">Australia
+            <input type="radio" id="AU" autocomplete="off">Australia
           </label>
         </div>
       </div>
       <div class="col-lg-6 p-0 mb-3" id="pl-1">
         <div class="input-group-btn scrolling-wrapper-flexbox" data-toggle="buttons">
-          <label class="btn btn-primary mr-2 active">
-            <input type="radio" id="all" autocomplete="off" checked>Stocks
-          </label>
           <label class="btn btn-primary mr-2">
+            <input type="radio" id="Stocks" autocomplete="off" checked>Stocks
+          </label>
+          <label class="btn btn-primary mr-2 active">
             <input type="radio" id="Indices" autocomplete="off">Indices
           </label>
           <label class="btn btn-primary mr-2">
@@ -190,7 +190,7 @@
           <img class="country-flag-lg" src="{% static 'main_app/svg/flags/us.svg' %}" alt="US">
           Stocks
         </h3>
-        <table class="market-table mb-3 table-striped shadow table-hover">
+        <table class="market-table mb-3 table-striped shadow table-hover" id='main-table'>
           <thead>
             <tr>
               <th></th>
