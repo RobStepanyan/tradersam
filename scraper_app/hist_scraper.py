@@ -47,6 +47,9 @@ def collect_for(obj, x, key, value, link):
                         trs = table.tbody.find_all('tr')
                         break
                     except:
+                        attempt += 1
+                        if attempt > 25:
+                            return
                         print('Waiting...')
                         sleep(1)
                 
