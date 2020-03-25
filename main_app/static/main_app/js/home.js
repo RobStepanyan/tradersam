@@ -3,15 +3,39 @@ $(function(){
     var country = $('#pr-1 .btn-primary.active input').attr('id')
     var type_ = $('#pl-1 .btn-primary.active input').attr('id')
     var container = $('#main-table')
+    var container2 = $('#market-carousel')
+    var countries = {
+        'G':'All Countries', 'US': 'United States', 'JP': 'Japan', 'UK':'United Kingdom',
+        'HK': 'Hong Kong', 'CH':'China', 'CA': 'Canada', 'GE': 'Germany', 'AU': 'Australia'
+    } 
+    $('#carousel-header').text(countries[country])
+    $('#main-table-header').append('<img class="country-flag-lg" src="/static/main_app/svg/flags/'+ country + '.svg">')
+    $('#main-table-header').append(' '+type_)
+
     $('#main-table-more').attr('href', '/dev/all/'+country.toLowerCase()+'/'+type_.toLowerCase()+'/')
     sendAjax()
+    sendAjaxCarousel()
     $('#pr-1 .btn-primary').click(_.debounce(function(){
         country = $('#pr-1 .btn-primary.active input').attr('id')
+        if (type_ == 'Commodities' || type_ == 'Currencies' || type_ == 'Cryptocurrencies') {
+            country = 'G'
+        }
+        $('#main-table-header').empty()
+        $('#main-table-header').append('<img class="country-flag-lg" src="/static/main_app/svg/flags/'+ country + '.svg">')
+        $('#main-table-header').append(' '+type_)
+        $('#carousel-header').text(countries[country])
         $('#main-table-more').attr('href', '/dev/all/'+country.toLowerCase()+'/'+type_.toLowerCase()+'/')
         sendAjax()
+        sendAjaxCarousel()
     },150));
     $('#pl-1 .btn-primary').click(_.debounce(function(){
         type_ = $('#pl-1 .btn-primary.active input').attr('id')
+        if (type_ == 'Commodities' || type_ == 'Currencies' || type_ == 'Cryptocurrencies') {
+            country = 'G'
+        }
+        $('#main-table-header').empty()
+        $('#main-table-header').append('<img class="country-flag-lg" src="/static/main_app/svg/flags/'+ country + '.svg">')
+        $('#main-table-header').append(' '+type_)
         $('#main-table-more').attr('href', '/dev/'+country.toLowerCase()+'/'+type_.toLowerCase()+'/')
         sendAjax()
     },150));
@@ -21,7 +45,7 @@ $(function(){
         $('<div class="h-100 lds-dual-ring-md"></div>').appendTo(container)
 
         $.ajax({
-            url: '/dev/ajax/home',
+            url: '/dev/ajax/home/main-table',
             data: {
                 'country': country,
                 'type_': type_
@@ -31,7 +55,6 @@ $(function(){
             //   },
             success: function(data){
                 container.empty()
-                console.log(data)
                 if (data['data_list'].length != 0){
                     container.append('<thead><tr></tr></thead>')
                     data['fields'].forEach(e => {
@@ -72,5 +95,51 @@ $(function(){
             }
         })
     };
+
+    function sendAjaxCarousel() {
+        container2.empty()
+        $('<div class="h-100 lds-dual-ring-md"></div>').appendTo(container2)
+
+        $.ajax({
+            url: '/dev/ajax/home/carousel/',
+            data: {
+                'country': country,
+            },
+            // error: function(xhr, status, error) {
+            // 	console.log(xhr.responseText);
+            //   },
+            success: function(data){
+                container2.empty()
+                if (data['data'].length != 0){
+                    data['data'].forEach(dct => {
+                        s = '<a href="/dev/asset/'+ dct['static']['country'].toLowerCase()+ dct['static']['Type']+'/'+ dct['static']['id']+'/' +
+                        `<div class="card asset-card card mr-3">
+                            <div class="row mb-1">
+                            <span class="long-name">` + dct['static']['long_name'] + `</span>
+                            </div>
+                            <div class="row justify-content-between">
+                            <span class="short-name">` + dct['static']['short_name'] + '</span>'
+                            
+                            if (dct['live']['change_perc'].includes('+')) {
+                                s+= `<div class="row">
+                                <span class="change up">`+ dct['live']['change_perc'] + `</span>
+                                </div>`
+                            } else if (dct['live']['change_perc'].includes('0')) {
+                                s += `<div class="row">
+                                <span class="change text-white">` + dct['live']['change_perc'] + `</span>
+                                </div>`
+                            } else {
+                                s+= `<div class="row">
+                                <span class="change down">` + dct['live']['change_perc'] + `</span>
+                                </div>` 
+                            };
+                            s += '</div></div></a>'
+                    });
+                } else {
+                    $('<h5 class="text-white text-center py-3 mb-0 w-100">No data found</h5>').appendTo(container2);
+                };
+            }
+        })
+    }
 });
 };

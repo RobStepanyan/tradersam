@@ -306,11 +306,11 @@ def ajax_all(request):
     }
     return JsonResponse(context)
 
-def ajax_home(request):
+def ajax_main_table(request):
     country = request.GET.get('country', 'US')
     type_ = request.GET.get('type_', 'Indices')
 
-    if not type_.title() in Types_plural:
+    if not type_.upper() in [x.upper() for x in Types_plural]:
         raise Http404('Type is not found')
 
     if not country.upper() in Countries:
@@ -375,6 +375,42 @@ def ajax_home(request):
     context = {
         'data_list': data_list,
         'fields': list(data.keys())
+    }
+    return JsonResponse(context)
+
+def ajax_home_carousel(request):
+    country = request.GET.get('country', 'US')
+    if not country.upper() in Countries:
+        raise Http404('Country is not found')
+
+    for key, value in STATIC_OBJECTS.items():
+        if value['type'] == 'indx' and (country[0] in key or country[1] in key):
+            obj = value['object']
+            fields = value['live fields']
+            break
+    
+    objects = obj.objects.all()[:15]
+    
+    data_list = []
+    data = {}
+    for item in objects:
+        objects_dct = {}
+        for model in AllAssetsLive.objects.filter(link=item.link):
+            dct = model_to_dict(model)
+            for key, value in dct.items():
+                
+                if key.lower() in ['short_name', 'last', 'chgange_perc']:
+                    data[key] = value
+
+        item = model_to_dict(item)
+
+        objects_dct['live'] = list(data.values())
+        objects_dct['static'] = item
+        if any(objects_dct.values()):
+            data_list.append(objects_dct)
+    
+    context = {
+        'data': data_list
     }
     return JsonResponse(context)
 

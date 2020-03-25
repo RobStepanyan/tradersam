@@ -69,10 +69,10 @@
       </div>
       <div class="col-lg-6 p-0 mb-3" id="pl-1">
         <div class="input-group-btn scrolling-wrapper-flexbox" data-toggle="buttons">
-          <label class="btn btn-primary mr-2">
+          <label class="btn btn-primary mr-2 active">
             <input type="radio" id="Stocks" autocomplete="off" checked>Stocks
           </label>
-          <label class="btn btn-primary mr-2 active">
+          <label class="btn btn-primary mr-2">
             <input type="radio" id="Indices" autocomplete="off">Indices
           </label>
           <label class="btn btn-primary mr-2">
@@ -85,7 +85,7 @@
             <input type="radio" id="Currencies" autocomplete="off">Currencies
           </label>
           <label class="btn btn-primary mr-2 pr-2">
-            <input type="radio" id="Cryptocurrency" autocomplete="off">Cryptocurrency
+            <input type="radio" id="Cryptocurrencies" autocomplete="off">Cryptocurrency
           </label>
           <label class="btn btn-primary">
             <input type="radio" id="ETFs" autocomplete="off">ETFs
@@ -97,87 +97,10 @@
 
   <div class="bg-dark p-3">
     <div class="container">
-      <h3 class="text-white text-align-center ml-0 mb-3">
-        United States
+      <h3 class="text-white text-align-center ml-0 mb-3" id='carousel-header'>
+        <!-- Carousel header -->
       </h3>
       <div class="row" id="market-carousel">
-        <a href="">
-          <div class="card asset-card card mr-3">
-            <div class="row justify-content-around">
-              <span class="short-name">S&P500</span>
-              <span class="long-name">S&P500 Futures</span>
-            </div>
-            <div class="row justify-content-around">
-              <span class="price up">313002.34</span>
-              <span class="change up">203.14%</span>
-            </div>
-          </div>
-        </a>
-
-        <a href="">
-          <div class="card asset-card card mr-3">
-            <div class="row justify-content-around">
-              <span class="short-name">S&P500</span>
-              <span class="long-name">S&P500 Futures</span>
-            </div>
-            <div class="row justify-content-around">
-              <span class="price up">313002.34</span>
-              <span class="change up">203.14%</span>
-            </div>
-          </div>
-        </a>
-
-        <a href="">
-          <div class="card asset-card card mr-3">
-            <div class="row justify-content-around">
-              <span class="short-name">S&P500</span>
-              <span class="long-name">S&P500 Futures</span>
-            </div>
-            <div class="row justify-content-around">
-              <span class="price up">313002.34</span>
-              <span class="change up">203.14%</span>
-            </div>
-          </div>
-        </a>
-
-        <a href="">
-          <div class="card asset-card card mr-3">
-            <div class="row justify-content-around">
-              <span class="short-name">S&P500</span>
-              <span class="long-name">S&P500 Futures</span>
-            </div>
-            <div class="row justify-content-around">
-              <span class="price up">313002.34</span>
-              <span class="change up">203.14%</span>
-            </div>
-          </div>
-        </a>
-
-        <a href="">
-          <div class="card asset-card card mr-3">
-            <div class="row justify-content-around">
-              <span class="short-name">S&P500</span>
-              <span class="long-name">S&P500 Futures</span>
-            </div>
-            <div class="row justify-content-around">
-              <span class="price up">313002.34</span>
-              <span class="change up">203.14%</span>
-            </div>
-          </div>
-        </a>
-
-        <a href="">
-          <div class="card asset-card card mr-3">
-            <div class="row justify-content-around">
-              <span class="short-name">S&P500</span>
-              <span class="long-name">S&P500 Futures</span>
-            </div>
-            <div class="row justify-content-around">
-              <span class="price up">313002.34</span>
-              <span class="change up">203.14%</span>
-            </div>
-          </div>
-        </a>
 
       </div>
     </div>
@@ -186,92 +109,11 @@
     <div class="row">
       <!-- Selected Table -->
       <div class="col-lg-6 p-0" id="pr-1">
-        <h3 class="text-white text-align-center ml-0 mb-3">
-          <img class="country-flag-lg" src="{% static 'main_app/svg/flags/us.svg' %}" alt="US">
-          Stocks
+        <h3 class="text-white text-align-center ml-0 mb-3" id='main-table-header'>
+          <!-- main table header -->
         </h3>
         <table class="market-table mb-3 table-striped shadow table-hover" id='main-table'>
-          <thead>
-            <tr>
-              <th></th>
-              <th>Ticker</th>
-              <th>Last Price</th>
-              <th>Change</th>
-              <th>Change %</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><img class="country-flag-md" src="{% static 'main_app/svg/flags/us.svg' %}" alt="US"></td>
-              <td>AAPL</td>
-              <td>313.45</td>
-              <td class="text-success">+13.24</td>
-              <td><span class="change up">+2.14%</span></td>
-            </tr>
-            <tr>
-              <td><img class="country-flag-md" src="{% static 'main_app/svg/flags/us.svg' %}" alt="US"></td>
-              <td>AAPL</td>
-              <td>313.45</td>
-              <td class="text-success">+13.24</td>
-              <td><span class="change up">+200.14%</span></td>
-            </tr>
-            <tr>
-              <td><img class="country-flag-md" src="{% static 'main_app/svg/flags/us.svg' %}" alt="US"></td>
-              <td>AAPL</td>
-              <td>313.45</td>
-              <td class="">0.00</td>
-              <td><span class="change">0.00%</span></td>
-            </tr>
-            <tr>
-              <td><img class="country-flag-md" src="{% static 'main_app/svg/flags/us.svg' %}" alt="US"></td>
-              <td>AAPL</td>
-              <td>313.45</td>
-              <td class="text-success">+13.24</td>
-              <td><span class="change up">+2.14%</span></td>
-            </tr>
-            <tr>
-              <td><img class="country-flag-md" src="{% static 'main_app/svg/flags/us.svg' %}" alt="US"></td>
-              <td>AAPL</td>
-              <td>313.45</td>
-              <td class="text-danger">-13.24</td>
-              <td><span class="change down">-2.14%</span></td>
-            </tr>
-            <tr>
-              <td><img class="country-flag-md" src="{% static 'main_app/svg/flags/us.svg' %}" alt="US"></td>
-              <td>AAPL</td>
-              <td>313.45</td>
-              <td class="text-success">+13.24</td>
-              <td><span class="change up">+2.14%</span></td>
-            </tr>
-            <tr>
-              <td><img class="country-flag-md" src="{% static 'main_app/svg/flags/us.svg' %}" alt="US"></td>
-              <td>AAPL</td>
-              <td>313.45</td>
-              <td class="text-danger">-13.24</td>
-              <td><span class="change down">-2.14%</span></td>
-            </tr>
-            <tr>
-              <td><img class="country-flag-md" src="{% static 'main_app/svg/flags/us.svg' %}" alt="US"></td>
-              <td>AAPL</td>
-              <td>313.45</td>
-              <td class="text-success">+13.24</td>
-              <td><span class="change up">+2.14%</span></td>
-            </tr>
-            <tr>
-              <td><img class="country-flag-md" src="{% static 'main_app/svg/flags/us.svg' %}" alt="US"></td>
-              <td>AAPL</td>
-              <td>313.45</td>
-              <td class="text-danger">-13.24</td>
-              <td><span class="change down">-2.14%</span></td>
-            </tr>
-            <tr>
-              <td><img class="country-flag-md" src="{% static 'main_app/svg/flags/us.svg' %}" alt="US"></td>
-              <td>AAPL</td>
-              <td>313.45</td>
-              <td class="text-success">+13.24</td>
-              <td><span class="change up">+2.14%</span></td>
-            </tr>
-          </tbody>
+        <!-- main table -->
         </table>
         <div class="text-center mb-3">
           <a href="" class="btn btn-primary-dark btn-wide" id='main-table-more'>More</a>
