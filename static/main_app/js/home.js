@@ -9,7 +9,7 @@ $(function(){
         'HK': 'Hong Kong', 'CH':'China', 'CA': 'Canada', 'GE': 'Germany', 'AU': 'Australia'
     } 
     $('#carousel-header').text(countries[country])
-    $('#main-table-header').append('<img class="country-flag-lg" src="/static/main_app/svg/flags/'+ country + '.svg">')
+    $('#main-table-header').append('<img class="country-flag-lg" src="/static/main_app/svg/flags/'+ country.toLowerCase() + '.svg">')
     $('#main-table-header').append(' '+type_)
 
     $('#main-table-more').attr('href', '/dev/all/'+country.toLowerCase()+'/'+type_.toLowerCase()+'/')
@@ -21,7 +21,7 @@ $(function(){
             country = 'G'
         }
         $('#main-table-header').empty()
-        $('#main-table-header').append('<img class="country-flag-lg" src="/static/main_app/svg/flags/'+ country + '.svg">')
+        $('#main-table-header').append('<img class="country-flag-lg" src="/static/main_app/svg/flags/'+ country.toLowerCase() + '.svg">')
         $('#main-table-header').append(' '+type_)
         $('#carousel-header').text(countries[country])
         $('#main-table-more').attr('href', '/dev/all/'+country.toLowerCase()+'/'+type_.toLowerCase()+'/')
@@ -34,7 +34,7 @@ $(function(){
             country = 'G'
         }
         $('#main-table-header').empty()
-        $('#main-table-header').append('<img class="country-flag-lg" src="/static/main_app/svg/flags/'+ country + '.svg">')
+        $('#main-table-header').append('<img class="country-flag-lg" src="/static/main_app/svg/flags/'+ country.toLowerCase() + '.svg">')
         $('#main-table-header').append(' '+type_)
         $('#main-table-more').attr('href', '/dev/'+country.toLowerCase()+'/'+type_.toLowerCase()+'/')
         sendAjax()
@@ -110,30 +110,33 @@ $(function(){
             //   },
             success: function(data){
                 container2.empty()
-                if (data['data'].length != 0){
-                    data['data'].forEach(dct => {
-                        s = '<a href="/dev/asset/'+ dct['static']['country'].toLowerCase()+ dct['static']['Type']+'/'+ dct['static']['id']+'/' +
+                if (data['data_list'].length != 0){
+                    data['data_list'].forEach(dct => {
+                        s = '<a href="/dev/asset/'+ dct['static']['country'].toLowerCase()+'/'+ dct['static']['Type'].toLowerCase()+'/'+ dct['static']['id']+'/">' +
                         `<div class="card asset-card card mr-3">
-                            <div class="row mb-1">
-                            <span class="long-name">` + dct['static']['long_name'] + `</span>
-                            </div>
-                            <div class="row justify-content-between">
-                            <span class="short-name">` + dct['static']['short_name'] + '</span>'
-                            
-                            if (dct['live']['change_perc'].includes('+')) {
-                                s+= `<div class="row">
-                                <span class="change up">`+ dct['live']['change_perc'] + `</span>
-                                </div>`
-                            } else if (dct['live']['change_perc'].includes('0')) {
-                                s += `<div class="row">
-                                <span class="change text-white">` + dct['live']['change_perc'] + `</span>
-                                </div>`
-                            } else {
-                                s+= `<div class="row">
-                                <span class="change down">` + dct['live']['change_perc'] + `</span>
-                                </div>` 
-                            };
-                            s += '</div></div></a>'
+                        <div class="row mb-1">
+                        <span class="long-name">` + dct['static']['long_name'] + `</span>
+                        </div>
+                        <div class="row justify-content-between">
+                        <span class="short-name">` + dct['static']['short_name'] + '</span>'
+                        
+                        if (dct['live'] == '+0.00%') {
+                            s+= '<span class="change text-white">' + dct['live'] + '</span></div>' 
+                        } else if (dct['live'].includes('-')) {
+                            s +='<span class="change down">' + dct['live'] + '</span></div>'
+                        } else if (dct['live'].includes('+')) {
+                            s+= '<span class="change up">'+ dct['live'] + '</span></div>'
+                        };
+                        s += '</div></div></a>'
+                        container2.append(s)
+                    });
+                    container2.attr('class', 'row')
+                    container2.slick({
+                        slidesToShow: 5,
+                        variableWidth: true,
+                        slidesToScroll: 1,
+                        autoplay: true,
+                        autoplaySpeed: 2000,
                     });
                 } else {
                     $('<h5 class="text-white text-center py-3 mb-0 w-100">No data found</h5>').appendTo(container2);

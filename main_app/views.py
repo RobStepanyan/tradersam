@@ -330,7 +330,7 @@ def ajax_main_table(request):
                 fields = value['live fields']
                 break
         else:    
-            if value['type'] == type_ and (country[0] in key or country[1] in key):
+            if value['type'] == type_ and country.lower() in key.lower():
                 obj = value['object']
                 fields = value['live fields']
                 break
@@ -386,31 +386,27 @@ def ajax_home_carousel(request):
     for key, value in STATIC_OBJECTS.items():
         if value['type'] == 'indx' and (country[0] in key or country[1] in key):
             obj = value['object']
-            fields = value['live fields']
             break
     
     objects = obj.objects.all()[:15]
     
     data_list = []
-    data = {}
     for item in objects:
         objects_dct = {}
         for model in AllAssetsLive.objects.filter(link=item.link):
-            dct = model_to_dict(model)
-            for key, value in dct.items():
-                
-                if key.lower() in ['short_name', 'last', 'chgange_perc']:
-                    data[key] = value
+            chg = model.change_perc
 
         item = model_to_dict(item)
+        plural_i = [i.upper() for i in Types_plural].index(item['Type'].upper())
+        item['Type'] = Types_plural[plural_i-1]
 
-        objects_dct['live'] = list(data.values())
+        objects_dct['live'] = chg
         objects_dct['static'] = item
-        if any(objects_dct.values()):
-            data_list.append(objects_dct)
+
+        data_list.append(objects_dct)
     
     context = {
-        'data': data_list
+        'data_list': data_list,
     }
     return JsonResponse(context)
 
