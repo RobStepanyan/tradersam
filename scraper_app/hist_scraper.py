@@ -120,7 +120,7 @@ types = list(set(types))
 # Complete list to delete and collect historical data for
 # Override types list here if needed
 # ['cmdty', 'crncy', 'crptcrncy', 'stck', 'indx', 'etf', 'bnd', 'fnd']
-types = ['stck', 'indx', 'etf', 'bnd', 'fnd']
+types = ['indx', 'etf', 'bnd', 'fnd']
 
 if inpt.upper() == 'Y':
     # Deleting old historical data

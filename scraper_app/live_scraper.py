@@ -185,6 +185,8 @@ class CollectLive:
                             live_data['Month'] = datetime.datetime.strptime(live_data['Month'], '%b %y')
                 except:
                     live_data['Month'] = None
+                if not '%' in live_data['Chg. %']:
+                    live_data['Chg. %'] += '%'
                 models.AllAssetsLive(
                     Type=self.type_,
                     link=link,
