@@ -40,7 +40,7 @@ $(function(){
         $('#main-table-header').empty()
         $('#main-table-header').append('<img class="country-flag-lg" src="/static/main_app/svg/flags/'+ country.toLowerCase() + '.svg">')
         $('#main-table-header').append(' '+type_)
-        $('#main-table-more').attr('href', '/dev/'+country.toLowerCase()+'/'+type_.toLowerCase()+'/')
+        $('#main-table-more').attr('href', '/dev/all/'+country.toLowerCase()+'/'+type_.toLowerCase()+'/')
         sendAjax()
     },150));
 
