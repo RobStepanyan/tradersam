@@ -132,9 +132,7 @@ class CollectLive:
             is_closed = 0
             if self.type_ == 'crncy' and len(tr.find_all('td')[-1].get_text()) <=5:
                 is_closed = True
-            elif self.type_ == 'crncy':
-                is_closed = False
-            elif self.type_ == 'crptcrncy':
+            elif self.type_ == 'crncy' or self.type_ == 'crptcrncy':
                 is_closed = False
             elif 'redClockIcon' in tr.find_all('td')[-1].span['class'][0]:
                 is_closed = True
@@ -223,7 +221,6 @@ class CollectLive:
                 }
                 minutes_ = {
                     '1D': 1, '5D': 5, '6M1M': 1, 
-                    '1Y': 1, '5Y': 5, 'Max':30 # minutes of every element except 1D 5D are used as hours
                 }
                 for k, v in hist_objects.items():
                     last_obj_count[k] = v.objects.filter(link=link).count()
@@ -232,8 +229,8 @@ class CollectLive:
 
                 for time_frame, hist_model in hist_objects.items():
                     if time_frame[-1] == 'D':
-                        if last_obj_count[time_frame] == 0 or now.minute - last_obj[time_frame].date.minute >= minutes_[time_frame]:
-                            # if there's no data at all or latest data is already outdated
+                        if last_obj_count[time_frame] == 0 or now - datetime.timedelta(minutes=minutes_[time_frame]) > last_obj[time_frame].date:
+                            # if there's no data at all or latest data is older (smaller) tahn needed
                             # send (Save) data
                             hist_model(
                             Type=self.type_,
@@ -248,21 +245,20 @@ class CollectLive:
                             ).save() 
                             print(f'{self.title}: saved HISTORICAL{time_frame}')
                     else:
-                        if last_obj_count[time_frame] == 0 or now.day - last_obj[time_frame].date.day >= minutes_[time_frame]:
-                            # if there's no data at all or latest data is already outdated
-                            # send (Save) data
-                            hist_model(
-                            Type=self.type_,
-                                link=link,
+                        if now.date == last_obj[time_frame].date:
+                            hist_model.objects.filter(link=link).order_by('-id').first().delete()
+                        hist_model(
+                        Type=self.type_,
+                            link=link,
 
-                                date=now,
-                                price=validate_price(live_data['Last']),
-                                Open=validate_price(live_data['Open']),
-                                high=validate_price(live_data['High']),
-                                low=validate_price(live_data['Low']),
-                                volume=validate_price(live_data['Vol.']),
-                            ).save() 
-                            print(f'{self.title}: saved HISTORICAL{time_frame}')
+                            date=now,
+                            price=validate_price(live_data['Last']),
+                            Open=validate_price(live_data['Open']),
+                            high=validate_price(live_data['High']),
+                            low=validate_price(live_data['Low']),
+                            volume=validate_price(live_data['Vol.']),
+                        ).save() 
+                        print(f'{self.title}: saved HISTORICAL{time_frame}')
 
                     if time_frame != 'Max':
                         if last_obj_count[time_frame]:
