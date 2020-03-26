@@ -142,28 +142,28 @@ STATIC_OBJECTS = {
     'Cryptocurrencies': {
         'object': CryptocurrencyStaticInfo, 'type': 'crptcrncy', 'link': TABLE_LINKS['Cryptocurrencies'], 'table class': 'genTbl openTbl js-all-crypto-table mostActiveStockTbl crossRatesTbl allCryptoTlb wideTbl elpTbl elp15',
         'before live fields': before_live_fields, 'live fields': live_fields['Cryptocurrencies'], 'after live fields': after_live_fields['Cryptocurrencies']},
-    'US Stocks': {
+    'United States (US) Stocks': {
         'object': USStockStaticInfo, 'type': 'stck', 'link': TABLE_LINKS['US Stocks'], 'table class': table_class1,
         'before live fields': before_live_fields, 'live fields': live_fields['Stocks'], 'after live fields': after_live_fields['Stocks']},
-    'Japan Stocks': {
+    'Japan (JP) Stocks': {
         'object': JapanStockStaticInfo, 'type': 'stck', 'link': TABLE_LINKS['Japan Stocks'], 'table class': table_class1,
         'before live fields': before_live_fields, 'live fields': live_fields['Stocks'], 'after live fields': after_live_fields['Stocks']},
-    'UK Stocks': {
+    'United Kingdom (UK) Stocks': {
         'object': UKStockStaticInfo, 'type': 'stck', 'link': TABLE_LINKS['UK Stocks'], 'table class': table_class1,
         'before live fields': before_live_fields, 'live fields': live_fields['Stocks'], 'after live fields': after_live_fields['Stocks']},
-    'HK Stocks': {
+    'Hong Kong (HK) Stocks': {
         'object': HKStockStaticInfo, 'type': 'stck', 'link': TABLE_LINKS['HK Stocks'], 'table class': table_class1,
         'before live fields': before_live_fields, 'live fields': live_fields['Stocks'], 'after live fields': after_live_fields['Stocks']},
-    'China Stocks': {
+    'China (CH) Stocks': {
         'object': ChinaStockStaticInfo, 'type': 'stck', 'link': TABLE_LINKS['China Stocks'], 'table class': table_class1,
         'before live fields': before_live_fields, 'live fields': live_fields['Stocks'], 'after live fields': after_live_fields['Stocks']},
-    'Canada Stocks': {
+    'Canada (CA) Stocks': {
         'object': CanadaStockStaticInfo, 'type': 'stck', 'link': TABLE_LINKS['Canada Stocks'], 'table class': table_class1,
         'before live fields': before_live_fields, 'live fields': live_fields['Stocks'], 'after live fields': after_live_fields['Stocks']},
-    'Germany Stocks': {
+    'Germany (GE) Stocks': {
         'object': GermanyStockStaticInfo, 'type': 'stck', 'link': TABLE_LINKS['Germany Stocks'], 'table class': table_class1,
         'before live fields': before_live_fields, 'live fields': live_fields['Stocks'], 'after live fields': after_live_fields['Stocks']},
-    'Australia Stocks': {
+    'Australia (AU) Stocks': {
         'object': AustraliaStockStaticInfo, 'type': 'stck', 'link': TABLE_LINKS['Australia Stocks'], 'table class': table_class1,
         'before live fields': before_live_fields, 'live fields': live_fields['Stocks'], 'after live fields': after_live_fields['Stocks']},
     
