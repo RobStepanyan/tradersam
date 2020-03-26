@@ -384,7 +384,7 @@ def ajax_home_carousel(request):
         raise Http404('Country is not found')
 
     for key, value in STATIC_OBJECTS.items():
-        if value['type'] == 'indx' and (country[0] in key or country[1] in key):
+        if value['type'] == 'indx' and country in key:
             obj = value['object']
             break
     

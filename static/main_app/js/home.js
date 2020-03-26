@@ -19,7 +19,9 @@ $(function(){
         country = $('#pr-1 .btn-primary.active input').attr('id')
         if (type_ == 'Commodities' || type_ == 'Currencies' || type_ == 'Cryptocurrencies') {
             country = 'G'
-        }
+        } else {
+            country = $('#pr-1 .btn-primary.active input').attr('id')
+        };
         $('#main-table-header').empty()
         $('#main-table-header').append('<img class="country-flag-lg" src="/static/main_app/svg/flags/'+ country.toLowerCase() + '.svg">')
         $('#main-table-header').append(' '+type_)
@@ -32,7 +34,9 @@ $(function(){
         type_ = $('#pl-1 .btn-primary.active input').attr('id')
         if (type_ == 'Commodities' || type_ == 'Currencies' || type_ == 'Cryptocurrencies') {
             country = 'G'
-        }
+        } else {
+            country = $('#pr-1 .btn-primary.active input').attr('id')
+        };
         $('#main-table-header').empty()
         $('#main-table-header').append('<img class="country-flag-lg" src="/static/main_app/svg/flags/'+ country.toLowerCase() + '.svg">')
         $('#main-table-header').append(' '+type_)
