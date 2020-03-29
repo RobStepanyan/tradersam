@@ -4335,7 +4335,7 @@ a.badge-dark.focus, a.badge-dark:focus {
 }
 .alert-primary {
   color: #7f331e;
-  background-color: #fde0d8;
+  background-color: var(--gray5);
   border-color: #fcd3c8;
 }
 .alert-primary hr {
@@ -4346,7 +4346,7 @@ a.badge-dark.focus, a.badge-dark:focus {
 }
 .alert-secondary {
   color: #383d41;
-  background-color: #e2e3e5;
+  background-color: var(--gray5);
   border-color: #d6d8db;
 }
 .alert-secondary hr {
@@ -4357,7 +4357,7 @@ a.badge-dark.focus, a.badge-dark:focus {
 }
 .alert-success {
   color: var(--success);
-  background-color: var(--white);
+  background-color: var(--gray5);
 }
 .alert-success hr {
   border-top-color: #b1dfbb;
@@ -4367,7 +4367,7 @@ a.badge-dark.focus, a.badge-dark:focus {
 }
 .alert-info {
   color: #0c5460;
-  background-color: #d1ecf1;
+  background-color: var(--gray5);
   border-color: #bee5eb;
 }
 .alert-info hr {
@@ -4378,7 +4378,7 @@ a.badge-dark.focus, a.badge-dark:focus {
 }
 .alert-warning {
   color: var(--yellow);
-  background-color: var(--white);
+  background-color: var(--gray5);
 }
 .alert-warning hr {
   border-top-color: #ffe8a1;
@@ -4389,7 +4389,7 @@ a.badge-dark.focus, a.badge-dark:focus {
 .alert-error,
 .alert-danger {
   color: var(--danger);
-  background-color: var(--white);
+  background-color: var(--gray5);
 }
 .alert-error,
 .alert-danger hr {
@@ -4401,7 +4401,7 @@ a.badge-dark.focus, a.badge-dark:focus {
 }
 .alert-light {
   color: #818182;
-  background-color: #fefefe;
+  background-color: var(--gray5);
   border-color: #fdfdfe;
 }
 .alert-light hr {
@@ -4412,7 +4412,7 @@ a.badge-dark.focus, a.badge-dark:focus {
 }
 .alert-dark {
   color: #1b1e21;
-  background-color: #d6d8d9;
+  background-color: var(--gray5);
   border-color: #c6c8ca;
 }
 .alert-dark hr {

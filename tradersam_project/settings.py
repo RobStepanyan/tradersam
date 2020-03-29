@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = "%k=1tb=szfko#s@9z8=#0)u&6*e#m)n7vtppaemk0c80^ds*g*"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 ALLOWED_HOSTS = ['localhost', '144.76.251.245', '.traders.am']
 
 
@@ -129,12 +129,3 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static/")
 
 # Django Crispy Forms
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
-
-# Email
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.yandex.ru'
-EMAIL_PORT = 465
-EMAIL_USE_SSL = True
-
-EMAIL_HOST_USER = 'noreply@traders.am'
-EMAIL_HOST_PASSWORD = '=qeJK%_^7s*6WP87'

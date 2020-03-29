@@ -28,6 +28,7 @@ urlpatterns = [
     path('', main_views.csoon),
     
     path('signup/', users_views.signup, name='signup'),
+    path('activate/<uidb64>/<token>/', users_views.signup_activation, name='signup-activate'),
     path('login/', users_views.login, name='login'),
     path('logout/', users_views.logout, name='logout'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
