@@ -58,8 +58,7 @@ def signup_activation(request, uidb64, token):
     if User and account_activation_token.check_token(user, token):
         user.is_active = True
         user.save()
-        messages.success(request, 'Accound has been created successfuly.')
-        
+        messages.success(request, 'Your account has been confirmed. Now you are able to log in.')
     else:
         messages.error(request, 'Activation link is invalid!')
     return redirect('home')
