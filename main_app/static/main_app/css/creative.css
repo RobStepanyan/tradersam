@@ -9218,8 +9218,13 @@ tbody {
   -webkit-box-shadow: 0.25rem 0.5rem 0.75rem rgba(0, 0, 0, 0.75)!important;
   box-shadow: 0.25rem 0.5rem 0.75rem rgba(0, 0, 0, 0.75)!important;
   /* for x-scroll in small devices */
-  margin-right: 16px;
   display: inline-table;
+}
+@media (max-width: 576px) {
+  .market-table {
+    /* for x-scroll in small devices */
+    margin-right: 16px;
+  }
 }
 .market-table td, .market-table th {
   height: 40px;
