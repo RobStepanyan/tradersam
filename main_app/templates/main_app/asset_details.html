@@ -62,14 +62,19 @@
           {{ asset.short_name }}
         </h2>
         <h2 class="text-white m-0">{{ data.last_price }} 
-          {% if data.change_perc.0 == '-' %}
-            <span class="text-danger"><i class="fas fa-arrow-down"></i>
-          {% elif data.change_perc.0 == '0' %}
+          {% if not data.change_perc %}
             <span class="text-white">
+              N/A
           {% else %}
-            <span class="text-success"><i class="fas fa-arrow-up"></i>
+            {% if data.change_perc.0 == '-' %}
+              <span class="text-danger"><i class="fas fa-arrow-down"></i>
+            {% elif data.change_perc.0 == '0' %}
+              <span class="text-white">
+            {% else %}
+              <span class="text-success"><i class="fas fa-arrow-up"></i>
+            {% endif %}
+              {{ data.change }} ({{ data.change_perc }})
           {% endif %}
-            {{ data.change }} ({{ data.change_perc }})
             </span>
         </h2>
         <i class="text-gray-5">As of {{ data.time }} CT.</i>
@@ -151,18 +156,38 @@
           <tr class="row">
             <td class="row col-sm-6">
               <div class="col-sm-6 p-0">
-                {{ pair.0.0 }}
+                {% if pair.0.0 %}
+                  {{ pair.0.0 }}
+                {% else %}
+                  N/A
+                {% endif %}
               </div>
               <div class="col-sm-6 p-0">
-                <span class="text-gray-5">{{ pair.0.1 }}</span>
+                <span class="text-gray-5">
+                  {% if pair.0.1 %}
+                    {{ pair.0.1 }}
+                  {% else %}
+                    N/A
+                  {% endif %}
+                </span>
               </div>
             </td>
             <td class="row col-sm-6">
               <div class="col-sm-6 p-0">
-                {{ pair.1.0 }}
+                {% if pair.1.0 %}
+                  {{ pair.1.0 }}
+                {% else %}
+                  N/A
+                {% endif %}
               </div>
               <div class="col-sm-6 p-0">
-                <span class="text-gray-5">{{ pair.1.1 }}</span>
+                <span class="text-gray-5">
+                  {% if pair.1.1 %}
+                    {{ pair.1.1 }}
+                  {% else %}
+                    N/A
+                  {% endif %}
+                </span>
               </div>
             </td>
           </tr>
@@ -186,17 +211,17 @@
             </div>
             <div class="row justify-content-between">
               <span class="short-name">{{ dct.static.short_name }}</span>
-              {% if dct.live.change_perc.0 == '+' %}
                 <div class="row">
+                {% if not dct.live.change_perc %}
+                  <span class="change text-white">N/A</span>
+                {% else %}  
+                  {% if dct.live.change_perc.0 == '+' %}
                   <span class="change up">{{ dct.live.change_perc }}</span>
-                </div>
-              {% elif dct.live.change_perc.0 == '0' %}
-                <div class="row">
+                  {% elif dct.live.change_perc.0 == '0' %}
                   <span class="change text-white">{{ dct.live.change_perc }}</span>
-                </div>
-              {% else %}
-                <div class="row">
+                  {% else %}
                   <span class="change down">{{ dct.live.change_perc }}</span>
+                  {% endif %}
                 </div>
               {% endif %}
             </div>
