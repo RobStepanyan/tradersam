@@ -86,4 +86,7 @@ def logout(request):
         messages.success(request, f'Successfuly logged out.')
     return render(request, 'main_app/home.html')
 
+def profile(request):
+    return HttpResponse('Profile')
+
         
