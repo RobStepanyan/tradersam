@@ -116,7 +116,7 @@ $(function(){
                 container2.empty()
                 if (data['data_list'].length != 0){
                     data['data_list'].forEach(dct => {
-                        s = '<a href="/dev/asset/'+ dct['static']['country'].toLowerCase()+'/'+ dct['static']['Type'].toLowerCase()+'/'+ dct['static']['id']+'/">' +
+                        s = '<a href="/dev/asset/'+ dct['static']['country'].toLowerCase()+'/index/'+ dct['static']['id']+'/">' +
                         `<div class="card asset-card card mr-3">
                         <div class="row mb-1">
                         <span class="long-name">` + dct['static']['long_name'] + `</span>

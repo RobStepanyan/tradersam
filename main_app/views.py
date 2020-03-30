@@ -101,19 +101,18 @@ def ajax_hist(request):
     cntry = cntry.upper()
     cntry1 = Countries[Countries.index(cntry)+1]
     country = (cntry, cntry1)
-    if type_ != 'etf':
-        type_ = Types[Types.index(type_.capitalize())-1]
+    type_ = Types[[x.lower() for x in Types].index(type_.lower())-1]
 
     for key, value in STATIC_OBJECTS.items():
-        if type_ == 'cmdty':
+        if type_.lower() == 'cmdty':
             obj = STATIC_OBJECTS['Commodities']['object']
             break
         elif cntry == 'G':
-            if value['type'] == type_:
+            if value['type'].lower() == type_.lower():
                 obj = value['object']
                 break
         else:    
-            if value['type'] == type_ and (country[0] in key or country[1] in key):
+            if value['type'].lower() == type_.lower() and (country[0] in key or country[1] in key):
                 obj = value['object']
                 break
 
@@ -411,26 +410,24 @@ def ajax_home_carousel(request):
     return JsonResponse(context)
 
 def asset_details(request, cntry, type_, pk):
-    if type_ != 'etf':
-        if not type_.title() in Types:
-            raise Http404("Type not found")
+    if not type_.lower() in [x.lower() for x in Types]:
+        raise Http404(f"Type not found: {type_}")
     
     cntry = cntry.upper()
-    if type_ != 'etf':
-        type_ = Types[Types.index(type_.capitalize())-1]
+    type_ = Types[[x.lower() for x in Types].index(type_.lower())-1]
     cntry1 = Countries[Countries.index(cntry)+1]
     country = (cntry, cntry1)
     
     for key, value in STATIC_OBJECTS.items():
-        if type_ == 'cmdty':
+        if type_.lower() == 'cmdty':
             obj = STATIC_OBJECTS['Commodities']['object']
             break
         elif cntry == 'G':
-            if value['type'] == type_:
+            if value['type'] == type_.lower():
                 obj = value['object']
                 break
         else:    
-            if value['type'] == type_ and (country[0] in key or country[1] in key):
+            if value['type'] == type_.lower() and (country[0] in key or country[1] in key):
                 obj = value['object']
                 break
     
