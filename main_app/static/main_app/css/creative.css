@@ -9517,3 +9517,10 @@ tbody {
 .d-initial {
   display: initial!important;
 }
+
+@media (min-width: 992px) {
+  .position-absolute-lg {
+    position:absolute;
+  }
+}
+
