@@ -7,9 +7,9 @@
           {{ form.username }}
           <label for="{{ form.username.id_for_label }}">Username</label>
           {% if form.username.errors %}
-            <ul class="pl-4">
+            <ul class="px-4">
             {% for error in form.username.errors %}
-            <li class="text-danger">{{ error|escape }}</li>
+            <li class="text-danger font-weight-bold list-unstyled">{{ error|escape }}</li>
             {% endfor %}
             </ul>
           {% endif %}
@@ -19,9 +19,9 @@
           {{ form.password }}
           <label for="{{ form.password.id_for_label }}">Password</label>
           {% if form.password.errors %}
-            <ul class="pl-4">
+            <ul class="px-4">
             {% for error in form.password.errors %}
-            <li class="text-danger">{{ error|escape }}</li>
+            <li class="text-danger font-weight-bold">{{ error|escape }}</li>
             {% endfor %}
             </ul>
           {% endif %}

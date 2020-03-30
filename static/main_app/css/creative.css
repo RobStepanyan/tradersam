@@ -1572,7 +1572,7 @@ pre code {
   height: calc(1.5em + .75rem + 2px);
   padding: .375rem .75rem;
   font-size: 1rem;
-  font-weight: 400;
+  font-weight: bold;
   line-height: 1.5;
   color: #495057;
   background-color: var(--white);
@@ -3004,10 +3004,6 @@ input[type=button].btn-block, input[type=reset].btn-block, input[type=submit].bt
   color: var(--white);
   border-color: var(--blue2);
   background-color: var(--blue2);
-}
-.custom-control-input:focus~.custom-control-label::before {
-  -webkit-box-shadow: 0 0 0 .2rem #002c8c;
-  box-shadow: 0 0 0 .2rem #002c8c;
 }
 .custom-control-input:focus:not(:checked)~.custom-control-label::before {
   border-color: #fbc2b3;
