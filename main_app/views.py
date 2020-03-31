@@ -101,8 +101,10 @@ def ajax_hist(request):
     cntry = cntry.upper()
     cntry1 = Countries[Countries.index(cntry)+1]
     country = (cntry, cntry1)
-    type_ = Types[[x.lower() for x in Types].index(type_.lower())-1]
-
+    
+    if type_.lower() != 'etf':
+        type_ = Types[[x.lower() for x in Types].index(type_.lower())-1]
+    
     for key, value in STATIC_OBJECTS.items():
         if type_.lower() == 'cmdty':
             obj = STATIC_OBJECTS['Commodities']['object']
@@ -112,7 +114,7 @@ def ajax_hist(request):
                 obj = value['object']
                 break
         else:    
-            if value['type'].lower() == type_.lower() and (country[0] in key or country[1] in key):
+            if value['type'].lower() == type_.lower() and (country[0] in key):
                 obj = value['object']
                 break
 
@@ -414,20 +416,21 @@ def asset_details(request, cntry, type_, pk):
         raise Http404(f"Type not found: {type_}")
     
     cntry = cntry.upper()
-    type_ = Types[[x.lower() for x in Types].index(type_.lower())-1]
+    if type_.lower() != 'etf':
+        type_ = Types[[x.lower() for x in Types].index(type_.lower())-1]
     cntry1 = Countries[Countries.index(cntry)+1]
-    country = (cntry, cntry1)
+    country = (cntry, cntry1) # US, United States
     
     for key, value in STATIC_OBJECTS.items():
         if type_.lower() == 'cmdty':
             obj = STATIC_OBJECTS['Commodities']['object']
             break
         elif cntry == 'G':
-            if value['type'] == type_.lower():
+            if value['type'].lower() == type_.lower():
                 obj = value['object']
                 break
         else:    
-            if value['type'] == type_.lower() and (country[0] in key or country[1] in key):
+            if value['type'].lower() == type_.lower() and (country[0] in key):
                 obj = value['object']
                 break
     
