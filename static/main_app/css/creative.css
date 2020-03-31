@@ -1579,10 +1579,10 @@ pre code {
   background-clip: padding-box;
   border: 1px solid #ced4da;
   border-radius: .5rem;
-  -webkit-transition: border-color .15s ease-in-out, -webkit-box-shadow .15s ease-in-out;
-  transition: border-color .15s ease-in-out, -webkit-box-shadow .15s ease-in-out;
-  transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
-  transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out, -webkit-box-shadow .15s ease-in-out;
+  -webkit-transition: border-color .25s ease-in-out, -webkit-box-shadow .25s ease-in-out;
+  transition: border-color .25s ease-in-out, -webkit-box-shadow .25s ease-in-out;
+  transition: border-color .25s ease-in-out, box-shadow .25s ease-in-out;
+  transition: border-color .25s ease-in-out, box-shadow .25s ease-in-out, -webkit-box-shadow .25s ease-in-out;
 }
 @media (prefers-reduced-motion:reduce) {
   .form-control {
@@ -2027,10 +2027,10 @@ textarea.form-control {
   line-height: 1.5;
   border-radius: .5rem;
   /* margin-bottom: 0.5rem; */
-  -webkit-transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, -webkit-box-shadow .15s ease-in-out;
-  transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, -webkit-box-shadow .15s ease-in-out;
-  transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
-  transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out, -webkit-box-shadow .15s ease-in-out;
+  -webkit-transition: color .25s ease-in-out, background-color .25s ease-in-out, border-color .25s ease-in-out, -webkit-box-shadow .25s ease-in-out;
+  transition: color .25s ease-in-out, background-color .25s ease-in-out, border-color .25s ease-in-out, -webkit-box-shadow .25s ease-in-out;
+  transition: color .25s ease-in-out, background-color .25s ease-in-out, border-color .25s ease-in-out, box-shadow .25s ease-in-out;
+  transition: color .25s ease-in-out, background-color .25s ease-in-out, border-color .25s ease-in-out, box-shadow .25s ease-in-out, -webkit-box-shadow .25s ease-in-out;
   white-space: nowrap;
 }
 @media (prefers-reduced-motion:reduce) {
@@ -2526,8 +2526,8 @@ a.btn.disabled, fieldset:disabled a.btn {
 input[type=button].btn-block, input[type=reset].btn-block, input[type=submit].btn-block {
   width: 100%}
 .fade {
-  -webkit-transition: opacity .15s linear;
-  transition: opacity .15s linear;
+  -webkit-transition: opacity .25s linear;
+  transition: opacity .25s linear;
 }
 @media (prefers-reduced-motion:reduce) {
   .fade {
@@ -2544,8 +2544,8 @@ input[type=button].btn-block, input[type=reset].btn-block, input[type=submit].bt
   position: relative;
   height: 0;
   overflow: hidden;
-  -webkit-transition: height .35s ease;
-  transition: height .35s ease;
+  -webkit-transition: height .25s ease;
+  transition: height .25s ease;
 }
 @media (prefers-reduced-motion:reduce) {
   .collapsing {
@@ -3088,10 +3088,10 @@ input[type=button].btn-block, input[type=reset].btn-block, input[type=submit].bt
   height: calc(1rem - 4px);
   background-color: #adb5bd;
   border-radius: .5rem;
-  -webkit-transition: background-color .15s ease-in-out, border-color .15s ease-in-out, -webkit-transform .15s ease-in-out, -webkit-box-shadow .15s ease-in-out;
-  transition: background-color .15s ease-in-out, border-color .15s ease-in-out, -webkit-transform .15s ease-in-out, -webkit-box-shadow .15s ease-in-out;
-  transition: transform .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
-  transition: transform .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out, -webkit-transform .15s ease-in-out, -webkit-box-shadow .15s ease-in-out;
+  -webkit-transition: background-color .25s ease-in-out, border-color .25s ease-in-out, -webkit-transform .25s ease-in-out, -webkit-box-shadow .25s ease-in-out;
+  transition: background-color .25s ease-in-out, border-color .25s ease-in-out, -webkit-transform .25s ease-in-out, -webkit-box-shadow .25s ease-in-out;
+  transition: transform .25s ease-in-out, background-color .25s ease-in-out, border-color .25s ease-in-out, box-shadow .25s ease-in-out;
+  transition: transform .25s ease-in-out, background-color .25s ease-in-out, border-color .25s ease-in-out, box-shadow .25s ease-in-out, -webkit-transform .25s ease-in-out, -webkit-box-shadow .25s ease-in-out;
 }
 @media (prefers-reduced-motion:reduce) {
   .custom-switch .custom-control-label:after {
@@ -3249,10 +3249,10 @@ input[type=button].btn-block, input[type=reset].btn-block, input[type=submit].bt
   background-color: var(--blue2);
   border: 0;
   border-radius: 1rem;
-  -webkit-transition: background-color .15s ease-in-out, border-color .15s ease-in-out, -webkit-box-shadow .15s ease-in-out;
-  transition: background-color .15s ease-in-out, border-color .15s ease-in-out, -webkit-box-shadow .15s ease-in-out;
-  transition: background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
-  transition: background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out, -webkit-box-shadow .15s ease-in-out;
+  -webkit-transition: background-color .25s ease-in-out, border-color .25s ease-in-out, -webkit-box-shadow .25s ease-in-out;
+  transition: background-color .25s ease-in-out, border-color .25s ease-in-out, -webkit-box-shadow .25s ease-in-out;
+  transition: background-color .25s ease-in-out, border-color .25s ease-in-out, box-shadow .25s ease-in-out;
+  transition: background-color .25s ease-in-out, border-color .25s ease-in-out, box-shadow .25s ease-in-out, -webkit-box-shadow .25s ease-in-out;
   -webkit-appearance: none;
   appearance: none;
 }
@@ -3279,10 +3279,10 @@ input[type=button].btn-block, input[type=reset].btn-block, input[type=submit].bt
   background-color: var(--blue2);
   border: 0;
   border-radius: 1rem;
-  -webkit-transition: background-color .15s ease-in-out, border-color .15s ease-in-out, -webkit-box-shadow .15s ease-in-out;
-  transition: background-color .15s ease-in-out, border-color .15s ease-in-out, -webkit-box-shadow .15s ease-in-out;
-  transition: background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
-  transition: background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out, -webkit-box-shadow .15s ease-in-out;
+  -webkit-transition: background-color .25s ease-in-out, border-color .25s ease-in-out, -webkit-box-shadow .25s ease-in-out;
+  transition: background-color .25s ease-in-out, border-color .25s ease-in-out, -webkit-box-shadow .25s ease-in-out;
+  transition: background-color .25s ease-in-out, border-color .25s ease-in-out, box-shadow .25s ease-in-out;
+  transition: background-color .25s ease-in-out, border-color .25s ease-in-out, box-shadow .25s ease-in-out, -webkit-box-shadow .25s ease-in-out;
   -moz-appearance: none;
   appearance: none;
 }
@@ -3312,10 +3312,10 @@ input[type=button].btn-block, input[type=reset].btn-block, input[type=submit].bt
   background-color: var(--blue2);
   border: 0;
   border-radius: 1rem;
-  -webkit-transition: background-color .15s ease-in-out, border-color .15s ease-in-out, -webkit-box-shadow .15s ease-in-out;
-  transition: background-color .15s ease-in-out, border-color .15s ease-in-out, -webkit-box-shadow .15s ease-in-out;
-  transition: background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
-  transition: background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out, -webkit-box-shadow .15s ease-in-out;
+  -webkit-transition: background-color .25s ease-in-out, border-color .25s ease-in-out, -webkit-box-shadow .25s ease-in-out;
+  transition: background-color .25s ease-in-out, border-color .25s ease-in-out, -webkit-box-shadow .25s ease-in-out;
+  transition: background-color .25s ease-in-out, border-color .25s ease-in-out, box-shadow .25s ease-in-out;
+  transition: background-color .25s ease-in-out, border-color .25s ease-in-out, box-shadow .25s ease-in-out, -webkit-box-shadow .25s ease-in-out;
   appearance: none;
 }
 @media (prefers-reduced-motion:reduce) {
@@ -3360,10 +3360,10 @@ input[type=button].btn-block, input[type=reset].btn-block, input[type=submit].bt
   background-color: #adb5bd;
 }
 .custom-control-label::before, .custom-file-label, .custom-select {
-  -webkit-transition: background-color .15s ease-in-out, border-color .15s ease-in-out, -webkit-box-shadow .15s ease-in-out;
-  transition: background-color .15s ease-in-out, border-color .15s ease-in-out, -webkit-box-shadow .15s ease-in-out;
-  transition: background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
-  transition: background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out, -webkit-box-shadow .15s ease-in-out;
+  -webkit-transition: background-color .25s ease-in-out, border-color .25s ease-in-out, -webkit-box-shadow .25s ease-in-out;
+  transition: background-color .25s ease-in-out, border-color .25s ease-in-out, -webkit-box-shadow .25s ease-in-out;
+  transition: background-color .25s ease-in-out, border-color .25s ease-in-out, box-shadow .25s ease-in-out;
+  transition: background-color .25s ease-in-out, border-color .25s ease-in-out, box-shadow .25s ease-in-out, -webkit-box-shadow .25s ease-in-out;
 }
 @media (prefers-reduced-motion:reduce) {
   .custom-control-label:before, .custom-file-label, .custom-select {
@@ -4161,10 +4161,10 @@ input[type=button].btn-block, input[type=reset].btn-block, input[type=submit].bt
   white-space: nowrap;
   vertical-align: baseline;
   border-radius: .25rem;
-  -webkit-transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, -webkit-box-shadow .15s ease-in-out;
-  transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, -webkit-box-shadow .15s ease-in-out;
-  transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
-  transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out, -webkit-box-shadow .15s ease-in-out;
+  -webkit-transition: color .25s ease-in-out, background-color .25s ease-in-out, border-color .25s ease-in-out, -webkit-box-shadow .25s ease-in-out;
+  transition: color .25s ease-in-out, background-color .25s ease-in-out, border-color .25s ease-in-out, -webkit-box-shadow .25s ease-in-out;
+  transition: color .25s ease-in-out, background-color .25s ease-in-out, border-color .25s ease-in-out, box-shadow .25s ease-in-out;
+  transition: color .25s ease-in-out, background-color .25s ease-in-out, border-color .25s ease-in-out, box-shadow .25s ease-in-out, -webkit-box-shadow .25s ease-in-out;
 }
 @media (prefers-reduced-motion:reduce) {
   .badge {
@@ -8825,10 +8825,10 @@ th {
   border-radius: 0.5rem;
 }
 .news-card:hover {
-  -webkit-transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, -webkit-box-shadow .15s ease-in-out;
-  transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, -webkit-box-shadow .15s ease-in-out;
-  transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
-  transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out, -webkit-box-shadow .15s ease-in-out;
+  -webkit-transition: color .25s ease-in-out, background-color .25s ease-in-out, border-color .25s ease-in-out, -webkit-box-shadow .25s ease-in-out;
+  transition: color .25s ease-in-out, background-color .25s ease-in-out, border-color .25s ease-in-out, -webkit-box-shadow .25s ease-in-out;
+  transition: color .25s ease-in-out, background-color .25s ease-in-out, border-color .25s ease-in-out, box-shadow .25s ease-in-out;
+  transition: color .25s ease-in-out, background-color .25s ease-in-out, border-color .25s ease-in-out, box-shadow .25s ease-in-out, -webkit-box-shadow .25s ease-in-out;
   -webkit-box-shadow: 0 .5rem 0.5rem rgba(0, 0, 0, .3);
   box-shadow: 0 .5rem 0.5rem rgba(0, 0, 0, .3);
 }
@@ -9340,11 +9340,11 @@ tbody {
 .searchTerm:focus, .searchButton:focus {
   background: var(--gray1);
   color: var(--white);
-  -webkit-transition: all .35s ease-out;
-  -moz-transition: all .35s ease-out;
-  -ms-transition: all .35s ease-out;
-  -o-transition: all .35s ease-out;
-  transition: all .35s ease-out
+  -webkit-transition: all .25s ease-out;
+  -moz-transition: all .25s ease-out;
+  -ms-transition: all .25s ease-out;
+  -o-transition: all .25s ease-out;
+  transition: all .25s ease-out
 }
 .searchTerm:focus::placeholder {
   color: var(--white);
@@ -9358,11 +9358,11 @@ tbody {
 .searchTerm:focus + .searchButton {
   background: var(--gray1);
   color: var(--white);
-  -webkit-transition: all .35s ease-out;
-  -moz-transition: all .35s ease-out;
-  -ms-transition: all .35s ease-out;
-  -o-transition: all .35s ease-out;
-  transition: all .35s ease-out;
+  -webkit-transition: all .25s ease-out;
+  -moz-transition: all .25s ease-out;
+  -ms-transition: all .25s ease-out;
+  -o-transition: all .25s ease-out;
+  transition: all .25s ease-out;
 }
 .searchTerm:focus + .searchButton:hover {
   background: var(--gray2);
