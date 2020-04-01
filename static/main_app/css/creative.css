@@ -2729,6 +2729,11 @@ input[type=button].btn-block, input[type=reset].btn-block, input[type=submit].bt
   background-color: transparent;
   border: 0;
   border-radius: 0;
+  -webkit-transition: all .25s ease-out;
+  -moz-transition: all .25s ease-out;
+  -ms-transition: all .25s ease-out;
+  -o-transition: all .25s ease-out;
+  transition: all .25s ease-out;
 }
 .dropdown-item:hover {
   color: var(--gray1)!important;
@@ -9344,7 +9349,7 @@ tbody {
   -moz-transition: all .25s ease-out;
   -ms-transition: all .25s ease-out;
   -o-transition: all .25s ease-out;
-  transition: all .25s ease-out
+  transition: all .25s ease-out;
 }
 .searchTerm:focus::placeholder {
   color: var(--white);

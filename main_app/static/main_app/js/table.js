@@ -1,5 +1,3 @@
-if (window.location.href.includes('all/')) {
-    // || window.location.href.endsWith('dev/')
 $(function(){
     var container = $('.market-table')
     $('<div class="h-100 lds-dual-ring-md"></div>').appendTo(container)
@@ -73,4 +71,3 @@ $(function(){
         });
     };
 });
-}

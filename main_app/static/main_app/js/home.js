@@ -1,4 +1,3 @@
-if (window.location.pathname == '/dev/' ){
 $(function(){
     var country = $('#pr-1 .btn-primary.active input').attr('id')
     var type_ = $('#pl-1 .btn-primary.active input').attr('id')
@@ -149,4 +148,3 @@ $(function(){
         })
     }
 });
-};

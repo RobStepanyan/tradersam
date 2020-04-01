@@ -23,13 +23,12 @@
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700&display=swap" rel="stylesheet">
 
   <!-- Plugin CSS -->
-  <link href="{% static 'main_app/vendor/magnific-popup/magnific-popup.css' %}" rel="stylesheet">
   <link href="{% static 'main_app/vendor/slick/slick.css' %}" rel="stylesheet" type="text/css"/>
   <link href="{% static 'main_app/vendor/slick/slick-theme.css' %}" rel="stylesheet" type="text/css"/>
 
   <!-- Theme CSS - Includes Bootstrap -->
   <link href="{% static 'main_app/css/creative.css' %}" rel="stylesheet">
-
+  {% block head %}{% endblock head %}
 </head>
 <body id="page-top">
 
@@ -65,7 +64,19 @@
           </li>
           {% if user.is_authenticated %}
             <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="{% url 'profile' %}">Profile</a>
+              <div class="dropdown show">
+                <a class="nav-link dropdown-toggle m-0" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Account
+                </a>
+              
+                <div class="dropdown-menu w-auto" aria-labelledby="dropdownMenuLink">
+                  <a class="dropdown-item" href="{% url 'account' %}">Personal Info</a>
+                  <a class="dropdown-item" href="{% url 'account' %}">Watchlists</a>
+                  <a class="dropdown-item" href="{% url 'account' %}">Alerts</a>
+                  <a class="dropdown-item" href="{% url 'account' %}">Portfolio</a>
+                  <a class="dropdown-item" href="{% url 'account' %}">Portfolio Builder</a>
+                </div>
+              </div>
             </li>
             <li class="nav-item">
               <a class="nav-link js-scroll-trigger" href="{% url 'logout' %}">Log out</a>
@@ -83,21 +94,19 @@
     </div>
   </nav>
   
-	{% block content %}{% endblock %}
+	{% block content %}{% endblock content %}
   <!-- Bootstrap core JavaScript -->
   <script src="{% static 'main_app/vendor/jquery/jquery.min.js' %}"></script>
   <script src="{% static 'main_app/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 
   <!-- Plugin JavaScript -->
   <script src="{% static 'main_app/vendor/jquery-easing/jquery.easing.min.js' %}"></script>
-  <script src="{% static 'main_app/vendor/magnific-popup/jquery.magnific-popup.min.js' %}"></script>
   <script src="{% static 'main_app/vendor/slick/slick.js' %}"></script>
   <script src="{% static 'main_app/js/underscore-min.js' %}"></script>
 
   <!-- Custom scripts for this template -->
   <script src="{% static 'main_app/js/creative.js' %}"></script>
-  <script src="{% static 'main_app/js/table.js' %}"></script>
-  <script src="{% static 'main_app/js/home.js' %}"></script>
+  {% block bodyend %}{% endblock bodyend %}
 
 </body>
 
