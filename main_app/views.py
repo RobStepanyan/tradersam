@@ -239,19 +239,19 @@ def ajax_all(request):
 
     plural_i = [i.upper() for i in Types_plural].index(type_.upper())
     type_ = Types_plural[plural_i-1]
-
+    
     for key, value in STATIC_OBJECTS.items():
-        if type_ == 'cmdty':
+        if type_.lower() == 'cmdty':
             obj = STATIC_OBJECTS['Commodities']['object']
             fields = STATIC_OBJECTS['Commodities']['live fields']
             break
-        elif country == 'G':
+        elif country.upper() == 'G':
             if value['type'] == type_:
                 obj = value['object']
                 fields = value['live fields']
                 break
         else:    
-            if value['type'] == type_ and (country[0] in key or country[1] in key):
+            if value['type'].lower() == type_.lower() and country.lower() in key.lower():
                 obj = value['object']
                 fields = value['live fields']
                 break
@@ -563,8 +563,11 @@ def all_assets(request, cntry, type_):
     type_ = (Types_plural[plural_i-1], Types_plural[plural_i]) # ('cmdty', 'Commodities)
     time = timezone.now()
 
-    if (type_[0] in ['cmdty', 'crncy', 'crptcrncy'] and country[0] != 'G') or (not type_[0] in ['cmdty', 'crncy', 'crptcrncy'] and country[0] == 'G'):
-        return redirect(reverse('all-assets', args=('us', type_[1].lower())))
+    if (type_[0] in ['cmdty', 'crncy', 'crptcrncy'] and country[0] != 'G'):
+        return redirect(reverse('all-assets', args=('us', 'indices')))
+    elif not type_[0] in ['cmdty', 'crncy', 'crptcrncy'] and country[0] == 'G':
+        return redirect(reverse('all-assets', args=('g', type_[1].lower())))
+
     context = {
         'country': country,
         'type': type_,
