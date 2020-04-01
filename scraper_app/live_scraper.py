@@ -28,6 +28,7 @@ class CollectLive:
         self.no = list(STATIC_OBJECTS.keys()).index(self.title)
         tabs = self.__class__.get_tabs(self)
         self.tab = tabs[self.no]
+        self.link_list = [i[0] for i in self.object_.objects.values_list('link')]
         self.__class__.init_tab(self)
 
     def init_tab(self):
@@ -106,7 +107,7 @@ class CollectLive:
             except AttributeError:
                 sleep(1)
         
-        link_list = [i[0] for i in self.object_.objects.values_list('link')]
+        link_list = self.link_list
         for tr in table.find_all('tr')[1:]:
             if tr.find('a') is None:
                 continue
@@ -232,7 +233,7 @@ class CollectLive:
                 for time_frame, hist_model in hist_objects.items():
                     if time_frame[-1] == 'D':
                         if last_obj_count[time_frame] == 0 or now - datetime.timedelta(minutes=minutes_[time_frame]) > last_obj[time_frame].date:
-                            # if there's no data at all or latest data is older (smaller) tahn needed
+                            # if there's no data at all or latest data is older (smaller) than needed
                             # send (Save) data
                             hist_model(
                             Type=self.type_,
@@ -247,8 +248,9 @@ class CollectLive:
                             ).save() 
                             print(f'{self.title}: saved HISTORICAL{time_frame}')
                     else:
-                        if now.date == last_obj[time_frame].date:
-                            hist_model.objects.filter(link=link).order_by('-id').first().delete()
+                        if last_obj[time_frame]:
+                            if now.date == last_obj[time_frame].date:
+                                hist_model.objects.filter(link=link).order_by('-id').first().delete()
                         hist_model(
                         Type=self.type_,
                             link=link,
@@ -405,13 +407,6 @@ def run_after_live(link, type_, after_fields, title):
     
 
         
-# from scraper_app import live_scraper
-# Logic of current module
-# 1. init selenium tabs
-# 2. loop and collect live data
-# 3. Check condition
-# 4. Call appropriate function
-# 5. Repeat
 def run_after_live_thread():
     global after_live_thread_alive, after_live_threads
 
@@ -421,6 +416,7 @@ def run_after_live_thread():
         Thread(target=run_after_live, 
         args=(args['link'], args['type'], args['after fields'], args['title'])).start()
 
+# Main function
 try:
     after_live_threads = []
     after_live_thread_alive = False

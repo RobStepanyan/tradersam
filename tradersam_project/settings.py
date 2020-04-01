@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'main_app.apps.MainAppConfig',
     'users_app.apps.UsersAppConfig',
     'scraper_app.apps.ScraperAppConfig',
+    'django_extensions',
 ]
 
 MIDDLEWARE = [
