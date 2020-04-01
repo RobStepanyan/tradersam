@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth import login as Login
 from django.contrib.auth import logout as Logout
 from django.contrib.auth.models import User
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse, HttpResponse, Http404
 from django.contrib.sites.shortcuts import get_current_site  
 from django.utils.encoding import force_bytes, force_text  
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode  
@@ -86,7 +86,10 @@ def logout(request):
         messages.success(request, f'Successfuly logged out.')
     return render(request, 'main_app/home.html')
 
-def profile(request):
-    return HttpResponse('Profile')
+def account(request, tab):
+    valid_tabs = ['personal-info', 'watchlists', 'alerts', 'portfolio', 'portfolio-builder']
+    if not tab in valid_tabs:
+        raise Http404(f'Tab is not found: {tab}')
+    return render(request, 'users_app/account.html', context={'data': tab.title()})
 
         
