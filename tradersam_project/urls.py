@@ -31,5 +31,5 @@ urlpatterns = [
     path('activate/<uidb64>/<token>/', users_views.signup_activation, name='signup-activate'),
     path('login/', users_views.login, name='login'),
     path('logout/', users_views.logout, name='logout'),
-    path('profile/', users_views.profile, name='profile'),
+    path('account/<str:tab>/', users_views.account, name='account'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
