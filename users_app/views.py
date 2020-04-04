@@ -28,6 +28,7 @@ def signup(request):
                 'users_app/sign_up_activation.html',
                 {
                     'user': user,
+                    'request': request,
                     'domain': current_url.domain,
                     'uid': urlsafe_base64_encode(force_bytes(user.id)),
                     'token': account_activation_token.make_token(user) 
@@ -69,9 +70,14 @@ def login(request):
         if form.is_valid():
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
+            remember = form.cleaned_data.get('remember')
             user = authenticate(request, username=username, password=password)
             if user:
                 Login(request, user)
+                if not remember:
+                    request.session.set_expiry(0)
+                # else:
+                #     request.session.set_expiry(60*60*24*2)
                 return redirect('home')
             else:
                 messages.error(request, 'Wrong Username/Email or Password')
@@ -86,10 +92,13 @@ def logout(request):
         messages.success(request, f'Successfuly logged out.')
     return render(request, 'main_app/home.html')
 
-def account(request, tab):
-    valid_tabs = ['personal-info', 'watchlists', 'alerts', 'portfolio', 'portfolio-builder']
-    if not tab in valid_tabs:
-        raise Http404(f'Tab is not found: {tab}')
-    return render(request, 'users_app/account.html', context={'data': tab.title()})
+def account(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+    return render(request, 'users_app/account.html')
+
+def ajax_account(request):
+    dep = request.GET.get('dep')
+    return JsonResponse({'result': dep})
 
         
