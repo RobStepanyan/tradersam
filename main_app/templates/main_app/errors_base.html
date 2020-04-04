@@ -10,6 +10,16 @@
     <!-- Theme CSS - Includes Bootstrap -->
 		<link href="{% static 'main_app/css/creative.css' %}" rel="stylesheet">
 </head>
+<body class="d-flex flex-column">
+  <div id="page-content">
+		<div class="container h-100">
+			<div class="row h-100 align-items-center justify-content-center text-center">
+				<div class="col-lg-10 align-self-end">
   {% block content %}{% endblock %}
+        <a class="btn btn-primary btn-xl js-scroll-trigger" href="/">Go to Homepage!</a>
+      </div>
+    </div>
+  </div>
+</div>
 </body>
 </html>
