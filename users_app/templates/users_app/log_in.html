@@ -28,8 +28,8 @@
         </div>
 
         <div class="custom-control custom-checkbox mb-3">
-          <input type="checkbox" class="custom-control-input border-0" id="customCheck1">
-          <label class="custom-control-label" for="customCheck1">Remember password</label>
+          {{ form.remember }}
+          <label class="custom-control-label" for="{{ form.remember.id_for_label }}">Remember password</label>
         </div>
         <button class="btn btn-primary btn-xl btn-block" type="submit">Log In</button>
       </form>

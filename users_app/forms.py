@@ -4,16 +4,16 @@ from django.contrib.auth.forms import UserCreationForm
 
 class UserSignUpForm(UserCreationForm):
     username = forms.CharField(widget=forms.TextInput(attrs={
-        'type':'username', 'id':'username', 'class':'form-control', 'placeholder':'Username', 'required':'True', 'autofocus':'True'}))
+        'type':'username', 'id':'username', 'class':'form-control', 'placeholder':'Username', 'autofocus':'True'}))
 
     email = forms.EmailField(widget=forms.EmailInput(attrs={
-        'type':'email', 'id':'email', 'class':'form-control', 'placeholder':'Email Address', 'required':'True'}))
+        'type':'email', 'id':'email', 'class':'form-control', 'placeholder':'Email Address'}))
 
     password1 = forms.CharField(widget=forms.PasswordInput(attrs={
-        'type':'password', 'id':'password1', 'class':'form-control', 'placeholder':'Password', 'required':'True'}))
+        'type':'password', 'id':'password1', 'class':'form-control', 'placeholder':'Password'}))
 
     password2 = forms.CharField(widget=forms.PasswordInput(attrs={
-        'type':'password', 'id':'password2', 'class':'form-control', 'placeholder':'Confirm Password', 'required':'True'}))
+        'type':'password', 'id':'password2', 'class':'form-control', 'placeholder':'Confirm Password'}))
     
     class Meta:
         model = User
@@ -21,8 +21,10 @@ class UserSignUpForm(UserCreationForm):
 
 class UserLogInForm(forms.Form):
     username = forms.CharField(widget=forms.TextInput(attrs={
-        'type':'username', 'id':'username', 'class':'form-control', 'placeholder':'Username', 'required':'True', 'autofocus':'True'}))
+        'type':'username', 'id':'username', 'class':'form-control', 'placeholder':'Username', 'autofocus':'True'}))
     
     password = forms.CharField(widget=forms.PasswordInput(attrs={
-        'type':'password', 'id':'password', 'class':'form-control', 'placeholder':'Confirm Passsword', 'required':'True'}))
-        
+        'type':'password', 'id':'password', 'class':'form-control', 'placeholder':'Confirm Passsword'}))
+    
+    remember = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs={
+        'type':'checkbox', 'class':'custom-control-input border-0', 'id':'customCheck1'}))
