@@ -6812,8 +6812,8 @@ a.bg-dark:focus, a.bg-dark:hover, button.bg-dark:focus, button.bg-dark:hover {
   box-shadow: 0 .125rem .25rem rgba(0, 0, 0, .075)!important;
 }
 .shadow {
-  -webkit-box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15)!important;
-  box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15)!important;
+  -webkit-box-shadow: 0 0.5rem 0.5rem rgba(0, 0, 0, .3);
+  box-shadow: 0 0.5rem 0.5rem rgba(0, 0, 0, .3);
 }
 .shadow-lg {
   -webkit-box-shadow: 0 1rem 3rem rgba(0, 0, 0, .175)!important;
@@ -9528,4 +9528,94 @@ tbody {
     position:absolute;
   }
 }
-
+.tab {
+  width: 100%;
+  color: var(--gray1);
+  background: var(--white);
+  border-radius: .5rem;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border: 2px solid white;
+  margin-bottom: -2px;
+  margin-right: 8px;
+  padding: 4px;
+  white-space: nowrap;
+  box-shadow: none!important;
+  -webkit-box-shadow: none!important;
+  cursor: pointer;
+}
+.tab:hover {
+  color: var(--blue2);
+  background: var(--white);
+}
+.tab.active {
+  color: var(--white);
+  background: var(--gray1);
+  border-bottom-color: transparent;
+}
+.tab.active:hover {
+  color: var(--white)!important;
+}
+.tab h4, h5 {
+  margin-bottom: 0;
+}
+.tab-panel {
+  display: flex;
+  width: 100%;
+}
+.d-contents {
+  display: contents;
+}
+.dual-ring-dark::after {
+  border-color: var(--gray1) transparent var(--gray1) transparent;
+}
+.account-card {
+  border: 1px solid var(--gray6);
+  border-radius: .5rem;
+  padding: 16px 8px;
+  background: var(--white);
+  -webkit-box-shadow: 0 0.5rem 0.5rem rgba(0, 0, 0, .3);
+  box-shadow: 0 0.5rem 0.5rem rgba(0, 0, 0, .3);
+}
+.account-card .col-lg-6 {
+  padding: 0 8px;
+  margin: 4px 0;
+}
+.account-input {
+  font-weight: bold;
+  border-radius: .5rem;
+  border: 1px solid var(--gray5);
+  padding: 5px 10px;
+  width: 100%;
+}
+.account-label {
+  display: block;
+  font-size: 1rem;
+  font-weight: bold;
+}
+#watchlist-row {
+  padding: 0 8px;
+}
+#watchlist-row .col-lg-6 {
+  padding: 8px;
+}
+.watchlist {
+  min-height: 400px;
+  max-height: 700px;
+}
+.watchlist.empty {
+  background: transparent;
+  border: 2px dashed var(--white);
+  display: flex;
+}
+.watchlist.empty .text-container {
+  text-align: center;
+  margin: auto;
+  color: var(--white);
+}
+.watchlist h3 {
+  text-align: center;
+  border-bottom: 2px solid var(--gray5);
+  margin: 0;
+  padding-bottom: 8px;
+}

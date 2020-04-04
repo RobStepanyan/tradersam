@@ -64,7 +64,7 @@
           </li>
           {% if user.is_authenticated %}
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'account' 'personal-info' %}">Account</a>
+              <a class="nav-link" href="{% url 'account' %}">Account</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="{% url 'logout' %}">Log out</a>
@@ -81,7 +81,7 @@
       </div>
     </div>
   </nav>
-
+  {% block content %}{% endblock content %}
   <!-- Footer -->
   <footer class="bg-dark py-4">
     <div class="container">
@@ -118,7 +118,6 @@
       </div>
     </div>
   </footer>
-	{% block content %}{% endblock content %}
   <!-- Bootstrap core JavaScript -->
   <script src="{% static 'main_app/vendor/jquery/jquery.min.js' %}"></script>
   <script src="{% static 'main_app/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>

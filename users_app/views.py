@@ -99,6 +99,14 @@ def account(request):
 
 def ajax_account(request):
     dep = request.GET.get('dep')
-    return JsonResponse({'result': dep})
+    if dep == 'account-info':
+        user = request.user
+        email = user.email
+        username = user.username
+        return JsonResponse({'email': email, 'username': username})
+    elif dep == 'watchlists':
+        return JsonResponse({})
+    else:
+        raise Http404(f'Department is not found {dep}')
 
         
