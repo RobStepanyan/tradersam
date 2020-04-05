@@ -9593,11 +9593,22 @@ tbody {
   font-size: 1rem;
   font-weight: bold;
 }
-#watchlist-row {
-  padding: 0 8px;
+@media (min-width: 576px){
+  #watchlist-row {
+    padding: 0 8px;
+  }
+  #watchlist-row>.col-lg-6 {
+    padding: 8px;
+  }
 }
-#watchlist-row .col-lg-6 {
-  padding: 8px;
+@media (max-width: 576px){
+  #main-container .col-lg-10 {
+    padding: 0;
+  }
+  #watchlist-row>.col-lg-6 {
+    padding: 0;
+    padding-bottom: 16px;
+  }
 }
 .watchlist {
   min-height: 400px;
@@ -9606,7 +9617,19 @@ tbody {
 .watchlist.empty {
   background: transparent;
   border: 2px dashed var(--white);
+  height: 100%;
   display: flex;
+}
+.watchlist.empty:hover {
+  background: var(--white);
+  transition: all .35s ease-out;
+  border-color: var(--gray1);
+}
+.watchlist.empty:hover .text-container {
+  color: var(--gray1);
+}
+.watchlist.empty:active {
+  transform: scale(0.99);
 }
 .watchlist.empty .text-container {
   text-align: center;
@@ -9615,7 +9638,12 @@ tbody {
 }
 .watchlist h3 {
   text-align: center;
-  border-bottom: 2px solid var(--gray5);
   margin: 0;
   padding-bottom: 8px;
+}
+.watchlist th {
+  border: none;
+}
+#main-container {
+  min-height: 450px;
 }
