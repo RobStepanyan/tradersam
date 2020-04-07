@@ -42,7 +42,6 @@ class CollectLive:
         self.tab = tabs[self.no]
         self.link_list = [i[0] for i in self.object_.objects.values_list('link')]
         self.__class__.init_tab(self)
-        self.times = []
 
         self.last_obj_count = {}
         self.last_obj = {}
@@ -445,13 +444,11 @@ try:
 
     Thread(target=run_after_live_thread).start()
     # # launch live
-    # while True:    
-    start = time.time()
-    for instance in instances:
-        instance.live_on()
-    results.append(round(time.time()-start, 2))
-    for instance in instances:
-        print(instance.times)
+    while True:    
+        start = time.time()
+        for instance in instances:
+            instance.live_on()
+        # results.append(round(time.time()-start, 2))
 
 finally:
     driver.quit()
@@ -459,6 +456,6 @@ finally:
     print('Driver is closed!')
     print(f'Init took: {results[0]} seconds')
     if len(results[1:]) != 0:
-        print(f'Average loop took: {sum(results[1:])/len(results[1:])} seconds')        
+        print(f'Last loop took: {time.time()-start} seconds')        
 
             
