@@ -10,7 +10,7 @@
   <div class="container">
     <div class="row justify-content-between m-0 p-0">
       <div>
-        <h3 class="text-gray-5 m-0">{{ asset.long }}</h3>
+        <h3 class="text-gray-5 m-0">{{ asset.long_name }}</h3>
         <h2 class="text-white m-0">
           {% if asset.country != 'G' %}
             {% with 'main_app/svg/flags/'|add:asset.country|lower|add:'.svg' as flag_static %}
