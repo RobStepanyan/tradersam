@@ -8,6 +8,18 @@ from . import models
 
 
 class CollectLive:
+    hist_objects = {
+    '1D': models.AllAssetsHistorical1D, '5D': models.AllAssetsHistorical5D, '6M1M': models.AllAssetsHistorical6M1M, 
+    '1Y': models.AllAssetsHistorical1Y, '5Y': models.AllAssetsHistorical5Y, 'Max': models.AllAssetsHistoricalMax
+    }
+    hours_ = {
+        '1D': 24, '5D': 24*5, '6M1M': 24*30, 
+        '1Y': 24*365, '5Y': 24*365*5
+    }
+    minutes_ = {
+        '1D': 1, '5D': 5, '6M1M': 1, 
+    }
+
     # this function is also used to fetch global variables to the class
     def get_tabs(self):
         global driver
@@ -30,6 +42,17 @@ class CollectLive:
         self.tab = tabs[self.no]
         self.link_list = [i[0] for i in self.object_.objects.values_list('link')]
         self.__class__.init_tab(self)
+        self.times = []
+
+        self.last_obj_count = {}
+        self.last_obj = {}
+        
+        for k, v in self.__class__.hist_objects.items():
+            self.last_obj_count[k] = v.objects.filter(Type=self.type_).count()
+            if self.last_obj_count[k] > 0:
+                self.last_obj[k] = v.objects.filter(Type=self.type_).order_by('-id').first()
+            else:
+                self.last_obj[k] = None
 
     def init_tab(self):
         driver.switch_to.window(self.tab)
@@ -139,6 +162,7 @@ class CollectLive:
                 is_closed = True
             else:
                 is_closed = False
+            
             if not is_closed:
                 # if the market is open collect the live data
                 live_data = {}
@@ -165,15 +189,15 @@ class CollectLive:
                 models.AllAssetsLive.objects.filter(link=link).delete()
                 try:
                     if self.type_ == 'crptcrncy':
-                        time = now
+                        time_ = now
                     elif len(live_data['Time']) <=5:
-                        time = datetime.datetime.strptime(str(now.year)+str(live_data['Time']), '%Y%d/%m')
+                        time_ = datetime.datetime.strptime(str(now.year)+str(live_data['Time']), '%Y%d/%m')
                     else:
-                        time = datetime.datetime.strptime(
+                        time_ = datetime.datetime.strptime(
                                 timezone.now().date().strftime('%Y:%m:%d:')+str(live_data['Time']), '%Y:%m:%d:%H:%M:%S')
-                        time = timezone.make_aware(time)
+                        time_ = timezone.make_aware(time_)
                 except:
-                    time = None
+                    time_ = None
                 try:
                     if self.type_ == 'cmdty':
                         if live_data['Month'] is None:
@@ -186,6 +210,7 @@ class CollectLive:
                     live_data['Month'] = None
                 if not '%' in live_data['Chg. %']:
                     live_data['Chg. %'] += '%'
+                
                 models.AllAssetsLive(
                     Type=self.type_,
                     link=link,
@@ -206,33 +231,14 @@ class CollectLive:
                     total_vol=validate_price(live_data['Total Vol.']),
                     total_assets=validate_price(live_data['Total Assets']),
                 
-                    time=time
+                    time=time_
                 ).save()
                 print(f'{self.title}: saved Live')
-
-                last_obj_count = {}
-                last_obj = {}
-                hist_objects = {
-                '1D': models.AllAssetsHistorical1D, '5D': models.AllAssetsHistorical5D, '6M1M': models.AllAssetsHistorical6M1M, 
-                '1Y': models.AllAssetsHistorical1Y, '5Y': models.AllAssetsHistorical5Y, 'Max': models.AllAssetsHistoricalMax
-                }
-                hours_ = {
-                    '1D': 24, '5D': 24*5, '6M1M': 24*30, 
-                    '1Y': 24*365, '5Y': 24*365*5
-                }
-                minutes_ = {
-                    '1D': 1, '5D': 5, '6M1M': 1, 
-                }
-                for k, v in hist_objects.items():
-                    last_obj_count[k] = v.objects.filter(link=link).count()
-                    if last_obj_count[k] > 0:
-                        last_obj[k] = v.objects.filter(link=link).order_by('-id').first()
-                    else:
-                        last_obj[k] = None
-
-                for time_frame, hist_model in hist_objects.items():
+                
+                
+                for time_frame, hist_model in self.__class__.hist_objects.items():
                     if time_frame[-1] == 'D':
-                        if last_obj_count[time_frame] == 0 or now - datetime.timedelta(minutes=minutes_[time_frame]) > last_obj[time_frame].date:
+                        if self.last_obj_count[time_frame] == 0 or now - datetime.timedelta(minutes=self.__class__.minutes_[time_frame]) > self.last_obj[time_frame].date:
                             # if there's no data at all or latest data is older (smaller) than needed
                             # send (Save) data
                             hist_model(
@@ -248,8 +254,8 @@ class CollectLive:
                             ).save() 
                             print(f'{self.title}: saved HISTORICAL{time_frame}')
                     else:
-                        if last_obj[time_frame]:
-                            if now.date == last_obj[time_frame].date:
+                        if self.last_obj[time_frame]:
+                            if now.date == self.last_obj[time_frame].date:
                                 hist_model.objects.filter(link=link).order_by('-id').first().delete()
                         hist_model(
                         Type=self.type_,
@@ -265,8 +271,8 @@ class CollectLive:
                         print(f'{self.title}: saved HISTORICAL{time_frame}')
 
                     if time_frame != 'Max':
-                        if last_obj_count[time_frame]:
-                            data1 = last_obj[time_frame].date
+                        if self.last_obj_count[time_frame]:
+                            data1 = self.last_obj[time_frame].date
                             if time_frame[-1] == 'D': 
                                 data2 = now
                             else:
@@ -274,9 +280,9 @@ class CollectLive:
                             diff = data2 - data1
                             days, seconds = diff.days, diff.seconds
                             hours = days * 24 + seconds // 3600
-                            if hours > hours_[time_frame]:
+                            if hours > self.__class__.hours_[time_frame]:
                                 hist_model.objects.filter(link=link).order_by('id')[0].delete()
-
+                
             elif is_closed:
                 # check whether "after live data" for today is available
                 last_obj_after_count = models.AllAssetsAfterLive.objects.filter(link=link).count()
@@ -289,7 +295,7 @@ class CollectLive:
                         )
             else:
                 print('Time Icon is not found/recognized')
-
+            
     def __repr__(self):
         return self.title
 
@@ -439,11 +445,13 @@ try:
 
     Thread(target=run_after_live_thread).start()
     # # launch live
-    while True:    
-        start = time.time()
-        for instance in instances:
-            instance.live_on()
-        results.append(round(time.time()-start, 2))
+    # while True:    
+    start = time.time()
+    for instance in instances:
+        instance.live_on()
+    results.append(round(time.time()-start, 2))
+    for instance in instances:
+        print(instance.times)
 
 finally:
     driver.quit()
