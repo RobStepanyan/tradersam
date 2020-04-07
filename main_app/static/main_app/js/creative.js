@@ -117,3 +117,5 @@ $('.searchTerm').click(function(){
 $(document).click(function(){
   $('#search-collapse').collapse('hide')
 });
+
+$('[data-toggle="tooltip"]').tooltip();
