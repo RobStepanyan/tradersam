@@ -152,7 +152,8 @@ class CollectLive:
                     tds.append(td.get_text().strip())
             
             now = timezone.now()
-            is_closed = 0
+            
+            is_closed = False
             
             if self.type_ == 'crncy' and len(tr.find_all('td')[-1].get_text()) <=5:
                 is_closed = True
@@ -160,8 +161,6 @@ class CollectLive:
                 is_closed = False
             elif 'redClockIcon' in tr.find_all('td')[-1].span['class']:
                 is_closed = True
-            else:
-                is_closed = False
             
             if not is_closed:
                 # if the market is open collect the live data
@@ -183,7 +182,7 @@ class CollectLive:
                 
                 if not self.type_ in ['bnd', 'crptcrncy']:
                     try:
-                        live_data['Prev. Close'] = round(float(live_data['Last'].replace(',','')) + float(live_data['Chg.']), 2)
+                        live_data['Prev. Close'] = round(float(live_data['Last'].replace(',','')) - float(live_data['Chg.']), 2)
                     except:
                         pass
                 models.AllAssetsLive.objects.filter(link=link).delete()
@@ -444,7 +443,7 @@ try:
     print('Init finished')
 
     Thread(target=run_after_live_thread).start()
-    # # launch live
+    # launch live
     while True:    
         start = time.time()
         for instance in instances:
