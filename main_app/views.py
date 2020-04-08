@@ -143,6 +143,15 @@ def ajax_hist(request):
             # data older is removed
             if dct['date'] < last_date.date() or dct['date'] is None:
                 continue
+        elif time_frame[-1] == 'D':
+            days = int(time_frame[0])
+            today = timezone.now()
+            last_date = today - relativedelta(days=days)
+            dct = model_to_dict(model)
+            # for example if 1M is selected than any
+            # data older is removed
+            if dct['date'] < last_date.date() or dct['date'] is None:
+                continue
         else:
             dct = model_to_dict(model)
         hist_data.append(dct)
