@@ -150,7 +150,7 @@ def ajax_hist(request):
             dct = model_to_dict(model)
             # for example if 1M is selected than any
             # data older is removed
-            if dct['date'] < last_date.date() or dct['date'] is None:
+            if dct['date'].date() < last_date.date() or dct['date'] is None:
                 continue
         else:
             dct = model_to_dict(model)
