@@ -1,10 +1,12 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from .forms import UserSignUpForm, UserLogInForm
+from django.core.exceptions import ValidationError, PermissionDenied
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as Login
 from django.contrib.auth import logout as Logout
 from django.contrib.auth.models import User
+from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.http import JsonResponse, HttpResponse, Http404
 from django.contrib.sites.shortcuts import get_current_site  
 from django.utils.encoding import force_bytes, force_text  
@@ -113,4 +115,24 @@ def ajax_account(request):
     else:
         raise Http404(f'Department is not found {dep}')
 
-        
+def ajax_change_username(request):
+    new_username = request.GET.get('username')
+    success_message = 'Username have been successfuly changed.'
+    exists_message = 'A user with that username already exists.'
+    
+    if not request.user.is_authenticated:
+        raise PermissionDenied('User is not authenticated')
+    try:
+        UnicodeUsernameValidator()(new_username)
+    except ValidationError as e:
+        # if new_username is not valid
+        return JsonResponse({'valid':False, 'message': e.message})
+
+    # if new_username is valid
+    user = request.user
+    if User.objects.exclude(pk=user.pk).filter(username=new_username).exists():
+        return JsonResponse({'valid':False, 'message': exists_message})
+    else:
+        user.username = new_username
+        user.save()
+        return JsonResponse({'valid': True, 'message': success_message})

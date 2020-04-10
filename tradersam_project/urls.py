@@ -32,5 +32,6 @@ urlpatterns = [
     path('login/', users_views.login, name='login'),
     path('logout/', users_views.logout, name='logout'),
     path('account/', users_views.account, name='account'),
-    path('ajax/account/', users_views.ajax_account, name='ajax-account')
+    path('ajax/account/', users_views.ajax_account, name='ajax-account'),
+    path('ajax/account/change-username/', users_views.ajax_change_username, name='ajax-change-username')
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

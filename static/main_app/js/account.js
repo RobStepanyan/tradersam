@@ -23,6 +23,38 @@ function loadHTML() {
     dep = $('.tab.active').attr('id')
     if (dep == 'security') {
         $(html_templates['security']).appendTo(container)
+        $('#personal-button').click(function(){
+          email = $('input#email').val()
+          username = $('input#username').val()
+
+          if (email == init_email && username != init_username) {
+            $.ajax({
+              url: '/ajax/account/change-username/',
+              data: {
+                'username': username
+              },
+              success: function(data){
+                if (data['valid']){
+                  message = 
+                  `
+                  <ul class="px-2" id="message">
+                  <li class="text-success font-weight-bold list-unstyled">${data['message']}</li>
+                  </ul>
+                  `
+                } else {
+                  message =
+                  `
+                  <ul class="px-2" id="message">
+                  <li class="text-danger font-weight-bold list-unstyled">${data['message']}</li>
+                  </ul>
+                  `
+                }
+                $('#message').remove()
+                $('#username').after($(message))
+              }
+            })
+          }
+        })
     } else if (dep == 'watchlists') {
         $(html_templates['watchlists']).appendTo(container)
     } else if (dep == 'alerts') {
@@ -55,10 +87,14 @@ function sendAjax(dep) {
     })
 }
 
+var init_email, init_username
 function displaySecurity(data) {
-    $('input#email').val(data['email'])
-    $('input#username').val(data['username'])
+    init_email = data['email']
+    init_username = data['username']
+    $('input#email').val(init_email)
+    $('input#username').val(init_username)
 }
+
 
 
 });
