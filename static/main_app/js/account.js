@@ -27,7 +27,7 @@ function loadHTML() {
           email = $('input#email').val()
           username = $('input#username').val()
 
-          if (email == init_email && username != init_username) {
+          if (username != init_username) {
             $.ajax({
               url: '/ajax/account/change-username/',
               data: {
@@ -37,20 +37,47 @@ function loadHTML() {
                 if (data['valid']){
                   message = 
                   `
-                  <ul class="px-2" id="message">
+                  <ul class="px-2 m-0" id="message-username">
                   <li class="text-success font-weight-bold list-unstyled">${data['message']}</li>
                   </ul>
                   `
                 } else {
                   message =
                   `
-                  <ul class="px-2" id="message">
+                  <ul class="px-2 m-0" id="message-username">
                   <li class="text-danger font-weight-bold list-unstyled">${data['message']}</li>
                   </ul>
                   `
                 }
-                $('#message').remove()
+                $('#message-username').remove()
                 $('#username').after($(message))
+              }
+            })
+          };
+          if (email != init_email) {
+            $.ajax({
+              url: '/ajax/account/change-email/',
+              data: {
+                'email': email
+              },
+              success: function(data){
+                if (data['valid']){
+                  message = 
+                  `
+                  <ul class="px-2 m-0" id="message-email">
+                  <li class="text-warning font-weight-bold list-unstyled">${data['message']}</li>
+                  </ul>
+                  `
+                } else {
+                  message =
+                  `
+                  <ul class="px-2 m-0" id="message-email">
+                  <li class="text-danger font-weight-bold list-unstyled">${data['message']}</li>
+                  </ul>
+                  `
+                }
+                $('#message-email').remove()
+                $('#email').after($(message))
               }
             })
           }
