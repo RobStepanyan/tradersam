@@ -3,12 +3,15 @@ from django.contrib import messages
 from .forms import UserSignUpForm, UserLogInForm
 from django.core.exceptions import ValidationError, PermissionDenied
 from django.core.validators import EmailValidator
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, password_validation
 from django.contrib.auth import login as Login
 from django.contrib.auth import logout as Logout
+from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.models import User
+from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.http import JsonResponse, HttpResponse, Http404
+from django.views.decorators.csrf import csrf_protect
 from django.contrib.sites.shortcuts import get_current_site  
 from django.utils.encoding import force_bytes, force_text  
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode  
@@ -22,6 +25,10 @@ def signup(request):
     if request.method == 'POST':
         form = UserSignUpForm(request.POST)
         if form.is_valid():
+            if User.objects.filter(email=request.POST.get('email')).exists():
+                messages.error(request, 'A user with that email already exists.')
+                return redirect('signup')
+
             user = form.save()
             user.is_active = False
             user.save()
@@ -46,7 +53,7 @@ def signup(request):
                 server.login('noreply@traders.am', '2p%84=DUu#W4WT7*')
                 server.sendmail(from_addr='noreply@traders.am', to_addrs=to_email, msg=msg.as_string())
 
-            to_email = to_email[0] + '*' * len(to_email[1:to_email.index('@')-2]) + to_email[to_email.index('@')-2:] 
+            to_email = to_email[:2] + '*' * len(to_email[2:to_email.index('@')-2]) + to_email[to_email.index('@')-2:] 
             return render(request, 'users_app/check_email.html', context={'email': to_email})
     else:
         form = UserSignUpForm()
@@ -68,6 +75,8 @@ def signup_activation(request, uidb64, token):
     return redirect('home')
 
 def login(request):
+    if request.user.is_authenticated:
+        Logout(request)
     if request.method == 'POST':
         form = UserLogInForm(request.POST)
         if form.is_valid():
@@ -83,7 +92,7 @@ def login(request):
                 #     request.session.set_expiry(60*60*24*2)
                 return redirect('home')
             else:
-                messages.error(request, 'Wrong Username/Email or Password')
+                messages.error(request, 'Wrong Username or Password')
     else:
         form = UserLogInForm()
     
@@ -196,3 +205,127 @@ def change_email(request, uidb64, token, new_email):
     else:
         messages.error(request, 'Email change link is invalid!')
     return redirect('home')
+
+@csrf_protect
+def ajax_change_password(request):
+    if not request.user.is_authenticated:
+        raise PermissionDenied('User is not authenticated')
+            
+    old = request.POST.get('old_pass')
+    new1 = request.POST.get('new_pass1')
+    new2 = request.POST.get('new_pass2')
+    user = request.user
+
+    if any([not old, not new1, not new2]):
+        # if any value is empty
+        return JsonResponse({'valid': False, 'message': 'Please fill up all the three fields.'})
+    if not user.check_password(old):
+        return JsonResponse({'valid': False, 'message': 'Old password is incorrect.'})
+    if new1 != new2:
+        return JsonResponse({'valid': False, 'message': 'The two password fields didn’t match.'})
+    if old == new1 or old == new2:
+        return JsonResponse({'vaild': False, 'message': 'The new password doesn\'t differ from the old one.'})
+    else:
+        try:
+            password_validation.validate_password(new1, user)
+        except ValidationError as e:
+            errors = [str(error) for error in e]
+            return JsonResponse({'valid': False, 'message': errors, 'iterable': True if len(errors) > 1 else None })
+        
+        user.set_password(new1)
+        user.save()
+        update_session_auth_hash(request, user)
+        return JsonResponse({'valid': True, 'message': 'Password has been successfuly changed.'})
+
+def password_reset(request):
+    if request.method == 'POST':
+        login = request.POST.get('login')
+        if '@' in login:
+            try:
+                EmailValidator()(login)
+            except ValidationError as e:
+                return render(request, 'users_app/password_reset.html', {'valid': False, 'message': e})
+
+            if not User.objects.filter(email=login).exists():
+                e = ['A user with that email doesn\'t exists']
+                return render(request, 'users_app/password_reset.html', {'valid': False, 'message': e})
+            else:
+                user = User.objects.get(email=login)
+        
+        else:
+            try:
+                UnicodeUsernameValidator()(login)
+            except ValidationError as e:
+                return render(request, 'users_app/password_reset.html', {'valid': False, 'message': e})
+
+            if not User.objects.filter(username=login).exists():
+                e = ['A user with that username doesn\'t exists']
+                return render(request, 'users_app/password_reset.html', {'valid': False, 'message': e})
+            else:
+                user = User.objects.get(username=login)
+
+        current_url = get_current_site(request)
+        mail_subject = 'Traders.am Password Reset'
+        message = render_to_string(
+            'users_app/email_reset_pass.html',
+            {
+                'user': user,
+                'request': request,
+                'domain': current_url.domain,
+                'uid': urlsafe_base64_encode(force_bytes(user.id)),
+                'token': account_activation_token.make_token(user),
+            }
+        )
+        to_email= user.email
+        with SMTP_SSL('smtp.yandex.ru', 465) as server:
+            msg = MIMEText(message, 'html')
+            msg['Subject'] = mail_subject
+            msg['From'] = "Traders.am <noreply@traders.am>"
+            
+            server.login('noreply@traders.am', '2p%84=DUu#W4WT7*')
+            server.sendmail(from_addr='noreply@traders.am', to_addrs=to_email, msg=msg.as_string())
+        to_email = to_email[:2] + '*' * len(to_email[2:to_email.index('@')-2]) + to_email[to_email.index('@')-2:] 
+        return render(request, 'users_app/check_reset_password.html', context={'email': to_email})
+    # if request.method != 'POST'
+    return render(request, 'users_app/password_reset.html')
+
+def new_password(request, uidb64, token):
+    if request.method == 'POST':
+        new1 = request.POST.get('new_pass1')
+        new2 = request.POST.get('new_pass2')
+        uid = force_text(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(id=uid)
+        if any([not new1, not new2]):
+        # if any value is empty
+            return render(
+            request, 'users_app/new_password.html', {'valid': False, 'message': 'Please fill up all the fields.'})
+        if new1 != new2:
+            return render(
+            request, 'users_app/new_password.html', {'valid': False, 'message': 'The two password fields didn’t match.'})
+        try:
+            password_validation.validate_password(new1, user)
+        except ValidationError as e:
+            errors = [str(error) for error in e]
+            return render(
+            request, 'users_app/new_password.html', {'valid': False, 'message': errors, 'iterable': True if len(errors) > 1 else None })
+        
+        user.set_password(new1)
+        user.save()
+        update_session_auth_hash(request, user)
+        messages.success(request, 'Password has been successfuly changed.')
+        return redirect('login')
+    else:
+        try:
+            uid = force_text(urlsafe_base64_decode(uidb64))
+            user = User.objects.get(id=uid)
+        except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+            messages.error(request, 'Activation link is invalid!')
+            return redirect('home')
+
+        if user and account_activation_token.check_token(user, token):
+            return render(request, 'users_app/new_password.html')
+        else:
+            messages.error(request, 'Activation link is invalid!')
+            return redirect('home')
+    
+    

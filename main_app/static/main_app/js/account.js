@@ -15,6 +15,34 @@ $('.tab').click(function(){
   getLoadDebounce()
 })
 
+function getCookie(name) {
+  var cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+      var cookies = document.cookie.split(';');
+      for (var i = 0; i < cookies.length; i++) {
+          var cookie = cookies[i].trim();
+          // Does this cookie string begin with the name we want?
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+              break;
+          }
+      }
+  }
+  return cookieValue;
+}
+var csrftoken = getCookie('csrftoken');
+function csrfSafeMethod(method) {
+  // these HTTP methods do not require CSRF protection
+  return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+$.ajaxSetup({
+  beforeSend: function(xhr, settings) {
+      if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+          xhr.setRequestHeader("X-CSRFToken", csrftoken);
+      }
+  }
+});
+
 
 function loadHTML() {
     container.empty()
@@ -80,6 +108,75 @@ function loadHTML() {
                 $('#email').after($(message))
               }
             })
+          }
+        })
+        $('#change-password').click(function(){
+          old_pass = $('#old-password').val()
+          new_pass1 = $('#new-password1').val()
+          new_pass2 = $('#new-password2').val()
+          $('#message-password').remove()
+
+          if (old_pass.length == 0 || new_pass1.length == 0 || new_pass2.length == 0){
+            message = 
+            `
+            <ul class="px-2 m-0" id="message-password">
+            <li class="text-danger font-weight-bold list-unstyled">Please fill up all the three fields.</li>
+            </ul>
+            `
+            $('#new-password2').after($(message))
+          } else {
+            if (new_pass1 != new_pass2) {
+              message = 
+              `
+              <ul class="px-2 m-0" id="message-password">
+              <li class="text-danger font-weight-bold list-unstyled">The two password fields didn’t match.</li>
+              </ul>
+              `
+              $('#new-password2').after($(message))
+            } else if (old_pass == new_pass1 || old_pass == new_pass2) {
+              `
+              <ul class="px-2 m-0" id="message-password">
+              <li class="text-danger font-weight-bold list-unstyled">The new password doesn\'t differ from the old one.</li>
+              </ul>
+              `
+              $('#new-password2').after($(message))
+            } else {
+              $.ajax({
+              type: 'POST',
+              url: '/ajax/account/change-password/',
+              data: {
+                'old_pass': old_pass,
+                'new_pass1': new_pass1,
+                'new_pass2': new_pass2
+              },
+              success: function(data){
+                if (data['valid']){
+                  message = 
+                  `
+                  <ul class="px-2 m-0" id="message-password">
+                  <li class="text-success font-weight-bold list-unstyled">${data['message']}</li>
+                  </ul>
+                  `
+                } else {
+                  if (data['iterable']) {
+                    message = '<ul class="px-2 m-0" id="message-password">'
+                    data['message'].forEach(msg => {
+                      message += `<li class="text-danger font-weight-bold list-unstyled">${msg}</li>`
+                    });
+                    message += '</ul>'
+                  } else {
+                    message =
+                    `
+                    <ul class="px-2 m-0" id="message-password">
+                    <li class="text-danger font-weight-bold list-unstyled">${data['message']}</li>
+                    </ul>
+                    `
+                  }
+                }
+                $('#new-password2').after($(message))
+              }
+              })
+            }
           }
         })
     } else if (dep == 'watchlists') {
@@ -148,18 +245,20 @@ var html_templates = {
     <div class="account-card">
     <h2 class="m-0 pl-2">Password</h2>
     <div class="col-lg-6">
-        <label class="account-label" for="current-password">Current Password</label>
-        <input class="account-input" type="password" id="current-password">
+        <label class="account-label" for="old-password">Current Password</label>
+        <input class="account-input" type="password" id="old-password">
     </div>
     <div class="col-lg-6">
-        <label class="account-label" for="new-password">New Password</label>
-        <input class="account-input" type="password" id="new-password">
+        <label class="account-label" for="new-password1">New Password</label>
+        <input class="account-input" type="password" id="new-password1">
     </div>
     <div class="col-lg-6">
-        <label class="account-label" for="confirm-password">Confirm Password</label>
-        <input class="account-input" type="password" id="confirm-password">
+        <label class="account-label" for="new-password2">Confirm Password</label>
+        <input class="account-input" type="password" id="new-password2">
     </div>
-    <button class="btn btn-primary ml-2 mt-2">Save Changes</button>
+    <button class="btn btn-primary ml-2 mt-2" id="change-password">Save Changes</button>
+    <hr>
+    <a href="password-reset/" class="btn btn-secondary ml-2">Reset via E-mail</a>
     </div>
     </div>`,
 
