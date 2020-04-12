@@ -134,6 +134,7 @@ function loadHTML() {
               `
               $('#new-password2').after($(message))
             } else if (old_pass == new_pass1 || old_pass == new_pass2) {
+              message= 
               `
               <ul class="px-2 m-0" id="message-password">
               <li class="text-danger font-weight-bold list-unstyled">The new password doesn\'t differ from the old one.</li>
