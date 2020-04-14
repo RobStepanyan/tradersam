@@ -41,17 +41,19 @@ class CollectLive:
         tabs = self.__class__.get_tabs(self)
         self.tab = tabs[self.no]
         self.link_list = [i[0] for i in self.object_.objects.values_list('link')]
-        self.__class__.init_tab(self)
+        if self.type_ != 'bnd':
+            self.last_price = 0
 
         self.last_obj_count = {}
         self.last_obj = {}
-        
         for k, v in self.__class__.hist_objects.items():
             self.last_obj_count[k] = v.objects.filter(Type=self.type_).count()
             if self.last_obj_count[k] > 0:
                 self.last_obj[k] = v.objects.filter(Type=self.type_).order_by('-id').first()
             else:
                 self.last_obj[k] = None
+
+        self.__class__.init_tab(self)
 
     def init_tab(self):
         driver.switch_to.window(self.tab)
@@ -179,7 +181,19 @@ class CollectLive:
                         live_data[key] = None
                     else:
                         live_data[key] = value
-                
+
+                if live_data['Last'] == self.last_price:
+                    # if market is closed but clock icon haven't changed
+                    # check market condition buy checking if the price is moving
+                    
+                    # 1. Navigate current tab to the blank page
+                    # 2. call init_tab()
+                    # 3. break current tab
+                    driver.get('about:blank')
+                    self.__class__.init_tab(self)
+                    break
+
+
                 if not self.type_ in ['bnd', 'crptcrncy']:
                     try:
                         live_data['Prev. Close'] = round(float(live_data['Last'].replace(',','')) - float(live_data['Chg.']), 2)
@@ -232,6 +246,7 @@ class CollectLive:
                 
                     time=time_
                 ).save()
+                self.last_price = live_data['Last']
                 print(f'{self.title}: saved Live')
                 
                 
