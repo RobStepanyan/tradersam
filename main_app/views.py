@@ -88,6 +88,13 @@ def ajax_search(request):
 def ajax_hist(request):
     time_frame = request.GET.get('time_frame')
     chart_type = request.GET.get('chart_type')
+
+    if time_frame[-1] == 'D' and chart_type == 'candle':
+        data = {
+            'hist_data': [],
+            'vol_data': []
+        }    
+        return JsonResponse(data)
     
     # finding type and primary key(pk)
     link = request.GET['link'][::-1]
@@ -161,35 +168,35 @@ def ajax_hist(request):
     # { time: '2018-10-19', value: 19103293.00, color: 'rgba(0, 150, 136, 0.8)' } - volume
     # preparing data
     hist_data_new = []
-    volume_data = []
-    last_volume = None
+    # volume_data = []
+    # last_volume = 0
     for data in hist_data:
         if time_frame[-1] == 'D':
             data['time'] = int(data['date'].timestamp())
         else:
             data['time'] = data['date'].strftime('%Y-%m-%d')
         
-        volume = data['volume']
-        if volume:
-            # volume example - 457.67K
-            volume_int = volume
-            if '$' in volume_int:
-                volume_int = volume_int.replace('$', '')
-            if ',' in volume_int:
-                volume_int = volume_int.replace(',', '')
-            if 'B' in volume_int:
-                volume_int = int(volume_int[:-1].replace('.', ''))* 10000000
-            elif 'M' in volume_int:
-                volume_int = int(volume_int[:-1].replace('.', ''))* 10000
-            elif 'K' in volume_int:
-                volume_int = int(volume_int[:-1].replace('.', ''))* 10
+        # volume = data['volume']
+        # if volume:
+        #     # volume example - 457.67K
+        #     volume_int = volume
+        #     if '$' in volume_int:
+        #         volume_int = volume_int.replace('$', '')
+        #     if ',' in volume_int:
+        #         volume_int = volume_int.replace(',', '')
+        #     if 'B' in volume_int:
+        #         volume_int = int(volume_int[:-1].replace('.', ''))* 10000000
+        #     elif 'M' in volume_int:
+        #         volume_int = int(volume_int[:-1].replace('.', ''))* 10000
+        #     elif 'K' in volume_int:
+        #         volume_int = int(volume_int[:-1].replace('.', ''))* 10
                 
-            if not last_volume or volume > last_volume:
-                color = 'rgba(0, 150, 136, 0.8)'
-            else:
-                color = 'rgba(255,82,82, 0.8)'
-            volume_data.append({'time': data['time'], 'value': volume, 'color': color})
-            last_volume = volume
+        #     if not last_volume or volume > last_volume:
+        #         color = 'rgba(0, 150, 136, 0.8)'
+        #     else:
+        #         color = 'rgba(255,82,82, 0.8)'
+        #     volume_data.append({'time': data['time'], 'value': volume_int, 'color': color})
+        #     last_volume = volume
         del data['date']
         if chart_type == 'line':
             if ',' in data['price']:
@@ -219,9 +226,9 @@ def ajax_hist(request):
         if all(dct.values()):
             hist_data.append(dct)
     vol_data = []
-    for dct in volume_data:
-        if all(dct.values()):
-            vol_data.append(dct)
+    # for dct in volume_data:
+    #     if all(dct.values()):
+    #         vol_data.append(dct)
     
     data = {
         'hist_data': hist_data,
