@@ -17,6 +17,7 @@ from .models import (
 
 
 driver = vps_selenium_setup()
+driver.get('https://www.investing.com/')
 print('Driver is ready!')
 
 data_ages = ['1M', '3M', '6M', '1Y', '5Y', 'Max']
@@ -38,8 +39,14 @@ def collect_for(obj, x, key, value, link):
                     print('No results found')
                     break
                 
-                execute_js_scripts(driver, data_age)
-                
+                while True:
+                    try:
+                        execute_js_scripts(driver, data_age)
+                        break
+                    except:
+                        # selenium.common.exceptions.ElementClickInterceptedException: Message: element click intercepted
+                        driver.execute_script("$('.truste_overlay').remove()") 
+
                 while True:
                     try:
                         soup = BeautifulSoup(driver.page_source, 'html.parser')
