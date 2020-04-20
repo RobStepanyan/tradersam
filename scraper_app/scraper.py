@@ -24,9 +24,43 @@ from .models import (
     ChinaFundStaticInfo, CanadaFundStaticInfo, GermanyFundStaticInfo, AustraliaFundStaticInfo,
 )
 
+# Disclaimer: This module is a complete bullshit
+# use collect_all() if needed
 
 # This class is used only for cryptocurrencies, currencies, commodities, stocks and indices
 class CollectStaticInfo:
+    def all():
+        __class__.commodities()
+        __class__.currencies()
+        __class__.cryptocurrencies('y')
+        
+        __class__.usstocks('y')
+        __class__.japanstocks('y')
+        __class__.ukstocks('y')
+        __class__.hkstocks('y')
+        __class__.chinastocks('y')
+        __class__.canadastocks('y')
+        __class__.germanystocks('y')
+        __class__.australiastocks('y')
+        
+        __class__.usindices('y')
+        __class__.japanindices('y')
+        __class__.ukindices('y')
+        __class__.hkindices('y')
+        __class__.chinaindices('y')
+        __class__.canadaindices('y')
+        __class__.germanyindices('y')
+        __class__.australiaindices('y')
+
+        __class__.usstocks('y')
+        __class__.japanstocks('y')
+        __class__.ukstocks('y')
+        __class__.hkstocks('y')
+        __class__.chinastocks('y')
+        __class__.canadastocks('y')
+        __class__.germanystocks('y')
+        __class__.australiastocks('y')
+
     def commodities():
         print('Starting CollectStaticInfo.commodities()')
         print('Removing old records')
@@ -74,6 +108,8 @@ class CollectStaticInfo:
                     fields[field.get_text()] = field.next_sibling.get_text()
             fields['Unit'] = unit
             fields['Country'] = country
+            if name == 'XAG/USD':
+                continue
             static_infos.append({**{'Short Name': name, 'Link': link}, **fields})
             print(f'{len(short_names)-short_names.index(name)-1} Commodities Left')
         
@@ -192,11 +228,10 @@ class CollectStaticInfo:
             driver.quit()
             print('Driver is closed')
 
-    def usstocks():
+    def usstocks(dd='n'):
         driver = vps_selenium_setup()
         print('Starting CollectStaticInfo.usstocks()')
         print('Removing old records')
-        dd = input('Are you sure you want to delete all the old records, and scrape new ones? Press Y or y to continue: ')
         if dd.upper() != 'Y':
             print('Closing CollectStaticInfo.usstocks()')
             return ''
@@ -279,11 +314,10 @@ class CollectStaticInfo:
         print('Data has been successfuly stored!')
         return ''
 
-    def japanstocks():
+    def japanstocks(dd='n'):
         driver = vps_selenium_setup()
         print('Starting CollectStaticInfo.japanstocks()')
         print('Removing old records')
-        dd = input('Are you sure you want to delete all the old records, and scrape new ones? Press Y or y to continue: ')
         if dd.upper() != 'Y':
             print('Closing CollectStaticInfo.japanstocks()')
             return ''
@@ -366,11 +400,10 @@ class CollectStaticInfo:
         print('Data has been successfuly stored!')
         return ''
 
-    def ukstocks():
+    def ukstocks(dd='n'):
         driver = vps_selenium_setup()
         print('Starting CollectStaticInfo.ukstocks()')
         print('Removing old records')
-        dd = input('Are you sure you want to delete all the old records, and scrape new ones? Press Y or y to continue: ')
         if dd.upper() != 'Y':
             print('Closing CollectStaticInfo.ukstocks()')
             return ''
@@ -435,11 +468,10 @@ class CollectStaticInfo:
         print('Data has been successfuly stored!')
         return ''
 
-    def hkstocks():
+    def hkstocks(dd='n'):
         driver = vps_selenium_setup()
         print('Starting CollectStaticInfo.hkstocks()')
         print('Removing old records')
-        dd = input('Are you sure you want to delete all the old records, and scrape new ones? Press Y or y to continue: ')
         if dd.upper() != 'Y':
             print('Closing CollectStaticInfo.hkstocks()')
             return ''
@@ -503,11 +535,10 @@ class CollectStaticInfo:
         print('Data has been successfuly stored!')
         return ''
 
-    def chinastocks():
+    def chinastocks(dd='n'):
         driver = vps_selenium_setup()
         print('Starting CollectStaticInfo.chinastocks()')
         print('Removing old records')
-        dd = input('Are you sure you want to delete all the old records, and scrape new ones? Press Y or y to continue: ')
         if dd.upper() != 'Y':
             print('Closing CollectStaticInfo.chinastocks()')
             return ''
@@ -574,11 +605,10 @@ class CollectStaticInfo:
         print('Data has been successfuly stored!')
         return ''
 
-    def canadastocks():
+    def canadastocks(dd='n'):
         driver = vps_selenium_setup()
         print('Starting CollectStaticInfo.canadastocks()')
         print('Removing old records')
-        dd = input('Are you sure you want to delete all the old records, and scrape new ones? Press Y or y to continue: ')
         if dd.upper() != 'Y':
             print('Closing CollectStaticInfo.canadastocks()')
             return ''
@@ -662,11 +692,10 @@ class CollectStaticInfo:
         print('Data has been successfuly stored!')
         return ''
 
-    def germanystocks():
+    def germanystocks(dd='n'):
         driver = vps_selenium_setup()
         print('Starting CollectStaticInfo.germanystocks()')
         print('Removing old records')
-        dd = input('Are you sure you want to delete all the old records, and scrape new ones? Press Y or y to continue: ')
         if dd.upper() != 'Y':
             print('Closing CollectStaticInfo.germanystocks()')
             return ''
@@ -749,11 +778,10 @@ class CollectStaticInfo:
         print('Data has been successfuly stored!')
         return ''
 
-    def australiastocks():
+    def australiastocks(dd='n'):
         driver = vps_selenium_setup()
         print('Starting CollectStaticInfo.australiastocks()')
         print('Removing old records')
-        dd = input('Are you sure you want to delete all the old records, and scrape new ones? Press Y or y to continue: ')
         if dd.upper() != 'Y':
             print('Closing CollectStaticInfo.australiastocks()')
             return ''
@@ -818,10 +846,9 @@ class CollectStaticInfo:
 
 
     # INDICES' STATIC INFO AREA
-    def usindices():
+    def usindices(dd='n'):
         driver = vps_selenium_setup()
         print('Starting CollectStaticInfo.usindices()')
-        dd = input('Are you sure you want to delete all the old records, and scrape new ones? Press Y or y to continue: ')
         print('Removing old records')
         if dd.upper() != 'Y':
             print('Closing CollectStaticInfo.usindices()')
@@ -896,10 +923,9 @@ class CollectStaticInfo:
         print('Data has been successfuly stored!')
         return ''
 
-    def japanindices():
+    def japanindices(dd='n'):
         driver = vps_selenium_setup()
         print('Starting CollectStaticInfo.japanindices()')
-        dd = input('Are you sure you want to delete all the old records, and scrape new ones? Press Y or y to continue: ')
         print('Removing old records')
         if dd.upper() != 'Y':
             print('Closing CollectStaticInfo.japanindices()')
@@ -974,10 +1000,9 @@ class CollectStaticInfo:
         print('Data has been successfuly stored!')
         return ''
 
-    def ukindices():
+    def ukindices(dd='n'):
         driver = vps_selenium_setup()
         print('Starting CollectStaticInfo.ukindices()')
-        dd = input('Are you sure you want to delete all the old records, and scrape new ones? Press Y or y to continue: ')
         print('Removing old records')
         if dd.upper() != 'Y':
             print('Closing CollectStaticInfo.ukindices()')
@@ -1032,10 +1057,9 @@ class CollectStaticInfo:
         print('Data has been successfuly stored!')
         return ''
 
-    def hkindices():
+    def hkindices(dd='n'):
         driver = vps_selenium_setup()
         print('Starting CollectStaticInfo.hkindices()')
-        dd = input('Are you sure you want to delete all the old records, and scrape new ones? Press Y or y to continue: ')
         print('Removing old records')
         if dd.upper() != 'Y':
             print('Closing CollectStaticInfo.hkindices()')
@@ -1092,10 +1116,9 @@ class CollectStaticInfo:
         print('Data has been successfuly stored!')
         return ''
 
-    def chinaindices():
+    def chinaindices(dd='n'):
         driver = vps_selenium_setup()
         print('Starting CollectStaticInfo.chinaindices()')
-        dd = input('Are you sure you want to delete all the old records, and scrape new ones? Press Y or y to continue: ')
         print('Removing old records')
         if dd.upper() != 'Y':
             print('Closing CollectStaticInfo.chinaindices()')
@@ -1171,10 +1194,9 @@ class CollectStaticInfo:
         print('Data has been successfuly stored!')
         return ''
 
-    def canadaindices():
+    def canadaindices(dd='n'):
         driver = vps_selenium_setup()
         print('Starting CollectStaticInfo.canadaindices()')
-        dd = input('Are you sure you want to delete all the old records, and scrape new ones? Press Y or y to continue: ')
         if dd.upper() != 'Y':
             print('Removing old records')
             print('Closing CollectStaticInfo.canadaindices()')
@@ -1250,10 +1272,9 @@ class CollectStaticInfo:
         print('Data has been successfuly stored!')
         return ''
 
-    def germanyindices():
+    def germanyindices(dd='n'):
         driver = vps_selenium_setup()
         print('Starting CollectStaticInfo.germanyindices()')
-        dd = input('Are you sure you want to delete all the old records, and scrape new ones? Press Y or y to continue: ')
         if dd.upper() != 'Y':
             print('Removing old records')
             print('Closing CollectStaticInfo.germanyindices()')
@@ -1329,10 +1350,9 @@ class CollectStaticInfo:
         print('Data has been successfuly stored!')
         return ''
 
-    def australiaindices():
+    def australiaindices(dd='n'):
         driver = vps_selenium_setup()
         print('Starting CollectStaticInfo.australiaindices()')
-        dd = input('Are you sure you want to delete all the old records, and scrape new ones? Press Y or y to continue: ')
         if dd.upper() != 'Y':
             print('Removing old records')
             print('Closing CollectStaticInfo.australiaindices()')
@@ -1393,21 +1413,21 @@ class CollectStaticInfo:
 class CollectETFIssuers:
     def all():
         print('Starting to collect for United States')
-        CollectETFIssuers.us()
+        __class__.us()
         print('Starting to collect for Japan')
-        CollectETFIssuers.japan()
+        __class__.japan()
         print('Starting to collect for United Kingdom')
-        CollectETFIssuers.uk()
+        __class__.uk()
         print('Starting to collect for Honk Kong')
-        CollectETFIssuers.hk()
+        __class__.hk()
         print('Starting to collect for China')
-        CollectETFIssuers.china()
+        __class__.china()
         print('Starting to collect for Canada')
-        CollectETFIssuers.canada()
+        __class__.canada()
         print('Starting to collect for Germany')
-        CollectETFIssuers.germany()
+        __class__.germany()
         print('Starting to collect for Australia')
-        CollectETFIssuers.australia()
+        __class__.australia()
 
 
     def us():
@@ -1788,21 +1808,21 @@ class CollectETFStaticInfo:
     def all():
         print('Starting CollectETFStaticInfo')
         print('Starting to collect for United States')
-        CollectETFStaticInfo.us()
+        __class__.us()
         print('Starting to collect for Japan')
-        CollectETFStaticInfo.japan()
+        __class__.japan()
         print('Starting to collect for United Kingdom')
-        CollectETFStaticInfo.uk()
+        __class__.uk()
         print('Starting to collect for Honk Kong')
-        CollectETFStaticInfo.hk()
+        __class__.hk()
         print('Starting to collect for China')
-        CollectETFStaticInfo.china()
+        __class__.china()
         print('Starting to collect for Canada')
-        CollectETFStaticInfo.canada()
+        __class__.canada()
         print('Starting to collect for Germany')
-        CollectETFStaticInfo.germany()
+        __class__.germany()
         print('Starting to collect for Australia')
-        CollectETFStaticInfo.australia()
+        __class__.australia()
 
 
     def us():
@@ -2379,21 +2399,21 @@ class CollectBondStaticInfo:
     def all():
         print('Starting CollectBondStaticInfo')
         print('Starting to collect for United States')
-        CollectBondStaticInfo.us()
+        __class__.us()
         print('Starting to collect for Japan')
-        CollectBondStaticInfo.japan()
+        __class__.japan()
         print('Starting to collect for United Kingdom')
-        CollectBondStaticInfo.uk()
+        __class__.uk()
         print('Starting to collect for Honk Kong')
-        CollectBondStaticInfo.hk()
+        __class__.hk()
         print('Starting to collect for China')
-        CollectBondStaticInfo.china()
+        __class__.china()
         print('Starting to collect for Canada')
-        CollectBondStaticInfo.canada()
+        __class__.canada()
         print('Starting to collect for Germany')
-        CollectBondStaticInfo.germany()
+        __class__.germany()
         print('Starting to collect for Australia')
-        CollectBondStaticInfo.australia()
+        __class__.australia()
 
 
     def us():
@@ -2894,21 +2914,21 @@ class CollectBondStaticInfo:
 class CollectFundIssuers:
     def all():
         print('Starting to Collect Fund Issuers for United States')
-        CollectFundIssuers.us()
+        __class__.us()
         print('Starting to Collect Fund Issuers for Japan')
-        CollectFundIssuers.japan()
+        __class__.japan()
         print('Starting to Collect Fund Issuers for United Kingdom')
-        CollectFundIssuers.uk()
+        __class__.uk()
         print('Starting to Collect Fund Issuers for Honk Kong')
-        CollectFundIssuers.hk()
+        __class__.hk()
         print('Starting to Collect Fund Issuers for China')
-        CollectFundIssuers.china()
+        __class__.china()
         print('Starting to Collect Fund Issuers for Canada')
-        CollectFundIssuers.canada()
+        __class__.canada()
         print('Starting to Collect Fund Issuers for Germany')
-        CollectFundIssuers.germany()
+        __class__.germany()
         print('Starting to Collect Fund Issuers for Australia')
-        CollectFundIssuers.australia()
+        __class__.australia()
     
     def us():
         driver = vps_selenium_setup()
@@ -3293,21 +3313,21 @@ class CollectFundStaticInfo:
     def all():
         print('Starting CollectFundStaticInfo')
         print('Starting to collect for United States')
-        CollectFundStaticInfo.us()
+        __class__.us()
         print('Starting to collect for Japan')
-        CollectFundStaticInfo.japan()
+        __class__.japan()
         print('Starting to collect for United Kingdom')
-        CollectFundStaticInfo.uk()
+        __class__.uk()
         print('Starting to collect for Honk Kong')
-        CollectFundStaticInfo.hk()
+        __class__.hk()
         print('Starting to collect for China')
-        CollectFundStaticInfo.china()
+        __class__.china()
         print('Starting to collect for Canada')
-        CollectFundStaticInfo.canada()
+        __class__.canada()
         print('Starting to collect for Germany')
-        CollectFundStaticInfo.germany()
+        __class__.germany()
         print('Starting to collect for Australia')
-        CollectFundStaticInfo.australia()
+        __class__.australia()
 
         
     def us():
@@ -4064,3 +4084,18 @@ class CollectFundStaticInfo:
 
         print('Data has been successfuly stored!')
         return ''
+
+def collect_all():
+    print('Removing all static info, you have 10 seconds left to cancel')
+    sleep(10)
+    # commoditiies, currencies, crypto, stocks, inices
+    CollectStaticInfo.all()
+    # etfs
+    CollectETFIssuers.all()
+    CollectETFStaticInfo.all()
+    # bonds
+    CollectBondStaticInfo.all()
+    # funds
+    CollectFundIssuers.all()
+    CollectFundStaticInfo.all()
+collect_all()
