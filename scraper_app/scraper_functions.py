@@ -87,7 +87,7 @@ def remove_already_saved(l, c_list):
 def vps_selenium_setup():
     """This function creates virtual display and returns set up chrome driver.
     Execution time: ~ 1.2seconds"""
-    display = Display(visible=0, size=(1920, 1080))
+    display = Display(visible=0, size=(1000, 1000))
     display.start()
     options = webdriver.ChromeOptions()
     prefs = {
@@ -110,7 +110,7 @@ def execute_js_scripts_max(driver):
     print('Executing JS scripts')
     driver.execute_script('$("#data_interval").val("Monthly");')
     driver.find_element_by_id('data_interval').value = "Monthly"
-    driver.find_element_by_id('widgetFieldDateRange').click()
+    driver.execute_script("$('#widgetFieldDateRange').click()")
     driver.find_element_by_id('startDate').clear()
     driver.find_element_by_id('startDate').send_keys('01/01/1980', Keys.ENTER)
     print('Executed JS scripts')
@@ -121,7 +121,7 @@ def execute_js_scripts_5y(driver):
     print('Executing JS scripts')
     driver.execute_script('$("#data_interval").val("Weekly");')
     driver.find_element_by_id('data_interval').value = "Weekly"
-    driver.find_element_by_id('widgetFieldDateRange').click()
+    driver.execute_script("$('#widgetFieldDateRange').click()")
     driver.find_element_by_id('startDate').clear()
     driver.find_element_by_id('startDate').send_keys(startDate, Keys.ENTER)
     print('Executed JS scripts')
@@ -138,7 +138,7 @@ def execute_js_scripts_1y1m(driver, data_age):
     print('Executing JS scripts')
     driver.execute_script('$("#data_interval").val("Daily");')
     driver.find_element_by_id('data_interval').value = "Daily"
-    driver.find_element_by_id('widgetFieldDateRange').click()
+    driver.execute_script("$('#widgetFieldDateRange').click()")
     driver.find_element_by_id('startDate').clear()
     driver.find_element_by_id('startDate').send_keys(start_date, Keys.ENTER)
     print('Executed JS scripts')
