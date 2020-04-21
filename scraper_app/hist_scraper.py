@@ -17,7 +17,6 @@ from .models import (
 
 
 driver = vps_selenium_setup()
-driver.get('https://www.investing.com/')
 print('Driver is ready!')
 
 data_ages = ['1M', '3M', '6M', '1Y', '5Y', 'Max']
@@ -39,20 +38,7 @@ def collect_for(obj, x, key, value, link):
                     print('No results found')
                     break
                 
-                while True:
-                    try:
-                        execute_js_scripts(driver, data_age)
-                        break
-                    except:
-                        # selenium.common.exceptions.ElementClickInterceptedException: Message: element click intercepted
-                        driver.execute_script(
-                            """
-                            $('*').filter(function() {
-                                return $(this).css('z-index') == 1200000;
-                            }).each(function() {
-                                // do something with them   
-                            });
-                            """) 
+                execute_js_scripts(driver, data_age)
 
                 while True:
                     try:
@@ -134,7 +120,7 @@ types = list(set(types))
 # Complete list to delete and collect historical data for
 # Override types list here if needed
 # ['cmdty', 'crncy', 'crptcrncy', 'stck', 'indx', 'etf', 'bnd', 'fnd']
-types = ['indx', 'etf', 'bnd', 'fnd']
+# types = ['indx', 'etf', 'bnd', 'fnd']
 
 if inpt.upper() == 'Y':
     # Deleting old historical data

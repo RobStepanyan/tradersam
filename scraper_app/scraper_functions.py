@@ -87,7 +87,7 @@ def remove_already_saved(l, c_list):
 def vps_selenium_setup():
     """This function creates virtual display and returns set up chrome driver.
     Execution time: ~ 1.2seconds"""
-    display = Display(visible=0, size=(1000, 1000))
+    display = Display(visible=0, size=(1920, 1080))
     display.start()
     options = webdriver.ChromeOptions()
     prefs = {
