@@ -45,7 +45,14 @@ def collect_for(obj, x, key, value, link):
                         break
                     except:
                         # selenium.common.exceptions.ElementClickInterceptedException: Message: element click intercepted
-                        driver.execute_script("$('.truste_overlay').remove()") 
+                        driver.execute_script(
+                            """
+                            $('*').filter(function() {
+                                return $(this).css('z-index') == 1200000;
+                            }).each(function() {
+                                // do something with them   
+                            });
+                            """) 
 
                 while True:
                     try:
