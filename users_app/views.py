@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from .forms import UserSignUpForm, UserLogInForm
+from .models import Watchlist
 from django.core.exceptions import ValidationError, PermissionDenied
 from django.core.validators import EmailValidator
 from django.contrib.auth import authenticate, password_validation
@@ -116,11 +117,15 @@ def ajax_account(request):
         email = user.email
         username = user.username
         return JsonResponse({'email': email, 'username': username})
+    
     elif dep == 'watchlists':
-        return JsonResponse({})
+        user = request.user
+        watchlists_raw = Watchlist.objects.filter(user=user)
+        return JsonResponse({'watchlists': []})
+    
     elif dep == 'alerts':
         return JsonResponse({})
-    elif dep == 'portfolio':
+    elif dep == 'portfolios':
         return JsonResponse({})
     else:
         raise Http404(f'Department is not found {dep}')
@@ -327,5 +332,4 @@ def new_password(request, uidb64, token):
         else:
             messages.error(request, 'Activation link is invalid!')
             return redirect('home')
-    
     

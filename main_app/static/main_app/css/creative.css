@@ -5704,6 +5704,11 @@ a.bg-dark:focus, a.bg-dark:hover, button.bg-dark:focus, button.bg-dark:hover {
 .d-inline-block {
   display: inline-block!important;
 }
+.d-inline-grid {
+  display: inline-grid!important;
+  display: -moz-inline-grid!important;
+  display: -ms-inline-grid!important;
+}
 .d-block {
   display: block!important;
 }
@@ -9609,14 +9614,20 @@ tbody {
     padding-bottom: 16px;
   }
 }
+#watchlist-row .col-lg-6 {
+  /* justify-content: center; */
+}
 .watchlist {
+  padding-bottom: 0;
+  overflow-y: auto;
   min-height: 400px;
-  max-height: 700px;
+  max-height: 650px;
 }
 .watchlist.empty {
   background: transparent;
   border: 2px dashed var(--white);
-  height: 100%;
+  height: calc(100% - 41px);
+  margin-top: 41px;
   display: flex;
 }
 .watchlist.empty:hover {
@@ -9641,6 +9652,7 @@ tbody {
   padding-bottom: 8px;
 }
 .watchlist th {
+  padding-top: 0;
   border: none;
 }
 #main-container {
@@ -9670,4 +9682,40 @@ tbody {
 }
 .account-card .dropdown-toggle {
   font-size: 1.2rem;
+}
+.watch-name-input {
+  margin-bottom: 1rem;
+  max-width: 100%;
+}
+.watch-name-input input{
+  padding: 5px 10px;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  border: 2px solid var(--white);
+  border-right: none;
+  background: var(--gray1);
+  color: var(--white);
+  font-size: 1.75rem;
+  font-weight: bold;
+  max-width: 80%;
+}
+.watch-name-input i {
+  position: absolute;
+  padding: 13px; /* (height-font-size)/2 */
+  height: 56px;
+  border: 2px solid var(--white);
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  border-left: none;
+  background: var(--white);
+  color: var(--success);
+  font-size: 30px;
+  font-weight: bold;
+  transition: all .35s;
+}
+.watch-name-input i:hover {
+  background: var(--gray6);
+}
+.watch-name-input i:active {
+  background: var(--gray5);
 }
