@@ -121,11 +121,11 @@ def ajax_account(request):
     
     elif dep == 'watchlists':
         user = request.user
-        watchlists_raw = Watchlist.objects.filter(user=user)
+        watchlists_raw = Watchlist.objects.filter(username=user.username)
         watchlists = []
         for watch in watchlists_raw:
             watchlists.append(model_to_dict(watch))
-        return JsonResponse({'watchlists': list(watchlists)})
+        return JsonResponse({'watchlists': watchlists})
     
     elif dep == 'alerts':
         return JsonResponse({})
@@ -337,13 +337,25 @@ def new_password(request, uidb64, token):
             messages.error(request, 'Activation link is invalid!')
             return redirect('home')
 
-def ajax_change_watch_name(request):
-    old_name = request.GET['old_name']
-    new_name = request.GET['new_name']
-    
+def ajax_watchlist(request):
     user = User.objects.get(pk=request.user.pk)
-    
-    obj = Watchlist.objects.get(user=user, name=old_name)
-    obj.name = new_name
-    obj.save()
-    return JsonResponse({})
+    if request.GET['action'] == 'change_name':
+        old_name = request.GET['old_name']
+        new_name = request.GET['new_name']
+        
+        if not Watchlist.objects.filter(username=user.username, name=new_name).exists:
+            return JsonResponse({'error': True})
+        obj = Watchlist.objects.get(username=user.username, name=old_name)
+        obj.name = new_name
+        obj.save()
+    elif request.GET['action'] == 'delete':
+       obj = Watchlist.objects.get(username=user.username, name=request.GET['name'])
+       obj.delete()
+    elif request.GET['action'] == 'create':
+        Watchlist(
+            name=request.GET['name'],
+            username=user.username,
+            asset_links=[]
+        ).save()
+
+    return JsonResponse({'error': False})

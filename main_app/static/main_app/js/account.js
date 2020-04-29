@@ -190,7 +190,6 @@ $(function () {
     } else if (dep == 'watchlists') {
       $(html_templates['watchlists']).appendTo(container)
       getData()
-      
 
     } else if (dep == 'alerts') {
       $(html_templates['alerts']).appendTo(container)
@@ -226,13 +225,13 @@ $(function () {
     } else if (dep == 'watchlists') {
       $('#watchlist-row').empty()
       var content = ''
-      
+
       data['watchlists'].forEach(wlist => {
         content +=
           `
           <div class="col-lg-6">
-          <div class="row justify-content-center">
-          <h3 class="text-white text-center">${wlist['name']}</h3>
+          <div class="row">
+          <h3 class="text-white text-center ml-auto">${wlist['name']}</h3><i type="button" id="${wlist['name']}" class="fas fa-trash ml-auto" data-toggle="modal" data-target="#watchlist-modal"></i>
           </div>
           <div class="account-card watchlist">
             <table class="table table-hover">
@@ -248,7 +247,7 @@ $(function () {
           `
         wlist['asset_links'].forEach(row => {
           content +=
-          `
+            `
           <tr>
             <td>f</td>
             <td>f</td>
@@ -273,7 +272,7 @@ $(function () {
         </div>
         `
       });
-      
+
       content +=
         `
         <div class="col-lg-6">
@@ -285,18 +284,26 @@ $(function () {
           </div>
         </div>
         `
-      
+
       $(content).appendTo($('#watchlist-row'))
-      new_watch_name_click()
+      watch_name_click()
+      watch_name_edit_click()
+      watch_create_click()
+      watch_trash_click()
       var empty_watch
-      $('.watchlist.empty').click(function(){
+      $('.watchlist.empty').click(function () {
+        // Checking quanity of watchlists
         if ($('#watchlist-row>.col-lg-6').length < 100) {
           empty_watch = $('#watchlist-row>.col-lg-6').last()
           content =
-          `
+            `
           <div class="col-lg-6">
-          <div class="row justify-content-center">
-          <h3 class="text-white text-center">Watchlist Name</h3>
+          <div class="row">
+
+          <div class="watch-name-input mx-auto">
+            <input maxlength="255" id="new_watch_name"><i id="create-watch" class="fas fa-check"></i>
+          </div>
+
           </div>
           <div class="account-card watchlist">
             <table class="table table-hover">
@@ -319,77 +326,156 @@ $(function () {
           `
           $(content).appendTo($('#watchlist-row'))
           $(empty_watch).appendTo($('#watchlist-row'))
-          
-          new_watch_name_click()
+
+          watch_name_click()
+          watch_name_edit_click()
+          watch_create_click()
+          watch_trash_click()
         }
       })
     }
   }
-  function new_watch_check_click(init_watch_name){
-    // Check mark
-    // Click event for newly appeared button
-    $('.watch-name-input i').click(function(){
-      var duplicate = false
+  function watch_name_edit_click(init_watch_name) {
+    // When clicked on a save button of a watchlist name
+    $('.watch-name-input #edit-watch').click(function () {
+      var valid = true
       var new_watch_name = $(this).prev().val()
+      if (new_watch_name.trim().length == 0) {
+        valid=false
+      }
+      // iterate throug watchlists and checks for duplicates and empty values
       $('#watchlist-row>.col-lg-6 h3').toArray().forEach(h => {
         if ($(h).text() == new_watch_name) {
-          duplicate = true
+          valid = false
         }
       });
-      if (!duplicate) {
-        // replace check mark icon with loading icon
+      if (valid) {
         $('#watch_name_dup_error').remove()
         // Send name change request to server
         $.ajax({
-          url: '/ajax/account/change-watch-name/',
+          url: '/ajax/account/watchlist/',
           data: {
+            'action': 'change_name',
             'old_name': init_watch_name,
             'new_name': new_watch_name
           },
-          success: function(){
-            
+          success: function (data) {
+            if (data['error']) {
+              var error_msg =
+                `
+                <ul class="m-0 p-0 mt-n3 mb-3" id="watch_name_dup_error">
+                  <li class="text-white font-weight-bold list-unstyled">Error has been occured.</li>
+                </ul>
+                `
+              $('#watch_name_dup_error').remove()
+              $(this).parent().after($(error_msg))
+              return false
+            }
           },
-          error: function(){
-            var error_msg = 
-            `
-            <ul class="m-0 p-0 mt-n3 mb-3" id="watch_name_dup_error">
-              <li class="text-white font-weight-bold list-unstyled">Error has been occured.</li>
-            </ul>
-            `
-            $('#watch_name_dup_error').remove()
-            $(this).parent().after($(error_msg))
-          }
         })
         $(this).parent().addClass('d-none')
-        $(this).parent().before(`<h3 class="text-white text-center">${new_watch_name}</h3>`)
+        $(this).parent().before(`<h3 class="text-white text-center ml-auto">${new_watch_name}</h3><i type="button" id="${new_watch_name}" class="fas fa-trash ml-auto" data-toggle="modal" data-target="#watchlist-modal"></i>`)
         $(this).parent().remove()
-        new_watch_name_click()
       } else {
-        var error_msg = 
-        `
-        <ul class="m-0 p-0 mt-n3 mb-3" id="watch_name_dup_error">
-          <li class="text-white font-weight-bold list-unstyled">Watchlist with a same name already exists.</li>
-        </ul>
-        `
-        $('#watch_name_dup_error').remove()
-        $(this).parent().after($(error_msg))
+        $(this).parent().addClass('d-none')
+        $(this).parent().before(`<h3 class="text-white text-center ml-auto">${init_watch_name}</h3><i type="button" id="${init_watch_name}" class="fas fa-trash ml-auto" data-toggle="modal" data-target="#watchlist-modal"></i>`)
+        $(this).parent().remove()
       }
+      watch_name_click()
+      watch_name_edit_click()
+      watch_create_click()
+      watch_trash_click()
     })
   }
-  function new_watch_name_click(){
-    $('#watchlist-row>.col-lg-6 h3').click(function(){
+  function watch_name_click() {
+    // When clicked on a watchlist header
+    $('#watchlist-row>.col-lg-6 h3').click(function () {
       var init_watch_name = $(this).text()
       $(this).addClass('d-none')
-      var new_watch_name_input = 
-      `
-      <div class="watch-name-input">
-        <input maxlength="255" id="new_watch_name"><i class="fas fa-check"></i>
-      <div>
+      var new_watch_name_input =
+        `
+      <div class="watch-name-input mx-auto">
+        <input maxlength="255" id="new_watch_name"><i id="edit-watch" class="fas fa-check"></i>
+      </div>
       `
       $(this).before(new_watch_name_input)
       $('#new_watch_name').val(init_watch_name)
+      $('.fa-trash').remove() // Removing trash icon
       $(this).remove()
-      new_watch_check_click(init_watch_name)
+      watch_name_edit_click(init_watch_name)
+    })
+  }
+  function watch_trash_click() {
+    // When clicke on a trash icon near watchlist title to delete it
+    $('#watchlist-row .fa-trash').click(function () {
+      var trash_el_name = $(this).attr('id')
+      var col = $(this).parent().parent() // row > col-lg-6
+      $('#watchlist-modal-delete').click(function () {
+        $.ajax({
+          url: '/ajax/account/watchlist/',
+          data: {
+            'action': 'delete',
+            'name': trash_el_name,
+          },
+          success: function (data) {
+            if (data['error']) {
+              var error_msg =
+                `
+                <ul class="m-0 p-0 mt-n3 mb-3" id="watch_name_del_error">
+                  <li class="text-white font-weight-bold list-unstyled">Error has been occured.</li>
+                </ul>
+                `
+              $('#watch_name_del_error').remove()
+              $(this).parent().after($(error_msg))
+            } else {
+              // if removed from database
+              $(col).remove()
+            }
+          },
+        })
+      })
+    })
+  }
+  function watch_create_click() {
+    $('.watch-name-input #create-watch').click(function () {
+      // check for duplicates js and django, empty values
+      var valid = true
+      var new_watch_name = $(this).prev().val()
+      // iterate throug watchlists and cheecek for valids
+      $('#watchlist-row>.col-lg-6 h3').toArray().forEach(h => {
+        if ($(h).text() == new_watch_name) {
+          valid = false
+        }
+      });
+      if (new_watch_name.trim().length == 0) {
+        valid = false
+      }
+      if (valid) {
+        $.ajax({
+          url: '/ajax/account/watchlist/',
+          data: {
+            'action': 'create',
+            'name': new_watch_name,
+          },
+          success: function (data) {
+            if (data['error']) {
+              var error_msg =
+                `
+                <ul class="m-0 p-0 mt-n3 mb-3" id="watch_name_del_error">
+                  <li class="text-white font-weight-bold list-unstyled">Error has been occured.</li>
+                </ul>
+                `
+              $('#watch_name_del_error').remove()
+              $(this).parent().after($(error_msg))
+              return false
+            } 
+          },
+        })
+        $(this).parent().addClass('d-none')
+        $(this).parent().before(`<h3 class="text-white text-center ml-auto">${new_watch_name}</h3><i type="button" id="${new_watch_name}" class="fas fa-trash ml-auto" data-toggle="modal" data-target="#watchlist-modal"></i>`)
+        $(this).parent().remove()
+        watch_name_click()
+      }
     })
   }
 
@@ -439,8 +525,28 @@ var html_templates = {
   'watchlists':
     `
     <div class="row">
-      <div class="col-lg-12 mx-auto">
+      <div class="mx-auto w-100">
         <div class="row" id="watchlist-row">
+        </div>
+      </div>
+    </div>
+    
+    <!-- Modal -->
+    <div class="modal fade" id="watchlist-modal" tabindex="-1" role="dialog" aria-labelledby="watchlist-modal-title" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p class="mb-0">Are you sure you want to delete the Watchlist?</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-danger" data-dismiss="modal" id="watchlist-modal-delete">Delete</button>
+          </div>
         </div>
       </div>
     </div>
@@ -472,7 +578,7 @@ var html_templates = {
                 <td>Moves Above 500.00</td>
                 <td>Once</td>
                 <td><h5><i class="fas fa-envelope hover" data-toggle="tooltip" title="E-mail message"></i> 
-                  <i class="fas fa-laptop hover" data-toggle="tooltip"title="Notification"></i></h5></td>
+                  <i class="fas fa-laptop hover" data-toggle="tooltip" title="Notification"></i></h5></td>
                 <td>
                   <div class="switch switch-xs switch-label-onoff pl-0 mr-2 d-flex fl justify-content-center">
                     <input class="switch-input" id="switch1" type="checkbox" :checked>

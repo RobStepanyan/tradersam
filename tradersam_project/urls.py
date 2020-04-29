@@ -39,5 +39,5 @@ urlpatterns = [
     path('ajax/account/change-email/', users_views.ajax_change_email, name='ajax-change-email'),
     path('account/change-email/<uidb64>/<token>/<new_email>', users_views.change_email, name='change-email'),#to receive the link sent to email
     path('ajax/account/change-password/', users_views.ajax_change_password, name='ajax-change-password'),
-    path('ajax/account/change-watch-name/', users_views.ajax_change_watch_name, name='ajax-change-watch-name'),
+    path('ajax/account/watchlist/', users_views.ajax_watchlist, name='ajax-watchlist'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
