@@ -9614,8 +9614,10 @@ tbody {
     padding-bottom: 16px;
   }
 }
-#watchlist-row .col-lg-6 {
-  /* justify-content: center; */
+#watchlist-row h3 {
+  white-space: nowrap;
+  overflow: hidden;
+  max-width: 100%;
 }
 .watchlist {
   padding-bottom: 0;
@@ -9718,4 +9720,7 @@ tbody {
 }
 .watch-name-input i:active {
   background: var(--gray5);
+}
+.font-size-2 {
+  font-size: 2rem;
 }

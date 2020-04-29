@@ -190,7 +190,6 @@ $(function () {
     } else if (dep == 'watchlists') {
       $(html_templates['watchlists']).appendTo(container)
       getData()
-      // On click add watchlist name, rows and save button
       
 
     } else if (dep == 'alerts') {
@@ -231,30 +230,40 @@ $(function () {
       data['watchlists'].forEach(wlist => {
         content +=
           `
-        <div class="col-lg-6">
+          <div class="col-lg-6">
+          <div class="row justify-content-center">
+          <h3 class="text-white text-center">${wlist['name']}</h3>
+          </div>
           <div class="account-card watchlist">
-          <h3>${wlist['name']}</h3>
-          <table class="table table-hover">
-            <thead>
-              <tr>
-                <th></th>
-                <th>Symbol</th>
-                <th>Change %</th>
-                <th>Volume</th>
-              </tr>
-            </thead>
-            <tbody>
-        `
-        wlist['rows'].forEach(row => {
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>Symbol</th>
+                  <th>Change %</th>
+                  <th>Volume</th>
+                </tr>
+              </thead>
+              <tbody>
+          `
+        wlist['asset_links'].forEach(row => {
           content +=
-            `
+          `
           <tr>
-            <td><img class="country-flag-md" src="/static/main_app/svg/flags/${row[0]['country']}.svg" alt=""></td>
-            <td><a href="${row[1]['href']}">${row[1]['short_name']}</a></td>
-            <td><span class="ml-0 d-initial change down">${row[2]['change_perc']}</span></td>
-            <td>${row[3]['volume']}</td>
+            <td>f</td>
+            <td>f</td>
+            <td>f</td>
+            <td>f</td>
           </tr>
           `
+          //   `
+          // <tr>
+          //   <td><img class="country-flag-md" src="/static/main_app/svg/flags/${row[0]['country']}.svg" alt=""></td>
+          //   <td><a href="${row[1]['href']}">${row[1]['short_name']}</a></td>
+          //   <td><span class="ml-0 d-initial change down">${row[2]['change_perc']}</span></td>
+          //   <td>${row[3]['volume']}</td>
+          // </tr>
+          // `
         });
         content +=
           `
@@ -331,7 +340,26 @@ $(function () {
         // replace check mark icon with loading icon
         $('#watch_name_dup_error').remove()
         // Send name change request to server
-        ----
+        $.ajax({
+          url: '/ajax/account/change-watch-name/',
+          data: {
+            'old_name': init_watch_name,
+            'new_name': new_watch_name
+          },
+          success: function(){
+            
+          },
+          error: function(){
+            var error_msg = 
+            `
+            <ul class="m-0 p-0 mt-n3 mb-3" id="watch_name_dup_error">
+              <li class="text-white font-weight-bold list-unstyled">Error has been occured.</li>
+            </ul>
+            `
+            $('#watch_name_dup_error').remove()
+            $(this).parent().after($(error_msg))
+          }
+        })
         $(this).parent().addClass('d-none')
         $(this).parent().before(`<h3 class="text-white text-center">${new_watch_name}</h3>`)
         $(this).parent().remove()
@@ -411,7 +439,7 @@ var html_templates = {
   'watchlists':
     `
     <div class="row">
-      <div class="col-lg-10 mx-auto">
+      <div class="col-lg-12 mx-auto">
         <div class="row" id="watchlist-row">
         </div>
       </div>

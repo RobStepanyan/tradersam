@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from .forms import UserSignUpForm, UserLogInForm
 from .models import Watchlist
+from django.forms.models import model_to_dict
 from django.core.exceptions import ValidationError, PermissionDenied
 from django.core.validators import EmailValidator
 from django.contrib.auth import authenticate, password_validation
@@ -121,7 +122,10 @@ def ajax_account(request):
     elif dep == 'watchlists':
         user = request.user
         watchlists_raw = Watchlist.objects.filter(user=user)
-        return JsonResponse({'watchlists': []})
+        watchlists = []
+        for watch in watchlists_raw:
+            watchlists.append(model_to_dict(watch))
+        return JsonResponse({'watchlists': list(watchlists)})
     
     elif dep == 'alerts':
         return JsonResponse({})
@@ -332,4 +336,14 @@ def new_password(request, uidb64, token):
         else:
             messages.error(request, 'Activation link is invalid!')
             return redirect('home')
+
+def ajax_change_watch_name(request):
+    old_name = request.GET['old_name']
+    new_name = request.GET['new_name']
     
+    user = User.objects.get(pk=request.user.pk)
+    
+    obj = Watchlist.objects.get(user=user, name=old_name)
+    obj.name = new_name
+    obj.save()
+    return JsonResponse({})
