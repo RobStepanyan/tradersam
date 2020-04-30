@@ -127,10 +127,10 @@ def ajax_account(request):
             watchlists.append(model_to_dict(watch))
         return JsonResponse({'watchlists': watchlists})
     
-    elif dep == 'alerts':
-        return JsonResponse({})
-    elif dep == 'portfolios':
-        return JsonResponse({})
+    # elif dep == 'alerts':
+    #     return JsonResponse({})
+    # elif dep == 'portfolios':
+    #     return JsonResponse({})
     else:
         raise Http404(f'Department is not found {dep}')
 

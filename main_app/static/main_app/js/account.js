@@ -52,9 +52,9 @@ $(function () {
   // End of CSRF Protection
 
   function loadHTML() {
-    container.empty()
-    container.removeClass('d-flex')
     container.addClass('d-none')
+    container.removeClass('d-flex')
+    container.empty()
     dep = $('.tab.active').attr('id')
     if (dep == 'security') {
       $(html_templates['security']).appendTo(container)
@@ -191,10 +191,10 @@ $(function () {
       $(html_templates['watchlists']).appendTo(container)
       getData()
 
-    } else if (dep == 'alerts') {
-      $(html_templates['alerts']).appendTo(container)
-    } else if (dep == 'portfolio') {
-      $(html_templates['portfolio']).appendTo(container)
+    // } else if (dep == 'alerts') {
+    //   $(html_templates['alerts']).appendTo(container)
+    // } else if (dep == 'portfolio') {
+    //   $(html_templates['portfolio']).appendTo(container)
     } else {
       $('<h2 class="text-white text-center w-100">Under Construction</h2>').appendTo(container)
       container.removeClass('d-none')
@@ -552,237 +552,237 @@ var html_templates = {
     </div>
     `,
 
-  'alerts':
-    `
-    <div class="row">
-      <div class="m-auto w-100">
-        <div class="account-card p-1 overflow-auto">  
-          <table class="table table-nowrap">
-            <thead>
-              <tr>
-                <th></th>
-                <th>Name</th>
-                <th>Alert Type</th>
-                <th>Condition</th>
-                <th>Frequency</th>
-                <th>Delivery Method</th>
-                <th>On/Off</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><img src="/static/main_app/svg/flags/au.svg" class="country-flag-md"></td>
-                <td>SPDR S&P 500 ETF Trust</td>
-                <td>Price</td>
-                <td>Moves Above 500.00</td>
-                <td>Once</td>
-                <td><h5><i class="fas fa-envelope hover" data-toggle="tooltip" title="E-mail message"></i> 
-                  <i class="fas fa-laptop hover" data-toggle="tooltip" title="Notification"></i></h5></td>
-                <td>
-                  <div class="switch switch-xs switch-label-onoff pl-0 mr-2 d-flex fl justify-content-center">
-                    <input class="switch-input" id="switch1" type="checkbox" :checked>
-                    <label class="switch-btn" for="switch1"></label>
-                  </div>
-                </td>
-                <td><h5><i class="fas fa-pen hover" data-toggle="tooltip" title="Edit"></i> 
-                  <i class="fas fa-trash hover" data-toggle="tooltip" title="Remove"></i></h5></td>
-              </tr>
-              <tr>
-                <td><img src="/static/main_app/svg/flags/au.svg" class="country-flag-md"></td>
-                <td>SPDR S&P 500 ETF Trust</td>
-                <td>Price</td>
-                <td>Moves Above 500.00</td>
-                <td>Once</td>
-                <td><h5><i class="fas fa-envelope hover" data-toggle="tooltip" title="E-mail message"></i> 
-                  <i class="fas fa-laptop hover" data-toggle="tooltip"title="Notification"></i></h5></td>
-                <td>
-                  <div class="switch switch-xs switch-label-onoff pl-0 mr-2 d-flex fl justify-content-center">
-                    <input class="switch-input" id="switch2" type="checkbox" :checked>
-                    <label class="switch-btn" for="switch2"></label>
-                  </div>
-                </td>
-                <td><h5><i class="fas fa-pen hover" data-toggle="tooltip" title="Edit"></i> 
-                  <i class="fas fa-trash hover" data-toggle="tooltip" title="Remove"></i></h5></td>
-              </tr>
-              <tr>
-                <td><img src="/static/main_app/svg/flags/au.svg" class="country-flag-md"></td>
-                <td>SPDR S&P 500 ETF Trust</td>
-                <td>Price</td>
-                <td>Moves Above 500.00</td>
-                <td>Once</td>
-                <td><h5><i class="fas fa-envelope hover" data-toggle="tooltip" title="E-mail message"></i> 
-                  <i class="fas fa-laptop hover" data-toggle="tooltip"title="Notification"></i></h5></td>
-                <td>
-                  <div class="switch switch-xs switch-label-onoff pl-0 mr-2 d-flex fl justify-content-center">
-                    <input class="switch-input" id="switch3" type="checkbox" :checked>
-                    <label class="switch-btn" for="switch3"></label>
-                  </div>
-                </td>
-                <td><h5><i class="fas fa-pen hover" data-toggle="tooltip" title="Edit"></i> 
-                  <i class="fas fa-trash hover" data-toggle="tooltip" title="Remove"></i></h5></td>
-              </tr>
-              <tr>
-                <td><img src="/static/main_app/svg/flags/au.svg" class="country-flag-md"></td>
-                <td>SPDR S&P 500 ETF Trust</td>
-                <td>Price</td>
-                <td>Moves Above 500.00</td>
-                <td>Once</td>
-                <td><h5><i class="fas fa-envelope hover" data-toggle="tooltip" title="E-mail message"></i> 
-                  <i class="fas fa-laptop hover" data-toggle="tooltip"title="Notification"></i></h5></td>
-                <td>
-                  <div class="switch switch-xs switch-label-onoff pl-0 mr-2 d-flex fl justify-content-center">
-                    <input class="switch-input" id="switch4" type="checkbox" :checked>
-                    <label class="switch-btn" for="switch4"></label>
-                  </div>
-                </td>
-                <td><h5><i class="fas fa-pen hover" data-toggle="tooltip" title="Edit"></i> 
-                  <i class="fas fa-trash hover" data-toggle="tooltip" title="Remove"></i></h5></td>
-              </tr>
-              <tr>
-                <td><img src="/static/main_app/svg/flags/au.svg" class="country-flag-md"></td>
-                <td>SPDR S&P 500 ETF Trust</td>
-                <td>Price</td>
-                <td>Moves Above 500.00</td>
-                <td>Once</td>
-                <td><h5><i class="fas fa-envelope hover" data-toggle="tooltip" title="E-mail message"></i> 
-                  <i class="fas fa-laptop hover" data-toggle="tooltip"title="Notification"></i></h5></td>
-                <td>
-                  <div class="switch switch-xs switch-label-onoff pl-0 mr-2 d-flex fl justify-content-center">
-                    <input class="switch-input" id="switch5" type="checkbox" :checked>
-                    <label class="switch-btn" for="switch5"></label>
-                  </div>
-                </td>
-                <td><h5><i class="fas fa-pen hover" data-toggle="tooltip" title="Edit"></i> 
-                  <i class="fas fa-trash hover" data-toggle="tooltip" title="Remove"></i></h5></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-    `,
+  // 'alerts':
+  //   `
+  //   <div class="row">
+  //     <div class="m-auto w-100">
+  //       <div class="account-card p-1 overflow-auto">  
+  //         <table class="table table-nowrap">
+  //           <thead>
+  //             <tr>
+  //               <th></th>
+  //               <th>Name</th>
+  //               <th>Alert Type</th>
+  //               <th>Condition</th>
+  //               <th>Frequency</th>
+  //               <th>Delivery Method</th>
+  //               <th>On/Off</th>
+  //               <th>Actions</th>
+  //             </tr>
+  //           </thead>
+  //           <tbody>
+  //             <tr>
+  //               <td><img src="/static/main_app/svg/flags/au.svg" class="country-flag-md"></td>
+  //               <td>SPDR S&P 500 ETF Trust</td>
+  //               <td>Price</td>
+  //               <td>Moves Above 500.00</td>
+  //               <td>Once</td>
+  //               <td><h5><i class="fas fa-envelope hover" data-toggle="tooltip" title="E-mail message"></i> 
+  //                 <i class="fas fa-laptop hover" data-toggle="tooltip" title="Notification"></i></h5></td>
+  //               <td>
+  //                 <div class="switch switch-xs switch-label-onoff pl-0 mr-2 d-flex fl justify-content-center">
+  //                   <input class="switch-input" id="switch1" type="checkbox" :checked>
+  //                   <label class="switch-btn" for="switch1"></label>
+  //                 </div>
+  //               </td>
+  //               <td><h5><i class="fas fa-pen hover" data-toggle="tooltip" title="Edit"></i> 
+  //                 <i class="fas fa-trash hover" data-toggle="tooltip" title="Remove"></i></h5></td>
+  //             </tr>
+  //             <tr>
+  //               <td><img src="/static/main_app/svg/flags/au.svg" class="country-flag-md"></td>
+  //               <td>SPDR S&P 500 ETF Trust</td>
+  //               <td>Price</td>
+  //               <td>Moves Above 500.00</td>
+  //               <td>Once</td>
+  //               <td><h5><i class="fas fa-envelope hover" data-toggle="tooltip" title="E-mail message"></i> 
+  //                 <i class="fas fa-laptop hover" data-toggle="tooltip"title="Notification"></i></h5></td>
+  //               <td>
+  //                 <div class="switch switch-xs switch-label-onoff pl-0 mr-2 d-flex fl justify-content-center">
+  //                   <input class="switch-input" id="switch2" type="checkbox" :checked>
+  //                   <label class="switch-btn" for="switch2"></label>
+  //                 </div>
+  //               </td>
+  //               <td><h5><i class="fas fa-pen hover" data-toggle="tooltip" title="Edit"></i> 
+  //                 <i class="fas fa-trash hover" data-toggle="tooltip" title="Remove"></i></h5></td>
+  //             </tr>
+  //             <tr>
+  //               <td><img src="/static/main_app/svg/flags/au.svg" class="country-flag-md"></td>
+  //               <td>SPDR S&P 500 ETF Trust</td>
+  //               <td>Price</td>
+  //               <td>Moves Above 500.00</td>
+  //               <td>Once</td>
+  //               <td><h5><i class="fas fa-envelope hover" data-toggle="tooltip" title="E-mail message"></i> 
+  //                 <i class="fas fa-laptop hover" data-toggle="tooltip"title="Notification"></i></h5></td>
+  //               <td>
+  //                 <div class="switch switch-xs switch-label-onoff pl-0 mr-2 d-flex fl justify-content-center">
+  //                   <input class="switch-input" id="switch3" type="checkbox" :checked>
+  //                   <label class="switch-btn" for="switch3"></label>
+  //                 </div>
+  //               </td>
+  //               <td><h5><i class="fas fa-pen hover" data-toggle="tooltip" title="Edit"></i> 
+  //                 <i class="fas fa-trash hover" data-toggle="tooltip" title="Remove"></i></h5></td>
+  //             </tr>
+  //             <tr>
+  //               <td><img src="/static/main_app/svg/flags/au.svg" class="country-flag-md"></td>
+  //               <td>SPDR S&P 500 ETF Trust</td>
+  //               <td>Price</td>
+  //               <td>Moves Above 500.00</td>
+  //               <td>Once</td>
+  //               <td><h5><i class="fas fa-envelope hover" data-toggle="tooltip" title="E-mail message"></i> 
+  //                 <i class="fas fa-laptop hover" data-toggle="tooltip"title="Notification"></i></h5></td>
+  //               <td>
+  //                 <div class="switch switch-xs switch-label-onoff pl-0 mr-2 d-flex fl justify-content-center">
+  //                   <input class="switch-input" id="switch4" type="checkbox" :checked>
+  //                   <label class="switch-btn" for="switch4"></label>
+  //                 </div>
+  //               </td>
+  //               <td><h5><i class="fas fa-pen hover" data-toggle="tooltip" title="Edit"></i> 
+  //                 <i class="fas fa-trash hover" data-toggle="tooltip" title="Remove"></i></h5></td>
+  //             </tr>
+  //             <tr>
+  //               <td><img src="/static/main_app/svg/flags/au.svg" class="country-flag-md"></td>
+  //               <td>SPDR S&P 500 ETF Trust</td>
+  //               <td>Price</td>
+  //               <td>Moves Above 500.00</td>
+  //               <td>Once</td>
+  //               <td><h5><i class="fas fa-envelope hover" data-toggle="tooltip" title="E-mail message"></i> 
+  //                 <i class="fas fa-laptop hover" data-toggle="tooltip"title="Notification"></i></h5></td>
+  //               <td>
+  //                 <div class="switch switch-xs switch-label-onoff pl-0 mr-2 d-flex fl justify-content-center">
+  //                   <input class="switch-input" id="switch5" type="checkbox" :checked>
+  //                   <label class="switch-btn" for="switch5"></label>
+  //                 </div>
+  //               </td>
+  //               <td><h5><i class="fas fa-pen hover" data-toggle="tooltip" title="Edit"></i> 
+  //                 <i class="fas fa-trash hover" data-toggle="tooltip" title="Remove"></i></h5></td>
+  //             </tr>
+  //           </tbody>
+  //         </table>
+  //       </div>
+  //     </div>
+  //   </div>
+  //   `,
 
-  'portfolio':
-    `
-    <div class="account-card p-3">
-      <div class="row align-items-center justify-content-between">
-        <div class="dropdown show mr-3 my-2">
-          <a class="btn btn-primary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Medium Risk
-          </a>
+  // 'portfolio':
+  //   `
+  //   <div class="account-card p-3">
+  //     <div class="row align-items-center justify-content-between">
+  //       <div class="dropdown show mr-3 my-2">
+  //         <a class="btn btn-primary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+  //           Medium Risk
+  //         </a>
         
-          <div class="dropdown-menu" data-toggle="buttons">
-            <h6 class="dropdown-header">Your Portfolios</h6>
-            <label class="btn dropdown-item active">
-              <input type="radio" id="low-risk" autocomplete="off" checked>  
-              Low Risk
-            </label>
-            <label class="btn dropdown-item">
-              <input type="radio" id="medium-risk" autocomplete="off">  
-              Medium Risk
-            </label>
-            <label class="btn dropdown-item">
-              <input type="radio" id="trading" autocomplete="off">  
-              Trading
-            </label>
-            <div class="dropdown-divider"></div>
-            <label class="btn dropdown-item">
-              <input type="radio" id="create_" autocomplete="off">  
-              <i class="fas fa-plus"></i> Create
-            </label>
-          </div>
+  //         <div class="dropdown-menu" data-toggle="buttons">
+  //           <h6 class="dropdown-header">Your Portfolios</h6>
+  //           <label class="btn dropdown-item active">
+  //             <input type="radio" id="low-risk" autocomplete="off" checked>  
+  //             Low Risk
+  //           </label>
+  //           <label class="btn dropdown-item">
+  //             <input type="radio" id="medium-risk" autocomplete="off">  
+  //             Medium Risk
+  //           </label>
+  //           <label class="btn dropdown-item">
+  //             <input type="radio" id="trading" autocomplete="off">  
+  //             Trading
+  //           </label>
+  //           <div class="dropdown-divider"></div>
+  //           <label class="btn dropdown-item">
+  //             <input type="radio" id="create_" autocomplete="off">  
+  //             <i class="fas fa-plus"></i> Create
+  //           </label>
+  //         </div>
         
-        </div>
-        <div class="row my-2">
-          <div class="px-2 border-right-bold">
-            Holdings:
-            <h4 class="text-success">$1K / 3456.45%</h4>
-          </div>
-          <div class="px-2 border-right-bold">
-            Open P/L:
-            <h4 class="text-success">$1K / 3456.45%</h4>
-          </div>
-          <div class="px-2">
-            Daily P/L:
-            <h4 class="text-success">$1K / 3456.45%</h4>
-          </div>  
-        </div>
-      </div>
-      <div class="w-100 overflow-auto">
-        <table class="table table-nowrap">
-        <thead>
-          <tr>
-            <th></th>
-            <th>Name</th>
-            <th>Symbol</th>
-            <th>Open Date</th>
-            <th>Type</th>
-            <th>Amount</th>
-            <th>Avg Price</th>
-            <th>Current Price</th>
-            <th>Daily P/L</th>
-            <th>Open P/L</th>
-            <th>Open P/L (%)</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><img class="country-flag-md" src="/static/main_app/svg/flags/ch.svg" alt=""></td>
-            <td>SPDR S&P 500 ETF Trust</td>
-            <td>SPY</td>
-            <td>08/07/1998</td>
-            <td>BUY</td>
-            <td>12</td>
-            <td>245.36</td>
-            <td>2437.21</td>
-            <td><span class="text-success">+2341.21</span></td>
-            <td><span class="text-success">+6534.24</span></td>
-            <td><span class="text-success">+2021.32%</span></td>
-          </tr>
-          <tr>
-            <td><img class="country-flag-md" src="/static/main_app/svg/flags/ch.svg" alt=""></td>
-            <td>SPDR S&P 500 ETF Trust</td>
-            <td>SPY</td>
-            <td>08/07/1998</td>
-            <td>BUY</td>
-            <td>12</td>
-            <td>245.36</td>
-            <td>2437.21</td>
-            <td><span class="text-success">+2341.21</span></td>
-            <td><span class="text-success">+6534.24</span></td>
-            <td><span class="text-success">+2021.32%</span></td>
-          </tr>
-          <tr>
-            <td><img class="country-flag-md" src="/static/main_app/svg/flags/ch.svg" alt=""></td>
-            <td>SPDR S&P 500 ETF Trust</td>
-            <td>SPY</td>
-            <td>08/07/1998</td>
-            <td>BUY</td>
-            <td>12</td>
-            <td>245.36</td>
-            <td>2437.21</td>
-            <td><span class="text-success">+2341.21</span></td>
-            <td><span class="text-success">+6534.24</span></td>
-            <td><span class="text-success">+2021.32%</span></td>
-          </tr>
-          <tr>
-            <td><img class="country-flag-md" src="/static/main_app/svg/flags/ch.svg" alt=""></td>
-            <td>SPDR S&P 500 ETF Trust</td>
-            <td>SPY</td>
-            <td>08/07/1998</td>
-            <td>BUY</td>
-            <td>12</td>
-            <td>245.36</td>
-            <td>2437.21</td>
-            <td><span class="text-success">+2341.21</span></td>
-            <td><span class="text-success">+6534.24</span></td>
-            <td><span class="text-success">+2021.32%</span></td>
-          </tr>
-        </tbody>
-      </table>
-      </div>
+  //       </div>
+  //       <div class="row my-2">
+  //         <div class="px-2 border-right-bold">
+  //           Holdings:
+  //           <h4 class="text-success">$1K / 3456.45%</h4>
+  //         </div>
+  //         <div class="px-2 border-right-bold">
+  //           Open P/L:
+  //           <h4 class="text-success">$1K / 3456.45%</h4>
+  //         </div>
+  //         <div class="px-2">
+  //           Daily P/L:
+  //           <h4 class="text-success">$1K / 3456.45%</h4>
+  //         </div>  
+  //       </div>
+  //     </div>
+  //     <div class="w-100 overflow-auto">
+  //       <table class="table table-nowrap">
+  //       <thead>
+  //         <tr>
+  //           <th></th>
+  //           <th>Name</th>
+  //           <th>Symbol</th>
+  //           <th>Open Date</th>
+  //           <th>Type</th>
+  //           <th>Amount</th>
+  //           <th>Avg Price</th>
+  //           <th>Current Price</th>
+  //           <th>Daily P/L</th>
+  //           <th>Open P/L</th>
+  //           <th>Open P/L (%)</th>
+  //         </tr>
+  //       </thead>
+  //       <tbody>
+  //         <tr>
+  //           <td><img class="country-flag-md" src="/static/main_app/svg/flags/ch.svg" alt=""></td>
+  //           <td>SPDR S&P 500 ETF Trust</td>
+  //           <td>SPY</td>
+  //           <td>08/07/1998</td>
+  //           <td>BUY</td>
+  //           <td>12</td>
+  //           <td>245.36</td>
+  //           <td>2437.21</td>
+  //           <td><span class="text-success">+2341.21</span></td>
+  //           <td><span class="text-success">+6534.24</span></td>
+  //           <td><span class="text-success">+2021.32%</span></td>
+  //         </tr>
+  //         <tr>
+  //           <td><img class="country-flag-md" src="/static/main_app/svg/flags/ch.svg" alt=""></td>
+  //           <td>SPDR S&P 500 ETF Trust</td>
+  //           <td>SPY</td>
+  //           <td>08/07/1998</td>
+  //           <td>BUY</td>
+  //           <td>12</td>
+  //           <td>245.36</td>
+  //           <td>2437.21</td>
+  //           <td><span class="text-success">+2341.21</span></td>
+  //           <td><span class="text-success">+6534.24</span></td>
+  //           <td><span class="text-success">+2021.32%</span></td>
+  //         </tr>
+  //         <tr>
+  //           <td><img class="country-flag-md" src="/static/main_app/svg/flags/ch.svg" alt=""></td>
+  //           <td>SPDR S&P 500 ETF Trust</td>
+  //           <td>SPY</td>
+  //           <td>08/07/1998</td>
+  //           <td>BUY</td>
+  //           <td>12</td>
+  //           <td>245.36</td>
+  //           <td>2437.21</td>
+  //           <td><span class="text-success">+2341.21</span></td>
+  //           <td><span class="text-success">+6534.24</span></td>
+  //           <td><span class="text-success">+2021.32%</span></td>
+  //         </tr>
+  //         <tr>
+  //           <td><img class="country-flag-md" src="/static/main_app/svg/flags/ch.svg" alt=""></td>
+  //           <td>SPDR S&P 500 ETF Trust</td>
+  //           <td>SPY</td>
+  //           <td>08/07/1998</td>
+  //           <td>BUY</td>
+  //           <td>12</td>
+  //           <td>245.36</td>
+  //           <td>2437.21</td>
+  //           <td><span class="text-success">+2341.21</span></td>
+  //           <td><span class="text-success">+6534.24</span></td>
+  //           <td><span class="text-success">+2021.32%</span></td>
+  //         </tr>
+  //       </tbody>
+  //     </table>
+  //     </div>
       
-    </div>
-    `
+  //   </div>
+  //   `
 }
