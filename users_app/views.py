@@ -343,14 +343,15 @@ def ajax_watchlist(request):
         old_name = request.GET['old_name']
         new_name = request.GET['new_name']
         
-        if not Watchlist.objects.filter(username=user.username, name=new_name).exists:
+        if not Watchlist.objects.filter(username=user.username, name=new_name).exists():
             return JsonResponse({'error': True})
         obj = Watchlist.objects.get(username=user.username, name=old_name)
         obj.name = new_name
         obj.save()
     elif request.GET['action'] == 'delete':
-       obj = Watchlist.objects.get(username=user.username, name=request.GET['name'])
-       obj.delete()
+        if Watchlist.objects.filter(username=user.username, name=request.GET['name']).exists():
+            obj = Watchlist.objects.get(username=user.username, name=request.GET['name'])
+            obj.delete()
     elif request.GET['action'] == 'create':
         Watchlist(
             name=request.GET['name'],
