@@ -1,8 +1,4 @@
 $(function () {
-  // Popover
-  $(function () {
-    $('[data-toggle="popover"]').popover()
-  })
   /*
   Overview
   
@@ -235,10 +231,7 @@ $(function () {
           `
           <div class="col-lg-6">
           <div class="row">
-          <h3 class="text-white text-center ml-auto">${wlist['name']}</h3>
-          <i type="button" id="${wlist['name']}" class="fas fa-trash ml-auto" data-toggle="modal" data-target="#watchlist-modal"></i>
-          <a tabindex="0" class="btn btn-lg btn-danger" role="button" data-toggle="popover" data-trigger="focus" title="Dismissible popover" data-content="And here's some amazing content. It's very engaging. Right?">Dismissible popover</a>
-          <a href="#" data-toggle="popover" title="Popover Header" data-content="Some content inside the popover">Toggle popover</a>
+          <h3 class="text-white text-center ml-auto">${wlist['name']}</h3><i type="button" id="${wlist['name']}" class="fas fa-trash ml-auto" data-toggle="modal" data-target="#watchlist-modal"></i>
           </div>
           <div class="account-card watchlist">
             <table class="table table-hover">
@@ -308,11 +301,9 @@ $(function () {
             `
           <div class="col-lg-6">
           <div class="row">
-
           <div class="watch-name-input mx-auto">
             <input maxlength="255" id="new_watch_name"><i id="create-watch" class="fas fa-check"></i>
           </div>
-
           </div>
           <div class="account-card watchlist">
             <table class="table table-hover">
@@ -510,7 +501,6 @@ var html_templates = {
     </div>
     <button class="btn btn-primary ml-2 mt-2" id="personal-button">Save Changes</button>
     </div>
-
     <div class="account-card">
     <h2 class="m-0 pl-2">Password</h2>
     <div class="col-lg-6">
