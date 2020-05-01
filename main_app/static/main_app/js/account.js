@@ -1,4 +1,8 @@
 $(function () {
+  // Popover
+  $(function () {
+    $('[data-toggle="popover"]').popover()
+  })
   /*
   Overview
   
@@ -231,7 +235,10 @@ $(function () {
           `
           <div class="col-lg-6">
           <div class="row">
-          <h3 class="text-white text-center ml-auto">${wlist['name']}</h3><i type="button" id="${wlist['name']}" class="fas fa-trash ml-auto" data-toggle="modal" data-target="#watchlist-modal"></i>
+          <h3 class="text-white text-center ml-auto">${wlist['name']}</h3>
+          <i type="button" id="${wlist['name']}" class="fas fa-trash ml-auto" data-toggle="modal" data-target="#watchlist-modal"></i>
+          <a tabindex="0" class="btn btn-lg btn-danger" role="button" data-toggle="popover" data-trigger="focus" title="Dismissible popover" data-content="And here's some amazing content. It's very engaging. Right?">Dismissible popover</a>
+          <a href="#" data-toggle="popover" title="Popover Header" data-content="Some content inside the popover">Toggle popover</a>
           </div>
           <div class="account-card watchlist">
             <table class="table table-hover">

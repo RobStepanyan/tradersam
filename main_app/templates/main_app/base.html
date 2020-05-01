@@ -129,7 +129,10 @@
   <!-- Custom scripts for this template -->
   <script src="{% static 'main_app/js/creative.js' %}"></script>
   {% block bodyend %}{% endblock bodyend %}
-
+  <script>
+    // Popover Init
+    $('[data-toggle="popover"]').popover();
+  </script>
 </body>
 
 </html>
