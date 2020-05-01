@@ -21,6 +21,8 @@ from django.template.loader import render_to_string
 from .tokens import account_activation_token
 from smtplib import SMTP_SSL
 from email.mime.text import MIMEText
+from scraper_app.scraper_data import STATIC_OBJECTS
+from scraper_app.models import AllAssetsLive, Countries
 
 # Create your views here.
 def signup(request):
@@ -124,7 +126,33 @@ def ajax_account(request):
         watchlists_raw = Watchlist.objects.filter(username=user.username)
         watchlists = []
         for watch in watchlists_raw:
-            watchlists.append(model_to_dict(watch))
+            watch = model_to_dict(watch)
+            name = watch['name']
+            asset_links = []
+            for asset in watch['asset_links']:
+                for value in STATIC_OBJECTS.values():
+                    static_model = None
+                    if value['object'].objects.filter(link=asset).exists():
+                        static_model = model_to_dict(value['object'].objects.get(link=asset))
+                
+                    if static_model:
+                        if AllAssetsLive.objects.filter(link=asset).exists():
+                            live_model = model_to_dict(AllAssetsLive.objects.get(link=asset))['change_perc', 'volume']
+                        else:
+                            live_model = {'change_perc': 'N/A', 'volume': 'N/A'}
+                    else:
+                        continue
+                    
+                    asset_dct = {
+                        'country': static_model['country'],
+                        'short_name': static_model['short_name'],
+                        'change_perc': live_model['change_perc'],
+                        'volume': live_model['volume'],
+                        'href': '/dev/asset/' + static_model['country'] + '/' + static_model['Type'].lower() + '/' + str(static_model['id'])
+                        }
+                    asset_links.append(asset_dct)
+            watchlists.append({'name': name, 'asset_links': asset_links})   
+
         return JsonResponse({'watchlists': watchlists})
     
     # elif dep == 'alerts':
@@ -356,7 +384,7 @@ def ajax_watchlist(request):
         Watchlist(
             name=request.GET['name'],
             username=user.username,
-            asset_links=[]
+            asset_links=['https://www.investing.com/commodities/oats', 'https://www.investing.com/commodities/lumber']
         ).save()
 
     return JsonResponse({'error': False})

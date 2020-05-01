@@ -248,22 +248,24 @@ $(function () {
         wlist['asset_links'].forEach(row => {
           content +=
             `
-          <tr>
-            <td>f</td>
-            <td>f</td>
-            <td>f</td>
-            <td>f</td>
-          </tr>
-          `
-          //   `
-          // <tr>
-          //   <td><img class="country-flag-md" src="/static/main_app/svg/flags/${row[0]['country']}.svg" alt=""></td>
-          //   <td><a href="${row[1]['href']}">${row[1]['short_name']}</a></td>
-          //   <td><span class="ml-0 d-initial change down">${row[2]['change_perc']}</span></td>
-          //   <td>${row[3]['volume']}</td>
-          // </tr>
-          // `
-        });
+            <tr>
+              <td><img class="country-flag-md" src="/static/main_app/svg/flags/${row['country']}.svg" alt=""></td>
+              <td><a href="${row['href']}">${row['short_name']}</a></td>
+            `
+            
+            if (row['change_perc'].includes('-')) {
+              content +=  `<td><span class="ml-0 d-initial change down">${row['change_perc']}</span></td>`
+            } else if (row['change_perc'].includes('+')) {
+              content +=  `<td><span class="ml-0 d-initial change up">${row['change_perc']}</span></td>`
+            } else {
+              content +=  `<td><span class="ml-0 d-initial change">${row['change_perc']}</span></td>`
+            }
+            content +=
+            `
+              <td>${row['volume']}</td>
+            </tr>
+            `
+        }); 
         content +=
           `
             </tbody>
