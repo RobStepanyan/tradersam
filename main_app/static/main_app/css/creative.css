@@ -145,7 +145,7 @@ a:hover {
   color: #000;
 }
 a:not([href]):not([tabindex]) {
-  color: inherit;
+  /* color: inherit; */
   text-decoration: none;
 }
 a:not([href]):not([tabindex]):focus, a:not([href]):not([tabindex]):hover {
@@ -9608,34 +9608,38 @@ tbody {
   white-space: nowrap;
   line-height: 1.25;
   overflow: hidden;
-  max-width: calc(100% - 1.25rem - 16px); /* 26px trash icon, 16px padding */
+  max-width: calc(100% - 2rem - 16px - 8px); /* 26px trash icon, 16px padding */
 }
-#watchlist-row h3+i {
+#watchlist-row h3+i,
+#watchlist-row h3+i+i {
   color: var(--white);
-  font-size: 1.25rem;
+  font-size: 1rem;
   padding: .5rem;
-  padding-top: .75rem;
+  padding-top: 1rem; /* 1.25 - line-height */
   padding-bottom: 0;
   margin-bottom: .5rem;
   float: right;
   transition: all .25s;
 }
-#watchlist-row h3+i:hover {
-  color: var(--gray6);
+#watchlist-row h3+i {
+  padding-right: 0;
 }
-#watchlist-row h3+i:active {
-  color: var(--red);
+#watchlist-row h3+i:hover,
+#watchlist-row h3+i+i:hover {
+  color: var(--gray6);
 }
 .watchlist {
   padding-bottom: 0;
-  overflow-y: auto;
-  min-height: 400px;
-  max-height: 650px;
+}
+.table-wrapper {
+  overflow-y: hidden;
+  max-height: 636px;
 }
 .watchlist.empty {
   background: transparent;
   border: 2px dashed var(--white);
   height: calc(100% - 41px);
+  min-height: 400px;
   margin-top: 41px;
   display: flex;
 }
