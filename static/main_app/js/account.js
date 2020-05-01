@@ -231,15 +231,18 @@ $(function () {
           `
           <div class="col-lg-6">
           <div class="row">
-          <h3 class="text-white text-center ml-auto">${wlist['name']}</h3><i type="button" id="${wlist['name']}" class="fas fa-trash ml-auto" data-toggle="modal" data-target="#watchlist-modal"></i>
+          <h3 class="text-white text-center ml-auto">${wlist['name']}</h3>
+          <i type="button" id="${wlist['name']}" class="fas fa-trash ml-auto" data-toggle="modal" data-target="#watchlist-modal"></i>
+          <i type="button" id="${wlist['name']}" class="fas fa-pen"></i>
           </div>
           <div class="account-card watchlist">
+            <div class="table-wrapper">
             <table class="table table-hover">
               <thead>
                 <tr>
                   <th></th>
                   <th>Symbol</th>
-                  <th>Change %</th>
+                  <th>Change</th>
                   <th>Volume</th>
                 </tr>
               </thead>
@@ -248,26 +251,38 @@ $(function () {
         wlist['asset_links'].forEach(row => {
           content +=
             `
-          <tr>
-            <td>f</td>
-            <td>f</td>
-            <td>f</td>
-            <td>f</td>
-          </tr>
-          `
-          //   `
-          // <tr>
-          //   <td><img class="country-flag-md" src="/static/main_app/svg/flags/${row[0]['country']}.svg" alt=""></td>
-          //   <td><a href="${row[1]['href']}">${row[1]['short_name']}</a></td>
-          //   <td><span class="ml-0 d-initial change down">${row[2]['change_perc']}</span></td>
-          //   <td>${row[3]['volume']}</td>
-          // </tr>
-          // `
-        });
+            <tr>
+              <td><img class="country-flag-md" src="/static/main_app/svg/flags/${row['country']}.svg" alt=""></td>
+              <td><a href="${row['href']}">${row['short_name']}</a></td>
+            `
+            
+            if (row['change_perc'].includes('-')) {
+              content +=  `<td><span class="ml-0 d-initial change down">${row['change_perc']}</span></td>`
+            } else if (row['change_perc'].includes('+')) {
+              content +=  `<td><span class="ml-0 d-initial change up">${row['change_perc']}</span></td>`
+            } else {
+              content +=  `<td><span class="ml-0 d-initial change">${row['change_perc']}</span></td>`
+            }
+            content +=
+            `
+              <td>${row['volume']}</td>
+            </tr>
+            `
+        }); 
         content +=
           `
             </tbody>
           </table>
+          </div>
+          `
+        if (wlist['asset_links'].length > 10) {
+          content += 
+          `
+          <a id="see_all" class="btn btn-secondary w-100 mt-3 mb-2" data-toggle="modal" data-target="#watchlist-view-modal">See All</a>
+          `
+        }  
+        content +=
+        `  
           </div>
         </div>
         `
@@ -290,6 +305,7 @@ $(function () {
       watch_name_edit_click()
       watch_create_click()
       watch_trash_click()
+      watch_see_all_click()
       var empty_watch
       $('.watchlist.empty').click(function () {
         // Checking quanity of watchlists
@@ -299,19 +315,18 @@ $(function () {
             `
           <div class="col-lg-6">
           <div class="row">
-
           <div class="watch-name-input mx-auto">
             <input maxlength="255" id="new_watch_name"><i id="create-watch" class="fas fa-check"></i>
           </div>
-
           </div>
           <div class="account-card watchlist">
+            <div class="table-wrapper">
             <table class="table table-hover">
               <thead>
                 <tr>
                   <th></th>
                   <th>Symbol</th>
-                  <th>Change %</th>
+                  <th>Change</th>
                   <th>Volume</th>
                 </tr>
               </thead>
@@ -321,6 +336,7 @@ $(function () {
                 </tr>
               </tbody>
             </table>
+            </div>
           </div>
           </div>
           `
@@ -331,6 +347,7 @@ $(function () {
           watch_name_edit_click()
           watch_create_click()
           watch_trash_click()
+          watch_see_all_click()
         }
       })
     }
@@ -374,11 +391,11 @@ $(function () {
           },
         })
         $(this).parent().addClass('d-none')
-        $(this).parent().before(`<h3 class="text-white text-center ml-auto">${new_watch_name}</h3><i type="button" id="${new_watch_name}" class="fas fa-trash ml-auto" data-toggle="modal" data-target="#watchlist-modal"></i>`)
+        $(this).parent().before(`<h3 class="text-white text-center ml-auto">${new_watch_name}</h3><i type="button" id="${new_watch_name}" class="fas fa-trash ml-auto" data-toggle="modal" data-target="#watchlist-modal"></i><i type="button" id="${new_watch_name}" class="fas fa-pen"></i>`)
         $(this).parent().remove()
       } else {
         $(this).parent().addClass('d-none')
-        $(this).parent().before(`<h3 class="text-white text-center ml-auto">${init_watch_name}</h3><i type="button" id="${init_watch_name}" class="fas fa-trash ml-auto" data-toggle="modal" data-target="#watchlist-modal"></i>`)
+        $(this).parent().before(`<h3 class="text-white text-center ml-auto">${init_watch_name}</h3><i type="button" id="${init_watch_name}" class="fas fa-trash ml-auto" data-toggle="modal" data-target="#watchlist-modal"></i><i type="button" id="${init_watch_name}" class="fas fa-pen"></i>`)
         $(this).parent().remove()
       }
       watch_name_click()
@@ -400,7 +417,9 @@ $(function () {
       `
       $(this).before(new_watch_name_input)
       $('#new_watch_name').val(init_watch_name)
-      $('.fa-trash').remove() // Removing trash icon
+      var parent = $(this).parent()
+      parent.find('.fa-trash').remove()
+      parent.find('.fa-pen').remove()
       $(this).remove()
       watch_name_edit_click(init_watch_name)
     })
@@ -472,10 +491,21 @@ $(function () {
           },
         })
         $(this).parent().addClass('d-none')
-        $(this).parent().before(`<h3 class="text-white text-center ml-auto">${new_watch_name}</h3><i type="button" id="${new_watch_name}" class="fas fa-trash ml-auto" data-toggle="modal" data-target="#watchlist-modal"></i>`)
+        $(this).parent().before(`<h3 class="text-white text-center ml-auto">${new_watch_name}</h3><i type="button" id="${new_watch_name}" class="fas fa-trash ml-auto" data-toggle="modal" data-target="#watchlist-modal"></i><i type="button" id="${new_watch_name}" class="fas fa-pen"></i>`)
         $(this).parent().remove()
         watch_name_click()
       }
+    })
+  }
+  function watch_see_all_click() {
+    $('#see_all').click(function(){
+      var table = $(this).prev().find('table')
+      var this_ = $(this)
+      $(table).appendTo($('#watchlist-view-modal .modal-body'))
+      $('#watchlist-view-modal .close').click(function(){
+        console.log(table)
+        $(table).appendTo(this_.prev())
+      })
     })
   }
 
@@ -501,7 +531,6 @@ var html_templates = {
     </div>
     <button class="btn btn-primary ml-2 mt-2" id="personal-button">Save Changes</button>
     </div>
-
     <div class="account-card">
     <h2 class="m-0 pl-2">Password</h2>
     <div class="col-lg-6">
@@ -546,6 +575,21 @@ var html_templates = {
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
             <button type="button" class="btn btn-danger" data-dismiss="modal" id="watchlist-modal-delete">Delete</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="watchlist-view-modal" tabindex="-1" role="dialog" aria-labelledby="watchlist-view-modal-title" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body overflow-auto">
+            
           </div>
         </div>
       </div>
