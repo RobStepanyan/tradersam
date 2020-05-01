@@ -1,9 +1,6 @@
 (function($) {
   "use strict"; // Start of use strict
-
-  // Popover Init
-  $('[data-toggle="popover"]').popover();
-
+  
   // Smooth scrolling using jQuery easing
   $('a.js-scroll-trigger[href*="#"]:not([href="#"])').click(function() {
     if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && location.hostname == this.hostname) {
