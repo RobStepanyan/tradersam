@@ -22,7 +22,7 @@ from .tokens import account_activation_token
 from smtplib import SMTP_SSL
 from email.mime.text import MIMEText
 from scraper_app.scraper_data import STATIC_OBJECTS
-from scraper_app.models import AllAssetsLive, Countries
+from scraper_app.models import AllAssetsLive, Countries, Types
 
 # Create your views here.
 def signup(request):
@@ -143,12 +143,13 @@ def ajax_account(request):
                     else:
                         continue
                     
+                    type_ = Types[Types.index(static_model['Type'])+1]
                     asset_dct = {
                         'country': static_model['country'],
                         'short_name': static_model['short_name'],
                         'change_perc': live_model['change_perc'],
                         'volume': live_model['volume'],
-                        'href': '/dev/asset/' + static_model['country'] + '/' + static_model['Type'].lower() + '/' + str(static_model['id'])
+                        'href': '/dev/asset/' + static_model['country'].lower() + '/' + type_.lower() + '/' + str(static_model['id'])
                         }
                     asset_links.append(asset_dct)
             watchlists.append({'name': name, 'asset_links': asset_links})   
@@ -371,8 +372,9 @@ def ajax_watchlist(request):
         old_name = request.GET['old_name']
         new_name = request.GET['new_name']
         
-        if not Watchlist.objects.filter(username=user.username, name=new_name).exists():
+        if Watchlist.objects.filter(username=user.username, name=new_name).exists():
             return JsonResponse({'error': True})
+        
         obj = Watchlist.objects.get(username=user.username, name=old_name)
         obj.name = new_name
         obj.save()
