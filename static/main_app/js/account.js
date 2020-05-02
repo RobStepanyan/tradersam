@@ -191,10 +191,10 @@ $(function () {
       $(html_templates['watchlists']).appendTo(container)
       getData()
 
-    // } else if (dep == 'alerts') {
-    //   $(html_templates['alerts']).appendTo(container)
-    // } else if (dep == 'portfolio') {
-    //   $(html_templates['portfolio']).appendTo(container)
+      // } else if (dep == 'alerts') {
+      //   $(html_templates['alerts']).appendTo(container)
+      // } else if (dep == 'portfolio') {
+      //   $(html_templates['portfolio']).appendTo(container)
     } else {
       $('<h2 class="text-white text-center w-100">Under Construction</h2>').appendTo(container)
       container.removeClass('d-none')
@@ -231,9 +231,9 @@ $(function () {
           `
           <div class="col-lg-6">
           <div class="row">
-          <h3 class="text-white text-center ml-auto">${wlist['name']}</h3>
+          <h3 class="watch_h3 text-white text-center ml-auto">${wlist['name']}</h3>
           <i type="button" id="${wlist['name']}" class="fas fa-trash ml-auto" data-toggle="modal" data-target="#watchlist-modal"></i>
-          <i type="button" id="${wlist['name']}" class="fas fa-pen"></i>
+          <i type="button" id="${wlist['name']}" class="fas fa-pen" data-toggle="modal" data-target="#watchlist-edit-modal"></i>
           </div>
           <div class="account-card watchlist">
             <div class="table-wrapper">
@@ -255,20 +255,20 @@ $(function () {
               <td><img class="country-flag-md" src="/static/main_app/svg/flags/${row['country']}.svg" alt=""></td>
               <td><a href="${row['href']}">${row['short_name']}</a></td>
             `
-            
-            if (row['change_perc'].includes('-')) {
-              content +=  `<td><span class="ml-0 d-initial change down">${row['change_perc']}</span></td>`
-            } else if (row['change_perc'].includes('+')) {
-              content +=  `<td><span class="ml-0 d-initial change up">${row['change_perc']}</span></td>`
-            } else {
-              content +=  `<td><span class="ml-0 d-initial change">${row['change_perc']}</span></td>`
-            }
-            content +=
+
+          if (row['change_perc'].includes('-')) {
+            content += `<td><span class="ml-0 d-initial change down">${row['change_perc']}</span></td>`
+          } else if (row['change_perc'].includes('+')) {
+            content += `<td><span class="ml-0 d-initial change up">${row['change_perc']}</span></td>`
+          } else {
+            content += `<td><span class="ml-0 d-initial change">${row['change_perc']}</span></td>`
+          }
+          content +=
             `
               <td>${row['volume']}</td>
             </tr>
             `
-        }); 
+        });
         content +=
           `
             </tbody>
@@ -276,13 +276,13 @@ $(function () {
           </div>
           `
         if (wlist['asset_links'].length > 10) {
-          content += 
-          `
+          content +=
+            `
           <a id="see_all" class="btn btn-secondary w-100 mt-3 mb-2" data-toggle="modal" data-target="#watchlist-view-modal">See All</a>
           `
-        }  
+        }
         content +=
-        `  
+          `  
           </div>
         </div>
         `
@@ -306,6 +306,7 @@ $(function () {
       watch_create_click()
       watch_trash_click()
       watch_see_all_click()
+      watch_pen_click()
       var empty_watch
       $('.watchlist.empty').click(function () {
         // Checking quanity of watchlists
@@ -348,6 +349,7 @@ $(function () {
           watch_create_click()
           watch_trash_click()
           watch_see_all_click()
+          watch_pen_click()
         }
       })
     }
@@ -358,7 +360,7 @@ $(function () {
       var valid = true
       var new_watch_name = $(this).prev().val()
       if (new_watch_name.trim().length == 0) {
-        valid=false
+        valid = false
       }
       // iterate throug watchlists and checks for duplicates and empty values
       $('#watchlist-row>.col-lg-6 h3').toArray().forEach(h => {
@@ -391,11 +393,11 @@ $(function () {
           },
         })
         $(this).parent().addClass('d-none')
-        $(this).parent().before(`<h3 class="text-white text-center ml-auto">${new_watch_name}</h3><i type="button" id="${new_watch_name}" class="fas fa-trash ml-auto" data-toggle="modal" data-target="#watchlist-modal"></i><i type="button" id="${new_watch_name}" class="fas fa-pen"></i>`)
+        $(this).parent().before(`<h3 class="watch_h3 text-white text-center ml-auto">${new_watch_name}</h3><i type="button" id="${new_watch_name}" class="fas fa-trash ml-auto" data-toggle="modal" data-target="#watchlist-modal"></i><i type="button" id="${new_watch_name}" class="fas fa-pen" data-toggle="modal" data-target="#watchlist-edit-modal"></i>`)
         $(this).parent().remove()
       } else {
         $(this).parent().addClass('d-none')
-        $(this).parent().before(`<h3 class="text-white text-center ml-auto">${init_watch_name}</h3><i type="button" id="${init_watch_name}" class="fas fa-trash ml-auto" data-toggle="modal" data-target="#watchlist-modal"></i><i type="button" id="${init_watch_name}" class="fas fa-pen"></i>`)
+        $(this).parent().before(`<h3 class="watch_h3 text-white text-center ml-auto">${init_watch_name}</h3><i type="button" id="${init_watch_name}" class="fas fa-trash ml-auto" data-toggle="modal" data-target="#watchlist-modal"></i><i type="button" id="${init_watch_name}" class="fas fa-pen" data-toggle="modal" data-target="#watchlist-edit-modal"></i>`)
         $(this).parent().remove()
       }
       watch_name_click()
@@ -406,7 +408,7 @@ $(function () {
   }
   function watch_name_click() {
     // When clicked on a watchlist header
-    $('#watchlist-row>.col-lg-6 h3').click(function () {
+    $('.watch_h3').click(function () {
       var init_watch_name = $(this).text()
       $(this).addClass('d-none')
       var new_watch_name_input =
@@ -416,7 +418,7 @@ $(function () {
       </div>
       `
       $(this).before(new_watch_name_input)
-      $('#new_watch_name').val(init_watch_name)
+      $(this).prev().children().val(init_watch_name)
       var parent = $(this).parent()
       parent.find('.fa-trash').remove()
       parent.find('.fa-pen').remove()
@@ -461,7 +463,7 @@ $(function () {
       var valid = true
       var new_watch_name = $(this).prev().val()
       // iterate throug watchlists and cheecek for valids
-      $('#watchlist-row>.col-lg-6 h3').toArray().forEach(h => {
+      $('.watch_h3').toArray().forEach(h => {
         if ($(h).text() == new_watch_name) {
           valid = false
         }
@@ -487,26 +489,198 @@ $(function () {
               $('#watch_name_del_error').remove()
               $(this).parent().after($(error_msg))
               return false
-            } 
+            }
           },
         })
         $(this).parent().addClass('d-none')
-        $(this).parent().before(`<h3 class="text-white text-center ml-auto">${new_watch_name}</h3><i type="button" id="${new_watch_name}" class="fas fa-trash ml-auto" data-toggle="modal" data-target="#watchlist-modal"></i><i type="button" id="${new_watch_name}" class="fas fa-pen"></i>`)
+        $(this).parent().before(`<h3 class="watch_h3 text-white text-center ml-auto">${new_watch_name}</h3><i type="button" id="${new_watch_name}" class="fas fa-trash ml-auto" data-toggle="modal" data-target="#watchlist-modal"></i><i type="button" id="${new_watch_name}" class="fas fa-pen" data-toggle="modal" data-target="#watchlist-edit-modal"></i>`)
         $(this).parent().remove()
         watch_name_click()
       }
     })
   }
   function watch_see_all_click() {
-    $('#see_all').click(function(){
+    $('#see_all').click(function () {
       var table = $(this).prev().find('table')
+      var table_name = $(this).parent().prev().find('h3').removeClass('text-white')
+      $(this).parent().next().addClass('d-none')
       var this_ = $(this)
       $(table).appendTo($('#watchlist-view-modal .modal-body'))
-      $('#watchlist-view-modal .close').click(function(){
-        console.log(table)
+      $(table_name).prependTo($('#watchlist-view-modal .modal-header'))
+      $('#watchlist-view-modal .close').click(function () {
         $(table).appendTo(this_.prev())
+        table_name.addClass('text-white')
+        this_.parent().next().removeClass('d-none')
+        $(table_name).prependTo(this_.parent().prev())
       })
     })
+  }
+  function watch_pen_click() {
+    $('#watchlist-row .fa-pen').click(function () {
+      var table = $(this).parent().next().find('table')
+      $(table).find('thead').find('tr').prepend($('<th><i class="fas fa-pen></i></th>'))
+      $(table).find('tbody').find('tr').each(function () {
+        $(this).prepend($('<td><i class="delete_row"></i></td>'))
+      });
+      var table_name = $(this).parent().find('.watch_h3').removeClass('text-white')
+      var this_ = $(this)
+      $(table).appendTo($('#watchlist-edit-modal .modal-body'))
+      // Search
+      $(`
+        <h4 class="w-100 text-center">Add to watchlist</h4>
+        <div class="search-block-watch w-100 pb-2">
+        <div class="search-watch">
+          <input type="text" class="searchTerm-watch" placeholder="Search">
+          <div class="searchButton-watch">
+            <i class="fa fa-search"></i>
+          </div>
+        </div>
+        <div class="collapse search-results-watch" id="search-collapse-watch">
+        </div>
+      </div>`).appendTo($('#watchlist-edit-modal .modal-body'))
+      $('.searchTerm-watch').keyup(_.debounce(searchWatch, 250));
+      $('.searchButton-watch').click(function () {
+        searchWatch();
+        $('#search-collapse-watch').collapse('show');
+        $('.searchTerm-watch').focus();
+      });
+      $('.searchTerm-watch').click(function () {
+        $('#search-collapse-watch').collapse('toggle')
+      });
+      $(document).click(function () {
+        $('#search-collapse-watch').collapse('hide')
+      });
+      // End of search
+      $(table_name).prependTo($('#watchlist-edit-modal .modal-header'))
+      $(this).parent().next().addClass('d-none')
+      watch_name_click()
+
+      $('.delete_row').click(function () {
+        $.ajax({
+          url: '/ajax/account/watchlist/',
+          data: {
+            'action': 'edit',
+            'sub_action': 'delete',
+            'name': table_name.text(),
+            'href': $(this).parent().parent().find('a').attr('href')
+          }
+        })
+        $(this).parent().parent().remove()
+      })
+
+      $('#watchlist-edit-modal .close').click(function () {
+        // remove searchbar
+        $(this).parent().parent().find('.search-block-watch').remove()
+        $(table).find('thead').find('tr').children().first().remove()
+        $(table).find('tbody').find('tr').each(function () {
+          $(this).children().first().remove()
+        });
+        $(table).prependTo(this_.parent().next().find('.table-wrapper'))
+        table_name.addClass('text-white')
+        $(table_name).prependTo(this_.parent())
+        this_.parent().next().removeClass('d-none')
+        $('[data-target="#watchlist-view-modal"').remove()
+        if ($(table).find('tbody').find('tr').length < 10) {
+          $('[data-target="#watchlist-view-modal"').remove()
+        } else {
+          this_.parent().next().append('<a id="see_all" class="btn btn-secondary w-100 mt-3 mb-2" data-toggle="modal" data-target="#watchlist-view-modal">See All</a>')
+        }
+      })
+    })
+    function search_item_click() {
+      $('.search-results-watch a.text-inherit').click(function(){
+        var href = $(this).attr('id')
+        var table_name = $(this).parent().parent().parent().prev().find('.watch_h3')
+        var table = $(this).parent().parent().parent().find('table')
+        $.ajax({
+          url: '/ajax/account/watchlist/',
+          data: {
+            'action': 'edit',
+            'sub_action': 'add',
+            'name': table_name.text(),
+            'href': href
+          },
+          success: function(result) {
+            var row = result['asset_dct']
+            var content =
+            `
+            <tr>
+              <td><i class="delete_row"></i></td>
+              <td><img class="country-flag-md" src="/static/main_app/svg/flags/${row['country']}.svg" alt=""></td>
+              <td><a href="${row['href']}">${row['short_name']}</a></td>
+            `
+
+            if (row['change_perc'].includes('-')) {
+              content += `<td><span class="ml-0 d-initial change down">${row['change_perc']}</span></td>`
+            } else if (row['change_perc'].includes('+')) {
+              content += `<td><span class="ml-0 d-initial change up">${row['change_perc']}</span></td>`
+            } else {
+              content += `<td><span class="ml-0 d-initial change">${row['change_perc']}</span></td>`
+            }
+            content +=
+            `
+              <td>${row['volume']}</td>
+            </tr>
+            `
+            $(content).appendTo(table.find('tbody'))
+          }
+        })
+      })
+    }
+    function searchWatch() {
+      if ($('.searchTerm-watch').val().length != 0) {
+        var container = $('.search-results-watch');
+        container.empty()
+        $('<div class="lds-dual-ring-sm"></div>').appendTo(container);
+        $.ajax({
+          url: '/dev/ajax/search/',
+          data: {
+            'search': $('.searchTerm-watch').val()
+          },
+          success: function (data) {
+            $('#search-collapse-watch').empty();
+            $('#search-collapse-watch').collapse('show');
+            if (_.isEmpty(data)) {
+              $('<div class="text-center py-1">'
+                + 'No Results' + '</div>').appendTo(container);
+            } else {
+              for (var i in data.results) {
+                var long_name = data.results[i]['long_name'];
+                if (long_name.length > 23) {
+                  long_name = long_name.slice(0, 21) + '..'
+                };
+                var type = data.results[i]['type']
+                var country = data.results[i]['country']
+                if (type == 'Currency') {
+                  c = 'crncy'
+                } else if (type == 'Cryptocurrency') {
+                  c = 'crptcrncy'
+                } else {
+                  c = country
+                };
+
+                $(
+                  '<a class="text-inherit" id="/dev/asset/' + country + '/' + type.toLowerCase() + '/' + data.results[i]['pk'] + '">'
+                  + '<div class="search-item">'
+                  + '<div class="d-flex">'
+                  + data.results[i]['short_name'] + ' | '
+                  + '<div class="search-long">' + long_name + '</div>'
+                  + '</div>'
+                  + '<div class="search-type">'
+                  + '<img class="country-flag-sm" src="/static/main_app/svg/flags/' + c + '.svg">'
+                  + ' ' + type + '</div>'
+                  + '</div></a>'
+                ).appendTo(container);
+              };
+            }
+            search_item_click()
+          },
+        });
+      } else {
+        $('#search-collapse-watch').empty();
+      };
+    }
+
   }
 
 
@@ -580,7 +754,7 @@ var html_templates = {
       </div>
     </div>
 
-    <div class="modal fade" id="watchlist-view-modal" tabindex="-1" role="dialog" aria-labelledby="watchlist-view-modal-title" aria-hidden="true">
+    <div data-keyboard="false" data-backdrop="static" class="modal fade" id="watchlist-view-modal" tabindex="-1" role="dialog" aria-labelledby="watchlist-view-modal-title" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
           <div class="modal-header">
@@ -594,239 +768,20 @@ var html_templates = {
         </div>
       </div>
     </div>
-    `,
 
-  // 'alerts':
-  //   `
-  //   <div class="row">
-  //     <div class="m-auto w-100">
-  //       <div class="account-card p-1 overflow-auto">  
-  //         <table class="table table-nowrap">
-  //           <thead>
-  //             <tr>
-  //               <th></th>
-  //               <th>Name</th>
-  //               <th>Alert Type</th>
-  //               <th>Condition</th>
-  //               <th>Frequency</th>
-  //               <th>Delivery Method</th>
-  //               <th>On/Off</th>
-  //               <th>Actions</th>
-  //             </tr>
-  //           </thead>
-  //           <tbody>
-  //             <tr>
-  //               <td><img src="/static/main_app/svg/flags/au.svg" class="country-flag-md"></td>
-  //               <td>SPDR S&P 500 ETF Trust</td>
-  //               <td>Price</td>
-  //               <td>Moves Above 500.00</td>
-  //               <td>Once</td>
-  //               <td><h5><i class="fas fa-envelope hover" data-toggle="tooltip" title="E-mail message"></i> 
-  //                 <i class="fas fa-laptop hover" data-toggle="tooltip" title="Notification"></i></h5></td>
-  //               <td>
-  //                 <div class="switch switch-xs switch-label-onoff pl-0 mr-2 d-flex fl justify-content-center">
-  //                   <input class="switch-input" id="switch1" type="checkbox" :checked>
-  //                   <label class="switch-btn" for="switch1"></label>
-  //                 </div>
-  //               </td>
-  //               <td><h5><i class="fas fa-pen hover" data-toggle="tooltip" title="Edit"></i> 
-  //                 <i class="fas fa-trash hover" data-toggle="tooltip" title="Remove"></i></h5></td>
-  //             </tr>
-  //             <tr>
-  //               <td><img src="/static/main_app/svg/flags/au.svg" class="country-flag-md"></td>
-  //               <td>SPDR S&P 500 ETF Trust</td>
-  //               <td>Price</td>
-  //               <td>Moves Above 500.00</td>
-  //               <td>Once</td>
-  //               <td><h5><i class="fas fa-envelope hover" data-toggle="tooltip" title="E-mail message"></i> 
-  //                 <i class="fas fa-laptop hover" data-toggle="tooltip"title="Notification"></i></h5></td>
-  //               <td>
-  //                 <div class="switch switch-xs switch-label-onoff pl-0 mr-2 d-flex fl justify-content-center">
-  //                   <input class="switch-input" id="switch2" type="checkbox" :checked>
-  //                   <label class="switch-btn" for="switch2"></label>
-  //                 </div>
-  //               </td>
-  //               <td><h5><i class="fas fa-pen hover" data-toggle="tooltip" title="Edit"></i> 
-  //                 <i class="fas fa-trash hover" data-toggle="tooltip" title="Remove"></i></h5></td>
-  //             </tr>
-  //             <tr>
-  //               <td><img src="/static/main_app/svg/flags/au.svg" class="country-flag-md"></td>
-  //               <td>SPDR S&P 500 ETF Trust</td>
-  //               <td>Price</td>
-  //               <td>Moves Above 500.00</td>
-  //               <td>Once</td>
-  //               <td><h5><i class="fas fa-envelope hover" data-toggle="tooltip" title="E-mail message"></i> 
-  //                 <i class="fas fa-laptop hover" data-toggle="tooltip"title="Notification"></i></h5></td>
-  //               <td>
-  //                 <div class="switch switch-xs switch-label-onoff pl-0 mr-2 d-flex fl justify-content-center">
-  //                   <input class="switch-input" id="switch3" type="checkbox" :checked>
-  //                   <label class="switch-btn" for="switch3"></label>
-  //                 </div>
-  //               </td>
-  //               <td><h5><i class="fas fa-pen hover" data-toggle="tooltip" title="Edit"></i> 
-  //                 <i class="fas fa-trash hover" data-toggle="tooltip" title="Remove"></i></h5></td>
-  //             </tr>
-  //             <tr>
-  //               <td><img src="/static/main_app/svg/flags/au.svg" class="country-flag-md"></td>
-  //               <td>SPDR S&P 500 ETF Trust</td>
-  //               <td>Price</td>
-  //               <td>Moves Above 500.00</td>
-  //               <td>Once</td>
-  //               <td><h5><i class="fas fa-envelope hover" data-toggle="tooltip" title="E-mail message"></i> 
-  //                 <i class="fas fa-laptop hover" data-toggle="tooltip"title="Notification"></i></h5></td>
-  //               <td>
-  //                 <div class="switch switch-xs switch-label-onoff pl-0 mr-2 d-flex fl justify-content-center">
-  //                   <input class="switch-input" id="switch4" type="checkbox" :checked>
-  //                   <label class="switch-btn" for="switch4"></label>
-  //                 </div>
-  //               </td>
-  //               <td><h5><i class="fas fa-pen hover" data-toggle="tooltip" title="Edit"></i> 
-  //                 <i class="fas fa-trash hover" data-toggle="tooltip" title="Remove"></i></h5></td>
-  //             </tr>
-  //             <tr>
-  //               <td><img src="/static/main_app/svg/flags/au.svg" class="country-flag-md"></td>
-  //               <td>SPDR S&P 500 ETF Trust</td>
-  //               <td>Price</td>
-  //               <td>Moves Above 500.00</td>
-  //               <td>Once</td>
-  //               <td><h5><i class="fas fa-envelope hover" data-toggle="tooltip" title="E-mail message"></i> 
-  //                 <i class="fas fa-laptop hover" data-toggle="tooltip"title="Notification"></i></h5></td>
-  //               <td>
-  //                 <div class="switch switch-xs switch-label-onoff pl-0 mr-2 d-flex fl justify-content-center">
-  //                   <input class="switch-input" id="switch5" type="checkbox" :checked>
-  //                   <label class="switch-btn" for="switch5"></label>
-  //                 </div>
-  //               </td>
-  //               <td><h5><i class="fas fa-pen hover" data-toggle="tooltip" title="Edit"></i> 
-  //                 <i class="fas fa-trash hover" data-toggle="tooltip" title="Remove"></i></h5></td>
-  //             </tr>
-  //           </tbody>
-  //         </table>
-  //       </div>
-  //     </div>
-  //   </div>
-  //   `,
-
-  // 'portfolio':
-  //   `
-  //   <div class="account-card p-3">
-  //     <div class="row align-items-center justify-content-between">
-  //       <div class="dropdown show mr-3 my-2">
-  //         <a class="btn btn-primary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-  //           Medium Risk
-  //         </a>
-        
-  //         <div class="dropdown-menu" data-toggle="buttons">
-  //           <h6 class="dropdown-header">Your Portfolios</h6>
-  //           <label class="btn dropdown-item active">
-  //             <input type="radio" id="low-risk" autocomplete="off" checked>  
-  //             Low Risk
-  //           </label>
-  //           <label class="btn dropdown-item">
-  //             <input type="radio" id="medium-risk" autocomplete="off">  
-  //             Medium Risk
-  //           </label>
-  //           <label class="btn dropdown-item">
-  //             <input type="radio" id="trading" autocomplete="off">  
-  //             Trading
-  //           </label>
-  //           <div class="dropdown-divider"></div>
-  //           <label class="btn dropdown-item">
-  //             <input type="radio" id="create_" autocomplete="off">  
-  //             <i class="fas fa-plus"></i> Create
-  //           </label>
-  //         </div>
-        
-  //       </div>
-  //       <div class="row my-2">
-  //         <div class="px-2 border-right-bold">
-  //           Holdings:
-  //           <h4 class="text-success">$1K / 3456.45%</h4>
-  //         </div>
-  //         <div class="px-2 border-right-bold">
-  //           Open P/L:
-  //           <h4 class="text-success">$1K / 3456.45%</h4>
-  //         </div>
-  //         <div class="px-2">
-  //           Daily P/L:
-  //           <h4 class="text-success">$1K / 3456.45%</h4>
-  //         </div>  
-  //       </div>
-  //     </div>
-  //     <div class="w-100 overflow-auto">
-  //       <table class="table table-nowrap">
-  //       <thead>
-  //         <tr>
-  //           <th></th>
-  //           <th>Name</th>
-  //           <th>Symbol</th>
-  //           <th>Open Date</th>
-  //           <th>Type</th>
-  //           <th>Amount</th>
-  //           <th>Avg Price</th>
-  //           <th>Current Price</th>
-  //           <th>Daily P/L</th>
-  //           <th>Open P/L</th>
-  //           <th>Open P/L (%)</th>
-  //         </tr>
-  //       </thead>
-  //       <tbody>
-  //         <tr>
-  //           <td><img class="country-flag-md" src="/static/main_app/svg/flags/ch.svg" alt=""></td>
-  //           <td>SPDR S&P 500 ETF Trust</td>
-  //           <td>SPY</td>
-  //           <td>08/07/1998</td>
-  //           <td>BUY</td>
-  //           <td>12</td>
-  //           <td>245.36</td>
-  //           <td>2437.21</td>
-  //           <td><span class="text-success">+2341.21</span></td>
-  //           <td><span class="text-success">+6534.24</span></td>
-  //           <td><span class="text-success">+2021.32%</span></td>
-  //         </tr>
-  //         <tr>
-  //           <td><img class="country-flag-md" src="/static/main_app/svg/flags/ch.svg" alt=""></td>
-  //           <td>SPDR S&P 500 ETF Trust</td>
-  //           <td>SPY</td>
-  //           <td>08/07/1998</td>
-  //           <td>BUY</td>
-  //           <td>12</td>
-  //           <td>245.36</td>
-  //           <td>2437.21</td>
-  //           <td><span class="text-success">+2341.21</span></td>
-  //           <td><span class="text-success">+6534.24</span></td>
-  //           <td><span class="text-success">+2021.32%</span></td>
-  //         </tr>
-  //         <tr>
-  //           <td><img class="country-flag-md" src="/static/main_app/svg/flags/ch.svg" alt=""></td>
-  //           <td>SPDR S&P 500 ETF Trust</td>
-  //           <td>SPY</td>
-  //           <td>08/07/1998</td>
-  //           <td>BUY</td>
-  //           <td>12</td>
-  //           <td>245.36</td>
-  //           <td>2437.21</td>
-  //           <td><span class="text-success">+2341.21</span></td>
-  //           <td><span class="text-success">+6534.24</span></td>
-  //           <td><span class="text-success">+2021.32%</span></td>
-  //         </tr>
-  //         <tr>
-  //           <td><img class="country-flag-md" src="/static/main_app/svg/flags/ch.svg" alt=""></td>
-  //           <td>SPDR S&P 500 ETF Trust</td>
-  //           <td>SPY</td>
-  //           <td>08/07/1998</td>
-  //           <td>BUY</td>
-  //           <td>12</td>
-  //           <td>245.36</td>
-  //           <td>2437.21</td>
-  //           <td><span class="text-success">+2341.21</span></td>
-  //           <td><span class="text-success">+6534.24</span></td>
-  //           <td><span class="text-success">+2021.32%</span></td>
-  //         </tr>
-  //       </tbody>
-  //     </table>
-  //     </div>
-      
-  //   </div>
-  //   `
+    <div data-keyboard="false" data-backdrop="static" class="modal fade" id="watchlist-edit-modal" tabindex="-1" role="dialog" aria-labelledby="watchlist-edit-modal-title" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <i class="fas fa-check text-success font-size-2"></i>
+            </button>
+          </div>
+          <div class="modal-body">
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    `
 }
