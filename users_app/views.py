@@ -123,7 +123,7 @@ def ajax_account(request):
     
     elif dep == 'watchlists':
         user = request.user
-        watchlists_raw = Watchlist.objects.filter(username=user.username)
+        watchlists_raw = Watchlist.objects.filter(username=user.username).order_by('name')
         watchlists = []
         for watch in watchlists_raw:
             watch = model_to_dict(watch)
@@ -388,5 +388,56 @@ def ajax_watchlist(request):
             username=user.username,
             asset_links=['https://www.investing.com/commodities/oats', 'https://www.investing.com/commodities/lumber']
         ).save()
+    elif request.GET['action'] == 'edit':
+        if Watchlist.objects.filter(username=user.username, name=request.GET['name']).exists():
+            obj = Watchlist.objects.get(username=user.username, name=request.GET['name'])
+            href = request.GET['href']
+            # Extracting variables from href
+            asset_end_index = href.index('asset/')+len('asset/')
+            country = href[asset_end_index : asset_end_index+href[asset_end_index:].index('/')].upper() # us->US
+            country_end_index = href.index(country.lower())+len(country)+1
+            type_ = href[country_end_index : country_end_index+href[country_end_index:].index('/')].title() 
+            type_ = Types[Types.index(type_)-1] # Commodity -> cmdty
+            id_ = int(href[-href[::-1].index('/'):])
+        
+            for key, value in STATIC_OBJECTS.items():
+                if type_ in ['cmdty', 'crncy', 'crptcrncy']:
+                    if type_ == value['type']:
+                        link = value['object'].objects.get(id=id_).link
+                        break
+                else:
+                    if country in key and type_ == value['type']:
+                        link = value['object'].objects.get(id=id_).link
+                        break
+
+        if request.GET['sub_action'] == 'delete':
+                obj.asset_links.remove(link)
+                obj.save()
+        
+        elif request.GET['sub_action'] == 'add':
+            obj.asset_links.append(link)
+            obj.save()
+            for value in STATIC_OBJECTS.values():
+                static_model = None
+                if value['object'].objects.filter(link=link).exists():
+                    static_model = model_to_dict(value['object'].objects.get(link=link))
+            
+                if static_model:
+                    if AllAssetsLive.objects.filter(link=link).exists():
+                        live_model = model_to_dict(AllAssetsLive.objects.get(link=link))['change_perc', 'volume']
+                    else:
+                        live_model = {'change_perc': 'N/A', 'volume': 'N/A'}
+                else:
+                    continue
+                
+                type_ = Types[Types.index(static_model['Type'])+1]
+                asset_dct = {
+                    'country': static_model['country'],
+                    'short_name': static_model['short_name'],
+                    'change_perc': live_model['change_perc'],
+                    'volume': live_model['volume'],
+                    'href': '/dev/asset/' + static_model['country'].lower() + '/' + type_.lower() + '/' + str(static_model['id'])
+                    }
+                return JsonResponse({'asset_dct': asset_dct})
 
     return JsonResponse({'error': False})
