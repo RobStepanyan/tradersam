@@ -26,9 +26,10 @@ hist_objects = {
 
 def collect_for(obj, x, key, value, link):
     driver.get(link)
-    attempt = 1
+    attempt = 0
     for data_age in data_ages:
         while True:
+            attempt += 1
             try: 
                 print(link)
                 soup = BeautifulSoup(driver.page_source, 'html.parser')
@@ -97,6 +98,8 @@ def collect_for(obj, x, key, value, link):
                 print(f'({key}) Stored {short_name} {data_age} {x}/{quanity}')
                 break
             except Exception as e:
+                if attempt >= 50:
+                    driver.get(link)
                 print_exception(e)
                 if not 'historical-data' in driver.current_url:
                     if value['type'] == 'crptcrncy':
@@ -120,7 +123,7 @@ types = list(set(types))
 # Complete list to delete and collect historical data for
 # Override types list here if needed
 # ['cmdty', 'crncy', 'crptcrncy', 'stck', 'indx', 'etf', 'bnd', 'fnd']
-# types = ['indx', 'etf', 'bnd', 'fnd']
+types = []
 
 if inpt.upper() == 'Y':
     # Deleting old historical data

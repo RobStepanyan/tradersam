@@ -59,15 +59,22 @@ class CollectLive:
         driver.switch_to.window(self.tab)
         print(f'{self.title}: Waiting the page to load')
         driver.get(self.link) # visit the link
-        if 'Stock' in self.title:
-            driver.execute_script('$("#stocksFilter").val("#all");')
-            driver.execute_script("doStocksFilter('select',this)")
-        if 'Crypto' in self.title:
-            desired_quanity = BeautifulSoup(driver.page_source, 'html.parser')
-            desired_quanity = desired_quanity.find('span', text='Number of Currencies')
-            desired_quanity = int(desired_quanity.find_next_sibling().get_text().replace(',', ''))
-        else:
-            desired_quanity = self.object_.objects.count()
+        
+        while True:
+            try:
+                if 'Stock' in self.title:
+                    driver.execute_script('$("#stocksFilter").val("#all");')
+                    driver.execute_script("doStocksFilter('select',this)")
+                if 'Crypto' in self.title:
+                    desired_quanity = BeautifulSoup(driver.page_source, 'html.parser')
+                    desired_quanity = desired_quanity.find('span', text='Number of Currencies')
+                    desired_quanity = int(desired_quanity.find_next_sibling().get_text().replace(',', ''))
+                else:
+                    desired_quanity = self.object_.objects.count()
+                break
+            except Exception as e:
+                print(e)
+        
         while True:
             try:
                 soup = BeautifulSoup(driver.page_source, 'html.parser')
@@ -182,16 +189,17 @@ class CollectLive:
                     else:
                         live_data[key] = value
 
-                if live_data['Last'] == self.last_price:
-                    # if market is closed but clock icon haven't changed
-                    # check market condition buy checking if the price is moving
-                    
-                    # 1. Navigate current tab to the blank page
-                    # 2. call init_tab()
-                    # 3. break current tab
-                    driver.get('about:blank')
-                    self.__class__.init_tab(self)
-                    break
+                if self.type_ != 'bnd':
+                    if live_data['Last'] == self.last_price:
+                        # if market is closed but clock icon haven't changed
+                        # check market condition buy checking if the price is moving
+                        
+                        # 1. Navigate current tab to the blank page
+                        # 2. call init_tab()
+                        # 3. break current tab
+                        driver.get('about:blank')
+                        self.__class__.init_tab(self)
+                        break
 
 
                 if not self.type_ in ['bnd', 'crptcrncy']:

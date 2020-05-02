@@ -223,7 +223,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='japanetfstaticinfo',
             name='issuer',
-            field=models.CharField(choices=[], max_length=40),
+            field=models.CharField(choices=[], max_length=60),
         ),
         migrations.AlterField(
             model_name='japanfundstaticinfo',
