@@ -30,7 +30,11 @@ def signup(request):
         form = UserSignUpForm(request.POST)
         if form.is_valid():
             if User.objects.filter(email=request.POST.get('email')).exists():
-                messages.error(request, 'A user with that email already exists.')
+                messages.error(request, 'User with that email already exists.')
+                return redirect('signup')
+
+            if User.objects.filter(username__iexact=request.POST.get('username')).exists():
+                messages.error(request, 'User with that username already exists.')
                 return redirect('signup')
 
             user = form.save()
