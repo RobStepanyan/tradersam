@@ -137,7 +137,8 @@ def ajax_account(request):
                 
                     if static_model:
                         if AllAssetsLive.objects.filter(link=asset).exists():
-                            live_model = model_to_dict(AllAssetsLive.objects.get(link=asset))['change_perc', 'volume']
+                            live_model = model_to_dict(AllAssetsLive.objects.get(link=asset))
+                            live_model = {'change_perc': live_model['change_perc'], 'volume': live_model['volume']}
                         else:
                             live_model = {'change_perc': 'N/A', 'volume': 'N/A'}
                     else:
@@ -145,6 +146,7 @@ def ajax_account(request):
                     
                     type_ = Types[Types.index(static_model['Type'])+1]
                     asset_dct = {
+                        'type': static_model['Type'],
                         'country': static_model['country'],
                         'short_name': static_model['short_name'],
                         'change_perc': live_model['change_perc'],
@@ -386,7 +388,7 @@ def ajax_watchlist(request):
         Watchlist(
             name=request.GET['name'],
             username=user.username,
-            asset_links=['https://www.investing.com/commodities/oats', 'https://www.investing.com/commodities/lumber']
+            asset_links=[]
         ).save()
     elif request.GET['action'] == 'edit':
         if Watchlist.objects.filter(username=user.username, name=request.GET['name']).exists():
@@ -397,7 +399,10 @@ def ajax_watchlist(request):
             country = href[asset_end_index : asset_end_index+href[asset_end_index:].index('/')].upper() # us->US
             country_end_index = href.index(country.lower())+len(country)+1
             type_ = href[country_end_index : country_end_index+href[country_end_index:].index('/')].title() 
-            type_ = Types[Types.index(type_)-1] # Commodity -> cmdty
+            if type_.lower() == 'etf':
+                type_ = type_.lower()
+            else:
+                type_ = Types[Types.index(type_)-1] # Commodity -> cmdty
             id_ = int(href[-href[::-1].index('/'):])
         
             for key, value in STATIC_OBJECTS.items():
@@ -424,7 +429,8 @@ def ajax_watchlist(request):
             
                 if static_model:
                     if AllAssetsLive.objects.filter(link=link).exists():
-                        live_model = model_to_dict(AllAssetsLive.objects.get(link=link))['change_perc', 'volume']
+                        live_model = model_to_dict(AllAssetsLive.objects.get(link=link))
+                        live_model = {'change_perc': live_model['change_perc'], 'volume': live_model['volume']}
                     else:
                         live_model = {'change_perc': 'N/A', 'volume': 'N/A'}
                 else:
@@ -432,6 +438,7 @@ def ajax_watchlist(request):
                 
                 type_ = Types[Types.index(static_model['Type'])+1]
                 asset_dct = {
+                    'type': static_model['Type'],
                     'country': static_model['country'],
                     'short_name': static_model['short_name'],
                     'change_perc': live_model['change_perc'],

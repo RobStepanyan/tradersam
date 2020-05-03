@@ -249,10 +249,19 @@ $(function () {
               <tbody>
           `
         wlist['asset_links'].forEach(row => {
+          var type = row['type']
+          var country = row['country']
+          if (type == 'Currency') {
+            c = 'crncy'
+          } else if (type == 'Cryptocurrency') {
+            c = 'crptcrncy'
+          } else {
+            c = country.toLowerCase()
+          };
           content +=
             `
             <tr>
-              <td><img class="country-flag-md" src="/static/main_app/svg/flags/${row['country']}.svg" alt=""></td>
+              <td><img class="country-flag-md" src="/static/main_app/svg/flags/${c}.svg" alt=""></td>
               <td><a href="${row['href']}">${row['short_name']}</a></td>
             `
 
@@ -459,7 +468,7 @@ $(function () {
   }
   function watch_create_click() {
     $('.watch-name-input #create-watch').click(function () {
-      // check for duplicates js and django, empty values
+      // check for duplicates, empty values
       var valid = true
       var new_watch_name = $(this).prev().val()
       // iterate throug watchlists and cheecek for valids
@@ -495,7 +504,11 @@ $(function () {
         $(this).parent().addClass('d-none')
         $(this).parent().before(`<h3 class="watch_h3 text-white text-center ml-auto">${new_watch_name}</h3><i type="button" id="${new_watch_name}" class="fas fa-trash ml-auto" data-toggle="modal" data-target="#watchlist-modal"></i><i type="button" id="${new_watch_name}" class="fas fa-pen" data-toggle="modal" data-target="#watchlist-edit-modal"></i>`)
         $(this).parent().remove()
+        watch_see_all_click()
         watch_name_click()
+        watch_pen_click()
+        watch_trash_click()
+        watch_name_edit_click()
       }
     })
   }
@@ -518,12 +531,15 @@ $(function () {
   function watch_pen_click() {
     $('#watchlist-row .fa-pen').click(function () {
       var table = $(this).parent().next().find('table')
-      $(table).find('thead').find('tr').prepend($('<th><i class="fas fa-pen></i></th>'))
-      $(table).find('tbody').find('tr').each(function () {
-        $(this).prepend($('<td><i class="delete_row"></i></td>'))
-      });
+      if ($(table).find('tbody tr td').length > 0) {
+        $(table).find('thead tr').prepend($('<th></th>'))
+        $(table).find('tbody tr').each(function () {
+          $(this).prepend($('<td><i class="delete_row"></i></td>'))
+        });
+      }
       var table_name = $(this).parent().find('.watch_h3').removeClass('text-white')
       var this_ = $(this)
+      $('#watchlist-edit-modal .modal-body').empty()
       $(table).appendTo($('#watchlist-edit-modal .modal-body'))
       // Search
       $(`
@@ -571,10 +587,13 @@ $(function () {
       $('#watchlist-edit-modal .close').click(function () {
         // remove searchbar
         $(this).parent().parent().find('.search-block-watch').remove()
-        $(table).find('thead').find('tr').children().first().remove()
-        $(table).find('tbody').find('tr').each(function () {
-          $(this).children().first().remove()
-        });
+        if ($(table).find('tbody').find('tr').length > 0) {
+          // remove trash icons column from table
+          $(table).find('thead').find('tr').children().first().remove()
+          $(table).find('tbody').find('tr').each(function () {
+            $(this).children().first().remove()
+          });
+        }
         $(table).prependTo(this_.parent().next().find('.table-wrapper'))
         table_name.addClass('text-white')
         $(table_name).prependTo(this_.parent())
@@ -585,6 +604,7 @@ $(function () {
         } else {
           this_.parent().next().append('<a id="see_all" class="btn btn-secondary w-100 mt-3 mb-2" data-toggle="modal" data-target="#watchlist-view-modal">See All</a>')
         }
+        $('#watchlist-edit-modal h4').remove()
       })
     })
     function search_item_click() {
@@ -602,11 +622,20 @@ $(function () {
           },
           success: function(result) {
             var row = result['asset_dct']
+            var type = row['type']
+            var country = row['country']
+            if (type == 'Currency') {
+              c = 'crncy'
+            } else if (type == 'Cryptocurrency') {
+              c = 'crptcrncy'
+            } else {
+              c = country.toLowerCase()
+            };
             var content =
             `
             <tr>
               <td><i class="delete_row"></i></td>
-              <td><img class="country-flag-md" src="/static/main_app/svg/flags/${row['country']}.svg" alt=""></td>
+              <td><img class="country-flag-md" src="/static/main_app/svg/flags/${c}.svg" alt=""></td>
               <td><a href="${row['href']}">${row['short_name']}</a></td>
             `
 
@@ -622,6 +651,9 @@ $(function () {
               <td>${row['volume']}</td>
             </tr>
             `
+            if (table.find('tbody tr td').length == 0) {
+              $(table).find('thead tr').prepend($('<th></th>'))
+            }
             $(content).appendTo(table.find('tbody'))
           }
         })
