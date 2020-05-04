@@ -252,17 +252,13 @@ $(function () {
         wlist['asset_links'].forEach(row => {
           var type = row['type']
           var country = row['country']
-          if (type == 'Currency') {
-            c = 'crncy'
-          } else if (type == 'Cryptocurrency') {
-            c = 'crptcrncy'
-          } else {
-            c = country.toLowerCase()
-          };
+          if (type == 'crncy' || type == 'crptcrncy') {
+            country = type
+          }
           content +=
             `
             <tr>
-              <td><img class="country-flag-md" src="/static/main_app/svg/flags/${c}.svg" alt=""></td>
+              <td><img class="country-flag-md" src="/static/main_app/svg/flags/${country.toLowerCase()}.svg" alt=""></td>
               <td><a href="${row['href']}">${row['short_name']}</a></td>
               <td>${row['last']}</td>
             `
@@ -627,13 +623,9 @@ $(function () {
             var row = result['asset_dct']
             var type = row['type']
             var country = row['country']
-            if (type == 'Currency') {
-              c = 'crncy'
-            } else if (type == 'Cryptocurrency') {
-              c = 'crptcrncy'
-            } else {
-              c = country.toLowerCase()
-            };
+            if (type == 'crncy' || type == 'crptcrncy') {
+              country = type
+            }
             var content =
             `
             <tr>
