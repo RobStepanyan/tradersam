@@ -1009,8 +1009,8 @@ class AllAssetsLive(models.Model):
     
     time = models.DateTimeField(default=None, null=True)
 
-    def __str__(self):
-        return f'({Types[Types.index(self.Type)+1]}) {self.time}'
+    # def __str__(self):
+    #     return f'({Types[Types.index(self.Type)+1]}) {self.time}'
     
     class Meta:
         verbose_name = '(Live All) Assets'

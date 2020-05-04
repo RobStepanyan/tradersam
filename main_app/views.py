@@ -410,12 +410,10 @@ def ajax_home_carousel(request):
     data_list = []
     for item in objects:
         objects_dct = {}
-        for model in AllAssetsLive.objects.filter(link=item.link):
-            chg = model.change_perc
+        model = AllAssetsLive.objects.get(link=item.link)
+        chg = model.change_perc
 
         item = model_to_dict(item)
-        plural_i = [i.upper() for i in Types_plural].index(item['Type'].upper())
-        item['Type'] = Types_plural[plural_i-1]
 
         objects_dct['live'] = chg
         objects_dct['static'] = item
