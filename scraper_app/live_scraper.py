@@ -49,7 +49,7 @@ class CollectLive:
         for k, v in self.__class__.hist_objects.items():
             self.last_obj_count[k] = v.objects.filter(Type=self.type_).count()
             if self.last_obj_count[k] > 0:
-                self.last_obj[k] = v.objects.filter(Type=self.type_).order_by('-id').first()
+                self.last_obj[k] = v.objects.filter(Type=self.type_).reverse().first() #newest model
             else:
                 self.last_obj[k] = None
 
@@ -270,7 +270,7 @@ class CollectLive:
                         # 6M1M, 1Y, 5Y, Max update last value 
                         if self.last_obj[time_frame]:
                             if now.date == self.last_obj[time_frame].date:
-                                hist_model.objects.filter(link=link).order_by('-id').first().delete()
+                                hist_model.objects.filter(link=link).reverse().first().delete() # remove newest model
                         hist_model(
                         Type=self.type_,
                             link=link,
@@ -296,7 +296,7 @@ class CollectLive:
                             days, seconds = diff.days, diff.seconds
                             hours = days * 24 + seconds // 3600
                             if hours > self.__class__.hours_[time_frame]:
-                                hist_model.objects.filter(link=link).order_by('id')[0].delete()
+                                hist_model.objects.filter(link=link).first().delete() # remove oldest model
                 
             elif is_closed:
                 # check whether "after live data" for today is available
