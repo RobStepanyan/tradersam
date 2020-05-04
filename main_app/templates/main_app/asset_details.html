@@ -121,17 +121,13 @@
           <tr class="row">
             <td class="row col-sm-6">
               <div class="col-sm-6 p-0">
-                {% if pair.0.0 %}
-                  {{ pair.0.0 }}
-                {% else %}
-                  N/A
-                {% endif %}
+                {{ pair.0.0 }}
               </div>
               <div class="col-sm-6 p-0">
                 <span class="text-gray-5">
                   {% if pair.0.1 %}
                     {{ pair.0.1 }}
-                  {% else %}
+                  {% elif pair.0.1 %}
                     N/A
                   {% endif %}
                 </span>
@@ -139,17 +135,13 @@
             </td>
             <td class="row col-sm-6">
               <div class="col-sm-6 p-0">
-                {% if pair.1.0 %}
-                  {{ pair.1.0 }}
-                {% else %}
-                  N/A
-                {% endif %}
+                {{ pair.1.0 }}
               </div>
               <div class="col-sm-6 p-0">
                 <span class="text-gray-5">
                   {% if pair.1.1 %}
                     {{ pair.1.1 }}
-                  {% else %}
+                  {% elif pair.1.0 %}
                     N/A
                   {% endif %}
                 </span>
