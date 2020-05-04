@@ -89,27 +89,18 @@ class CollectLive:
                 sleep(1)
         
         # removing unnecessary elements
-        classes_to_remove = [
-            'sideNotificationZone', 'breakingNews', 'floatingAlertWrapper',
-            'generalOverlay js-general-overlay displayNone',
-            'earAdv left js-floaty-flyer',
-            'genPopup signupPromotionPopup js-promotion-popup displayNone'
-        ]
+        classes_to_remove = ['generalOverlay', 'signupWrap', 'midHeader']
         
-        driver.execute_script(f"$('header').remove()")
+        driver.execute_script("$('header').remove()")
+        driver.execute_script("$('footer').remove()")
+        driver.execute_script("$('#rightColumn').remove()")
+
         for cl in classes_to_remove:
             # for skipping TimeoutException: Message: script timeout
             try:
                 driver.execute_script(f"$('.{cl}').remove()")
             except:
                 pass
-        
-        for el in soup.find('div', class_='wrapper').findChildren(recursive=False):
-            if el.name != 'section':
-                if el.has_attr('class') and len(el['class']) > 0:
-                    driver.execute_script(f"$('.{el['class'][0]}').remove()")
-                elif el.has_attr('id'):
-                    driver.execute_script(f"$('#{el['id']}').remove()")
 
         print(f'{self.title}: Tab is initializated!')
 
