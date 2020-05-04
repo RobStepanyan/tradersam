@@ -96,20 +96,20 @@ class CollectLive:
             'genPopup signupPromotionPopup js-promotion-popup displayNone'
         ]
         
-        driver.execute_script(f"$('header').empty()")
+        driver.execute_script(f"$('header').remove()")
         for cl in classes_to_remove:
             # for skipping TimeoutException: Message: script timeout
             try:
-                driver.execute_script(f"$('.{cl}').empty()")
+                driver.execute_script(f"$('.{cl}').remove()")
             except:
                 pass
         
         for el in soup.find('div', class_='wrapper').findChildren(recursive=False):
             if el.name != 'section':
                 if el.has_attr('class') and len(el['class']) > 0:
-                    driver.execute_script(f"$('.{el['class'][0]}').empty()")
+                    driver.execute_script(f"$('.{el['class'][0]}').remove()")
                 elif el.has_attr('id'):
-                    driver.execute_script(f"$('#{el['id']}').empty()")
+                    driver.execute_script(f"$('#{el['id']}').remove()")
 
         print(f'{self.title}: Tab is initializated!')
 
@@ -196,7 +196,7 @@ class CollectLive:
                         
                         # 1. Navigate current tab to the blank page
                         # 2. call init_tab()
-                        # 3. break current tab
+                        # 3. break - go to the next tab
                         driver.get('about:blank')
                         self.__class__.init_tab(self)
                         break
@@ -253,7 +253,7 @@ class CollectLive:
                     total_assets=validate_price(live_data['Total Assets']),
                 
                     time=time_
-                ).save()
+                ).save(force_insert=True)
                 self.last_price = live_data['Last']
                 print(f'{self.title}: saved Live')
                 
@@ -273,7 +273,7 @@ class CollectLive:
                                 high=validate_price(live_data['High']),
                                 low=validate_price(live_data['Low']),
                                 volume=validate_price(live_data['Vol.']),
-                            ).save() 
+                            ).save(force_insert=True) 
                             print(f'{self.title}: saved HISTORICAL{time_frame}')
                     else:
                         if self.last_obj[time_frame]:
@@ -289,7 +289,7 @@ class CollectLive:
                             high=validate_price(live_data['High']),
                             low=validate_price(live_data['Low']),
                             volume=validate_price(live_data['Vol.']),
-                        ).save() 
+                        ).save(force_insert=True) 
                         print(f'{self.title}: saved HISTORICAL{time_frame}')
 
                     if time_frame != 'Max':
@@ -427,7 +427,7 @@ def run_after_live(link, type_, after_fields, title):
         settlement_day=settlement_day,
         asset_class=validate_price(after_live_data['Asset Class']),
         eps=validate_price(after_live_data['EPS']),
-    ).save()
+    ).save(force_insert=True)
     
     print(f'{title}: saved AFTERLIVE')
     global after_live_thread_alive
