@@ -80,7 +80,7 @@ def signup_activation(request, uidb64, token):
         messages.success(request, 'Your account has been confirmed. Now you are able to log in.')
     else:
         messages.error(request, 'Activation link is invalid!')
-    return redirect('home')
+    return redirect('login')
 
 def login(request):
     if request.user.is_authenticated:
