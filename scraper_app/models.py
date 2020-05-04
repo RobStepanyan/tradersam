@@ -891,6 +891,7 @@ class AllAssetsHistoricalMax(models.Model):
         return f'({Types[Types.index(self.Type)+1]}) {self.short_name} in {self.date.year} {self.date.strftime("%B")}'
 
     class Meta:
+        ordering = ['date',]
         verbose_name = '(Historical Max Years) All Assets'
         verbose_name_plural = '(Historical Max Years) All Assets'
 
@@ -910,6 +911,7 @@ class AllAssetsHistorical5Y(models.Model):
         return f'({Types[Types.index(self.Type)+1]}) {self.short_name} in {self.date.year} {self.date.strftime("%B")}'
 
     class Meta:
+        ordering = ['date',]
         verbose_name = '(Historical 5 Years) All Assets'
         verbose_name_plural = '(Historical 5 Years) All Assets'
 
@@ -929,6 +931,7 @@ class AllAssetsHistorical1Y(models.Model):
         return f'({Types[Types.index(self.Type)+1]}) {self.short_name} in {self.date.year} {self.date.strftime("%B")}'
 
     class Meta:
+        ordering = ['date',]
         verbose_name = '(Historical 1 Year) All Assets'
         verbose_name_plural = '(Historical 1 Year) All Assets'
 
@@ -948,6 +951,7 @@ class AllAssetsHistorical6M1M(models.Model):
         return f'({Types[Types.index(self.Type)+1]}) {self.short_name} in {self.date.year} {self.date.strftime("%B")}'
 
     class Meta:
+        ordering = ['date',]
         verbose_name = '(Historical 6M-1M) All Assets'
         verbose_name_plural = '(Historical 6M-1M) All Assets'
 
@@ -966,6 +970,7 @@ class AllAssetsHistorical5D(models.Model):
         return f'({Types[Types.index(self.Type)+1]}) in {self.date.year} {self.date.strftime("%B")}'
 
     class Meta:
+        ordering = ['date',]
         verbose_name = '(Historical 5 Days) All Assets'
         verbose_name_plural = '(Historical 5 Days) All Assets'
 
@@ -984,6 +989,7 @@ class AllAssetsHistorical1D(models.Model):
         return f'({Types[Types.index(self.Type)+1]}) in {self.date.year} {self.date.strftime("%B")}'
 
     class Meta:
+        ordering = ['date',]
         verbose_name = '(Historical 1 Day) All Assets'
         verbose_name_plural = '(Historical 1 Day) All Assets'
 

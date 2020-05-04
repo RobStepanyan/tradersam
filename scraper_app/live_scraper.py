@@ -267,6 +267,7 @@ class CollectLive:
                             ).save(force_insert=True) 
                             print(f'{self.title}: saved HISTORICAL{time_frame}')
                     else:
+                        # 6M1M, 1Y, 5Y, Max update last value 
                         if self.last_obj[time_frame]:
                             if now.date == self.last_obj[time_frame].date:
                                 hist_model.objects.filter(link=link).order_by('-id').first().delete()
@@ -284,6 +285,7 @@ class CollectLive:
                         print(f'{self.title}: saved HISTORICAL{time_frame}')
 
                     if time_frame != 'Max':
+                        # delete outdated data
                         if self.last_obj_count[time_frame]:
                             data1 = self.last_obj[time_frame].date
                             if time_frame[-1] == 'D': 
