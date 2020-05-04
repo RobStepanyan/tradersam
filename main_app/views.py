@@ -560,11 +560,41 @@ def asset_details(request, cntry, type_, pk):
 
         similars_lst.append(similars_dct)
 
+    # Getting static info to display after display
+    static_pairs = []
+    for i1, i2 in model_to_dict(asset).items():
+        if '_' in i1:
+            i1 = i1.replace('_', ' ')
+        i1 = i1.title()
+        
+        if i1 in [x for sub_l in data_pairs for x in sub_l]+['Link', 'Id']:
+            continue
+
+        if i1.lower() == 'isin':
+            i1 = 'ISIN'
+        elif i1.lower() == 'type':
+            i2 = Types[Types.index(i2)+1]
+        elif i1.lower() == 'country':
+            i2 = Countries[Countries.index(i2)+1]
+        elif i1.lower() == 'short name':
+            i1 = 'Symbol/Ticker'
+        elif i1.lower() == 'long name':
+            i1 = 'Name'
+
+        static_pairs.append([i1, i2])
+
+    static_pairs1, static_pairs2 = static_pairs[:len(static_pairs)//2+1], static_pairs[len(static_pairs)//2+1:]
+    
+    if len(static_pairs2) < len(static_pairs1):
+        static_pairs2.append(['',''])
+
+
     context = {
         'data': data_,
         'asset': asset,
         'similars': similars_lst,
         'data_pairs': zip(data_pairs1, data_pairs2),
+        'static_pairs': zip(static_pairs1, static_pairs2)
     }
     return render(request, 'main_app/asset_details.html', context)
 

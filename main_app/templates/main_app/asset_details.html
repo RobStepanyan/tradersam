@@ -152,6 +152,46 @@
       </tbody>
     </table>
   </div>
+
+  <div class="container p-0 align-middle">
+    <h3 class="text-white px-3">About</h3>
+    <table class="mb-3">
+      <tbody>
+        {% for pair in static_pairs %}
+          <tr class="row">
+            <td class="row col-sm-6">
+              <div class="col-sm-6 p-0">
+                {{ pair.0.0 }}
+              </div>
+              <div class="col-sm-6 p-0">
+                <span class="text-gray-5">
+                  {% if pair.0.1 %}
+                    {{ pair.0.1 }}
+                  {% elif pair.0.1 %}
+                    N/A
+                  {% endif %}
+                </span>
+              </div>
+            </td>
+            <td class="row col-sm-6">
+              <div class="col-sm-6 p-0">
+                {{ pair.1.0 }}
+              </div>
+              <div class="col-sm-6 p-0">
+                <span class="text-gray-5">
+                  {% if pair.1.1 %}
+                    {{ pair.1.1 }}
+                  {% elif pair.1.0 %}
+                    N/A
+                  {% endif %}
+                </span>
+              </div>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
 </section>
 
 <!-- Similar carousel -->
