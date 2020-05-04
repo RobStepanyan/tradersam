@@ -156,7 +156,7 @@ def ajax_account(request):
                         'last': live_model['last'],
                         'change_perc': live_model['change_perc'],
                         'volume': live_model['volume'],
-                        'href': '/dev/asset/' + static_model['country'].lower() + '/' + type_.lower() + '/' + str(static_model['id'])
+                        'href': '/asset/' + static_model['country'].lower() + '/' + type_.lower() + '/' + str(static_model['id'])
                         }
                     asset_links.append(asset_dct)
             watchlists.append({'name': name, 'asset_links': asset_links})   
@@ -448,7 +448,7 @@ def ajax_watchlist(request):
                     'short_name': static_model['short_name'],
                     'change_perc': live_model['change_perc'],
                     'volume': live_model['volume'],
-                    'href': '/dev/asset/' + static_model['country'].lower() + '/' + type_.lower() + '/' + str(static_model['id'])
+                    'href': '/asset/' + static_model['country'].lower() + '/' + type_.lower() + '/' + str(static_model['id'])
                     }
                 return JsonResponse({'asset_dct': asset_dct})
     
@@ -488,7 +488,7 @@ def ajax_watchlist(request):
     #                     'country': static_model['country'],
     #                     'short_name': static_model['short_name'],
     #                     'live_model': live_model,
-    #                     'href': '/dev/asset/' + static_model['country'].lower() + '/' + type_.lower() + '/' + str(static_model['id'])
+    #                     'href': '/asset/' + static_model['country'].lower() + '/' + type_.lower() + '/' + str(static_model['id'])
     #                     }
     #                 assets_list.append(asset_dct)
     #         return JsonResponse({'name': name, 'assets_list': assets_list})

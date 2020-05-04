@@ -39,7 +39,7 @@ function dataAjax(timeFrame, chartType, theme) {
 	$(container).empty()
 	$('<div class="h-100 lds-dual-ring-md"></div>').appendTo(container)
 	$.ajax({
-		url: '/dev/ajax/hist/',
+		url: '/ajax/hist/',
 		data: {
 		'link': link,
 		'time_frame': timeFrame,

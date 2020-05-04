@@ -11,7 +11,7 @@ $(function () {
   $('#main-table-header').append('<img class="country-flag-lg" src="/static/main_app/svg/flags/' + country.toLowerCase() + '.svg">')
   $('#main-table-header').append(' ' + type_)
 
-  $('#main-table-more').attr('href', '/dev/all/' + country.toLowerCase() + '/' + type_.toLowerCase() + '/')
+  $('#main-table-more').attr('href', '/all/' + country.toLowerCase() + '/' + type_.toLowerCase() + '/')
   sendAjax()
   sendAjaxCarousel()
   sendAjaxUserTable()
@@ -29,7 +29,7 @@ $(function () {
       $(container2).empty()
     }
     $('#carousel-header').text(countries[country])
-    $('#main-table-more').attr('href', '/dev/all/' + country.toLowerCase() + '/' + type_.toLowerCase() + '/')
+    $('#main-table-more').attr('href', '/all/' + country.toLowerCase() + '/' + type_.toLowerCase() + '/')
     sendAjax()
     sendAjaxCarousel()
   }, 150));
@@ -47,7 +47,7 @@ $(function () {
     $('#main-table-header').empty()
     $('#main-table-header').append('<img class="country-flag-lg" src="/static/main_app/svg/flags/' + country.toLowerCase() + '.svg">')
     $('#main-table-header').append(' ' + type_)
-    $('#main-table-more').attr('href', '/dev/all/' + country.toLowerCase() + '/' + type_.toLowerCase() + '/')
+    $('#main-table-more').attr('href', '/all/' + country.toLowerCase() + '/' + type_.toLowerCase() + '/')
     sendAjax()
   }, 150));
 
@@ -56,7 +56,7 @@ $(function () {
     $('<div class="h-100 lds-dual-ring-md"></div>').appendTo(container)
 
     $.ajax({
-      url: '/dev/ajax/home/main-table',
+      url: '/ajax/home/main-table',
       data: {
         'country': country,
         'type_': type_
@@ -74,7 +74,7 @@ $(function () {
           container.append('<tbody></tbody>')
           data['data_list'].forEach(e => {
             s = ''
-            var hrf = '/dev/asset/' + e['static']['country'].toLowerCase() + '/' + e['static']['Type'] + '/' + e['static']['id'] + '/'
+            var hrf = '/asset/' + e['static']['country'].toLowerCase() + '/' + e['static']['Type'] + '/' + e['static']['id'] + '/'
             s += '<td><a href="' + hrf + '">' + Object.values(e['live'])[0] + '</a></td>'
             Object.values(e['live']).slice(1).forEach(v => {
               if (v) {
@@ -112,7 +112,7 @@ $(function () {
     $('<div class="h-100 lds-dual-ring-md"></div>').appendTo(container2)
 
     $.ajax({
-      url: '/dev/ajax/home/carousel/',
+      url: '/ajax/home/carousel/',
       data: {
         'country': country,
       },
@@ -123,7 +123,7 @@ $(function () {
         container2.empty()
         if (data['data_list'].length != 0) {
           data['data_list'].forEach(dct => {
-            s = '<a href="/dev/asset/' + dct['static']['country'].toLowerCase() + '/index/' + dct['static']['id'] + '/">' +
+            s = '<a href="/asset/' + dct['static']['country'].toLowerCase() + '/index/' + dct['static']['id'] + '/">' +
               `<div class="card asset-card card mr-3">
                         <div class="row mb-1">
                         <span class="long-name">` + dct['static']['long_name'] + `</span>

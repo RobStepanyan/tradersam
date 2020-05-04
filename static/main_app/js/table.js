@@ -23,7 +23,7 @@ $(function(){
         $(container).empty()
         $('<div class="h-100 lds-dual-ring-md"></div>').appendTo(container)
         $.ajax({
-            url: '/dev/ajax/all/',
+            url: '/ajax/all/',
             data: {
             'link': window.location.href,
             'expanded': expanded,
@@ -42,7 +42,7 @@ $(function(){
                     container.append('<tbody></tbody>')
                     data['data_list'].forEach(e => {
                         s = ''
-                        var hrf = '/dev/asset/' + e['static']['country'].toLowerCase() + '/' + e['static']['Type'] + '/' + e['static']['id'] + '/'
+                        var hrf = '/asset/' + e['static']['country'].toLowerCase() + '/' + e['static']['Type'] + '/' + e['static']['id'] + '/'
                         s += '<td><a href="' + hrf + '">'+ Object.values(e['live'])[0] + '</a></td>'
                         Object.values(e['live']).slice(1).forEach(v => {
                             if (v.includes('+')) {

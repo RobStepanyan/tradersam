@@ -58,7 +58,7 @@ function search() {
     container.empty()
     $('<div class="lds-dual-ring-sm"></div>').appendTo(container);
     $.ajax({
-      url: '/dev/ajax/search/',
+      url: '/ajax/search/',
       data: {
         'search': $('.searchTerm').val()
       },
@@ -85,7 +85,7 @@ function search() {
             };
             
             $(
-              '<a class="text-inherit" href="/dev/asset/' + country + '/' + type.toLowerCase() + '/' + data.results[i]['pk'] +'">'
+              '<a class="text-inherit" href="/asset/' + country + '/' + type.toLowerCase() + '/' + data.results[i]['pk'] +'">'
             + '<div class="search-item">' 
             + '<div class="d-flex">'
             + data.results[i]['short_name'] + ' | '
