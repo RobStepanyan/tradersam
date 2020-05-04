@@ -14,6 +14,7 @@ $(function () {
   $('#main-table-more').attr('href', '/dev/all/' + country.toLowerCase() + '/' + type_.toLowerCase() + '/')
   sendAjax()
   sendAjaxCarousel()
+  sendAjaxUserTable()
   $('#pr-1 .btn-primary').click(_.debounce(function () {
     country = $('#pr-1 .btn-primary.active input').attr('id')
     if (type_ == 'Commodities' || type_ == 'Currencies' || type_ == 'Cryptocurrencies') {
@@ -153,5 +154,211 @@ $(function () {
         };
       }
     })
+  }
+
+  function sendAjaxUserTable() {
+    $.ajax({
+      url: '/ajax/account/',
+      data: {
+        'dep': 'watchlists'
+      },
+      success: function (data) {
+        if (data['watchlists'].length == 0) {
+          content = 
+          `
+          <h3 class="text-white text-center ml-0 mb-3"><i class="fas fa-user"></i> Your Watchlists</h3>
+          <div class="position-absolute card justify-content-center">
+            <a href="/account/">
+              <h1 class="display-3 text-center"><i class="fas fa-plus"></i></h1>
+              <h4 class="text-center">Create a Watchlist</h4>
+            </a>
+          </div>
+          <table class="market-table mb-3 table-striped filter-blur shadow">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Ticker</th>
+                <th>Last Price</th>
+                <th>Change</th>
+                <th>Change %</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><i class="fa fa-globe text-dark country-flag-md mb-0"></i></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><i class="fa fa-globe text-dark country-flag-md mb-0"></i></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><i class="fa fa-globe text-dark country-flag-md mb-0"></i></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><i class="fa fa-globe text-dark country-flag-md mb-0"></i></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><i class="fa fa-globe text-dark country-flag-md mb-0"></i></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><i class="fa fa-globe text-dark country-flag-md mb-0"></i></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><i class="fa fa-globe text-dark country-flag-md mb-0"></i></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><i class="fa fa-globe text-dark country-flag-md mb-0"></i></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><i class="fa fa-globe text-dark country-flag-md mb-0"></i></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><i class="fa fa-globe text-dark country-flag-md mb-0"></i></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+          `
+          var parent = $('#user-table-header').parent().parent()
+          parent.empty()
+          $(content).appendTo(parent)
+          return
+        }
+
+        // Table header
+        var user_table_dropdown =
+          `
+        <div class="dropdown" id="user-table-dropdown">
+          <a class="btn btn-primary-dark dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            ${data['watchlists'][0]['name']}
+          </a>
+          <div class="dropdown-menu" data-toggle="buttons">
+        `
+        data['watchlists'].forEach(watch => {
+          user_table_dropdown +=
+            `<label class="btn dropdown-item">
+            <input type="radio" id="${watch['name']}" autocomplete="off" checked="">${watch['name']}
+          </label>`
+        })
+
+        user_table_dropdown += `
+          </div>
+        </div>
+        `
+        $('#user-table-header').after($(user_table_dropdown))
+        $('#user-table-header').parent().find('.dropdown-menu label').first().addClass('active')
+        
+        displayWatch(data['watchlists'][0])
+        
+        $('#user-table-dropdown .dropdown-item').click(function(){
+          $.ajax({
+            url: '/ajax/account/',
+            data: {
+              'dep': 'watchlists'
+            },
+            success: function (data) {
+              // Table header
+              $('#user-table-dropdown a.dropdown-toggle').text($('#user-table-dropdown .dropdown-item.active').text())
+              
+              data['watchlists'].forEach(watch => {
+                console.log()
+                console.log(watch['name'] == $('#user-table-dropdown .dropdown-item.active').text())
+                if (watch['name'] == $('#user-table-dropdown .dropdown-item.active').text().trim()) {
+                  displayWatch(watch)
+                }
+              });
+            }
+          })
+        })
+      }
+    })
+  }
+  function displayWatch(watch) {
+    $('#user-table').empty()
+    // Table
+    var user_table =
+      `
+      <thead>
+        <tr>
+          <th></th>
+          <th>Symbol</th>
+          <th>Last</th>
+          <th>Change</th>
+          <th>Volume</th>
+        </tr>
+      </thead>
+      <tbody>
+      `
+    watch['asset_links'].forEach(row => {
+      var type = row['type']
+      var country = row['country']
+      if (type == 'Currency') {
+        c = 'crncy'
+      } else if (type == 'Cryptocurrency') {
+        c = 'crptcrncy'
+      } else {
+        c = country.toLowerCase()
+      };
+      user_table +=
+        `
+        <tr>
+          <td><img class="country-flag-md" src="/static/main_app/svg/flags/${c}.svg" alt=""></td>
+          <td><a href="${row['href']}">${row['short_name']}</a></td>
+          <td>${row['last']}</td>
+        `
+
+      if (row['change_perc'].includes('-')) {
+        user_table += `<td><span class="ml-0 d-initial change down">${row['change_perc']}</span></td>`
+      } else if (row['change_perc'].includes('+')) {
+        user_table += `<td><span class="ml-0 d-initial change up">${row['change_perc']}</span></td>`
+      } else {
+        user_table += `<td><span class="ml-0 d-initial change">${row['change_perc']}</span></td>`
+      }
+      user_table +=
+        `
+          <td>${row['volume']}</td>
+        </tr>
+        `
+    });
+    user_table += '</tbody>'
+    $(user_table).appendTo($('#user-table'))
   }
 });

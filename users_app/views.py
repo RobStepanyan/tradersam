@@ -142,9 +142,9 @@ def ajax_account(request):
                     if static_model:
                         if AllAssetsLive.objects.filter(link=asset).exists():
                             live_model = model_to_dict(AllAssetsLive.objects.get(link=asset))
-                            live_model = {'change_perc': live_model['change_perc'], 'volume': live_model['volume']}
+                            live_model = {'last': live_model['last_price'],'change_perc': live_model['change_perc'], 'volume': live_model['volume']}
                         else:
-                            live_model = {'change_perc': 'N/A', 'volume': 'N/A'}
+                            live_model = {'last': 'N/A', 'change_perc': 'N/A', 'volume': 'N/A'}
                     else:
                         continue
                     
@@ -153,6 +153,7 @@ def ajax_account(request):
                         'type': static_model['Type'],
                         'country': static_model['country'],
                         'short_name': static_model['short_name'],
+                        'last': live_model['last'],
                         'change_perc': live_model['change_perc'],
                         'volume': live_model['volume'],
                         'href': '/dev/asset/' + static_model['country'].lower() + '/' + type_.lower() + '/' + str(static_model['id'])
@@ -450,5 +451,47 @@ def ajax_watchlist(request):
                     'href': '/dev/asset/' + static_model['country'].lower() + '/' + type_.lower() + '/' + str(static_model['id'])
                     }
                 return JsonResponse({'asset_dct': asset_dct})
+    
+    # elif request.GET['retrieve']:
+    #     if Watchlist.objects.filter(username=user.username, name=request.GET['name']).exists():
+    #         watch = model_to_dict(Watchlist.objects.get(username=user.username, name=request.GET['name']))
+    #         name = watch['name']
+    #         assets_list = []
+    #         for asset in watch['asset_links']:
+    #             for value in STATIC_OBJECTS.values():
+    #                 static_model = None
+    #                 if value['object'].objects.filter(link=asset).exists():
+    #                     static_model = model_to_dict(value['object'].objects.get(link=asset))
+                
+    #                 if static_model:
+    #                     if AllAssetsLive.objects.filter(link=asset).exists():
+    #                         live_model = model_to_dict(AllAssetsLive.objects.get(link=asset))
+    #                         if static_model.Type == 'crptcrcny':
+    #                             live_model = {
+    #                                 'last': live_model['last_price'], 'change_perc': live_model['change_perc'], 'volume': live_model['volume']}
+    #                         else:
+    #                             live_model = {
+    #                                 'last': live_model['last_price'], 'change': live_model['change'], 'change_perc': live_model['change_perc'], 'volume': live_model['volume']}
+    #                     else:
+    #                         if static_model.Type == 'crptcrcny':
+    #                             live_model = {
+    #                                 'last': 'N/A', 'change_perc': 'N/A', 'volume': 'N/A'}
+    #                         else:
+    #                             live_model = {
+    #                                 'last': 'N/A', 'change': 'N/A', 'change_perc': 'N/A', 'volume': 'N/A'}
+    #                 else:
+    #                     continue
+                    
+    #                 type_ = Types[Types.index(static_model['Type'])+1]
+    #                 asset_dct = {
+    #                     'type': static_model['Type'],
+    #                     'country': static_model['country'],
+    #                     'short_name': static_model['short_name'],
+    #                     'live_model': live_model,
+    #                     'href': '/dev/asset/' + static_model['country'].lower() + '/' + type_.lower() + '/' + str(static_model['id'])
+    #                     }
+    #                 assets_list.append(asset_dct)
+    #         return JsonResponse({'name': name, 'assets_list': assets_list})
+
 
     return JsonResponse({'error': False})

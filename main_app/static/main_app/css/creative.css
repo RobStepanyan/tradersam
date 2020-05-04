@@ -9244,7 +9244,7 @@ tbody {
 .filter-blur {
   filter: blur(1px);
 }
-#pr-1>h3, #pl-1>h3 {
+#pr-1 h3, #pl-1 h3 {
   height: 32px;
 }
 .btn-wide {
@@ -9396,18 +9396,29 @@ tbody {
   z-index: 0; /* z-index of search bar (.search) is set to 1 */
 }
 @media (min-width: 992px) {
+  .user-table-wrapper::-webkit-scrollbar,
   .search-results::-webkit-scrollbar {
     width: 15px;
   }
+  .user-table-wrapper::-webkit-scrollbar-track,
   .search-results::-webkit-scrollbar-track {
     margin-top: 0.5rem;
     border-radius: .5rem;
     background-color: var(--gray4);
   }
+  .user-table-wrapper::-webkit-scrollbar-track {
+    margin-top: 0;
+    border-radius: 0;
+  }
+  .user-table-wrapper::-webkit-scrollbar-thumb,
   .search-results::-webkit-scrollbar-thumb {
     border-radius: .5rem;
     background: var(--gray2);
   }
+  .user-table-wrapper::-webkit-scrollbar-thumb {
+    border-radius: 0;
+  }
+  .user-table-wrapper::-webkit-scrollbar-thumb:hover,
   .search-results::-webkit-scrollbar-thumb:hover {
     background: var(--gray3);
   }
@@ -9881,4 +9892,20 @@ tbody {
 }
 .delete_row::before {
   content: "\f1f8";
+}
+#user-table-header .dropdown-menu {
+  width: initial!important;
+  top: 100%!important;
+  left: 50%!important;
+  transform: translate(-50%)!important;
+}
+.user-table-wrapper {
+  background: var(--gray1);
+  max-height: 440px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  border: 2px solid;
+  border-radius: .5rem;
+  -webkit-box-shadow: 0.25rem 0.5rem 0.75rem rgba(0, 0, 0, 0.75)!important;
+  box-shadow: 0.25rem 0.5rem 0.75rem rgba(0, 0, 0, 0.75)!important;
 }

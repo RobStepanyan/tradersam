@@ -97,7 +97,7 @@
 
   <div class="bg-dark p-3">
     <div class="container">
-      <h3 class="text-white text-align-center ml-0 mb-3" id='carousel-header'>
+      <h3 class="text-white text-center ml-0 mb-3" id='carousel-header'>
         <!-- Carousel header -->
       </h3>
       <div class="row" id="market-carousel">
@@ -109,7 +109,7 @@
     <div class="row">
       <!-- Selected Table -->
       <div class="col-lg-6 p-0" id="pr-1">
-        <h3 class="text-white text-align-center ml-0 mb-3" id='main-table-header'>
+        <h3 class="text-white text-center ml-0 mb-3" id='main-table-header'>
           <!-- main table header -->
         </h3>
         <table class="market-table mb-3 table-striped shadow table-hover" id='main-table'>
@@ -120,378 +120,121 @@
         </div>
       </div>
       <div class="col-lg-6 p-0" id="pl-1">
-        <!-- Watchlist Table -->
-        <h3 class="text-white text-align-center ml-0 mb-3"><i class="fas fa-user"></i> Your Watchlist</h3>
-        <div class="position-absolute card justify-content-center">
-          <h4 class="mb-0 text-center w-100 px-3">You need an account for personalized tables and many more features.
-          </h4 class="mb-0 text-center w-100">
-          <div class="row pt-3">
-            <div class="col-6 text-right px-2">
-              <a href="{% url 'login' %}" class="btn btn-primary btn-wide">Log In</a>
-            </div>
-            <div class="col-6 text-left px-2">
-              <a href="{% url 'signup' %}" class="btn btn-primary btn-wide">Sign Up</a>
+        {% if user.is_authenticated %}
+          <div class="row justify-content-center">
+            <h3 class="text-white ml-0 mb-3 mr-3" id='user-table-header'>
+              Watchlists
+            </h3>
+          </div>
+          <div class="user-table-wrapper mb-3 ">
+            <table class="market-table table-striped shadow table-hover" id='user-table'>
+          <!-- main table -->
+          </table>
+          </div>
+          
+          <div class="text-center mb-3" id="user-table-buttons">
+            <a href="{% url 'account' %}" class="btn btn-primary-dark btn-wide">Manage</a>
+          </div>
+        {% else %}
+          <!-- Watchlist Table -->
+          <h3 class="text-white text-center ml-0 mb-3"><i class="fas fa-user"></i> Your Watchlists</h3>
+          <div class="position-absolute card justify-content-center">
+            <h4 class="mb-0 text-center w-100 px-3">You need an account for personalized tables and many more features.</h4>
+            <div class="row pt-3">
+              <div class="col-6 text-right px-2">
+                <a href="{% url 'login' %}" class="btn btn-primary btn-wide">Log In</a>
+              </div>
+              <div class="col-6 text-left px-2">
+                <a href="{% url 'signup' %}" class="btn btn-primary btn-wide">Sign Up</a>
+              </div>
             </div>
           </div>
-        </div>
-        <table class="market-table mb-3 table-striped filter-blur shadow">
-          <thead>
-            <tr>
-              <th></th>
-              <th>Ticker</th>
-              <th>Last Price</th>
-              <th>Change</th>
-              <th>Change %</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><i class="fa fa-globe text-dark country-flag-md mb-0"></i></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td><i class="fa fa-globe text-dark country-flag-md mb-0"></i></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td><i class="fa fa-globe text-dark country-flag-md mb-0"></i></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td><i class="fa fa-globe text-dark country-flag-md mb-0"></i></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td><i class="fa fa-globe text-dark country-flag-md mb-0"></i></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td><i class="fa fa-globe text-dark country-flag-md mb-0"></i></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td><i class="fa fa-globe text-dark country-flag-md mb-0"></i></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td><i class="fa fa-globe text-dark country-flag-md mb-0"></i></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td><i class="fa fa-globe text-dark country-flag-md mb-0"></i></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td><i class="fa fa-globe text-dark country-flag-md mb-0"></i></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr>
-          </tbody>
-        </table>
+          <table class="market-table mb-3 table-striped filter-blur shadow">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Ticker</th>
+                <th>Last Price</th>
+                <th>Change</th>
+                <th>Change %</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><i class="fa fa-globe text-dark country-flag-md mb-0"></i></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><i class="fa fa-globe text-dark country-flag-md mb-0"></i></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><i class="fa fa-globe text-dark country-flag-md mb-0"></i></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><i class="fa fa-globe text-dark country-flag-md mb-0"></i></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><i class="fa fa-globe text-dark country-flag-md mb-0"></i></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><i class="fa fa-globe text-dark country-flag-md mb-0"></i></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><i class="fa fa-globe text-dark country-flag-md mb-0"></i></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><i class="fa fa-globe text-dark country-flag-md mb-0"></i></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><i class="fa fa-globe text-dark country-flag-md mb-0"></i></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><i class="fa fa-globe text-dark country-flag-md mb-0"></i></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+        {% endif %}
       </div>
     </div>
-  </div>
-</section>
-
-<!-- Feed Section -->
-<section class="page-section" id="feed">
-  <div class="container h-100">
-    <h2 class="mt-0"><i class="fa fa-1x fa-globe text-primary-dark"></i> Popular Today!</h2>
-    <!-- <p class="text-muted-75">U.S only</p> -->
-    <div class="row align-items-center justify-content-between news-card p-0 mt-4">
-      <!-- Title -->
-      <div class="col-lg-9 news-title">
-        <a href="{% url 'news-details' %}">
-          <h3 class="font-weight-bold">Bulls and Bears of the alright week: Ford, Intel McDonalds, Twitter and more
-          </h3>
-        </a>
-        <div class="news-short">
-          <!-- Short content -->
-          <a href="{% url 'news-details' %}">
-            <p class="text-dark-75 font-weight-light">Get the latest financial market news, information & quotes of
-              various securities, data analysis reports, as well as a general...</p>
-          </a>
-        </div>
-      </div>
-      <!-- Picture -->
-      <div class="col-lg-3 news-pic pr-3 p-0">
-        <a href="#"><img src="{% static 'main_app/media/default_news(150x150).png' %}"></a>
-      </div>
-    </div>
-    <hr>
-    <div class="row align-items-center justify-content-between news-card p-0 mt-4">
-      <!-- Title -->
-      <div class="col-lg-9 news-title">
-        <a href="{% url 'news-details' %}">
-          <h3 class="font-weight-bold">Bulls and Bears of the alright week: Ford, Intel McDonalds, Twitter and more
-          </h3>
-        </a>
-        <div class="news-short">
-          <!-- Short content -->
-          <a href="{% url 'news-details' %}">
-            <p class="text-dark-75 font-weight-light">Get the latest financial market news, information & quotes of
-              various securities, data analysis reports, as well as a general...</p>
-          </a>
-        </div>
-      </div>
-      <!-- Picture -->
-      <div class="col-lg-3 news-pic pr-3 p-0">
-        <a href="#"><img src="{% static 'main_app/media/default_news(150x150).png' %}"></a>
-      </div>
-    </div>
-    <hr>
-    <div class="row align-items-center justify-content-between news-card p-0 mt-4">
-      <!-- Title -->
-      <div class="col-lg-9 news-title">
-        <a href="{% url 'news-details' %}">
-          <h3 class="font-weight-bold">Bulls and Bears of the alright week: Ford, Intel McDonalds, Twitter and more
-          </h3>
-        </a>
-        <div class="news-short">
-          <!-- Short content -->
-          <a href="{% url 'news-details' %}">
-            <p class="text-dark-75 font-weight-light">Get the latest financial market news, information & quotes of
-              various securities, data analysis reports, as well as a general...</p>
-          </a>
-        </div>
-      </div>
-      <!-- Picture -->
-      <div class="col-lg-3 news-pic pr-3 p-0">
-        <a href="#"><img src="{% static 'main_app/media/default_news(150x150).png' %}"></a>
-      </div>
-    </div>
-    <hr>
-    <div class="row align-items-center justify-content-between news-card p-0 mt-4">
-      <!-- Title -->
-      <div class="col-lg-9 news-title">
-        <a href="{% url 'news-details' %}">
-          <h3 class="font-weight-bold">Bulls and Bears of the alright week: Ford, Intel McDonalds, Twitter and more
-          </h3>
-        </a>
-        <div class="news-short">
-          <!-- Short content -->
-          <a href="{% url 'news-details' %}">
-            <p class="text-dark-75 font-weight-light">Get the latest financial market news, information & quotes of
-              various securities, data analysis reports, as well as a general...</p>
-          </a>
-        </div>
-      </div>
-      <!-- Picture -->
-      <div class="col-lg-3 news-pic pr-3 p-0">
-        <a href="#"><img src="{% static 'main_app/media/default_news(150x150).png' %}"></a>
-      </div>
-    </div>
-    <hr>
-    <div class="row align-items-center justify-content-between news-card p-0 mt-4">
-      <!-- Title -->
-      <div class="col-lg-9 news-title">
-        <a href="{% url 'news-details' %}">
-          <h3 class="font-weight-bold">Bulls and Bears of the alright week: Ford, Intel McDonalds, Twitter and more
-          </h3>
-        </a>
-        <div class="news-short">
-          <!-- Short content -->
-          <a href="{% url 'news-details' %}">
-            <p class="text-dark-75 font-weight-light">Get the latest financial market news, information & quotes of
-              various securities, data analysis reports, as well as a general...</p>
-          </a>
-        </div>
-      </div>
-      <!-- Picture -->
-      <div class="col-lg-3 news-pic pr-3 p-0">
-        <a href="#"><img src="{% static 'main_app/media/default_news(150x150).png' %}"></a>
-      </div>
-    </div>
-    <hr>
-    <div class="row align-items-center justify-content-between news-card p-0 mt-4">
-      <!-- Title -->
-      <div class="col-lg-9 news-title">
-        <a href="{% url 'news-details' %}">
-          <h3 class="font-weight-bold">Bulls and Bears of the alright week: Ford, Intel McDonalds, Twitter and more
-          </h3>
-        </a>
-        <div class="news-short">
-          <!-- Short content -->
-          <a href="{% url 'news-details' %}">
-            <p class="text-dark-75 font-weight-light">Get the latest financial market news, information & quotes of
-              various securities, data analysis reports, as well as a general...</p>
-          </a>
-        </div>
-      </div>
-      <!-- Picture -->
-      <div class="col-lg-3 news-pic pr-3 p-0">
-        <a href="#"><img src="{% static 'main_app/media/default_news(150x150).png' %}"></a>
-      </div>
-    </div>
-    <hr>
-    <div class="row align-items-center justify-content-between news-card p-0 mt-4">
-      <!-- Title -->
-      <div class="col-lg-9 news-title">
-        <a href="{% url 'news-details' %}">
-          <h3 class="font-weight-bold">Bulls and Bears of the alright week: Ford, Intel McDonalds, Twitter and more
-          </h3>
-        </a>
-        <div class="news-short">
-          <!-- Short content -->
-          <a href="{% url 'news-details' %}">
-            <p class="text-dark-75 font-weight-light">Get the latest financial market news, information & quotes of
-              various securities, data analysis reports, as well as a general...</p>
-          </a>
-        </div>
-      </div>
-      <!-- Picture -->
-      <div class="col-lg-3 news-pic pr-3 p-0">
-        <a href="#"><img src="{% static 'main_app/media/default_news(150x150).png' %}"></a>
-      </div>
-    </div>
-    <hr>
-    <div class="row align-items-center justify-content-between news-card p-0 mt-4">
-      <!-- Title -->
-      <div class="col-lg-9 news-title">
-        <a href="{% url 'news-details' %}">
-          <h3 class="font-weight-bold">Bulls and Bears of the alright week: Ford, Intel McDonalds, Twitter and more
-          </h3>
-        </a>
-        <div class="news-short">
-          <!-- Short content -->
-          <a href="{% url 'news-details' %}">
-            <p class="text-dark-75 font-weight-light">Get the latest financial market news, information & quotes of
-              various securities, data analysis reports, as well as a general...</p>
-          </a>
-        </div>
-      </div>
-      <!-- Picture -->
-      <div class="col-lg-3 news-pic pr-3 p-0">
-        <a href="#"><img src="{% static 'main_app/media/default_news(150x150).png' %}"></a>
-      </div>
-    </div>
-    <hr>
-    <div class="row align-items-center justify-content-between news-card p-0 mt-4">
-      <!-- Title -->
-      <div class="col-lg-9 news-title">
-        <a href="{% url 'news-details' %}">
-          <h3 class="font-weight-bold">Bulls and Bears of the alright week: Ford, Intel McDonalds, Twitter and more
-          </h3>
-        </a>
-        <div class="news-short">
-          <!-- Short content -->
-          <a href="{% url 'news-details' %}">
-            <p class="text-dark-75 font-weight-light">Get the latest financial market news, information & quotes of
-              various securities, data analysis reports, as well as a general...</p>
-          </a>
-        </div>
-      </div>
-      <!-- Picture -->
-      <div class="col-lg-3 news-pic pr-3 p-0">
-        <a href="#"><img src="{% static 'main_app/media/default_news(150x150).png' %}"></a>
-      </div>
-    </div>
-    <hr>
-    <div class="row align-items-center justify-content-between news-card p-0 mt-4">
-      <!-- Title -->
-      <div class="col-lg-9 news-title">
-        <a href="{% url 'news-details' %}">
-          <h3 class="font-weight-bold">Bulls and Bears of the alright week: Ford, Intel McDonalds, Twitter and more
-          </h3>
-        </a>
-        <div class="news-short">
-          <!-- Short content -->
-          <a href="{% url 'news-details' %}">
-            <p class="text-dark-75 font-weight-light">Get the latest financial market news, information & quotes of
-              various securities, data analysis reports, as well as a general...</p>
-          </a>
-        </div>
-      </div>
-      <!-- Picture -->
-      <div class="col-lg-3 news-pic pr-3 p-0">
-        <a href="#"><img src="{% static 'main_app/media/default_news(150x150).png' %}"></a>
-      </div>
-    </div>
-    <hr>
-    <div class="row align-items-center justify-content-between news-card p-0 mt-4">
-      <!-- Title -->
-      <div class="col-lg-9 news-title">
-        <a href="{% url 'news-details' %}">
-          <h3 class="font-weight-bold">Bulls and Bears of the alright week: Ford, Intel McDonalds, Twitter and more
-          </h3>
-        </a>
-        <div class="news-short">
-          <!-- Short content -->
-          <a href="{% url 'news-details' %}">
-            <p class="text-dark-75 font-weight-light">Get the latest financial market news, information & quotes of
-              various securities, data analysis reports, as well as a general...</p>
-          </a>
-        </div>
-      </div>
-      <!-- Picture -->
-      <div class="col-lg-3 news-pic pr-3 p-0">
-        <a href="#"><img src="{% static 'main_app/media/default_news(150x150).png' %}"></a>
-      </div>
-    </div>
-    <hr>
-    <div class="row align-items-center justify-content-between news-card p-0 mt-4">
-      <!-- Title -->
-      <div class="col-lg-9 news-title">
-        <a href="{% url 'news-details' %}">
-          <h3 class="font-weight-bold">Bulls and Bears of the alright week: Ford, Intel McDonalds, Twitter and more
-          </h3>
-        </a>
-        <div class="news-short">
-          <!-- Short content -->
-          <a href="{% url 'news-details' %}">
-            <p class="text-dark-75 font-weight-light">Get the latest financial market news, information & quotes of
-              various securities, data analysis reports, as well as a general...</p>
-          </a>
-        </div>
-      </div>
-      <!-- Picture -->
-      <div class="col-lg-3 news-pic pr-3 p-0">
-        <a href="#"><img src="{% static 'main_app/media/default_news(150x150).png' %}"></a>
-      </div>
-    </div>
-    <!-- <hr>
-    <nav class="mt-4">
-      <ul class="pagination justify-content-center">
-        <li class="page-item">
-          <a class="page-link" href="#" tabindex="-1">Previous</a>
-        </li>
-        <li class="page-item active"><a class="page-link" href="#">1</a></li>
-        <li class="page-item"><a class="page-link" href="#">2</a></li>
-        <li class="page-item"><a class="page-link" href="#">3</a></li>
-        <li class="page-item">
-          <a class="page-link" href="#">Next</a>
-        </li>
-      </ul>
-    </nav> -->
   </div>
 </section>
 

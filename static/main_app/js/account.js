@@ -242,6 +242,7 @@ $(function () {
                 <tr>
                   <th></th>
                   <th>Symbol</th>
+                  <th>Last</th>
                   <th>Change</th>
                   <th>Volume</th>
                 </tr>
@@ -263,6 +264,7 @@ $(function () {
             <tr>
               <td><img class="country-flag-md" src="/static/main_app/svg/flags/${c}.svg" alt=""></td>
               <td><a href="${row['href']}">${row['short_name']}</a></td>
+              <td>${row['last']}</td>
             `
 
           if (row['change_perc'].includes('-')) {
@@ -336,6 +338,7 @@ $(function () {
                 <tr>
                   <th></th>
                   <th>Symbol</th>
+                  <th>Last</th>
                   <th>Change</th>
                   <th>Volume</th>
                 </tr>
@@ -637,6 +640,7 @@ $(function () {
               <td><i class="delete_row"></i></td>
               <td><img class="country-flag-md" src="/static/main_app/svg/flags/${c}.svg" alt=""></td>
               <td><a href="${row['href']}">${row['short_name']}</a></td>
+              <td>${row['last']}</td>
             `
 
             if (row['change_perc'].includes('-')) {
